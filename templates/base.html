@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <meta charset="UTF-8">
+    <title>{{ config.title }}</title>
+    <link rel="stylesheet" type="text/css" href="/assets/style.css" />
+  </head>
+  <body>
+    <nav>
+      <div class="inner">
+        <div class="logo"><a href="/">{{ config.title }}</a></div>
+        <ul class="link">
+          <li>
+            <a href="/about" > about </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="content">
+      <div class="posts">
+        <div class="inner">
+          {% block content %} {% endblock content %}
+        </div>
+      </div>
+      {% block footer %}
+      <footer>
+        <div class="inner justify-items-between">
+          <ul class="left">
+            <li> <a href="https://twitter.com/nasitray" target="_blank"> Twitter </a> </li>
+            <li> <a href="https://github.com/nasitray" target="_blank"> GitHub </a> </li>
+          </ul>
+
+          <ul class="right">
+            <li> <a href="{{ get_url(path="rss.xml", trailing_slash=false) }}">RSS</a> </li>
+          </ul>
+        </div>
+      </footer>
+      {% endblock footer %}
+    </div>
+
+    {% block tail_script %}
+    {% endblock tail_script %}
+  </body>
+</html>

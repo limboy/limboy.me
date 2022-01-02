@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block content %}
+<div class="post">
+  <h1 class="title"><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+  <div class="meta">
+    <time>{{ page.date }}</time>
+    <ul class="tags">
+      {% for tag in page.taxonomies.tags %}
+      <li><a href="{{ get_taxonomy_url(kind="tags", name=tag) }}">{{ tag }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="body">
+    {{ page.content | safe }}
+  </div>
+</div>
+{% endblock content %}
+
+{% block tail_script %}
+<script type="text/javascript">
+const observer = new IntersectionObserver(([e]) => {
+  if (e.target) {
+    e.target.classList.toggle('sticking', e.intersectionRatio < 1)
+  }
+}, {
+  rootMargin: '-1px 0px 0px 0px',
+  threshold: [1],
+});
+
+observer.observe(document.querySelector(".body h1"));
+</script>
+{% endblock tail_script %}

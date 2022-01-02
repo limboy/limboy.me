@@ -1,0 +1,10 @@
+{% macro page_list(pages) %} {% for page in pages %}
+<div class="post archive">
+  <h1 class="title"><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+  <div class="meta"><time>{{ page.date }}</time></div>
+  <p class="intro">
+    {% if page.description %} {{ page.description | safe }} {% else %} {{
+    page.summary | safe}} {% endif %}
+  </p>
+</div>
+{% endfor %} {% endmacro page_list %}

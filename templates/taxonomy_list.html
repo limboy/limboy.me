@@ -1,0 +1,19 @@
+{% extends "index.html" %} 
+{% import "macros.html" as macros %}
+
+{% block content %}
+
+{% for term in terms %}
+
+<div class="meta taxonomy">
+  <ul class="tags">
+    <li><a href="{{ term.permalink }}">{{ term.name }}</a></li>
+  </ul>
+</div>
+
+{{ macros::page_list(pages=term.pages) }}
+
+{% endfor %}
+
+{% endblock content %}
+

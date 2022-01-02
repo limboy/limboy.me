@@ -1,0 +1,6 @@
+{% extends "base.html" %} 
+  {% import "macros.html" as macros %} 
+  {% block content %} 
+  {% set section = get_section(path="posts/_index.md") %} 
+  {{ macros::page_list(pages=section.pages) }} 
+{% endblock %}
