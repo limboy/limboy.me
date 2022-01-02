@@ -1,8 +1,10 @@
 +++
-title= "Hello World"
+title= "Hello World, What a wonderful life, Oh yeah"
 date = 2021-12-17
 [taxonomies]
 tags = ["essay"]
+[extra]
+cover = "https://ncdn.camarts.cn/c2f355a0.jpg"
 +++
 
 <!-- DONATELINKS -->

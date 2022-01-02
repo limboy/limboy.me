@@ -1,10 +1,24 @@
-{% macro page_list(pages) %} {% for page in pages %}
-<div class="post archive">
-  <h1 class="title"><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
-  <div class="meta"><time>{{ page.date }}</time></div>
-  <p class="intro">
-    {% if page.description %} {{ page.description | safe }} {% else %} {{
-    page.summary | safe}} {% endif %}
-  </p>
+{% macro page_list(pages) %}
+
+<div class="pages">
+  {% for page in pages %}
+  <div class="post archive">
+    <a href="{{ page.permalink }}">
+      {% if page.extra.cover %}
+      <div class="image" style="background-image:url({{page.extra.cover}})"></div>
+      {% endif %}
+      <div class="meta">
+        <ul class="tags">
+          {% for tag in page.taxonomies.tags %}
+          <li>{{ tag }}</li>
+          {% endfor %}
+        </ul>
+        <h1 class="title">{{ page.title }}</h1>
+        <time>{{ page.date }}</time>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
 </div>
-{% endfor %} {% endmacro page_list %}
+
+{% endmacro page_list %}

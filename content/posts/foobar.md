@@ -1,11 +1,11 @@
 +++
-title= "Hello World Again"
+title= "This foobar, nice to meet you! oh yeah"
 description = "This is another description"
 date = 2021-12-17
 [taxonomies]
-tags = ["rust", "os", "essay"]
+tags = ["rust", "os"]
 [extra]
-cover = "https://ncdn.camarts.cn/c2f355a0.jpg"
+cover = "https://ncdn.camarts.cn/255435bd.jpg"
 +++
 
 中文
