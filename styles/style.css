@@ -126,7 +126,7 @@
   margin: 1rem 0;
   line-height: 1.5;
   overflow: auto;
-  display: block;
+  display: block !important;
 }
 
 .prose td,
