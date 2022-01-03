@@ -4,7 +4,7 @@
   <meta content="width=device-width,initial-scale=1" name="viewport" />
   <meta charset="UTF-8">
   <title>{{ config.title }}</title>
-  <script src="/assets/main.js"></script>
+  <link rel="stylesheet" href="/assets/main.css?{{ get_file_hash(path='static/assets/main.css', sha_type=256) }}" />
 </head>
 
 <body class="{% block bodyclass %}  {% endblock bodyclass %}">

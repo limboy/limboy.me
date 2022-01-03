@@ -1,31 +1,36 @@
 const path = require('path');
+const { exec } = require('child_process');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const EventHooksPlugin = require('event-hooks-webpack-plugin');
 
-module.exports = {
-  entry: './static/assets/entry.js',
-  output: {
-    path: path.resolve(__dirname, 'static/assets/'),
-    filename: 'main.js',
-  },
-  module: {
-    rules: [
-      {
-        test: /\.css$/,
-        exclude: /node_modules/,
-        use: [
-          {
-            loader: 'style-loader',
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              importLoaders: 1,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-          },
-        ],
-      },
+module.exports = (env, options) => {
+  const devMode = options.mode == 'development';
+  return {
+    entry: ['./styles/style.css'],
+    output: {
+      path: path.resolve(__dirname, 'static/assets/'),
+      publicPath: '',
+      filename: '_.js',
+    },
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: 'main.css',
+      }),
+      new EventHooksPlugin({
+        done: () => {
+          // remove unecessary js file
+          exec(`rm -rf ${path.resolve(__dirname, 'static/assets/_.js')}`);
+        },
+      }),
     ],
-  },
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          exclude: /node_modules/,
+          use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+        },
+      ],
+    },
+  };
 };
