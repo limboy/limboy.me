@@ -3,7 +3,7 @@ title= "This foobar, nice to meet you! oh yeah"
 description = "This is another description"
 date = 2021-12-17
 [taxonomies]
-tags = ["rust", "os"]
+tags = ["rust", "os", "essay"]
 [extra]
 cover = "https://ncdn.camarts.cn/255435bd.jpg"
 +++

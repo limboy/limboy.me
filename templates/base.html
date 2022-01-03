@@ -4,36 +4,38 @@
   <meta content="width=device-width,initial-scale=1" name="viewport" />
   <meta charset="UTF-8">
   <title>{{ config.title }}</title>
-  <link rel="stylesheet" type="text/css" href="/assets/style.css" />
+  <script src="/assets/main.js"></script>
 </head>
 
 <body class="{% block bodyclass %}  {% endblock bodyclass %}">
-  <nav>
-    <div class="inner">
-      <div class="logo"><a href="/">{{ config.title }}</a></div>
+  <nav class="flex justify-center items-center h-12 opacity-80 bg-black">
+    <div class="inner flex justify-between items-center mx-1">
+      <div class="color-white "><a class="nav-link" href="/">{{ config.title }}</a></div>
       <ul class="link">
-        <li>
-          <a href="/about"> about </a>
+        <li class="inline">
+          <a class="nav-link" href="/about" class="decoration-0"> about
+          </a>
         </li>
       </ul>
     </div>
   </nav>
-  <div class="content">
-    <div class="posts">
-      <div class="inner">
+
+  <div class="flex flex-col justify-between min-h-[calc(100vh-3rem)]">
+    <div class="flex justify-center">
+      <div class="inner mt-1 mb-2">
         {% block content %} {% endblock content %}
       </div>
     </div>
     {% block footer %}
-    <footer>
-      <div class="inner justify-items-between">
-        <ul class="left">
-          <li> <a href="https://twitter.com/nasitray" target="_blank"> Twitter </a> </li>
-          <li> <a href="https://github.com/nasitray" target="_blank"> GitHub </a> </li>
+    <footer class="flex border-t border-gray-300 text-gray-500 items-center justify-center h-12 text-sm">
+      <div class="flex inner justify-between">
+        <ul class="flex gap-2">
+          <li> <a class="footer-link" href="https://twitter.com/nasitray" target="_blank"> Twitter </a> </li>
+          <li> <a class="footer-link" href="https://github.com/nasitray" target="_blank"> GitHub </a> </li>
         </ul>
 
         <ul class="right">
-          <li> <a href="{{ get_url(path=" rss.xml", trailing_slash=false) }}">RSS</a> </li>
+          <li> <a class="footer-link" href="{{ get_url(path=" rss.xml", trailing_slash=false) }}">RSS</a> </li>
         </ul>
       </div>
     </footer>

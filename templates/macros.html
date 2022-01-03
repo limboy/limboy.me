@@ -1,20 +1,16 @@
 {% macro page_list(pages) %}
 
-<div class="pages">
+<div class="flex mt-4 -mr-4 lg:mt-6 lg:-mr-6 2xl:mt-8 2xl:-mr-8 flex-wrap">
   {% for page in pages %}
-  <div class="post archive">
-    <a href="{{ page.permalink }}">
+  <div class="flex flex-1 mr-4 mb-4 lg:mr-6 lg:mb-6 2xl:mr-8 2xl:mb-8 bg-white rounded-2xl min-w-[20rem]">
+    <a class="flex flex-col flex-grow" href="{{ page.permalink }}">
       {% if page.extra.cover %}
-      <div class="image" style="background-image:url({{page.extra.cover}})"></div>
+      <div class="rounded-t-2xl bg-cover h-[266px] w-full" style="background-image:url({{page.extra.cover}})">
+      </div>
       {% endif %}
-      <div class="meta">
-        <ul class="tags">
-          {% for tag in page.taxonomies.tags %}
-          <li>{{ tag }}</li>
-          {% endfor %}
-        </ul>
-        <h1 class="title">{{ page.title }}</h1>
-        <time>{{ page.date }}</time>
+      <div class="flex grow gap-1 flex-col justify-between p-4">
+        <h1 class="title text-2xl leading-tight">{{ page.title }}</h1>
+        <time class="text-sm text-gray-500">{{ page.date }}</time>
       </div>
     </a>
   </div>

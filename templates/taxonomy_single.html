@@ -1,12 +1,9 @@
-{% extends "index.html" %} 
+{% extends "index.html" %}
 {% import "macros.html" as macros %}
 
 {% block content %}
-<div class="meta taxonomy">
-  <ul class="tags">
-    <li><a href="{{ current_url }}">{{ term.name }}</a></li>
-  </ul>
-</div>
+
+<h1 class="text-3xl mt-6"><a href="{{ term.permalink }}">{{ term.name }}</a></h1>
 
 {{ macros::page_list(pages=term.pages) }}
 
