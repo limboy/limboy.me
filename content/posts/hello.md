@@ -3,6 +3,7 @@ title= "你看起来好像很好吃"
 date = 2021-12-17
 [taxonomies]
 tags = ["essay"]
+subject = ["essay"]
 [extra]
 cover = "https://ncdn.camarts.cn/c2f355a0.jpg"
 +++
