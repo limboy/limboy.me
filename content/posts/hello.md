@@ -1,5 +1,5 @@
 +++
-title= "Hello World, What a wonderful life, Oh yeah"
+title= "你看起来好像很好吃"
 date = 2021-12-17
 [taxonomies]
 tags = ["essay"]
@@ -16,6 +16,16 @@ cover = "https://ncdn.camarts.cn/c2f355a0.jpg"
 > The Joplin applications automatically save previous versions of your notes at regular intervals. These versions are synced across devices and can be viewed from the desktop application. To do so, click on the "Information" button on a note, then click on "Previous version of this note". From this screen you can view the previous versions of the note as well as restore any of them.
 
 <!-- more -->
+
+<p class="info">
+hello <code>world</code>
+this is for you
+</p>
+
+<p class="warn">
+hello world
+this is for you
+</p>
 
 ```js
 import db from 'lib/planetscale';

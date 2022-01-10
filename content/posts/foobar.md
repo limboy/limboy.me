@@ -12,6 +12,8 @@ cover = "https://ncdn.camarts.cn/255435bd.jpg"
 
 Hello! I've been thinking about how to explain DNS a bunch in the last year.
 
+<!-- more -->
+
 I like to learn in a very hands-on way. And so when I write a zine, I often close the zine by saying something like "… and the best way to learn more about this is to play around and experiment!".
 
 So I built a site where you can do experiments with DNS called Mess With DNS. It has examples of experiments you can try, and you’ve very encouraged to come up with your own experiments.

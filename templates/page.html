@@ -1,7 +1,25 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+
+{% block head %}
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="{{ page.permalink }}">
+
+<meta name="twitter:title" content="{{ page.title }}">
+<meta property="og:title" content="{{ page.title }}">
+
+<meta property="og:description" content="{{ page.summary }}">
+<meta name="twitter:description" content="{{ page.summary }}">
+
+<meta name="twitter:image" content="{{ page.extra.cover }}" />
+<meta name="og:image" content="{{ page.extra.cover }}" />
+{% endblock head %}
+
+{% block content %}
 <div class="mt-6">
-  <h1 class="title text-4xl"><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
-  <div class="flex gap-4 items-center mt-1">
+  <h1 class="title text-3xl"><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
+  <div class="flex gap-4 items-center mt-4">
     <time class="text-gray-500">{{ page.date }}</time>
     <ul class="tags flex items-center gap-2">
       {% for tag in page.taxonomies.tags %}

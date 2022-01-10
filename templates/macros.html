@@ -2,7 +2,7 @@
 
 <div class="flex mt-4 -mr-4 lg:mt-6 lg:-mr-6 2xl:mt-8 2xl:-mr-8 flex-wrap">
   {% for page in pages %}
-  <div class="flex flex-1 mr-4 mb-4 lg:mr-6 lg:mb-6 2xl:mr-8 2xl:mb-8 bg-white rounded-2xl min-w-[20rem]">
+  <div class="flex flex-col flex-1 mr-4 mb-4 lg:mr-6 lg:mb-6 2xl:mr-8 2xl:mb-8 bg-white rounded-2xl min-w-[20rem]">
     <a class="flex flex-col flex-grow" href="{{ page.permalink }}">
       {% if page.extra.cover %}
       <div class="rounded-t-2xl bg-cover h-[266px] w-full" style="background-image:url({{page.extra.cover}})">
@@ -11,8 +11,18 @@
       <div class="flex grow gap-1 flex-col justify-between p-4">
         <h1 class="title text-2xl leading-tight">{{ page.title }}</h1>
         <time class="text-sm text-gray-500">{{ page.date }}</time>
+
       </div>
     </a>
+
+    <ul class="tags flex gap-2 mx-4 mb-4">
+      {% for tag in page.taxonomies.tags %}
+      <li class="pb-[2px] px-2 rounded-2xl border border-gray-700 hover:bg-gray-900 hover:text-gray-100 transition-all">
+        <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}">{{ tag
+          }}</a>
+      </li>
+      {% endfor %}
+    </ul>
   </div>
   {% endfor %}
 </div>

@@ -406,6 +406,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: 0.25rem;
   margin-right: 0.25rem;
 }
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
 .my-6 {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
@@ -623,8 +627,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-top: 1rem;
 }
 
-.prose h1 {
-  font-size: 1.8rem;
+.prose h2 {
+  font-size: 1.6rem;
   position: -webkit-sticky;
   position: sticky;
   z-index: 10;
@@ -632,10 +636,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding: 0.25rem 0;
   top: 0px !important;
   border-bottom: 4px solid lightgray;
-}
-
-.prose h2 {
-  font-size: 1.6rem;
 }
 
 .prose h3 {
@@ -655,7 +655,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   border-left: 5px solid #e5e5e5;
   color: #666;
   font-style: italic;
-  font-weight: 500;
+}
+
+.prose pre {
+  background-color: #f5f5f7 !important;
+  margin: 1rem 0;
 }
 
 .prose pre code {
@@ -727,6 +731,18 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .prose li + li {
   margin-top: 0.25rem;
+}
+
+.prose .info {
+  background-color: #deeafd;
+  color: #174ea6;
+  padding: 1rem;
+}
+
+.prose .warn {
+  background-color: #fff1e3;
+  color: #191919;
+  padding: 1rem;
 }
 
 .hover\:bg-gray-900:hover {
