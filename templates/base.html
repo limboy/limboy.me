@@ -31,13 +31,15 @@
     {% block footer %}
     <footer class="flex border-t border-gray-300 text-gray-500 items-center justify-center h-12 text-sm">
       <div class="flex inner justify-between">
-        <ul class="flex gap-4">
+        <ul class="flex gap-2 sm:gap-4">
           <li> <a class="footer-link" href="https://twitter.com/_limboy" target="_blank"> Twitter </a> </li>
           <li> <a class="footer-link" href="https://github.com/limboy" target="_blank"> GitHub </a> </li>
-          <li> <a class="footer-link" href="https://2010-2021.limboy.me" target="_blank"> Previous Articles </a> </li>
         </ul>
 
-        <ul class="right">
+        <p class="hidden opacity-20 sm:block">👻</p>
+
+        <ul class="flex gap-2 sm:gap-4">
+          <li> <a class="footer-link" href="https://2010-2021.limboy.me" target="_blank"> Old Articles </a> </li>
           <li> <a class="footer-link" href="{{ get_url(path='rss.xml', trailing_slash=false) }}">RSS</a> </li>
         </ul>
       </div>
