@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/:year/:month/:day/:post", "destination": "2010-2021.limboy.me/:year/:month/:day/:post", "permanent": true }
+  ]
+}
+
