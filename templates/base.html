@@ -6,6 +6,7 @@
   <meta charset="UTF-8">
   <title>{% block title %}{% endblock title %}{{ config.title }}</title>
   <link rel="stylesheet" href="/assets/main.css?{{ get_file_hash(path='static/assets/main.css', sha_type=256) }}" />
+  <script defer data-domain="limboy.me" src="https://plausible.io/js/plausible.js"></script>
   {% block head %}{% endblock head %}
 </head>
 
