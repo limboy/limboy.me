@@ -4,7 +4,7 @@
 <head>
   <meta content="width=device-width,initial-scale=1" name="viewport" />
   <meta charset="UTF-8">
-  <title>{{ config.title }}</title>
+  <title>{% block title %}{% endblock title %}{{ config.title }}</title>
   <link rel="stylesheet" href="/assets/main.css?{{ get_file_hash(path='static/assets/main.css', sha_type=256) }}" />
   {% block head %}{% endblock head %}
 </head>

@@ -558,6 +558,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 1.875rem;
   line-height: 2.25rem;
 }
+.font-medium {
+  font-weight: 500;
+}
 .leading-tight {
   line-height: 1.25;
 }
@@ -627,28 +630,22 @@ Ensure the default browser behavior of the `hidden` attribute.
 .prose h3,
 .prose h4,
 .prose h5 {
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 0.5rem;
   margin-top: 1rem;
 }
 
 .prose h2 {
-  font-size: 1.6rem;
-  position: -webkit-sticky;
-  position: sticky;
-  z-index: 10;
-  background-color: #fff;
-  padding: 0.25rem 0;
-  top: 0px !important;
-  border-bottom: 4px solid lightgray;
+  font-size: 1.75rem;
+  border-bottom: 1px solid lightgray;
 }
 
 .prose h3 {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
 }
 
 .prose h4 {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
 }
 
 .prose h5 {
@@ -658,8 +655,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 .prose blockquote {
   padding: 0 1rem;
   border-left: 5px solid #e5e5e5;
-  color: #666;
-  font-style: italic;
+  color: #555;
 }
 
 .prose pre {
@@ -722,11 +718,13 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .prose img[align='left'] {
-  padding-right: 1.25rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
 }
 
 .prose img[align='right'] {
-  padding-left: 1.25rem;
+  padding-left: 1rem;
+  padding-bottom: 1rem;
 }
 
 .prose ul {

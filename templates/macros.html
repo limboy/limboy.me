@@ -5,11 +5,12 @@
   <div class="flex flex-col flex-1 mr-4 mb-4 lg:mr-6 lg:mb-6 2xl:mr-8 2xl:mb-8 bg-white rounded-2xl min-w-[20rem]">
     <a class="flex flex-col flex-grow" href="{{ page.permalink }}">
       {% if page.extra.cover %}
-      <div class="rounded-t-2xl bg-cover h-[266px] w-full" style="background-image:url({{page.extra.cover}})">
+      <div class="rounded-t-2xl bg-cover h-[266px] w-full"
+        style="background-image:url({{get_url(path=page.extra.cover)}})">
       </div>
       {% endif %}
       <div class="flex grow gap-1 flex-col justify-between p-4">
-        <h1 class="title text-2xl leading-tight">{{ page.title }}</h1>
+        <h1 class="title font-medium text-2xl leading-tight">{{ page.title }}</h1>
         <time class="text-sm text-gray-500">{{ page.date }}</time>
 
       </div>
