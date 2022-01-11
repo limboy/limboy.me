@@ -492,14 +492,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .justify-between {
   justify-content: space-between;
 }
-.gap-4 {
-  gap: 1rem;
+.gap-2 {
+  gap: 0.5rem;
 }
 .gap-1 {
   gap: 0.25rem;
 }
-.gap-2 {
-  gap: 0.5rem;
+.gap-4 {
+  gap: 1rem;
 }
 .rounded-2xl {
   border-radius: 1rem;
@@ -573,9 +573,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .opacity-80 {
   opacity: 0.8;
-}
-.opacity-10 {
-  opacity: 0.1;
 }
 .opacity-20 {
   opacity: 0.2;
