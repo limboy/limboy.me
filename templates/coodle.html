@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ page.title }} -
+{% endblock title %}
+
+{% block head %}
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="{{ page.permalink }}">
+
+<meta name="twitter:title" content="{{ page.title }}">
+<meta property="og:title" content="{{ page.title }}">
+
+<meta name="twitter:image" content="{{ get_url(path=page.extra.cover) }}" />
+<meta name="og:image" content="{{ get_url(path=page.extra.cover) }}" />
+{% endblock head %}
+
+{% block content %}
+<div class="mt-6">
+  {{ page.content | safe }}
+</div>
+{% endblock content %}

@@ -35,6 +35,7 @@
   </div>
 
   <ul class="tags flex items-center gap-2 mb-4">
+    {% if page.taxonomies.tags %}
     {% for tag in page.taxonomies.tags %}
     <li
       class="pb-[2px] mt-4 px-2 rounded-2xl border border-gray-700 hover:bg-gray-900 hover:text-gray-100 transition-all">
@@ -42,6 +43,7 @@
         }}</a>
     </li>
     {% endfor %}
+    {% endif %}
   </ul>
 
   <script src="https://giscus.app/client.js" data-repo="limboy/limboy.me" data-repo-id="R_kgDOGqD9cw"

@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .inner {
-  width: 20rem;
+  width: 21rem;
 }
 
 @media screen(sm) {

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block bodyclass %}bg-nav-color{% endblock %}
+
+{% block content %}
+{% set section = get_section(path="coodle/_index.md") %}
+{{ macros::coodle_list(pages=section.pages) }}
+{% endblock %}

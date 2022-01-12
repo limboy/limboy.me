@@ -2,11 +2,10 @@
 
 <div class="flex mt-4 -mr-4 lg:mt-6 lg:-mr-6 2xl:mt-8 2xl:-mr-8 flex-wrap">
   {% for page in pages %}
-  <div class="flex flex-col flex-1 mr-4 mb-4 lg:mr-6 lg:mb-6 2xl:mr-8 2xl:mb-8 bg-white rounded-2xl min-w-[20rem]">
+  <div class="flex flex-col flex-1 mr-4 mb-4 lg:mr-6 lg:mb-6 2xl:mr-8 2xl:mb-8 bg-white min-w-[20rem]">
     <a class="flex flex-col flex-grow" href="{{ page.permalink }}">
       {% if page.extra.cover %}
-      <div class="rounded-t-2xl bg-cover h-[266px] w-full"
-        style="background-image:url({{get_url(path=page.extra.cover)}})">
+      <div class="bg-cover h-[266px] w-full" style="background-image:url({{get_url(path=page.extra.cover)}})">
       </div>
       {% endif %}
       <div class="flex grow gap-1 flex-col justify-between p-4">
@@ -18,7 +17,7 @@
 
     <ul class="tags flex gap-2 mx-4 mb-4">
       {% for tag in page.taxonomies.tags %}
-      <li class="pb-[2px] px-2 rounded-2xl border border-gray-700 hover:bg-gray-900 hover:text-gray-100 transition-all">
+      <li class="pb-[2px] px-2 border border-gray-700 hover:bg-gray-900 hover:text-gray-100 transition-all">
         <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}">{{ tag
           }}</a>
       </li>
@@ -29,3 +28,18 @@
 </div>
 
 {% endmacro page_list %}
+
+{% macro coodle_list(pages) %}
+<div class="mt-4 gap-4 lg:mt-6 2xl:mt-8 grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3">
+  {% for page in pages %}
+  <div class="relative">
+    <p style="bottom:6px; left:10px; color:rgba(255, 255, 255, 0.75); font-size:10px" class="absolute">{{page.date}}</p>
+    <a href="{{ page.permalink }}">
+      {% if page.extra.cover %}
+      <img src="{{get_url(path=page.extra.cover)}}" />
+      {% endif %}
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endmacro coodle_list %}

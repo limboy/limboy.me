@@ -399,6 +399,12 @@ Ensure the default browser behavior of the `hidden` attribute.
   -webkit-text-decoration-color: #9ca3af;
           text-decoration-color: #9ca3af;
 }
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
 .mx-1 {
   margin-left: 0.25rem;
   margin-right: 0.25rem;
@@ -444,6 +450,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .flex {
   display: flex;
 }
+.grid {
+  display: grid;
+}
 .hidden {
   display: none;
 }
@@ -474,6 +483,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 .grow {
   flex-grow: 1;
 }
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.flex-row {
+  flex-direction: row;
+}
 .flex-col {
   flex-direction: column;
 }
@@ -489,21 +504,17 @@ Ensure the default browser behavior of the `hidden` attribute.
 .justify-between {
   justify-content: space-between;
 }
+.gap-4 {
+  gap: 1rem;
+}
 .gap-2 {
   gap: 0.5rem;
 }
 .gap-1 {
   gap: 0.25rem;
 }
-.gap-4 {
-  gap: 1rem;
-}
 .rounded-2xl {
   border-radius: 1rem;
-}
-.rounded-t-2xl {
-  border-top-left-radius: 1rem;
-  border-top-right-radius: 1rem;
 }
 .border {
   border-width: 1px;
@@ -581,7 +592,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .inner {
-  width: 20rem;
+  width: 21rem;
 }
 
 @media (min-width: 640px) {
@@ -780,6 +791,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   .lg\:mb-6 {
     margin-bottom: 1.5rem;
   }
+
+  .lg\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 1536px) {
@@ -798,6 +813,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .\32xl\:mb-8 {
     margin-bottom: 2rem;
+  }
+
+  .\32xl\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 

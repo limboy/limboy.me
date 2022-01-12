@@ -5,7 +5,7 @@
   <meta content="width=device-width,initial-scale=1" name="viewport" />
   <meta charset="UTF-8">
   <title>{% block title %}{% endblock title %}{{ config.title }}</title>
-  <link rel="stylesheet" href="/assets/main.css" />
+  <link rel="stylesheet" href="/assets/main.css?{{ get_file_hash(path='static/assets/main.css', sha_type=256) }}" />
   <script defer data-domain="limboy.me" src="https://plausible.io/js/plausible.js"></script>
   {% block head %}{% endblock head %}
 </head>
@@ -13,7 +13,10 @@
 <body class="{% block bodyclass %}  {% endblock bodyclass %}">
   <nav class="flex justify-center items-center h-12 opacity-80 bg-black">
     <div class="inner flex justify-between items-center mx-1">
-      <div class="color-white "><a class="nav-link" href="/">{{ config.title }}</a></div>
+      <ul class="color-white flex flex-row gap-4">
+        <li><a class="nav-link" href="/">{{ config.title }}</a></li>
+        <li><a class="nav-link" href="/coodle">Coodle</a></li>
+      </ul>
       <ul class="link">
         <li class="inline">
           <a class="nav-link" href="/about" class="decoration-0"> About
