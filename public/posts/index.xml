@@ -8,6 +8,7 @@
         <language>zh</language>
         <atom:link href="https://limboy.me/posts/index.xml" rel="self" type="application/rss+xml"/>
         <lastBuildDate>Tue, 11 Jan 2022 00:00:00 +0000</lastBuildDate>
+        
         <item>
             <title>2021 Review</title>
             <pubDate>Tue, 11 Jan 2022 00:00:00 +0000</pubDate>
@@ -17,5 +18,6 @@
 &lt;p&gt;辞职之后给了自己一段缓冲期，逐步去探索能够持续有热情地做十年的事情。不得不说，可以自由支配的时间是一件奢侈品，一旦适应就很难再回去了。&lt;&#x2F;p&gt;
 </description>
         </item>
+        
     </channel>
 </rss>
