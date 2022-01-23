@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .inner {
-  width: 21rem;
+  width: 22rem;
 }
 
 @media screen(sm) {
@@ -106,7 +106,9 @@
 }
 
 .prose ul {
-  margin: 1rem 0;
+  padding-left: 2em;
+  list-style-type: disc;
+  margin: 0.25rem 0;
 }
 
 .prose p code,
@@ -156,11 +158,6 @@
 .prose img[align='right'] {
   padding-left: 1rem;
   padding-bottom: 1rem;
-}
-
-.prose ul {
-  padding-left: 2em;
-  list-style-type: disc;
 }
 
 .prose li + li {

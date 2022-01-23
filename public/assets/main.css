@@ -1,3 +1,6 @@
+/*!**************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/postcss-loader/dist/cjs.js!./styles/style.css ***!
+  \**************************************************************************************************************/
 /*
 ! tailwindcss v3.0.8 | MIT License | https://tailwindcss.com
 *//*
@@ -444,9 +447,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .block {
   display: block;
 }
-.inline {
-  display: inline;
-}
 .flex {
   display: flex;
 }
@@ -592,7 +592,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .inner {
-  width: 21rem;
+  width: 22rem;
 }
 
 @media (min-width: 640px) {
@@ -680,7 +680,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .prose ul {
-  margin: 1rem 0;
+  padding-left: 2em;
+  list-style-type: disc;
+  margin: 0.25rem 0;
 }
 
 .prose p code,
@@ -730,11 +732,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .prose img[align='right'] {
   padding-left: 1rem;
   padding-bottom: 1rem;
-}
-
-.prose ul {
-  padding-left: 2em;
-  list-style-type: disc;
 }
 
 .prose li + li {

@@ -15,6 +15,7 @@
       </div>
     </a>
 
+    {% if page.taxonomies.tags %}
     <ul class="tags flex gap-2 mx-4 mb-4">
       {% for tag in page.taxonomies.tags %}
       <li class="pb-[2px] px-2 border border-gray-700 hover:bg-gray-900 hover:text-gray-100 transition-all">
@@ -23,6 +24,7 @@
       </li>
       {% endfor %}
     </ul>
+    {% endif %}
   </div>
   {% endfor %}
 </div>
