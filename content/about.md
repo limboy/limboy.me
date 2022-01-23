@@ -17,11 +17,19 @@ template = "about.html"
 
 编程方面，我喜欢使用 JavaScript / React / Next / Node 来解决页面和工具类的需求，对 Rust 也很有兴趣，用 [jack](https://twitter.com/jack) 的话来说：[rust is a perfect programming language](https://twitter.com/jack/status/1474263588651126788)，在学习了一段时间后，我也有类似的感觉，虽然还没想好具体用她来解决什么问题。
 
+### 技术栈
+
+- 编程语言：接触过很多，目前以 JavaScript 为主
+- 开发框架：React / Chakra (CSS) / Next.js
+- 部署平台: Vercel / Cloudflare
+- 数据库平台：PlanetScale / Supabase
+- 存储：BackBlaze
+
 ## 关于这个网站
 
 如 Gwern 所说，我希望这个网站的内容能让 10 年后的我（还有一定的智力，但很多东西都忘了）还有兴趣看，且看能看明白，其他看到这些内容的人也能有所收获，或者品尝到一些乐趣。同时保持足够的更新频率（一旦停了就会停很久，这个道理我们都懂）。话题方面没有太大局限，某段时间吸引我注意力的都可以成为素材。
 
-### 技术栈
+### 用到的工具
 
 使用 [Zola](https://www.getzola.org) 作为内容生成工具（一部分是出于对 Rust 和 Single Binary 的偏爱，另一方面 Zola 确实满足了需求，又不过于复杂），使用 [Tailwind](http://tailwindcss.com) 来编写页面样式（不得不说，真的很方便），网站托管在 [Vercel](http://vercel.com) 上，希望这套技术栈能支撑十年。
 
