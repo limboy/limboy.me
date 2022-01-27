@@ -15,15 +15,11 @@ template = "about.html"
 >
 > I hope my other readers, whomever they may be, might find the topic as interesting as I found it, and the essay useful or at least entertaining–but the intended audience is my future self.
 
-编程方面，我喜欢使用 JavaScript / React / Next / Node 来解决页面和工具类的需求，对 Rust 也很有兴趣，用 [jack](https://twitter.com/jack) 的话来说：[rust is a perfect programming language](https://twitter.com/jack/status/1474263588651126788)，在学习了一段时间后，我也有类似的感觉，虽然还没想好具体用她来解决什么问题。
-
 ### 技术栈
 
 - 编程语言：接触过很多，目前以 JavaScript 为主
 - 开发框架：React / Chakra (CSS) / Next.js
 - 部署平台: Vercel / Cloudflare
-- 数据库平台：PlanetScale / Supabase
-- 存储：BackBlaze
 
 ## 关于这个网站
 
@@ -35,4 +31,4 @@ template = "about.html"
 
 ## 最后
 
-如果你有什么想和我聊的，欢迎给我发邮件：`hi@limboy.me`
+如果你有什么想和我聊的，欢迎给我发邮件：`hi@limboy.me`，也可以在 [Twitter](https://twitter.com/_limboy) 和 [Github](https://github.com/limboy) 上关注我。
