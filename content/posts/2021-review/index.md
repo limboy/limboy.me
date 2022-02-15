@@ -32,7 +32,7 @@ cover = "/posts/2021-review/cover.jpg"
 还有一个亮点就是场外点评，嘉宾们会通过细致的观察，结合自己的人生履历，找到切入点，去剖析其中的意味，不时伴随着精准的吐槽，像在听一场脱口秀。
 
 {% aside(level="info") %}
-[官网](http://www.terrace-house.jp/inthecity/story/index.html)有每一集的简介、景点还有使用到的配乐。[Spotify](https://open.spotify.com/playlist/4K0nbgALPgUENnwRLZfL5Y?si=b66188ad5ebf4d27)上也有对应的歌曲列表
+[官网](http://www.terrace-house.jp/inthecity/story/index.html)有每一集的简介、景点还有使用到的配乐。[Spotify](https://open.spotify.com/playlist/4K0nbgALPgUENnwRLZfL5Y?si=b66188ad5ebf4d27) 上也有对应的歌曲列表
 {% end %}
 
 #### [风筝](https://movie.douban.com/subject/25752323/)
@@ -193,18 +193,13 @@ Generative Art 的奥义是通过编程的方式去绘制奇妙的图案或者�
 
 受[这篇文章](https://leerob.io/blog/rust)启发，加上连续几年被评为最受喜爱的编程语言，就去了解了下 Rust，两个礼拜摸索下来之后，确实很不错。虽然还没想到具体的使用场景，但应该会继续学习。
 
-### ByteTalk
-
-<div style="clear:both; overflow:hidden">
-<img style="max-width: 150px" src="/posts/2021-review/bytetalk.jpg" align="left" />
+### [ByteTalk](https://www.xiaoyuzhoufm.com/podcast/6177bab6b69226ed16a3ed41)
 
 做一档播客节目的想法也有段时间了，但没想到太好的切入点。然后想到自己身边的一些程序员们其实挺有聊头的，或许可以试试做一期讲述程序员故事的播客，然后就拉了当时在飞书的几个小伙伴来家里搓一顿，顺便把第一期播客给录了（期间还玩了桥牌，很有意思的益智竞合类游戏，规则比较简单，但也考验技术和默契）。
 
 剪辑完后在朋友圈和 Twitter 发了下，效果还不错，也收到了些反馈，就想着约其他合适的对象来聊聊，尝试邀请了几位，没想到都成了，这也给了我信心。在与这些嘉宾的聊天中，自己也学到了很多，开阔了视野。在跟 [Antfu](http://twitter.com/antfu7) 和 [Tienson](https://twitter.com/tiensonqin) 聊完后，我甚至想搞个英文的账号和博客，去感受下跟世界互联网接轨的感觉。
 
 虽然前期准备和后期剪辑挺耗时间的，但看到播出后大家的反馈还是挺欣慰的。由于接下来要做的事情比较多，新的一年 ByteTalk 的更新频率可能会降一下，如果有合适的访谈对象，还是会尽力去争取的。
-
-</div>
 
 ## 利器
 
@@ -218,7 +213,7 @@ Generative Art 的奥义是通过编程的方式去绘制奇妙的图案或者�
 
 ### 35mm
 
-![](/posts/2021-review/35mm.jpg)
+{{ img(path="/posts/2021-review/35mm.jpg") }}
 
 这是古墩路上的一家咖啡馆，不大，在一座写字楼的高层，很喜欢这里的氛围，适合看书和学习，通常会坐一下午或者一整天。
 

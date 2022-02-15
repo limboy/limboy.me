@@ -29,9 +29,10 @@
   {% endif %}
 
   <h1 class="title font-medium text-3xl"><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
-  <div class="flex gap-4 items-center mt-1">
+  <div class="flex gap-4 items-center my-1">
     <time class="text-gray-500">{{ page.date }}</time>
   </div>
+  <hr class="border-t-[3px]" />
   <div class="prose lg:prose-xl max-w-full my-6">
     {{ page.content | safe }}
   </div>

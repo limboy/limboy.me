@@ -19,6 +19,10 @@
   --secondary-color: #000;
 }
 
+body {
+  color: #2f3d4e;
+}
+
 @layer components {
   .nav-link {
     @apply text-nav-color opacity-80 hover:opacity-100 transition-opacity;
@@ -174,16 +178,6 @@
   max-width: 100%;
   box-sizing: content-box;
   display: inline;
-}
-
-.prose img[align='left'] {
-  padding-right: 1rem;
-  padding-bottom: 1rem;
-}
-
-.prose img[align='right'] {
-  padding-left: 1rem;
-  padding-bottom: 1rem;
 }
 
 .prose li + li {

@@ -416,6 +416,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-left: 1rem;
   margin-right: 1rem;
 }
+.my-1 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
 .my-6 {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
@@ -522,6 +526,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .border-t {
   border-top-width: 1px;
 }
+.border-t-\[3px\] {
+  border-top-width: 3px;
+}
 .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
@@ -609,6 +616,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 :root {
   --nav-color: #f5f5f7;
   --secondary-color: #000;
+}
+
+body {
+  color: #2f3d4e;
 }
 
 .prose a {
@@ -754,16 +765,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   max-width: 100%;
   box-sizing: content-box;
   display: inline;
-}
-
-.prose img[align='left'] {
-  padding-right: 1rem;
-  padding-bottom: 1rem;
-}
-
-.prose img[align='right'] {
-  padding-left: 1rem;
-  padding-bottom: 1rem;
 }
 
 .prose li + li {
