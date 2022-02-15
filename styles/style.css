@@ -3,22 +3,12 @@
 @tailwind utilities;
 
 .inner {
-  width: 22rem;
-}
-
-@media screen(sm) {
-  .inner {
-    width: 30rem;
-  }
+  width: 100%;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 @media screen(lg) {
-  .inner {
-    width: 42rem;
-  }
-}
-
-@media screen(2xl) {
   .inner {
     width: 60rem;
   }

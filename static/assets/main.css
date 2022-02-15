@@ -554,13 +554,13 @@ Ensure the default browser behavior of the `hidden` attribute.
 .pb-\[2px\] {
   padding-bottom: 2px;
 }
-.text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
 .text-2xl {
   font-size: 1.5rem;
   line-height: 2rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 .text-3xl {
   font-size: 1.875rem;
@@ -582,6 +582,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .opacity-80 {
   opacity: 0.8;
 }
+.opacity-90 {
+  opacity: 0.9;
+}
 .opacity-20 {
   opacity: 0.2;
 }
@@ -592,22 +595,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 .inner {
-  width: 22rem;
-}
-
-@media (min-width: 640px) {
-  .inner {
-    width: 30rem;
-  }
+  width: 100%;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 @media (min-width: 1024px) {
-  .inner {
-    width: 42rem;
-  }
-}
-
-@media (min-width: 1536px) {
   .inner {
     width: 60rem;
   }
