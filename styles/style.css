@@ -92,9 +92,9 @@
 .prose code {
   overflow: auto;
   padding: 0.5rem 0.75rem;
-  font-size: 85%;
-  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
-    Liberation Mono, monospace;
+  font-size: 90%;
+  font-family: Menlo, 'SF Mono', 'Andale Mono', 'Roboto Mono', Monaco, monospace;
+  -webkit-font-smoothing: antialiased;
 }
 
 .prose ul {
