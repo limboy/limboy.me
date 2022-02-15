@@ -677,6 +677,8 @@ Ensure the default browser behavior of the `hidden` attribute.
   overflow: auto;
   padding: 0.5rem 0.75rem;
   font-size: 85%;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+    Liberation Mono, monospace;
 }
 
 .prose ul {
