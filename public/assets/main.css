@@ -466,6 +466,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .h-\[266px\] {
   height: 266px;
 }
+.h-\[188px\] {
+  height: 188px;
+}
 .min-h-\[calc\(100vh-3rem\)\] {
   min-height: calc(100vh - 3rem);
 }
@@ -802,8 +805,19 @@ body {
     display: block;
   }
 
+  .sm\:h-\[220px\] {
+    height: 220px;
+  }
+
   .sm\:gap-4 {
     gap: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+
+  .md\:h-\[220px\] {
+    height: 220px;
   }
 }
 
@@ -823,6 +837,10 @@ body {
 
   .lg\:mb-6 {
     margin-bottom: 1.5rem;
+  }
+
+  .lg\:h-\[220px\] {
+    height: 220px;
   }
 
   .lg\:grid-cols-2 {
@@ -846,6 +864,10 @@ body {
 
   .\32xl\:mb-8 {
     margin-bottom: 2rem;
+  }
+
+  .\32xl\:h-\[266px\] {
+    height: 266px;
   }
 
   .\32xl\:grid-cols-3 {
