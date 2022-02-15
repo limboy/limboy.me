@@ -87,11 +87,15 @@
 .prose pre code {
   display: block;
   max-height: 30rem;
+  padding: 0.75rem 1rem;
+}
+
+.prose pre[data-linenos] code {
+  padding: 0.5rem 0;
 }
 
 .prose code {
   overflow: auto;
-  padding: 0.5rem 0.75rem;
   font-size: 90%;
   font-family: Menlo, 'SF Mono', 'Andale Mono', 'Roboto Mono', Monaco, monospace;
   -webkit-font-smoothing: antialiased;
@@ -113,6 +117,36 @@
   white-space: pre-wrap;
   padding: 0.2em 0.4em;
   border-radius: 0.3rem;
+}
+
+.prose code table {
+  display: table !important;
+  margin: 0;
+  width: 100%;
+  line-height: 1.6;
+}
+
+.prose code td,
+.prose code th {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.prose code tr > td:first-child {
+  color: #ccc;
+  text-align: center;
+  user-select: none;
+  min-width: 1rem;
+}
+
+.prose code tr > td:first-child mark {
+  color: #999;
+}
+
+.prose code mark {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+  display: block !important;
 }
 
 .prose table {
