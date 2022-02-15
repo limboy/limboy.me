@@ -1,8 +1,8 @@
 {% macro page_list(pages) %}
 
-<div class="flex mt-4 -mr-4 lg:mt-6 lg:-mr-6 2xl:mt-8 2xl:-mr-8 flex-wrap">
+<div class="flex mt-4 -mr-4 lg:mt-6 lg:-mr-6 flex-wrap">
   {% for page in pages %}
-  <div class="flex flex-col flex-1 mr-4 mb-4 lg:mr-6 lg:mb-6 2xl:mr-8 2xl:mb-8 bg-white min-w-[20rem]">
+  <div class="flex flex-col flex-1 mr-4 mb-4 lg:mr-6 lg:mb-6 bg-white min-w-[20rem]">
     <a class="flex flex-col flex-grow" href="{{ page.permalink }}">
       {% if page.extra.cover %}
       <div class="bg-cover h-[266px] w-full" style="background-image:url({{get_url(path=page.extra.cover)}})">
