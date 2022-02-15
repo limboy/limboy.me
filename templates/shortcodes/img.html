@@ -1,2 +1,4 @@
 {% set meta = get_image_metadata(path=path) %}
-<p></p><img src="{{path}}" sizes="(max-width: {{meta.width/2}}px) 100vw, {{meta.width/2}}px" /></p>
+<p {% if algin %} style="text-align:{{align}}" {% else %} style="text-align:center" {% endif %}><img src="{{path}}"
+    srcset="{{path}} {{meta.width/2}}w,{{path}} {{meta.width/2}}w"
+    sizes="(max-width: {{meta.width/2}}px) 100vw, {{meta.width/2}}px" width="{{meta.width/2}}" /></p>
