@@ -1,0 +1,2 @@
+{% set meta = get_image_metadata(path=path) %}
+<img src="{{path}}" sizes="(max-width: {{meta.width/2}}px) 100vw, {{meta.width/2}}px" />
