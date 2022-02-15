@@ -164,14 +164,17 @@
   margin-top: 0.25rem;
 }
 
-.prose .info {
-  background-color: #deeafd;
-  color: #174ea6;
+.prose aside {
   padding: 1rem;
+  margin: 1rem 0;
 }
 
-.prose .warn {
-  background-color: #fff1e3;
-  color: #191919;
-  padding: 1rem;
+.prose aside.info {
+  background-color: rgba(44, 124, 176, 0.1);
+  border-left: 4px solid rgba(44, 124, 176, 0.4);
+}
+
+.prose aside.warn {
+  background-color: rgba(224, 109, 16, 0.1);
+  border-left: 4px solid rgba(224, 109, 16, 0.4);
 }

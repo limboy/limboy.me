@@ -31,7 +31,9 @@ cover = "/posts/2021-review/cover.jpg"
 
 还有一个亮点就是场外点评，嘉宾们会通过细致的观察，结合自己的人生履历，找到切入点，去剖析其中的意味，不时伴随着精准的吐槽，像在听一场脱口秀。
 
-<p class="info"><a style="text-decoration:underline" href="http://www.terrace-house.jp/inthecity/story/index.html" target="_blank">官网</a>有每一集的简介、景点还有使用到的配乐。<a href="https://open.spotify.com/playlist/4K0nbgALPgUENnwRLZfL5Y?si=b66188ad5ebf4d27" style="text-decoration:underline" target="_blank">Spotify</a> 上也有对应的歌曲列表</p>
+{% aside(level="info") %}
+[官网](http://www.terrace-house.jp/inthecity/story/index.html)有每一集的简介、景点还有使用到的配乐。[Spotify](https://open.spotify.com/playlist/4K0nbgALPgUENnwRLZfL5Y?si=b66188ad5ebf4d27)上也有对应的歌曲列表
+{% end %}
 
 #### [风筝](https://movie.douban.com/subject/25752323/)
 
@@ -45,7 +47,9 @@ cover = "/posts/2021-review/cover.jpg"
 
 也是一部五星推荐的剧，风格上跟[火花](https://movie.douban.com/subject/26635329/)有点像，剧里的三位主人公有 10 年之约，如果 10 年之后还没火，就解散。结果确实也没火，但这个过程让他们收获极多。两位女性角色，一个是三人组合的铁杆粉丝，另一个是她的妹妹，这五个人的生活因为短剧而串联在一起。每一集都有一个短剧，这些短剧都提炼自三人生活中的一些事，不一定那么好笑，但品一品还挺有味道。演员们的演技真的炸裂，不少桥段很自然地就把眼泪勾了出来（当然编剧也功不可没）。
 
-<p class="info"><a style="text-decoration:underline" href="https://open.spotify.com/album/4JLJ1Rf5qNdnjldxGNL8bW" target="_blank">Spotify</a> 上有 OST，不过可能出于版权原因听不了</p>
+{% aside(level="info") %}
+[Spotify](https://open.spotify.com/album/4JLJ1Rf5qNdnjldxGNL8bW) 上有 OST，不过可能出于版权原因听不了
+{% end %}
 
 #### [东京爱情故事](https://movie.douban.com/subject/1438760/)
 

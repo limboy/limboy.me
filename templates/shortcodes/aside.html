@@ -1,0 +1,3 @@
+<aside {% if level %}class="{{level}}" {% endif %}>
+  {{ body | markdown(inline=true) | safe }}
+</aside>
