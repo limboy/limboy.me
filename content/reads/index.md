@@ -10,10 +10,8 @@ title= "Reads"
 - **[刀锋](https://book.douban.com/subject/2035162/)** - 你要尝尝糖的滋味，但不必变做糖
 - **[项塔兰](https://book.douban.com/subject/35093979/)** - 一个作家的传奇经历，越狱后的跨国流亡，兼具文学性和哲学探讨
 - **[恶意](https://book.douban.com/subject/26877752/)** - 因你我变得渺小，即使你有恩于我，处处帮我，我也要对你施加极限的恶意
-- **[被讨厌的勇气](https://book.douban.com/subject/26369699/)** - 重要的不是被给予了什么，而是如何利用被给予的东西；跟过去的自己比；人生是点的连续，只存于刹那
 - **[你当像鸟飞往你的山](https://book.douban.com/subject/33440205/)** - 有时教育就是唯一的出路，带你逃离，飞往你的山
 - **[夜晚的潜水艇](https://book.douban.com/subject/35005045/)** - 以想象力为基石，以浓缩又飘逸的文字为砖石，带你领略陈春城的九座宫殿
-- **[生命安宁](https://book.douban.com/subject/24732489/)** - 斯多葛主义的生活哲学，如何获得持久的安宁、深邃的欢悦
 - **[三体](https://book.douban.com/subject/2567698/)** - 无需赘述，已看两遍
 - **[偷书贼](https://book.douban.com/subject/30225784/)** - 读书不仅可以获取知识，丰富内心，还可以帮你度过生命中的艰难时期
 - **[动物农场](https://book.douban.com/subject/2035179/)** - 极权是如何产生的，它又会带来哪些影响，就让奥威尔笔下的动物们来演示下吧
@@ -22,6 +20,8 @@ title= "Reads"
 
 - **[上帝掷骰子吗](https://book.douban.com/subject/33477229/)** - 不枯燥地带你领略量子力学的发展历程、物理学大师们的故事，上帝还真的掷骰子
 - **[货币未来](https://book.douban.com/subject/35178904/)** - 细数货币历史，展望货币未来。可以了解货币的职能、与政府的关系，货币本位变动带来的影响
+- **[被讨厌的勇气](https://book.douban.com/subject/26369699/)** - 重要的不是被给予了什么，而是如何利用被给予的东西；跟过去的自己比；人生是点的连续，只存于刹那
+- **[生命安宁](https://book.douban.com/subject/24732489/)** - 斯多葛主义的生活哲学，如何获得持久的安宁、深邃的欢悦
 - **[十分钟冥想](https://book.douban.com/subject/34888157/)** - 专注当下在做的事，注意想法、情绪的产生，不要被带着走
 - **[The Nature of Code](https://natureofcode.com/)** - 将编码结合数学与物理，生成独特的艺术图片、动画
 - **[人类简史](https://book.douban.com/subject/25985021/)** - 人和人群的演化过程，虚构故事的能力，不同文明的特点和产生背景，对全面了解智人有很大帮助
