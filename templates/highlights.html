@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+{{ page.title }} -
+{% endblock title %}
+
+{% block content %}
+<style>
+  #h2-header-1 {
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 38px;
+    border: 0;
+  }
+
+  .prose p {
+    margin: 0 0 0.25rem 0;
+  }
+
+  .timeline-card::before {
+    background-color: #fff;
+    background-image: url(/assets/clock.svg);
+    content: '';
+    display: block;
+    float: left;
+    height: 1.5rem;
+    left: -0.75rem;
+    position: absolute;
+    top: -0.125rem;
+    width: 1.5rem;
+  }
+</style>
+
+<div class="prose lg:prose-xl max-w-full my-6">
+  {{ page.content | safe }}
+</div>
+{% endblock content %}

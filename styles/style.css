@@ -81,6 +81,7 @@ body {
   padding: 0 1rem;
   border-left: 5px solid #e5e5e5;
   color: #555;
+  margin: 1rem 0;
 }
 
 .prose pre {

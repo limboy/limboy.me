@@ -1,0 +1,7 @@
+<div class="timeline-card {% if not isLast %}border-l{% endif %} border-gray-300 pl-5 pb-12 relative">
+  <p class="text-gray-400 text-sm">{{date}}</p>
+  <span class="px-3 py-1 bg-violet-100 inline-block text-violet-700 my-1 mb-4">{{title}}</span>
+  <div>
+    {{ body | markdown(inline=true) | safe }}
+  </div>
+</div>

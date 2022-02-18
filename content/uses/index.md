@@ -12,14 +12,16 @@ title= "Uses"
 - **[Plausible](https://plausible.io/)** - Privacy friendly 的访问统计服务
 - **[CodeSandbox](https://codesandbox.io/)** - 很方便的 online IDE，自带 Preview，用来做代码演示比较方便
 - **[book4you](https://book4you.org/)** - 中英文电子书俱全
-- **[Things](https://culturedcode.com/things/)** - Elegant Task Manager
+- **[Walling](https://walling.app/)** - Notion + Google Keep，内容管理很方便
+- **[Vercel](https://vercel.com/)** - 自己的 Side Project 基本都在这里了
+- **[Spotify](https://open.spotify.com/)** - 听音乐首选
 
 ## Tech
 
 - **[React](https://reactjs.org/)** - 相比其他的前端框架，还是 React 用起来比较舒服
 - **[Next.js](https://nextjs.org//)** - 基于 React 的全功能开发框架
-- **[Chakra](https://chakra-ui.com/)** - 相比 Tailwind，Chakra 更 React，同时还提供常用的组件
 - **[Zola](https://getzola.org/)** - 基于 Rust 的静态网站生成工具，Single Binary，小巧，功能也够用
+- **[Tailwind CSS](https://https://tailwindcss.com/)**
 - **JavaScript**
 
 ## IDE
@@ -36,11 +38,10 @@ title= "Uses"
 - **[Stats](https://github.com/exelban/stats)** - System Monitor，开源免费
 - **[Mimestream](https://mimestream.com/)** - Mac Native Gmail Client
 - **[Sublime Merge](https://www.sublimemerge.com/)** - Git Client made by Sublime
+- **[PasteNow](https://pastenow.app/)** 剪贴板管理工具
+- **[Dash](https://kapeli.com/dash)** 看技术文档很方便
 - **[1Password](https://1password.com/)**
-- **[Spotify](https://www.spotify.com/)**
-- **[Drafts](https://getdrafts.com/)**
 - **[Sketch](https://www.sketch.com/)**
-- **[Dash](https://kapeli.com/dash)**
 
 ## CLIs
 
