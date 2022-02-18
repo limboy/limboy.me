@@ -2,7 +2,7 @@
 title= "Reads"
 +++
 
-看过且觉得不错的书和文章
+看过且觉得不错的书、文章和剧集
 
 ## Fiction
 
@@ -59,23 +59,29 @@ title= "Reads"
 - **[Application State Management with React](https://kentcdodds.com/blog/application-state-management-with-react)**
 - **[How I built a modern website in 2021](https://kentcdodds.com/blog/how-i-built-a-modern-website-in-2021)**
 
-## Quotes
+## TV Series
 
-> 无论是欣赏艺术，还是领悟科学，我们最终得到的将是美的享受和看待世界的全新角度。
->
-> -- 七堂极简物理课
-
-> In programming, as in many fields, the hard part isn’t solving problems, but deciding what problems to solve.
-> Imagination is hard to measure, but in practice it dominates the kind of productivity that’s measured in lines of code.
->
-> -- Paul Graham
-
-> 个体唯一能做的，就是保有自己的一份自由，就是这个世界怎么变，我自己有我自己的世界，这个你不能侵犯。
->
-> -- 陈佩斯
-
-> The noblest pleasure is the joy of understanding.
->
-> -- Leonardo da Vinci
-
-> Simplicity is complicated but the clarity is worth the fight.
+- **[大明王朝 1566](https://movie.douban.com/subject/2210001/)**
+- **[风筝(无删减版)](https://movie.douban.com/subject/25752323/)**
+- **[东京爱情故事](https://movie.douban.com/subject/1438760/)**
+- **[硅谷](https://movie.douban.com/subject/20644938/)**
+- **[我的事说来话长](https://movie.douban.com/subject/34670642/)**
+- **[母亲](https://movie.douban.com/subject/4303624/)**
+- **[Odd Taxi](https://movie.douban.com/subject/35332568/)**
+- **[非自然死亡](https://movie.douban.com/subject/27140017/)**
+- **[重版出来](https://movie.douban.com/subject/26602304/)**
+- **[短剧开始啦](https://movie.douban.com/subject/35358556/)**
+- **[宇宙时空之旅](https://movie.douban.com/subject/24698699/)**
+- **[绝命毒师](https://movie.douban.com/subject/2373195/)**
+- **[风骚律师](https://movie.douban.com/subject/25726259/)**
+- **[老友记](https://movie.douban.com/subject/1393859/)**
+- **[宋飞正传](https://movie.douban.com/subject/1418198/)**
+- **[武林外传](https://movie.douban.com/subject/3882715)**
+- **[潜伏](https://movie.douban.com/subject/3314870/)**
+- **[新闻编辑室](https://movie.douban.com/subject/6142597/)**
+- **[Rick and Morty](https://movie.douban.com/subject/11537954/)**
+- **[Bojack](https://movie.douban.com/subject/25900177/)**
+- **[请回答 1988](https://movie.douban.com/subject/26302614/)**
+- **[我的大叔](https://movie.douban.com/subject/27602137/)**
+- **[未生](https://movie.douban.com/subject/25870057/)**
+- **[Death Note](https://www.imdb.com/title/tt0877057/)**
