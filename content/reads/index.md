@@ -54,6 +54,10 @@ title= "Reads"
 - **[How to Pick a Career (That Actually Fits You)](https://waitbutwhy.com/2018/04/picking-career.html)**
 - **[Quit Your Job](https://palladiummag.com/2022/01/06/quit-your-job/)**
 - **[Why You Should Start a Blog Right Now](https://guzey.com/personal/why-have-a-blog/)**
+- **[Writing Resilient Components](https://overreacted.io/writing-resilient-components/)**
+- **[A Complete Guide to useEffect](https://overreacted.io/a-complete-guide-to-useeffect/)**
+- **[Application State Management with React](https://kentcdodds.com/blog/application-state-management-with-react)**
+- **[How I built a modern website in 2021](https://kentcdodds.com/blog/how-i-built-a-modern-website-in-2021)**
 
 ## Quotes
 
