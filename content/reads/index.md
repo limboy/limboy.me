@@ -58,6 +58,7 @@ title= "Reads"
 - **[A Complete Guide to useEffect](https://overreacted.io/a-complete-guide-to-useeffect/)**
 - **[Application State Management with React](https://kentcdodds.com/blog/application-state-management-with-react)**
 - **[How I built a modern website in 2021](https://kentcdodds.com/blog/how-i-built-a-modern-website-in-2021)**
+- **[Visualizing Algorithms](https://bost.ocks.org/mike/algorithms/)**
 
 ## TV Series
 
