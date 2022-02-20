@@ -12,7 +12,7 @@ title= "Uses"
 - **[Plausible](https://plausible.io/)** - Privacy friendly 的访问统计服务
 - **[CodeSandbox](https://codesandbox.io/)** - 很方便的 online IDE，自带 Preview，用来做代码演示比较方便
 - **[book4you](https://book4you.org/)** - 中英文电子书俱全
-- **[Walling](https://walling.app/)** - Notion + Google Keep，内容管理很方便
+- **[Craft](https://craft.do/)** - 笔记 App
 - **[Vercel](https://vercel.com/)** - 自己的 Side Project 基本都在这里了
 - **[Spotify](https://open.spotify.com/)** - 听音乐首选
 
