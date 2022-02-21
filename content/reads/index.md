@@ -59,6 +59,8 @@ title= "Reads"
 - **[Application State Management with React](https://kentcdodds.com/blog/application-state-management-with-react)**
 - **[How I built a modern website in 2021](https://kentcdodds.com/blog/how-i-built-a-modern-website-in-2021)**
 - **[Visualizing Algorithms](https://bost.ocks.org/mike/algorithms/)**
+- **[You and your research](https://www.cs.utexas.edu/users/dahlin/bookshelf/hamming.html)**
+- **[How to be successful](https://blog.samaltman.com/how-to-be-successful)**
 
 ## TV Series
 
