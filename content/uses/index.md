@@ -42,6 +42,7 @@ title= "Uses"
 - **[Dash](https://kapeli.com/dash)** 看技术文档很方便
 - **[1Password](https://1password.com/)**
 - **[Sketch](https://www.sketch.com/)**
+- **[NetNewsWire](https://netnewswire.com/)**
 
 ## CLIs
 
