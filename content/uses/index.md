@@ -43,6 +43,7 @@ title= "Uses"
 - **[1Password](https://1password.com/)**
 - **[Sketch](https://www.sketch.com/)**
 - **[NetNewsWire](https://netnewswire.com/)**
+- **[Logseq](https://logseq.com/)**
 
 ## CLIs
 
