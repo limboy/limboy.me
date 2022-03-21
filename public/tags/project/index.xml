@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-      <title>Limboy</title>
-        <link>https://limboy.me/posts/</link>
+      <title>Limboy - project</title>
+        <link>https://limboy.me</link>
         <description></description>
         <generator>Zola</generator>
         <language>zh</language>
-        <atom:link href="https://limboy.me/posts/index.xml" rel="self" type="application/rss+xml"/>
+        <atom:link href="https://limboy.me/tags/project/index.xml" rel="self" type="application/rss+xml"/>
         <lastBuildDate>Mon, 21 Mar 2022 00:00:00 +0000</lastBuildDate>
         
         <item>
@@ -49,17 +49,6 @@
 &lt;p&gt;在跟 Randy 聊时，他有提到过 &lt;a href=&quot;https:&#x2F;&#x2F;logseq.com&#x2F;&quot;&gt;Logseq&lt;&#x2F;a&gt; 这款笔记利器，就去体验了下，然后就被惊到了。极低的输入成本，强大的双链和 Query，方便的 Journal，Privacy First，Local Data 等等。然后就想着要是能邀请 Logseq 的作者来聊聊就太好了，按照惯例，先在推上勾搭，没想到我跟作者&lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;tiensonqin&quot;&gt;天生&lt;&#x2F;a&gt;竟还有交集（同在花瓣工作过），他也答应了这次邀请。在推上发了这个消息后，&lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;laike9m&quot;&gt;laike9m&lt;&#x2F;a&gt; 也有兴趣一起来聊聊，于是就有了这期的访谈，播出后反响也不错。天生的谦逊、对 logseq 的热情和 laike9m 的专业性都给我留下了很深的印象。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;jie-wei&quot;&gt;结尾&lt;&#x2F;h3&gt;
 &lt;p&gt;制作 Bytetalk 的过程让我对播客有了更多的了解，也明白了其中的艰辛（寻找嘉宾，准备大纲，后期剪辑等等）。但看到大家的反馈就觉得这事值得，等我把这事思考地成熟些，就可以开始第二季了。&lt;&#x2F;p&gt;
-</description>
-        </item>
-        
-        
-        <item>
-            <title>2021 Review</title>
-            <pubDate>Tue, 11 Jan 2022 00:00:00 +0000</pubDate>
-            <link>https://limboy.me/posts/2021-review/</link>
-            <guid>https://limboy.me/posts/2021-review/</guid>
-            <description>&lt;p&gt;2021 这一年如果要有个分界点的话，那就是年中离开字节跳动。在飞书工作了两年之后，自觉还是无法适应和胜任相关的工作。一方面自己对移动端开发的热情越来越低，其他方面也没有太强烈的意愿，另一方面飞书的强度对我这个「老人」挑战也挺大的，加上 ToB 业务属性，处理多方问题和反馈也对精力撕扯得厉害。不过确实也学到了很多，尤其是身边的小伙伴们，他们真的很棒。&lt;&#x2F;p&gt;
-&lt;p&gt;辞职之后给了自己一段缓冲期，逐步去探索能够持续有热情地做十年的事情。不得不说，可以自由支配的时间是一件奢侈品，一旦适应就很难再回去了。&lt;&#x2F;p&gt;
 </description>
         </item>
         

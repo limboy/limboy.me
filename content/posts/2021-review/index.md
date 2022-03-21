@@ -4,7 +4,6 @@ date = 2022-01-11
 description = "2021 年离开了工作两年的字节跳动，也迎来了自己的第二个 Gap Year。慢慢思考之后要走的路。"
 [taxonomies]
 tags = ["review", "essay"]
-subject = ["essay"]
 [extra]
 cover = "/posts/2021-review/cover.jpg"
 +++

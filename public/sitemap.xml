@@ -36,16 +36,11 @@
         <lastmod>2022-01-11</lastmod>
     </url>
     <url>
+        <loc>https://limboy.me/posts/bytetalk/</loc>
+        <lastmod>2022-03-21</lastmod>
+    </url>
+    <url>
         <loc>https://limboy.me/projects/</loc>
-    </url>
-    <url>
-        <loc>https://limboy.me/reads/</loc>
-    </url>
-    <url>
-        <loc>https://limboy.me/subject/</loc>
-    </url>
-    <url>
-        <loc>https://limboy.me/subject/essay/</loc>
     </url>
     <url>
         <loc>https://limboy.me/tags/</loc>
@@ -54,9 +49,9 @@
         <loc>https://limboy.me/tags/essay/</loc>
     </url>
     <url>
-        <loc>https://limboy.me/tags/review/</loc>
+        <loc>https://limboy.me/tags/project/</loc>
     </url>
     <url>
-        <loc>https://limboy.me/uses/</loc>
+        <loc>https://limboy.me/tags/review/</loc>
     </url>
 </urlset>

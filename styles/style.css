@@ -204,3 +204,12 @@ body {
   background-color: rgba(224, 109, 16, 0.1);
   border-left: 4px solid rgba(224, 109, 16, 0.4);
 }
+
+.prose a.link-item {
+  color: #222;
+}
+
+.prose a.link-item:hover {
+  color: #eee;
+  text-decoration: none;
+}

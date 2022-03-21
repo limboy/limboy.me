@@ -1,0 +1,31 @@
+<div class="project-item mt-6 flex flex-col md:flex-row w-full bg-gray-100 rounded-lg overflow-hidden justify-between">
+  <div class="bg-cover min-h-[200px] p-4 basis-56 md:basis-[22%] bg-center"
+    style="background-image:url({{get_url(path=cover)}})">
+    <div class="flex grow gap-1 flex-col justify-between p-4">
+    </div>
+  </div>
+  <div class="flex flex-col basis-[78%] p-4 justify-between gap-4">
+    <div class="flex grow gap-1 flex-col">
+      <h1 class="title font-medium text-2xl leading-tight" style="margin: 0;">{{ title }}</h1>
+      <p class="py-2">
+        {{ body | markdown(inline=true) | safe }}
+      </p>
+    </div>
+    <div class="flex gap-4" style="padding:0; margin:0">
+      {% if url %}
+      <a class="link-item px-4 list-none pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all"
+        style="margin-top: 0;" href="{{ url }}">链接</a>
+      {% endif %}
+
+      {% if article_url %}
+      <a class="link-item px-4 list-none pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all"
+        style="margin-top: 0;" href="{{ article_url }}">文章</a>
+      {% endif %}
+
+      {% if github_url %}
+      <a class="link-item px-4 list-none pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all"
+        style="margin-top: 0;" href="{{ github_url }}">GitHub</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
