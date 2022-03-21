@@ -1,31 +1,33 @@
 {% macro page_list(pages) %}
 
-<div class="flex mt-4 -mr-4 lg:mt-6 lg:-mr-6 flex-wrap">
+<div class="flex mt-4 md:mt-6 flex-wrap gap-8">
   {% for page in pages %}
-  <div class="flex flex-col flex-1 mr-4 mb-4 lg:mr-6 lg:mb-6 bg-white min-w-[20rem]">
-    <a class="flex flex-col flex-grow" href="{{ page.permalink }}">
-      {% if page.extra.cover %}
-      <div class="bg-cover h-[188px] sm:h-[220px] 2xl:h-[266px] w-full"
-        style="background-image:url({{get_url(path=page.extra.cover)}})">
-      </div>
-      {% endif %}
+  <div class="article-item flex flex-col md:flex-row w-full rounded-lg overflow-hidden justify-between">
+    <div class="bg-cover min-h-[250px] p-4 basis-56 md:basis-[40%]" {% if page.extra.cover %}
+      style="background-image:url({{get_url(path=page.extra.cover)}})" {% endif %}>
       <div class="flex grow gap-1 flex-col justify-between p-4">
-        <h1 class="title font-medium text-2xl leading-tight">{{ page.title }}</h1>
-        <time class="text-sm text-gray-500">{{ page.date }}</time>
-
       </div>
-    </a>
-
-    {% if page.taxonomies.tags %}
-    <ul class="tags flex gap-2 mx-4 mb-4">
-      {% for tag in page.taxonomies.tags %}
-      <li class="pb-[2px] px-2 border border-gray-700 hover:bg-gray-900 hover:text-gray-100 transition-all">
-        <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}">{{ tag
-          }}</a>
-      </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
+    </div>
+    <div class="flex flex-col bg-white basis-[60%] p-4 justify-between gap-4">
+      <div class="flex grow gap-1 flex-col">
+        <a class="block" href="{{ page.permalink }}">
+          <h1 class="title font-medium text-2xl leading-tight">{{ page.title }}</h1>
+          <time class="text-sm text-gray-500">{{ page.date }}</time>
+          <p class="py-2">{{ page.description}}</p>
+        </a>
+      </div>
+      {% if page.taxonomies.tags %}
+      <ul class="tags flex gap-4">
+        {% for tag in page.taxonomies.tags %}
+        <li
+          class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+          <a class="inline-block" href="{{ get_taxonomy_url(kind='tags', name=tag) }}">{{ tag
+            }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
   </div>
   {% endfor %}
 </div>

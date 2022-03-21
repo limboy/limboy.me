@@ -179,6 +179,7 @@ body {
   max-width: 100%;
   box-sizing: content-box;
   display: inline;
+  border-radius: 0.5rem;
 }
 
 .prose li + li {
@@ -188,6 +189,10 @@ body {
 .prose aside {
   padding: 1rem;
   margin: 1rem 0;
+}
+
+.prose aside p:last-child {
+  margin-bottom: 0;
 }
 
 .prose aside.info {

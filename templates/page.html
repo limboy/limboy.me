@@ -25,29 +25,33 @@
 {% block content %}
 <div class="mt-4 lg:mt-6">
   {% if page.extra.cover %}
-  <img class="w-full mb-4" src="{{get_url(path=page.extra.cover)}}" />
+  <img class="w-full mb-4 rounded-lg" src="{{get_url(path=page.extra.cover)}}" />
   {% endif %}
 
   <h1 class="title font-medium text-3xl"><a href="{{ page.permalink }}">{{ page.title }}</a></h1>
   <div class="flex gap-4 items-center my-1">
     <time class="text-gray-500">{{ page.date }}</time>
+
   </div>
   <hr class="border-t-[3px]" />
+
   <div class="prose lg:prose-xl max-w-full my-6">
     {{ page.content | safe }}
   </div>
 
-  <ul class="tags flex items-center gap-2 mb-4">
+
+  <ul class="tags flex justify-center items-center gap-4 mt-5 mb-8 text-lg">
     {% if page.taxonomies.tags %}
     {% for tag in page.taxonomies.tags %}
     <li
-      class="pb-[2px] mt-4 px-2 rounded-2xl border border-gray-700 hover:bg-gray-900 hover:text-gray-100 transition-all">
-      <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}">{{ tag
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="{{ get_taxonomy_url(kind='tags', name=tag) }}">{{ tag
         }}</a>
     </li>
     {% endfor %}
     {% endif %}
   </ul>
+
 
   <script src="https://giscus.app/client.js" data-repo="limboy/limboy.me" data-repo-id="R_kgDOGqD9cw"
     data-category="General" data-category-id="DIC_kwDOGqD9c84CAoVe" data-mapping="pathname" data-reactions-enabled="1"
