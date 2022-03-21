@@ -5,6 +5,12 @@ template = "highlights.html"
 
 ## 2022
 
+{% timelinecard(title="发布一篇博客" date="2022-03-22") %}
+
+[回顾了下「拼音猜成语」背后的一些故事](/posts/idiom/)
+
+{% end %}
+
 {% timelinecard(title="发布一篇博客" date="2022-03-21") %}
 
 [回顾了下 Bytetalk 背后的一些故事](/posts/bytetalk/)
