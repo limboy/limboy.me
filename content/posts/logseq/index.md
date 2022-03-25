@@ -384,6 +384,7 @@ flat blocks 就像这样：
 以上就是我目前的 Logseq 使用习惯。因为 Logseq 灵活又强大，大家的使用姿势都不太一样，以下这几个链接也可以一并参考：
 
 - [我的人生管理系统](https://www.bmpi.dev/self/life-in-plain-text/)
+- [OKR + GTD + Note => Logseq](https://www.bmpi.dev/self/okr-gtd-note-logseq/)
 - [How I Use Logseq to Take Notes and Organize My Life](https://www.youtube.com/watch?v=BhHfF0P9A80)
 - [我是如何使用 Logseq 的 (via Randy)](https://www.youtube.com/watch?v=DxoGJBb1mWQ)
 - [How I Orgnise My Life](https://www.youtube.com/watch?v=bpikCLhpIRY) 作者用的 Roam Research，可以参考下使用理念
