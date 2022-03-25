@@ -750,6 +750,7 @@ body {
   display: block;
   max-height: 30rem;
   padding: 0.75rem 1rem;
+  white-space: pre-wrap;
 }
 
 .prose pre[data-linenos] code {
