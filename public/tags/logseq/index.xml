@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-      <title>Limboy</title>
+      <title>Limboy - logseq</title>
         <link>https://limboy.me</link>
         <description></description>
         <generator>Zola</generator>
         <language>zh</language>
-        <atom:link href="https://limboy.me/index.xml" rel="self" type="application/rss+xml"/>
+        <atom:link href="https://limboy.me/tags/logseq/index.xml" rel="self" type="application/rss+xml"/>
         <lastBuildDate>Fri, 25 Mar 2022 00:00:00 +0000</lastBuildDate>
         
         <item>
@@ -305,102 +305,6 @@
 &lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=bpikCLhpIRY&quot;&gt;How I Orgnise My Life&lt;&#x2F;a&gt; 作者用的 Roam Research，可以参考下使用理念&lt;&#x2F;li&gt;
 &lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=ScRrcL__SSI&quot;&gt;Roam Research 作者是如何使用 Roam Research 的&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;
-</description>
-        </item>
-        
-        
-        <item>
-            <title>拼音猜成语</title>
-            <pubDate>Tue, 22 Mar 2022 00:00:00 +0000</pubDate>
-            <link>https://limboy.me/posts/idiom/</link>
-            <guid>https://limboy.me/posts/idiom/</guid>
-            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;pinyincaichengyu.com&#x2F;&quot;&gt;拼音猜成语&lt;&#x2F;a&gt; 是我第一款 PV 超过百万的产品，这里就来聊聊它背后的故事。&lt;&#x2F;p&gt;
-
-&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;data.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;data.jpg 1128.5w,&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;data.jpg 1128.5w&quot;
-    sizes=&quot;(max-width: 1128.5px) 100vw, 1128.5px&quot; width=&quot;1128.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;bei-jing&quot;&gt;背景&lt;&#x2F;h3&gt;
-&lt;p&gt;有一段时间在 Twitter 上经常能看到有推友在发各种颜色的方块，原来是一个叫 &lt;a href=&quot;https:&#x2F;&#x2F;www.nytimes.com&#x2F;games&#x2F;wordle&#x2F;index.html&quot;&gt;Wordle&lt;&#x2F;a&gt; 的英文猜词小游戏，试玩了后发现还挺不错的，轻量、节制还益智。就拉妹子一起来玩，有时还会在零点一起挑战。但非母语也影响了游戏体验，遇到一些生僻的词就只能束手就擒了。某天走在路上就在想，是不是可以做一个成语版的 Wordle，用拼音？&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;kai-fa&quot;&gt;开发&lt;&#x2F;h3&gt;
-&lt;p&gt;有了方向之后，就开始细化具体的游戏机制，发现只要把成语拆解为拼音组合，就可以像 Wordle 那样猜了。较快地搭了一个原型后，让妹子体验了下，发现可以玩，好像还挺好玩，这也给了我一些信心。之后大概花了 1 个星期的时间完善这个小游戏，从琢磨游戏机制到设计界面和交互，到实现功能、填充词库。这段时间在学习前端，正好可以通过这个项目来练手。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;nei-ce&quot;&gt;内测&lt;&#x2F;h3&gt;
-&lt;p&gt;其实就是拉人来玩。在常去的咖啡馆也邀请了店员来感受下这个游戏，有表示拼音不太友好的，但也有顺利玩下来并猜到答案的，看起来玩法上应该还 OK，拼音字母可能会是个障碍，但了解了玩法之后应该问题不大。也在小群里让小伙伴们体验了下。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;shang-xian&quot;&gt;上线&lt;&#x2F;h3&gt;
-&lt;p&gt;开发完上线后，在 &lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;_limboy&#x2F;status&#x2F;1483622557782003712?s=20&quot;&gt;Twitter&lt;&#x2F;a&gt; 上发了一下，反响还不错，也收到了不少反馈。比如没有对输入做限制可以「作弊」，对字母判定上有一些疑惑，有的同学表示太难了，也有觉得简单的。结合这些反馈做了些调整，比如只能输入有效的拼音组合，对键盘做了字母高亮等，自己玩下来感觉难度正好。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;chuan-bo&quot;&gt;传播&lt;&#x2F;h3&gt;
-&lt;p&gt;经过几天的自然传播后，一天有几千 UV，Twitter 上搜索「pinyincaichengyu.com」也能看到有不少人在玩这个游戏。查看访问统计，一开始 Twitter 的来源最多，几天后从 Facebook、Google 和 Instagram 来的越来越多。有一段时间新加坡的玩家占了大多数。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;fan-kui&quot;&gt;反馈&lt;&#x2F;h3&gt;
-&lt;p&gt;Side Project 的成就感除了完成作品之外，还有很大一部分是用户的反馈。从来信才知道有不少国外的朋友在通过这个小游戏学习中文，也有教汉语的老师会在课后跟同学们一起玩这个游戏，有在新加坡的电台听到介绍这个游戏的。当然也有反馈游戏 Bug 和 Feature 的，比如词库里「厚积薄发」的「薄」声调被标记成了「bao」，然后那个时间段就收到了不少反馈该问题的来信。&lt;&#x2F;p&gt;
-&lt;p&gt;因为游戏反响还不错，有国外的媒体来信希望了解这个游戏更多的信息，如澎湃新闻英文频道、卫报，也有国内媒体，这个确实是意料之外。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;gai-jin&quot;&gt;改进&lt;&#x2F;h3&gt;
-&lt;p&gt;第一版上线后，代码质量感觉还是不够好，于是从头开始又写了一遍，这次代码设计上更加合理，流程上也更加规范，加入了测试集和 Storybook，顺便把觉得不错的 Feature 如声调提示、统计信息、成语解释等给加上了，对 UI 也做了些优化。&lt;&#x2F;p&gt;
-
-&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;popup.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;popup.jpg 672w,&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;popup.jpg 672w&quot;
-    sizes=&quot;(max-width: 672px) 100vw, 672px&quot; width=&quot;672&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
-  加入「游戏统计」这块还有点小挑战，因为没有用户系统，只能通过设备来判断，而发给服务器的请求又很容易伪造，所以需要一套防护措施。采用的是客户端加密的方式，&lt;code&gt;import&lt;&#x2F;code&gt; 一段加密后的 js，然后生成一个全局变量（用来验证和避免重放攻击），因为这段 js 用到了很多浏览器相关的 API，所以不太好通过 cli 的方式直接引用（当然可以用 headless 工具，不过这也增加了成本）
-&lt;&#x2F;aside&gt;&lt;h3 id=&quot;kai-yuan&quot;&gt;开源&lt;&#x2F;h3&gt;
-&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;idiom&quot;&gt;开源&lt;&#x2F;a&gt;就像是个节点，让这个小游戏的源码出现在了公共区域，虽然不一定会有多少人关注。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;shou-huo&quot;&gt;收获&lt;&#x2F;h3&gt;
-&lt;p&gt;通过这个项目更加熟悉了前端，包括工程化、React、CSS、JS、Browser API 等等，也感受到了 Side Project 的乐趣，更重要的是对自己的长处和短板有了更清晰的认识，为之后的发展方向选择提供了样本。&lt;&#x2F;p&gt;
-</description>
-        </item>
-        
-        
-        <item>
-            <title>关于 Bytetalk</title>
-            <pubDate>Mon, 21 Mar 2022 00:00:00 +0000</pubDate>
-            <link>https://limboy.me/posts/bytetalk/</link>
-            <guid>https://limboy.me/posts/bytetalk/</guid>
-            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;podcast&#x2F;6177bab6b69226ed16a3ed41&quot;&gt;Bytetalk&lt;&#x2F;a&gt; 是去年的一个尝试性项目，以访谈的形式与不同领域的程序员聊聊他们的故事。一方面可以拓展自己的视野，另一方面也能给听众一些启发。第一季 7 期录制下来，结果还不错，感谢各位嘉宾朋友和听众们。等接下来有了更明确的规划后，再来开始第二季。这里简单回顾下 Bytetalk 背后的一些故事。&lt;&#x2F;p&gt;
-
-&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;data.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;data.jpg 1086w,&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;data.jpg 1086w&quot;
-    sizes=&quot;(max-width: 1086px) 100vw, 1086px&quot; width=&quot;1086&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
-&lt;p&gt;之所以选择播客，而不是更常见的视频，主要是因为自己在镜头前会变得不自然，访谈嘉宾可能也会有这方面的困扰，另一方面视频的录制和剪辑成本也会更高。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;di-yi-qi&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;episode&#x2F;6177bab6b69226ed16a3ed42&quot;&gt;第一期&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
-&lt;p&gt;第一期节目尤为重要，因为在录制播客方面的经验几乎为零，所以需要容忍度高、能聊又互相熟悉的嘉宾。为此借着聚餐的名义，将字节的几个小伙伴「诱骗」到家里，期间还玩了会桥牌。因为是第一次录多人聊天，在设备调试这块就花了近半小时，好在最后的效果还能接受。&lt;&#x2F;p&gt;
-&lt;p&gt;第一期节目没有特定的主题，主要围绕一些常见的话题展开讨论，如：如何保持对工作的热情，提升竞争力，度过 35 岁危机等等。因为相互之间比较熟悉，所以聊天的氛围还不错。在推上发了之后，也收到了些正面反馈。&lt;&#x2F;p&gt;
-&lt;p&gt;通过这一期节目，基本把播客的整个制作流程摸熟了，但作为主持人还有很大的成长空间，同时录音质量把控和后期剪辑这两块还有待改善。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;di-er-qi&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;episode&#x2F;618208328a9c9c36e9977e44&quot;&gt;第二期&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
-&lt;p&gt;有了第一次的经验，接下来找访谈对象时，会更有意识地去找有「聊点」的嘉宾，然后就想到了之前在凤凰网的同事，他现在已经在经营自己的潜水事业了，我很好奇他是如何进行这么大的跨行业转行。虽然好久没有联系，勾搭了之后，还是接受了邀请，这也给了我不小的信心。这一次是远程，访谈大纲和线上录制都通过飞书来完成，还挺顺利的（PS：那时还没有意识到录多轨音频的重要性 😂）。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;di-san-qi&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;episode&#x2F;618c9897fad86a854205b2a0&quot;&gt;第三期&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
-&lt;p&gt;第三期我想邀请的嘉宾是&lt;a href=&quot;https:&#x2F;&#x2F;imtx.me&#x2F;&quot;&gt;图拉鼎&lt;&#x2F;a&gt;，我觉得应该会有很多人对独立开发者感兴趣，另一方面也好久没聊了，正好可以借录制播客聚聚。还会担心他档期比较紧或者对播客录制不太感冒，结果比我想的顺利。于是就找了一个茶馆，开始了第三期节目的录制&lt;&#x2F;p&gt;
-
-&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;teahouse.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;teahouse.jpg 1000w,&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;teahouse.jpg 1000w&quot;
-    sizes=&quot;(max-width: 1000px) 100vw, 1000px&quot; width=&quot;1000&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
-  &lt;strong&gt;一个小插曲:&lt;&#x2F;strong&gt; 由于收听次数较多，VPS 流量已经顶不住了，听众也反馈有卡顿的现象。图拉鼎建议可以试下 Cloudflare，果然非常有效，而且还是免费，一下就让我成了 Cloudflare 的粉丝，并以股票支持。（虽然买了之后就一路降降降···）
-&lt;&#x2F;aside&gt;&lt;aside class=&quot;info&quot; &gt;
-  &lt;strong&gt;另一个小插曲:&lt;&#x2F;strong&gt; 我妈也会听这个节目，她说这一期她最喜欢。
-&lt;&#x2F;aside&gt;&lt;h3 id=&quot;di-si-qi&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;episode&#x2F;61948a3ee2550ba6b3fa8f2b&quot;&gt;第四期&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
-&lt;p&gt;前三期节目播出后，收到了 &lt;a href=&quot;https:&#x2F;&#x2F;lutaonan.com&#x2F;&quot;&gt;Randy&lt;&#x2F;a&gt; 的来信，让我觉得特别惊喜，因为自己之前也有关注过他，正好可以做一期播客。这个过程中我也感受到了 Randy 的认真和专业。为了这次播客，他准备了非常详细的文稿，针对访谈大纲基本都有详细的回应文字，音频录制设备也很完善。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;di-wu-qi&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;episode&#x2F;619c9a7515e2f7df2eca996e&quot;&gt;第五期&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
-&lt;p&gt;在寻找下一个嘉宾时，&lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;yihong0618&quot;&gt;yihong&lt;&#x2F;a&gt; 出现在了我的视野，他的 running page、对跑步的坚持、对开源的热情、那股爱折腾的劲儿给我留了下了很深的印象，就想邀请他来聊一期，他也愉快地答应了。&lt;&#x2F;p&gt;
-&lt;p&gt;这次的录制过程还有一些小插曲，我拉小蕊作为 co-host 来共同录制，结果我带上了收音设备，却忘了带上对应的连接线。然后就用了 AirPods 结合 iPhone 的录音。跟 yihong 一开始用的飞书视频，结果由于飞书对 VPN 的支持不好，导致通话效果不佳（后来才发现是 VPN 的原因），最后用的微信语音，双方各自录制自己的音轨，由于两边都缺少专业的录音设备，导致这次的音频效果不够理想（试了 GarageBand 的各种奇技淫巧，还是无法弥补音源质量上的不足）。&lt;&#x2F;p&gt;
-&lt;aside class=&quot;info&quot; &gt;
-  &lt;strong&gt;PS:&lt;&#x2F;strong&gt; yihong 的东北话实在太有喜感了，哈哈。
-&lt;&#x2F;aside&gt;&lt;h3 id=&quot;di-liu-qi&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;episode&#x2F;61b43114f7b64dfb09f2524c&quot;&gt;第六期&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
-&lt;p&gt;因为自己开始逐渐关注前端，然后就发现 &lt;a href=&quot;https:&#x2F;&#x2F;antfu.me&#x2F;&quot;&gt;Anthony Fu&lt;&#x2F;a&gt; 在我的 Timeline 上出镜率很高，内容也都很棒。去了解了下之后，发现这位同学很不一样：&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;antfu&quot;&gt;Github&lt;&#x2F;a&gt; 上有很多的 Sponsor，参与&#x2F;主导了一些很有影响力的开源项目，也会有一些很奇特的 Idea，用英文交流，习惯在国外的开源社区活动，Github Contribution 几乎全是绿的。这完全勾起了我的好奇心，很想了解这位神人背后的一些故事，于是就试探性地在推上发了邀请，没想到很快答应了。&lt;&#x2F;p&gt;
-&lt;p&gt;Anthony 同学的语言表达和组织能力确实很强，全程我基本只要把问题抛过去，就能有较完整和流畅的回复。后期剪辑时还重新录制了下自己的那一轨音频（因为原先的那一轨有些瑕疵，加上我说的内容也较少 😂），导致听起来不像一个完整的访谈···&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;di-qi-qi&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;episode&#x2F;61c6cccac525309a443b5b36&quot;&gt;第七期&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
-&lt;p&gt;在跟 Randy 聊时，他有提到过 &lt;a href=&quot;https:&#x2F;&#x2F;logseq.com&#x2F;&quot;&gt;Logseq&lt;&#x2F;a&gt; 这款笔记利器，就去体验了下，然后就被惊到了。极低的输入成本，强大的双链和 Query，方便的 Journal，Privacy First，Local Data 等等。然后就想着要是能邀请 Logseq 的作者来聊聊就太好了，按照惯例，先在推上勾搭，没想到我跟作者&lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;tiensonqin&quot;&gt;天生&lt;&#x2F;a&gt;竟还有交集（同在花瓣工作过），他也答应了这次邀请。在推上发了这个消息后，&lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;laike9m&quot;&gt;laike9m&lt;&#x2F;a&gt; 也有兴趣一起来聊聊，于是就有了这期的访谈，播出后反响也不错。天生的谦逊、对 logseq 的热情和 laike9m 的专业性都给我留下了很深的印象。&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;jie-wei&quot;&gt;结尾&lt;&#x2F;h3&gt;
-&lt;p&gt;制作 Bytetalk 的过程让我对播客有了更多的了解，也明白了其中的艰辛（寻找嘉宾，准备大纲，后期剪辑等等）。但看到大家的反馈就觉得这事值得，等我把这事思考地成熟些，就可以开始第二季了。&lt;&#x2F;p&gt;
-</description>
-        </item>
-        
-        
-        
-        
-        
-        
-        <item>
-            <title>2021 Review</title>
-            <pubDate>Tue, 11 Jan 2022 00:00:00 +0000</pubDate>
-            <link>https://limboy.me/posts/2021-review/</link>
-            <guid>https://limboy.me/posts/2021-review/</guid>
-            <description>&lt;p&gt;2021 这一年如果要有个分界点的话，那就是年中离开字节跳动。在飞书工作了两年之后，自觉还是无法适应和胜任相关的工作。一方面自己对移动端开发的热情越来越低，其他方面也没有太强烈的意愿，另一方面飞书的强度对我这个「老人」挑战也挺大的，加上 ToB 业务属性，处理多方问题和反馈也对精力撕扯得厉害。不过确实也学到了很多，尤其是身边的小伙伴们，他们真的很棒。&lt;&#x2F;p&gt;
-&lt;p&gt;辞职之后给了自己一段缓冲期，逐步去探索能够持续有热情地做十年的事情。不得不说，可以自由支配的时间是一件奢侈品，一旦适应就很难再回去了。&lt;&#x2F;p&gt;
 </description>
         </item>
         

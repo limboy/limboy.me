@@ -106,13 +106,23 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.prose ul {
-  padding-left: 2em;
+.prose ul,
+.prose ol {
+  padding-left: 1em;
   list-style-type: disc;
-  margin: 0.25rem 0;
+  margin: 0.5rem 0;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  list-style-position: inside;
 }
 
 .prose p code,
+.prose aside code,
 .prose li > code,
 .prose td code {
   vertical-align: middle;

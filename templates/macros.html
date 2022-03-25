@@ -20,7 +20,7 @@
       <ul class="tags flex gap-4">
         {% for tag in page.taxonomies.tags %}
         <li
-          class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+          class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900">
           <a class="inline-block" href="{{ get_taxonomy_url(kind='tags', name=tag) }}">{{ tag
             }}</a>
         </li>

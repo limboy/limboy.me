@@ -7,7 +7,307 @@
         <generator>Zola</generator>
         <language>zh</language>
         <atom:link href="https://limboy.me/posts/index.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Tue, 22 Mar 2022 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Fri, 25 Mar 2022 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>我的 Logseq 使用习惯</title>
+            <pubDate>Fri, 25 Mar 2022 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/logseq/</link>
+            <guid>https://limboy.me/posts/logseq/</guid>
+            <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;logseq.com&#x2F;&quot;&gt;Logseq&lt;&#x2F;a&gt; 是有一次在跟 &lt;a href=&quot;https:&#x2F;&#x2F;lutaonan.com&#x2F;&quot;&gt;Randy&lt;&#x2F;a&gt; 聊天时，他提到最近用得比较多的笔记工具。试用了之后，就被吸引了。经过一段时间摸索，找到了比较舒服的使用姿势，跟大家分享下。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  &lt;strong&gt;PS:&lt;&#x2F;strong&gt; &lt;a href=&quot;https:&#x2F;&#x2F;bytetalk.fm&quot;&gt;Bytetalk&lt;&#x2F;a&gt; 有一期&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;episode&#x2F;61c6cccac525309a443b5b36&quot;&gt;跟 Logseq 创始人的访谈播客&lt;&#x2F;a&gt;，感兴趣的话可以听一下&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;PPS:&lt;&#x2F;strong&gt; Randy 做过一个&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=DxoGJBb1mWQ&quot;&gt;视频&lt;&#x2F;a&gt;，分享了他&lt;a href=&quot;https:&#x2F;&#x2F;twitter.com&#x2F;randyloop&#x2F;status&#x2F;1501588790988918784?s=20&amp;amp;t=W_yXlH6y6i-xoL08uhZE9g&quot;&gt;使用 Logseq 的一些经验&lt;&#x2F;a&gt;
+&lt;&#x2F;aside&gt;&lt;h2 id=&quot;logseq-shi-shi-yao&quot;&gt;Logseq 是什么&lt;&#x2F;h2&gt;
+&lt;p&gt;Logseq 是一个以 Outline 为组织形式，以 Block 为核心，支持双向链接和灵活查询的笔记工具。由于它的强大和灵活，很多人（包括我）都用它来 Organize Life。&lt;&#x2F;p&gt;
+&lt;p&gt;相比于其他的笔记工具，Logseq 的独特点有：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;极低的记录门槛&lt;&#x2F;strong&gt;。每天会自动新建 Journal，然后直接写就行了。Outline 模式也让输入变得非常轻量。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;强大的查询能力&lt;&#x2F;strong&gt;。基于 Outline 组织模式的笔记工具，如果欠缺聚合能力，就容易出现孤岛，Logseq 内置了 Simple Query 和 Advanced Query 两种模式，可以很好地按需聚合内容。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;开源&lt;&#x2F;strong&gt;。开源给人一种安心感，也能体现创作者对代码的信心。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;免费&lt;&#x2F;strong&gt;。嗯，这个理由很充分了···&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Local Data&lt;&#x2F;strong&gt;。数据存在本地，不用担心数据泄露或者被用来作为大数据的训练集，也能让 App 的体验更流畅（相比 Online Service，如 Roam Research）。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Markdown&lt;&#x2F;strong&gt;。没有使用私有格式，其他工具也能打开&#x2F;浏览文件内容，也方便对数据做二次开发。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;活跃的社区&lt;&#x2F;strong&gt;。不用担心没人用，导致停止开发，遇到问题也能愉快地交流。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  &lt;strong&gt;PS:&lt;&#x2F;strong&gt; Logseq 的部分投资人也是 Logseq 的重度用户，甚至会写 Logseq 的插件
+&lt;&#x2F;aside&gt;
+&lt;p&gt;当然槽点也是有的，比如设计上还不够精细，文档也有待完善，Advanced Query 虽然很好用，但门槛也很高。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  以天为单位来录入内容的另一好处是方便回顾，如果想知道哪天做了哪些事，打开当天的页面就能了解大概。
+&lt;&#x2F;aside&gt;
+&lt;p&gt;Logseq 使用起来很自由，但如果缺少规范也容易迷失，无法发挥最大威力，下面就来聊聊我的一些使用经验，仅供参考。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;yi-xie-gai-nian&quot;&gt;一些概念&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;block&quot;&gt;Block&lt;&#x2F;h3&gt;
+&lt;p&gt;Block 是 Logseq 中很重要的一个概念，随便在里面输入一段话，这段话就是一个 Block。Block 可以有 Parent 和 Children&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 每一行都是 Block
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 缩进后会成为 Child Block
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 点击左边的小圆点可以进入到 Block 内页
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 也可以折叠和展开
+&lt;&#x2F;span&gt;&lt;span&gt;• &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Logseq 是一个不错的笔记工具
+&lt;&#x2F;span&gt;&lt;span&gt;  • &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;开源且免费
+&lt;&#x2F;span&gt;&lt;span&gt;  • &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;使用方便
+&lt;&#x2F;span&gt;&lt;span&gt;  • &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;page&quot;&gt;Page&lt;&#x2F;h3&gt;
+&lt;p&gt;如果只有 Block，那这些 Block 之间就很难建立关联，Page 可以解决这个问题（Tag 也可以）。只要在一段文字的前后加入两个中括号就行&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Logseq 会自动成为一个 Page，title 就是 Logseq
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 点击进去后还能看到 Back Link，也就是这个 Block
+&lt;&#x2F;span&gt;&lt;span&gt;[[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Logseq&lt;&#x2F;span&gt;&lt;span&gt;]] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;最近的一些更新
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;tag&quot;&gt;Tag&lt;&#x2F;h3&gt;
+&lt;p&gt;跟 Page 类似，Tag 也可以达到聚合 Block 的效果，只要在前面加上 &lt;code&gt;#&lt;&#x2F;code&gt;。既然两者效果类似，那使用场景有什么区别呢？我的习惯是：如果是一段语句的组成部分就用 Page，其他场景就用 Tag（因为 Tag 无法处理空格，所以我更习惯用 &lt;code&gt;#[[Tag]]&lt;&#x2F;code&gt; 这种形式）。&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;Logseq 的 advanced query 学起来好累啊 #Thoughts
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;写一篇 [[关于 Logseq]] 的文章
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;back-link&quot;&gt;Back Link&lt;&#x2F;h3&gt;
+&lt;p&gt;所有有 Tag 或 Page 的 Block 都会被聚合在一起，同时还会带上日期，这个非常方便。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;backlink.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;backlink.jpg 561w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;backlink.jpg 561w&quot;
+    sizes=&quot;(max-width: 561px) 100vw, 561px&quot; width=&quot;561&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;properties&quot;&gt;Properties&lt;&#x2F;h3&gt;
+&lt;p&gt;Page 和 Block 都可以有自己的属性，对于 Page 来说，第一行如果是 &lt;code&gt;XXX::YYY&lt;&#x2F;code&gt; 这样的形式就会被认为是该页面的属性，对于 Block 则是下一个缩进行。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;properties.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;properties.jpg 249w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;properties.jpg 249w&quot;
+    sizes=&quot;(max-width: 249px) 100vw, 249px&quot; width=&quot;249&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;上图中，&lt;code&gt;关于个人笔记&lt;&#x2F;code&gt;这个页面就有一个 &lt;code&gt;is&lt;&#x2F;code&gt; 的属性，该属性的 value 是 &lt;code&gt;[[Blog]]&lt;&#x2F;code&gt;。结合 Advanced Query 可以实现一些很方便的效果。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  给页面加属性毕竟是一件有成本的事情，我会对持续多天的页面（通常是一个领域或项目）的内容加上属性，对于像 &lt;code&gt;#Pearls&lt;&#x2F;code&gt; 这些不那么重要的内容就只是加 Tag
+&lt;&#x2F;aside&gt;&lt;h3 id=&quot;simple-query&quot;&gt;Simple Query&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;logseq.github.io&#x2F;#&#x2F;page&#x2F;queries&quot;&gt;Simple Query&lt;&#x2F;a&gt; 比较容易理解，但能力也有限，格式为 &lt;code&gt;{{query (some query detail here)}}&lt;&#x2F;code&gt;，常用的有：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;clojure&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-clojure &quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span&gt;{{query &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;#tag&lt;&#x2F;span&gt;&lt;span&gt;}}
+&lt;&#x2F;span&gt;&lt;span&gt;{{query [[page]]}}
+&lt;&#x2F;span&gt;&lt;span&gt;{{query &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;full-text search&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;}}
+&lt;&#x2F;span&gt;&lt;span&gt;{{query (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;and &lt;&#x2F;span&gt;&lt;span&gt;[[project]] (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span&gt; NOW LATER))}}
+&lt;&#x2F;span&gt;&lt;span&gt;{{query (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;or &lt;&#x2F;span&gt;&lt;span&gt;[[page &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;]] [[page &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;]])}}
+&lt;&#x2F;span&gt;&lt;span&gt;{{query (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;and &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;between&lt;&#x2F;span&gt;&lt;span&gt; -7d +7d) (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;task&lt;&#x2F;span&gt;&lt;span&gt; DONE))}}
+&lt;&#x2F;span&gt;&lt;span&gt;{{query (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;property&lt;&#x2F;span&gt;&lt;span&gt; key value)}}
+&lt;&#x2F;span&gt;&lt;span&gt;{{query (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;page-tags &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;#tag&lt;&#x2F;span&gt;&lt;span&gt;)}}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;advanced-query&quot;&gt;Advanced Query&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;docs.logseq.com&#x2F;#&#x2F;page&#x2F;advanced%20queries&quot;&gt;Advanced Query&lt;&#x2F;a&gt; 会更复杂，但能力也更强，格式如下：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;clojure&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-clojure &quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span&gt;{:title  [:h2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;Your query title&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt; :query  [:find (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;pull&lt;&#x2F;span&gt;&lt;span&gt; ?b [*])
+&lt;&#x2F;span&gt;&lt;span&gt;          :where ...]
+&lt;&#x2F;span&gt;&lt;span&gt; :inputs [...]
+&lt;&#x2F;span&gt;&lt;span&gt; :view             (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span&gt;[query-result] [:div ...])
+&lt;&#x2F;span&gt;&lt;span&gt; :result-transform (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span&gt;[query-result] ...)
+&lt;&#x2F;span&gt;&lt;span&gt; :collapsed? &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这些是 &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Datalog&quot;&gt;Datalog&lt;&#x2F;a&gt; 的语法，具体解释可见&lt;a href=&quot;https:&#x2F;&#x2F;docs.datomic.com&#x2F;on-prem&#x2F;query&#x2F;query.html&quot;&gt;这篇文章&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;shi-yong-yao-dian&quot;&gt;使用要点&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;biao-qian-he-shu-xing-de-xuan-ze&quot;&gt;标签和属性的选择&lt;&#x2F;h3&gt;
+&lt;p&gt;通常出于便利考虑，会选择给 Block 加标签，以聚合同类内容，比如 &lt;code&gt;[[pnpm 的设计理念]]&lt;&#x2F;code&gt; 这个包含 Page 的 Block，可以加一个 &lt;code&gt;#[[Frontend]]&lt;&#x2F;code&gt; 标签，这样进入到 &lt;code&gt;Frontend&lt;&#x2F;code&gt; 页面后就能看到 &lt;code&gt;[[pnpm 的设计理念]]&lt;&#x2F;code&gt; 这个 Block 了。&lt;&#x2F;p&gt;
+&lt;p&gt;那么这两种用法有什么区别呢？&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;&#x2F;&#x2F; Tag
+&lt;&#x2F;span&gt;&lt;span&gt;[[pnpm 的设计理念]] #[[Programming]] #[[Frontend]]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;&#x2F;&#x2F; Properties
+&lt;&#x2F;span&gt;&lt;span&gt;pnpm 的设计理念
+&lt;&#x2F;span&gt;&lt;span&gt;category:: [[Programming]]
+&lt;&#x2F;span&gt;&lt;span&gt;sub-category:: [[Frontend]]
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;直接用 Tag 的话，有两个问题：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;如果 &lt;code&gt;[[pnpm 的设计理念]]&lt;&#x2F;code&gt; 下的内容较多，要分很多天来啃，那么这个 Block 都要手动加上 &lt;code&gt;#[[Frontend]]&lt;&#x2F;code&gt; 这个标签。&lt;&#x2F;li&gt;
+&lt;li&gt;如果要给这个 Block 加上其他的 Tag，如 &lt;code&gt;#[[Build Tool]]&lt;&#x2F;code&gt;，那么就要找到所有引用该页面的 Block，挨个加上这个 Tag。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;如果最近一段时间在研究这个话题，那么可以每天 &lt;code&gt;copy ref&lt;&#x2F;code&gt; 过来，然后在下面补充学习内容。学习完后，如果其他 Block 要引用 &lt;code&gt;[[pnpm 的设计理念]]&lt;&#x2F;code&gt;，比如 &lt;code&gt;正如在 [[pnpm 的设计理念]] 中所说...&lt;&#x2F;code&gt; 这段话，不加标签，那么这个 Block 就会失去跟 &lt;code&gt;[[Frontend]]&lt;&#x2F;code&gt; &lt;code&gt;[[Programming]]&lt;&#x2F;code&gt; 的关联，如果要加标签则容易遗漏，也显得奇怪。&lt;&#x2F;p&gt;
+&lt;p&gt;对于会被其他 Block 引用的 Page，可以采用给页面加属性，然后结合 Advanced Query 来实现。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  关于使用 flat blocks（block 之间是平行关系） 还是 nest blocks（block 之间是层级关系），这个因人而异。我之前喜欢用 nest blocks，如:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;• [[Thoughts]]
+&lt;&#x2F;span&gt;&lt;span&gt;  • Logseq 还是挺好用的
+&lt;&#x2F;span&gt;&lt;span&gt;  • 应该要写一篇使用 Logseq 心得的文章
+&lt;&#x2F;span&gt;&lt;span&gt;  • ···
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这样，可以建立 Daily 模版，然后只要往对应的 Block 下面添加内容就行了。进入页面后，也能看到相关的 Block。但如果 Block 的属性复杂一些，如既属于编程，同时还是一本书，就不知道该放在哪个 Block 下面了。&lt;&#x2F;p&gt;
+&lt;p&gt;flat blocks 就像这样：&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;• 冰椰拿铁什么时候这么难喝了 #Tiny
+&lt;&#x2F;span&gt;&lt;span&gt;• 后面两个人说话好大声呀 #Tiny
+&lt;&#x2F;span&gt;&lt;span&gt;• 晚上想看一部电影 #Thoughts
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;后来对 nest blocks 和 flat blocks 定了个规则，只有有明确从属关系的才使用 nest blocks（如书摘，文摘），其他默认用 flat blocks。
+&lt;&#x2F;aside&gt;&lt;h3 id=&quot;ye-mian-shu-xing-he-gao-ji-jian-suo&quot;&gt;页面属性和高级检索&lt;&#x2F;h3&gt;
+&lt;p&gt;页面属性上面已有介绍（页面的第一行以 &lt;code&gt;Key::Value&lt;&#x2F;code&gt; 这样的格式书写），我常用的属性有：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;is:&lt;&#x2F;strong&gt; 表示这个 Page 是什么，如 &lt;code&gt;is::[[Blog]]&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;category:&lt;&#x2F;strong&gt; 这个 Page 的分类，如 &lt;code&gt;category::[[Programming]]&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;sub-category:&lt;&#x2F;strong&gt; 这个 Page 的子分类，如 &lt;code&gt;sub-category::[[Frontend]]&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;medium:&lt;&#x2F;strong&gt; 这个 Page 的媒介类型（视频、书、文章等），如 &lt;code&gt;medium::[[Book]]&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  一开始没有分这么细，用 &lt;code&gt;tags::[[Book]] [[Programming]]&lt;&#x2F;code&gt; 这种形式聚合在一起。但在写 Query 时遇到了障碍，被迫「降级」成这种写法。
+&lt;&#x2F;aside&gt;
+&lt;p&gt;然后就可以用 Query 把这些 Block 找出来了。比如可以找到所有包含 &lt;code&gt;category::[[Programming]]&lt;&#x2F;code&gt; 属性的页面的 Block。如果只是找出页面是不够的，我们来看下对比。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;compare.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;compare.jpg 655w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;compare.jpg 655w&quot;
+    sizes=&quot;(max-width: 655px) 100vw, 655px&quot; width=&quot;655&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;上面是 Block，下面是 Page，通常我们更想要得到上面的效果。为此，需要写 Advanced Query，下面这段代码会找到所有引用了包含 &lt;code&gt;category&lt;&#x2F;code&gt; 属性为 &lt;code&gt;Programming&lt;&#x2F;code&gt; 的页面的 Block。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;clojure&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-clojure &quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;#+BEGIN_QUERY
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;; 以下注释是我查找网上文章结合自己的理解，不一定对
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;; &amp;#39;?xxx&amp;#39; 表示一个变量
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;; &amp;#39;$&amp;#39; 表示数据库
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;; &amp;#39;:xxx&amp;#39; 表示字段和查询关键字
+&lt;&#x2F;span&gt;&lt;span&gt;{:title [:h2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;Todo&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt; :query [:find (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;pull&lt;&#x2F;span&gt;&lt;span&gt; ?b [*]) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;;找到所有符合条件的条目，&amp;#39;*&amp;#39; 表示条目的所有字段
+&lt;&#x2F;span&gt;&lt;span&gt; :in $ ?category &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;;&amp;#39;?category&amp;#39; 就是通过 &amp;#39;inputs&amp;#39; 传过来的变量
+&lt;&#x2F;span&gt;&lt;span&gt; :where
+&lt;&#x2F;span&gt;&lt;span&gt;  [?b :block&#x2F;ref-pages ?p] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;;条件语句用 &amp;#39;[]&amp;#39; 表示，?p 是什么下面会说明
+&lt;&#x2F;span&gt;&lt;span&gt;  [?p :block&#x2F;properties ?pr] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;;?p 是包含了 properties 为 ?pr 的页面，?pr 是什么，下面会说明
+&lt;&#x2F;span&gt;&lt;span&gt;  [(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;get&lt;&#x2F;span&gt;&lt;span&gt; ?pr :category) ?t] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;; get 是获取 object 的属性，并将它设置为 ?t
+&lt;&#x2F;span&gt;&lt;span&gt;  [(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;contains?&lt;&#x2F;span&gt;&lt;span&gt; ?t ?category)]&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;; contains?（注意&amp;#39;?&amp;#39;在后面）表示 predict，也就是符合特定条件
+&lt;&#x2F;span&gt;&lt;span&gt;  (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;not &lt;&#x2F;span&gt;&lt;span&gt;[?b :block&#x2F;marker ?m])&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;; not [xxx] 表示对 [xxx] 的结果取反
+&lt;&#x2F;span&gt;&lt;span&gt; ]
+&lt;&#x2F;span&gt;&lt;span&gt; :inputs [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;Programming&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;; 传入一个参数
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;#+END_QUERY
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;如果要找到标记为 TODO 的，稍作下调整即可:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;clojure&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-clojure &quot;&gt;&lt;code class=&quot;language-clojure&quot; data-lang=&quot;clojure&quot;&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;#+BEGIN_QUERY
+&lt;&#x2F;span&gt;&lt;span&gt;{:title [:h2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;Doing&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt; :query [:find (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;pull&lt;&#x2F;span&gt;&lt;span&gt; ?b [*])
+&lt;&#x2F;span&gt;&lt;span&gt; :in $ ?category
+&lt;&#x2F;span&gt;&lt;span&gt;:where
+&lt;&#x2F;span&gt;&lt;span&gt; [?b :block&#x2F;marker ?m]
+&lt;&#x2F;span&gt;&lt;span&gt; [(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; ?m &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;TODO&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;)]
+&lt;&#x2F;span&gt;&lt;span&gt; [?b :block&#x2F;ref-pages ?p]
+&lt;&#x2F;span&gt;&lt;span&gt; [?p :block&#x2F;properties ?pr]
+&lt;&#x2F;span&gt;&lt;span&gt; [(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;get&lt;&#x2F;span&gt;&lt;span&gt; ?pr :category) ?t]
+&lt;&#x2F;span&gt;&lt;span&gt; [(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;contains?&lt;&#x2F;span&gt;&lt;span&gt; ?t ?category)]
+&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt; :inputs [&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;Programming&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;#+END_QUERY
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  这里使用 &lt;code&gt;:inputs [:current-page]&lt;&#x2F;code&gt; 会更加灵活，但 Logseq 对 &lt;code&gt;current-page&lt;&#x2F;code&gt; 做了小写处理，导致 &lt;code&gt;(contains? ?t ?category)&lt;&#x2F;code&gt; 无法匹配，换用其他写法如 &lt;code&gt;(some #(= (clojure.string&#x2F;lower-case %) ?current-page) (into [] ?t))&lt;&#x2F;code&gt; （将 &lt;code&gt;set&lt;&#x2F;code&gt; 先转为 &lt;code&gt;vect&lt;&#x2F;code&gt;，再通过 some 判断是否有一个 item，小写化之后跟 &lt;code&gt;?current-page&lt;&#x2F;code&gt; 一样），也不行，所以就手动传入 Page Name 了。
+&lt;&#x2F;aside&gt;&lt;h3 id=&quot;shi-yong-copy-block-embed-lai-ju-he-nei-rong-dao-ye-mian&quot;&gt;使用 Copy block embed 来聚合内容到页面&lt;&#x2F;h3&gt;
+&lt;p&gt;这是某一天的 Journal 页，每天的页面内容大概就是这个样子&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;journal.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;journal.jpg 844w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;journal.jpg 844w&quot;
+    sizes=&quot;(max-width: 844px) 100vw, 844px&quot; width=&quot;844&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;可以看到有些 Block 打了标签，有些没有。没打标签的，通常会 Link 到一个 Page，在 Page 里会有相关的属性，通过属性可以将 Block Query 出来。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;page-properties.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;page-properties.jpg 837w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;page-properties.jpg 837w&quot;
+    sizes=&quot;(max-width: 837px) 100vw, 837px&quot; width=&quot;837&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
+  因为这个 Page 有可能在其他 Block 中被引用，所以选择了 Properties
+&lt;&#x2F;aside&gt;
+&lt;p&gt;展开的内容就记在 Block 下，这样回顾时也方便知道每天都记了哪些内容。但这样会比较零散，其他 Block 再引用该 Page 时，只能看到内容分散在不同天的 Block 下。这里有一个 Tip 是使用 &lt;code&gt;Copy block embed&lt;&#x2F;code&gt;。将每天记录的内容 &lt;code&gt;Copy block embeds&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;copy-block-embeds.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;copy-block-embeds.jpg 378w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;copy-block-embeds.jpg 378w&quot;
+    sizes=&quot;(max-width: 378px) 100vw, 378px&quot; width=&quot;378&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;然后在对应的页面粘贴即可&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;paste-embed-blocks.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;paste-embed-blocks.jpg 835w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;paste-embed-blocks.jpg 835w&quot;
+    sizes=&quot;(max-width: 835px) 100vw, 835px&quot; width=&quot;835&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;在一处编辑，其他地方自动更新。点击右边的数字可以看到原始的内容。这样既可以发挥 Logseq 快速记录的特性，又能让相关内容很好地聚合。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  &lt;code&gt;copy ref&lt;&#x2F;code&gt; 和 &lt;code&gt;copy embeds&lt;&#x2F;code&gt; 都可以同步显示内容。区别是，前者只能展示一级内容，且点击后会跳转到 Source Block，后者可以展示多个层级的内容，且可以就地编辑。
+&lt;&#x2F;aside&gt;&lt;h3 id=&quot;zai-ye-mian-nei-jiang-xiang-guan-block-an-bu-tong-wei-du-ju-he&quot;&gt;在页面内将相关 Block 按不同维度聚合&lt;&#x2F;h3&gt;
+&lt;p&gt;因为 Block 与 Page 之间是通过属性间接关联在一起的，所以这些 Block 不会自动出现在该 Page 下，需要通过 Advanced Query 将它们检索出来，相关的 Code 上面已经有了，这里看下展示效果：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;page.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;page.jpg 832w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;page.jpg 832w&quot;
+    sizes=&quot;(max-width: 832px) 100vw, 832px&quot; width=&quot;832&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;划分的维度很简单：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Inbox:&lt;&#x2F;strong&gt; 没有 Todo 标记的（&lt;code&gt;(not [?b :block&#x2F;marker ?m])&lt;&#x2F;code&gt;），表示将来某一天可以做&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Todo:&lt;&#x2F;strong&gt; 标记为 &lt;code&gt;TODO&lt;&#x2F;code&gt; 的 Block&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Doing:&lt;&#x2F;strong&gt; 标记为 &lt;code&gt;DOING&lt;&#x2F;code&gt; 的 Block&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Done:&lt;&#x2F;strong&gt; 标记为 &lt;code&gt;DONE&lt;&#x2F;code&gt; 的 Block&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  这里需要在设置里将 &amp;quot;DOING 耗时统计&amp;quot;  这一项关掉，不然只要在 TODO 和 DOING 状态间切换就会进行耗时计算，这跟我们的使用姿势不符。
+&lt;&#x2F;aside&gt;
+&lt;p&gt;假如 &lt;code&gt;Todo&lt;&#x2F;code&gt; 列表空了，就从 &lt;code&gt;Inbox&lt;&#x2F;code&gt; 中找几个，状态切换为 &lt;code&gt;TODO&lt;&#x2F;code&gt; ，就会自动出现在 &lt;code&gt;Todo&lt;&#x2F;code&gt; 这个 Group 下。&lt;&#x2F;p&gt;
+&lt;p&gt;假如 &lt;code&gt;Doing&lt;&#x2F;code&gt; 的做完了，从 &lt;code&gt;Todo&lt;&#x2F;code&gt; 中找几个，状态切换为 &lt;code&gt;DOING&lt;&#x2F;code&gt; （点击 TODO 按钮即可），就会自动出现在 &lt;code&gt;Doing&lt;&#x2F;code&gt; 这个 Group 下。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;yi-bing-guan-li-todo&quot;&gt;一并管理 Todo&lt;&#x2F;h3&gt;
+&lt;p&gt;用 Logseq 管理 Todo 不是一个顺便的行为，而是合适的行为。对于 Todo 来说，我觉得 Context 是很重要的，而 Logseq 可以为 Todo 提供足够多的 Context，同时可以将 Todo 和其他 Block 联系起来。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;chang-jing-mo-ni&quot;&gt;场景模拟&lt;&#x2F;h2&gt;
+&lt;h3 id=&quot;jin-tian-de-dai-ban-shi-xiang-you-na-xie&quot;&gt;今天的待办事项有哪些&lt;&#x2F;h3&gt;
+&lt;p&gt;先从昨天的 Todo 中找哪些今天可以继续做的，通过 copy ref 的方式，放到今天的 Todo 列表中。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  用 copy ref 可以保持一致性，只要修改一处，其他地方都会同时更新。
+&lt;&#x2F;aside&gt;
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;today-todo.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;today-todo.jpg 449w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;today-todo.jpg 449w&quot;
+    sizes=&quot;(max-width: 449px) 100vw, 449px&quot; width=&quot;449&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;点击进去后可以看到相关的引用&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;ref-backlink.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;ref-backlink.jpg 837w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;ref-backlink.jpg 837w&quot;
+    sizes=&quot;(max-width: 837px) 100vw, 837px&quot; width=&quot;837&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
+  注意到 Block 后面的数字，这是 Logseq 的一个 Feature：点击 「TODO」后会切换到「DOING」，同时开始计时，当再切换到「TODO」或「DONE」时，就能看到经过了多少时间。可以在 Settings 里关闭该功能。
+&lt;&#x2F;aside&gt;
+&lt;p&gt;如果这几个 Todo 做完了，可以从其他标为 Favorite 页面的待办里挑几个出来。「挑」的过程就是将 Block 的 &lt;code&gt;&#x2F;TODO&lt;&#x2F;code&gt; 切换为 &lt;code&gt;&#x2F;DOING&lt;&#x2F;code&gt;，然后 copy ref 到今天的 Todo 列表里。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  我的一些 Favorite 页面，方便回顾&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;- Ideas &#x2F;&#x2F; 随时冒出来的一些想法
+&lt;&#x2F;span&gt;&lt;span&gt;- Thoughts&#x2F;&#x2F; 自己的一些思考
+&lt;&#x2F;span&gt;&lt;span&gt;- Pearls &#x2F;&#x2F; 网上看到的一些不错的内容
+&lt;&#x2F;span&gt;&lt;span&gt;- Tiny &#x2F;&#x2F; 记录生活中的一些小细节
+&lt;&#x2F;span&gt;&lt;span&gt;- Articles
+&lt;&#x2F;span&gt;&lt;span&gt;- Books
+&lt;&#x2F;span&gt;&lt;span&gt;- Frontend
+&lt;&#x2F;span&gt;&lt;span&gt;- Programming
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=bpikCLhpIRY&quot;&gt;这个视频&lt;&#x2F;a&gt;的作者用了另一种维度来作为 Daily Entry 的模版&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;- Create
+&lt;&#x2F;span&gt;&lt;span&gt;- Consume
+&lt;&#x2F;span&gt;&lt;span&gt;- Connect
+&lt;&#x2F;span&gt;&lt;span&gt;- Celebrate
+&lt;&#x2F;span&gt;&lt;span&gt;- Coordinate
+&lt;&#x2F;span&gt;&lt;span&gt;- Consolidate
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+
+&lt;&#x2F;aside&gt;&lt;h3 id=&quot;zuo-du-shu-bi-ji&quot;&gt;做读书笔记&lt;&#x2F;h3&gt;
+&lt;p&gt;这是 Logseq 的又一个亮点，通过命令 &lt;code&gt;&#x2F;Upload an asset&lt;&#x2F;code&gt; 上传 PDF 文件后（其实就是将文件拷贝到 Logseq 在本地的目录），点击该文件可以左右分栏，左边是 PDF 电子书，右边是笔记区。阅读过程中，如果有想记录的内容，可以先在 PDF 中高亮，然后右键选择 &lt;code&gt;copy ref&lt;&#x2F;code&gt;，在 Block 中粘贴，就能引用到这些文字了。相比传统的复制粘贴，&lt;code&gt;copy ref&lt;&#x2F;code&gt; 的内容点击后，可以回到 PDF，进而查看更多的上下文。也可以方便地加入自己的 Comment&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;pdf-read.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;pdf-read.jpg 790.5w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;pdf-read.jpg 790.5w&quot;
+    sizes=&quot;(max-width: 790.5px) 100vw, 790.5px&quot; width=&quot;790.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;lin-shi-chu-xian-de-dai-ban-shi-xiang&quot;&gt;临时出现的待办事项&lt;&#x2F;h3&gt;
+&lt;p&gt;可以新建一个 &lt;code&gt;Inbox&lt;&#x2F;code&gt; 页面，然后把事项放到当天的 Journal 页，打上 &lt;code&gt;Inbox&lt;&#x2F;code&gt; 标签。如&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;• 帮忙调研某个产品 #Inbox
+&lt;&#x2F;span&gt;&lt;span&gt;• 用户反馈了个 Bug #Inbox
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后就可以在工作间隙，Review 这些 Inbox 项，看是否应该在今天处理，是否要加上特定的属性（方便归类到特定的页面）。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;hui-gu&quot;&gt;回顾&lt;&#x2F;h3&gt;
+&lt;p&gt;回顾是一个很重要的过程，对于学到的内容可以加深印象，了解进行中的事情处于什么状态，帮助制定下一阶段的计划。对于每一个需要回顾的页面，可以都加入到侧栏的 Favorites，同时结合 Advanced Query 把 Block 按 Todo &#x2F; Doing &#x2F; Done 区分开来（像 Ideas &#x2F; Thoughts 这样的页面就不需要了）。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  如果担心遗漏，可以按日期来 Review
+&lt;&#x2F;aside&gt;&lt;h2 id=&quot;xiao-ji-qiao&quot;&gt;小技巧&lt;&#x2F;h2&gt;
+&lt;ul&gt;
+&lt;li&gt;输入 &lt;code&gt;&#x2F;&lt;&#x2F;code&gt; 会出现自动提示，比如设置为 TODO，上传附件等，其中 &lt;code&gt;&#x2F;Today&lt;&#x2F;code&gt; 和 &lt;code&gt;&#x2F;Current time&lt;&#x2F;code&gt; 很方便，前者可以自动添加当前日期，如 &lt;code&gt;[[2022-03-24]]&lt;&#x2F;code&gt;，这样就会以 Back Link 的形式出现在 &lt;code&gt;2022-03-24&lt;&#x2F;code&gt; Journal 页。后者会输出当前时间（精确到分钟），可以用来记录时间消耗。&lt;code&gt;&#x2F;Draw&lt;&#x2F;code&gt; 甚至可以嵌入一个画板。&lt;&#x2F;li&gt;
+&lt;li&gt;使用 &lt;code&gt;{{cloze content}}&lt;&#x2F;code&gt; 可以把 &lt;code&gt;content&lt;&#x2F;code&gt; 隐藏起来，点击后展开，可以用来记忆单词。&lt;&#x2F;li&gt;
+&lt;li&gt;将常用的结构设置为 Template（比如每天的例行事项，右键点击左边的小圆点可以看到这个选项），在需要的地方选择该模版即可自动填充模版内容。&lt;&#x2F;li&gt;
+&lt;li&gt;在设置里开启「Developer mode」后，可以安装 Plugins 和 Themes&lt;&#x2F;li&gt;
+&lt;li&gt;按住 &lt;code&gt;Shift&lt;&#x2F;code&gt; 点击 Page 链接，可以在 Sidebar 打开，方便同时浏览&lt;&#x2F;li&gt;
+&lt;li&gt;编辑代码或者 Query，可以点击上面的空白区域
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;edit-query.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;edit-query.jpg 492w,&amp;#x2F;posts&amp;#x2F;logseq&amp;#x2F;edit-query.jpg 492w&quot;
+    sizes=&quot;(max-width: 492px) 100vw, 492px&quot; width=&quot;492&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h2&gt;
+&lt;p&gt;以上就是我目前的 Logseq 使用习惯。因为 Logseq 灵活又强大，大家的使用姿势都不太一样，以下这几个链接也可以一并参考：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=BhHfF0P9A80&quot;&gt;How I Use Logseq to Take Notes and Organize My Life&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=DxoGJBb1mWQ&quot;&gt;我是如何使用 Logseq 的 (via Randy)&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=bpikCLhpIRY&quot;&gt;How I Orgnise My Life&lt;&#x2F;a&gt; 作者用的 Roam Research，可以参考下使用理念&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=ScRrcL__SSI&quot;&gt;Roam Research 作者是如何使用 Roam Research 的&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+        </item>
+        
         
         <item>
             <title>拼音猜成语</title>
