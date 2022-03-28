@@ -463,9 +463,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .h-12 {
   height: 3rem;
 }
-.min-h-\[calc\(100vh-3rem\)\] {
-  min-height: calc(100vh - 3rem);
-}
 .min-h-\[200px\] {
   min-height: 200px;
 }
