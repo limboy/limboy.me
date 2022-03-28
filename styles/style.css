@@ -10,13 +10,14 @@
 
 @media screen(lg) {
   .inner {
-    width: 60rem;
+    width: 48rem;
   }
 }
 
 :root {
-  --nav-color: #f5f5f7;
+  --nav-color: #fff;
   --secondary-color: #000;
+  --code-font-family: Menlo, 'Roboto Mono', Courier New, monospace;
 }
 
 body {
@@ -223,4 +224,8 @@ body {
 .prose a.link-item:hover {
   color: #eee;
   text-decoration: none;
+}
+
+hr.separator:last-child {
+  display: none;
 }
