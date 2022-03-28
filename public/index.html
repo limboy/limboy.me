@@ -5,7 +5,7 @@
   <meta content="width=device-width,initial-scale=1" name="viewport" />
   <meta charset="UTF-8">
   <title>Limboy</title>
-  <link rel="stylesheet" href="/assets/main.css?3eZitq5jCvmO3X91RiyqRSLGeMdCFVCamilj+kLPgSs=" />
+  <link rel="stylesheet" href="/assets/main.css?3BKPiJvABDTarxppAWJV+U458aqQTh1eOJPUNl6nmRY=" />
   <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
   
 </head>
@@ -27,7 +27,7 @@
   </nav>
 
   <div class="flex flex-col min-h-[calc(100vh-3rem)]">
-    <div class="flex justify-center" style="min-height: calc(100vh - 7.5rem);">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 7.5rem);">
       <div class="inner mb-2">
         
 
@@ -84,6 +84,14 @@
 
   
   
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 7.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 7.5rem)`
+    })
+  </script>
 </body>
 
 </html>
