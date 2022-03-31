@@ -3,7 +3,7 @@ title= "我的 Logseq 使用习惯"
 date = 2022-03-25
 description = "Logseq 是一个笔记工具，又不仅仅是一个笔记工具。经过一段时间摸索之后，找到了比较舒服的使用姿势"
 [taxonomies]
-tags = ["pratical", "logseq"]
+tags = ["practical", "logseq"]
 [extra]
 cover = "/posts/logseq/cover.jpg"
 +++

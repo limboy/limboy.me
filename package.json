@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev-webpack": "webpack --watch --mode development",
-    "dev-zola": "zola serve",
+    "dev-zola": "zola serve -i 0.0.0.0",
     "dev": "concurrently 'npm:dev-webpack' 'npm:dev-zola'",
     "build-webpack": "webpack --mode production",
     "build-zola": "zola build",

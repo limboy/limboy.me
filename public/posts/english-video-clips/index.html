@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+通过视频片段来学习英语 -
+Limboy</title>
+  <link rel="stylesheet" href="/assets/main.css?T6J3Zv7t5amuIuhX6d+YOKucQWjPw892gbAxrkFCpjg=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/english-video-clips/">
+
+<meta name="twitter:title" content="通过视频片段来学习英语">
+<meta property="og:title" content="通过视频片段来学习英语">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 7.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;english-video-clips&#x2F;">通过视频片段来学习英语</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2022-03-31</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>「背单词」是件很有挑战的事情，尤其是在出了校园之后，持续下去更是困难。那如何让这个过程多点乐趣呢？然后就想到了视频：如果把包含对应单词的影视片段裁剪出来，通过看视频的方式会不会让「背单词」不那么枯燥？一方面可以对单词的上下文可以有更多的了解，另外也正好可以回顾这些作品。</p>
+<p>感觉可行，怎么做呢？其实也简单，从字幕文件入手，字幕包含了单词，也有 Time Offset，拿到这些信息后，找到对应的视频文件，通过 <code>ffmpeg</code> 去截取视频片段就行了。</p>
+<h3 id="di-yi-bu-xia-zai-ying-shi-ju-he-zi-mu">第一步：下载影视剧和字幕</h3>
+<p>这一步主要是体力活，把字幕和视频文件名对应。有个小技巧：通过 <code>rename</code> 命令可以根据正则批量重命名文件（需要先通过 <code>brew</code> 安装）</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># $n 可以反向引用前面括号里的内容
+</span><span style="color:#8e908c;"># -n 选项可以预览重命名后的效果（dry run）
+</span><span>
+</span><span style="color:#8e908c;"># 「老友记.Friends.s01e07.ass」将会被重命名为「Friends.S01E07.ass」
+</span><span style="color:#c82728;">rename </span><span style="color:#839c00;">&#39;s/老友记.(Friends.)s([\d]+)e([\d]+)/$1S$2E$3/g&#39; </span><span style="color:#3e999f;">*
+</span></code></pre>
+<aside class="info" >
+  Mac 也内置了批量重命名文件的功能（选择多个文件 -&gt; 右键 -&gt; 重命名），如果不需要正则替换的话，这个也很方便
+</aside><h3 id="di-er-bu-xie-jiao-ben">第二步：写脚本</h3>
+<p>这个脚本的目标是：</p>
+<ol>
+<li>找到包含该单词的视频，并解析出开始时间</li>
+<li>通过 <code>ffmpeg</code> 截取视频片段</li>
+</ol>
+<p>其中 <code>.ass</code> 文件每一行的字幕格式如下：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>Dialogue: 0,0:11:38.57,0:11:39.84,*Default,NTP,0000,0000,0000,,沃尔特  来看看\NCheck it out Walt.
+</span></code></pre>
+<p>所以只要定位到包含该单词的行，然后找到符合特征(<code>dd:dd:dd.dd</code>)的字符串即可。这里遇到一个小问题，在打开某些字幕文件时会出现乱码，通过 Hex Editor 看了下长这样：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;english-video-clips&#x2F;utf-16.jpg"
+    srcset="&#x2F;posts&#x2F;english-video-clips&#x2F;utf-16.jpg 527w,&#x2F;posts&#x2F;english-video-clips&#x2F;utf-16.jpg 527w"
+    sizes="(max-width: 527px) 100vw, 527px" width="527" /></p>
+<p>BOM 头是 <code>0xFFFE</code>（小端序），同时还有用来占位的 <code>00</code>，是 <code>utf16le</code> 编码的文件。所以在判断该用哪种编码打开时要格外注意。</p>
+<h3 id="di-san-bu-jie-qu-shi-pin">第三步：截取视频</h3>
+<p>这一部分比较简单，一行命令就妥了：</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># -t 表示 duration
+</span><span style="color:#c82728;">ffmpeg</span><span style="color:#f07219;"> -ss</span><span style="color:#4271ae;"> 01:19:27</span><span style="color:#f07219;"> -i</span><span style="color:#4271ae;"> input.mp4</span><span style="color:#f07219;"> -t</span><span style="color:#4271ae;"> 00:00:30</span><span style="color:#f07219;"> -c</span><span style="color:#4271ae;"> copy output.mp4
+</span></code></pre>
+<p>最终效果大概这样：
+<video playsinline controls>
+  <source src="https:&#x2F;&#x2F;assets.limboy.me&#x2F;file&#x2F;limboy-personal&#x2F;stage0-demo.mov" type="video/mp4" />
+</video></p>
+<p>看起来可行，但还挺不方便的，总不能每次要生成视频都要打开终端吧，要找到生成的视频并浏览也不够便捷，如果还要加上「生词本」的功能，同时查看该单词的具体解释又该怎么办呢？难道要写一个桌面端应用 🤔</p>
+<p>我甚至想到用 <a href="https://nextjs.org/">Next.js</a> 来开发一个本地 web 服务了，感觉还是太麻烦。那有没有能实现这些功能、足够好用，同时开发成本也低的解决方案呢？这时我想到了 <a href="https://www.raycast.com/">Raycast</a> 这个平时一直在用的 Launcher。</p>
+<p>浏览了下文档后，发现可以很好地满足需求。</p>
+<h3 id="di-si-bu-jie-ru-raycast-sheng-cheng-dan-ci-shi-pin">第四步：接入 Raycast（生成单词视频）</h3>
+<p>简单介绍下 Raycast，它是一个 Mac 下的启动器，跟 <a href="https://www.alfredapp.com/">Alfred</a> 类似，但 UI 和 UE 比 Alfred 更好，还免费，支持的 Extension 也不少。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;english-video-clips&#x2F;raycast.jpg"
+    srcset="&#x2F;posts&#x2F;english-video-clips&#x2F;raycast.jpg 750w,&#x2F;posts&#x2F;english-video-clips&#x2F;raycast.jpg 750w"
+    sizes="(max-width: 750px) 100vw, 750px" width="750" /></p>
+<p>这里我们会用到一个脚本用来生成单词视频，一个 Extension 用来浏览单词对应的视频和解释，同时支持添加到单词本（Add to New）。</p>
+<p>创建脚本的过程很简单，启动 Raycast 后，输入 <code>Create Script Command</code>，输入必要的信息，就会生成一个 <code>.sh</code> 结尾的文件（需要先在 Setting 的 Extension 页，<code>Add Script Directory</code>），把生成视频的脚本复制上去就行了。效果如下：</p>
+<video playsinline controls>
+  <source src="https:&#x2F;&#x2F;assets.limboy.me&#x2F;file&#x2F;limboy-personal&#x2F;raycast-cli.mov" type="video/mp4" />
+</video><h3 id="di-wu-bu-jie-ru-raycast-liu-lan-dan-ci">第五步：接入 Raycast（浏览单词）</h3>
+<p>Raycast 提供了方便的 <a href="https://developers.raycast.com/">API</a>（React）来搭建界面和交互。得益于良好的设计，这些 API 使用起来非常舒服和直观。同时因为是运行在 Node 环境，所以可以访问本地文件、执行脚本等。</p>
+<aside class="info" >
+  下次如果有涉及跟本地交互的需求，可能会优先考虑 Raycast，不合适的话再考虑本地运行 Next.js 服务。
+</aside>
+<p>最终的效果如下：</p>
+<video playsinline controls>
+  <source src="https:&#x2F;&#x2F;assets.limboy.me&#x2F;file&#x2F;limboy-personal&#x2F;raycast-english-clips.mov" type="video/mp4" />
+</video>
+<p>代码也不过百来行：</p>
+<pre data-lang="ts" style="background-color:#f9f9f9;color:#111111;" class="language-ts "><code class="language-ts" data-lang="ts"><span style="color:#8959a8;">import </span><span>{ </span><span style="color:#c82728;">ActionPanel</span><span>, </span><span style="color:#c82728;">List</span><span>, </span><span style="color:#c82728;">Action</span><span>, </span><span style="color:#c82728;">Icon </span><span>} </span><span style="color:#8959a8;">from </span><span style="color:#839c00;">&#39;@raycast/api&#39;</span><span>;
+</span><span style="color:#8959a8;">import </span><span style="color:#c82728;">fs </span><span style="color:#8959a8;">from </span><span style="color:#839c00;">&#39;fs&#39;</span><span>;
+</span><span style="color:#8959a8;">import </span><span>{ </span><span style="color:#c82728;">execSync </span><span>} </span><span style="color:#8959a8;">from </span><span style="color:#839c00;">&#39;child_process&#39;</span><span>;
+</span><span style="color:#8959a8;">import </span><span>{ </span><span style="color:#c82728;">useState </span><span>} </span><span style="color:#8959a8;">from </span><span style="color:#839c00;">&#39;react&#39;</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">const </span><span style="color:#c82728;">allWordsDir </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;/Users/limboy/Dropbox/Videos/Snippets/&#39;</span><span>;
+</span><span style="color:#8959a8;">const </span><span style="color:#c82728;">newWordsDir </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;/Users/limboy/Dropbox/English/Snippets/Memorizing/&#39;</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">const </span><span style="color:#4271ae;">allWords </span><span style="color:#3e999f;">= </span><span>() </span><span style="color:#8959a8;">=&gt; </span><span>{
+</span><span>  </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">fs</span><span style="color:#4271ae;">.readdirSync</span><span>(</span><span style="color:#c82728;">allWordsDir</span><span>)</span><span style="color:#4271ae;">.filter</span><span>((</span><span style="color:#f07219;">item</span><span>) </span><span style="color:#8959a8;">=&gt; </span><span style="color:#c82728;">item</span><span>[</span><span style="color:#f07219;">0</span><span>] </span><span style="color:#3e999f;">!== </span><span style="color:#839c00;">&#39;.&#39;</span><span>);
+</span><span>};
+</span><span>
+</span><span style="color:#8959a8;">const </span><span style="color:#4271ae;">newWords </span><span style="color:#3e999f;">= </span><span>() </span><span style="color:#8959a8;">=&gt; </span><span>{
+</span><span>  </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">fs</span><span style="color:#4271ae;">.readdirSync</span><span>(</span><span style="color:#c82728;">newWordsDir</span><span>)</span><span style="color:#4271ae;">.filter</span><span>((</span><span style="color:#f07219;">item</span><span>) </span><span style="color:#8959a8;">=&gt; </span><span style="color:#c82728;">item</span><span>[</span><span style="color:#f07219;">0</span><span>] </span><span style="color:#3e999f;">!== </span><span style="color:#839c00;">&#39;.&#39;</span><span>);
+</span><span>};
+</span><span>
+</span><span style="color:#8959a8;">const </span><span style="color:#4271ae;">allSnippets </span><span style="color:#3e999f;">= </span><span>(</span><span style="color:#f07219;">word</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">string</span><span>) </span><span style="color:#8959a8;">=&gt; </span><span>{
+</span><span>  </span><span style="color:#8959a8;">const </span><span style="color:#c82728;">dir </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">allWordsDir </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;/&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">word</span><span>;
+</span><span>  </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">fs</span><span style="color:#4271ae;">.readdirSync</span><span>(</span><span style="color:#c82728;">dir</span><span>);
+</span><span>};
+</span><span>
+</span><span style="color:#8959a8;">const </span><span style="color:#4271ae;">toggleNew </span><span style="color:#3e999f;">= </span><span>(</span><span style="color:#f07219;">word</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">string</span><span>, </span><span style="color:#f07219;">toNew</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">boolean</span><span>) </span><span style="color:#8959a8;">=&gt; </span><span>{
+</span><span>  </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">toNew</span><span>) {
+</span><span>    </span><span style="color:#4271ae;">execSync</span><span>(</span><span style="color:#839c00;">`ln -s ${</span><span style="color:#c82728;">allWordsDir</span><span style="color:#839c00;">}${</span><span style="color:#c82728;">word</span><span style="color:#839c00;">} ${</span><span style="color:#c82728;">newWordsDir</span><span style="color:#839c00;">}`</span><span>);
+</span><span>  } </span><span style="color:#8959a8;">else </span><span>{
+</span><span>    </span><span style="color:#4271ae;">execSync</span><span>(</span><span style="color:#839c00;">`rm ${</span><span style="color:#c82728;">newWordsDir</span><span style="color:#839c00;">}${</span><span style="color:#c82728;">word</span><span style="color:#839c00;">}`</span><span>);
+</span><span>  }
+</span><span>};
+</span><span>
+</span><span style="color:#8959a8;">export default function </span><span style="color:#4271ae;">Command</span><span>() {
+</span><span>  </span><span style="color:#8959a8;">return </span><span>(
+</span><span>    &lt;List&gt;
+</span><span>      </span><span style="color:#3e999f;">&lt;</span><span style="color:#c82728;">List</span><span>.</span><span style="color:#c82728;">Item
+</span><span>        </span><span style="color:#c82728;">title</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&quot;All Words&quot;
+</span><span>        </span><span style="color:#c82728;">icon</span><span style="color:#3e999f;">=</span><span>{Icon.</span><span style="color:#c82728;">Text</span><span>}
+</span><span>        </span><span style="color:#c82728;">actions</span><span style="color:#3e999f;">=</span><span>{
+</span><span>          &lt;ActionPanel&gt;
+</span><span>            &lt;Action.</span><span style="color:#c82728;">Push
+</span><span>              </span><span style="color:#c82728;">title</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&quot;All Words&quot;
+</span><span>              </span><span style="color:#c82728;">target</span><span style="color:#3e999f;">=</span><span>{&lt;WordsList </span><span style="color:#c82728;">isAll</span><span style="color:#3e999f;">=</span><span>{</span><span style="color:#c82728;">true</span><span>} </span><span style="color:#3e999f;">/&gt;</span><span>}
+</span><span>            /&gt;
+</span><span>          &lt;/ActionPanel&gt;
+</span><span>        }
+</span><span>      </span><span style="color:#3e999f;">/&gt;
+</span><span>      </span><span style="color:#3e999f;">&lt;</span><span style="color:#c82728;">List</span><span>.</span><span style="color:#c82728;">Item
+</span><span>        </span><span style="color:#c82728;">title</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&quot;New Words&quot;
+</span><span>        </span><span style="color:#c82728;">icon</span><span style="color:#3e999f;">=</span><span>{Icon.</span><span style="color:#c82728;">Star</span><span>}
+</span><span>        </span><span style="color:#c82728;">actions</span><span style="color:#3e999f;">=</span><span>{
+</span><span>          &lt;ActionPanel&gt;
+</span><span>            &lt;Action.</span><span style="color:#c82728;">Push
+</span><span>              </span><span style="color:#c82728;">title</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&quot;All Words&quot;
+</span><span>              </span><span style="color:#c82728;">target</span><span style="color:#3e999f;">=</span><span>{&lt;WordsList </span><span style="color:#c82728;">isAll</span><span style="color:#3e999f;">=</span><span>{</span><span style="color:#c82728;">false</span><span>} </span><span style="color:#3e999f;">/&gt;</span><span>}
+</span><span>            /&gt;
+</span><span>          &lt;/ActionPanel&gt;
+</span><span>        }
+</span><span>      </span><span style="color:#3e999f;">/&gt;
+</span><span>    </span><span style="color:#3e999f;">&lt;/</span><span style="color:#c82728;">List</span><span style="color:#3e999f;">&gt;
+</span><span>  );
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">WordsList</span><span>({ </span><span style="color:#f07219;">isAll </span><span>}</span><span style="color:#3e999f;">: </span><span>{ </span><span style="color:#c82728;">isAll</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">boolean </span><span>}) {
+</span><span>  </span><span style="color:#8959a8;">const </span><span style="color:#c82728;">wordsFunction </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">isAll </span><span style="color:#3e999f;">? </span><span style="color:#c82728;">allWords </span><span style="color:#3e999f;">: </span><span style="color:#c82728;">newWords</span><span>;
+</span><span>  </span><span style="color:#8959a8;">const </span><span>[</span><span style="color:#c82728;">words</span><span>, </span><span style="color:#c82728;">setWords</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">useState</span><span>(</span><span style="color:#4271ae;">wordsFunction</span><span>());
+</span><span>  </span><span style="color:#8959a8;">return </span><span>(
+</span><span>    &lt;List&gt;
+</span><span>      {</span><span style="color:#f07219;">words</span><span>.</span><span style="color:#f07219;">map</span><span>((</span><span style="color:#f07219;">word</span><span>, </span><span style="color:#f07219;">i</span><span>) </span><span style="color:#3e999f;">=&gt; </span><span>{
+</span><span>        const </span><span style="color:#c82728;">dictPath </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;dict://&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">word</span><span>;
+</span><span>        </span><span style="color:#4271ae;">return </span><span>(
+</span><span>          &lt;List.Item
+</span><span>            </span><span style="color:#f07219;">key</span><span style="color:#3e999f;">=</span><span>{</span><span style="color:#c82728;">i</span><span>}
+</span><span>            </span><span style="color:#f07219;">icon</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&quot;list-icon.png&quot;
+</span><span>            </span><span style="color:#f07219;">title</span><span style="color:#3e999f;">=</span><span>{</span><span style="color:#c82728;">word</span><span>}
+</span><span>            </span><span style="color:#f07219;">actions</span><span style="color:#3e999f;">=</span><span>{
+</span><span>              &lt;ActionPanel&gt;
+</span><span>                &lt;Action.</span><span style="color:#c82728;">Push
+</span><span>                  </span><span style="color:#c82728;">icon</span><span style="color:#3e999f;">=</span><span>{Icon.</span><span style="color:#c82728;">Video</span><span>}
+</span><span>                  </span><span style="color:#c82728;">title</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&quot;Show Video Snippets&quot;
+</span><span>                  </span><span style="color:#c82728;">target</span><span style="color:#3e999f;">=</span><span>{&lt;Snippets </span><span style="color:#c82728;">word</span><span style="color:#3e999f;">=</span><span>{</span><span style="color:#c82728;">word</span><span>} </span><span style="color:#3e999f;">/&gt;</span><span>}
+</span><span>                /&gt;
+</span><span>                &lt;Action.Open </span><span style="color:#c82728;">title</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&quot;Show in Dict&quot; </span><span style="color:#c82728;">target</span><span style="color:#3e999f;">=</span><span>{</span><span style="color:#c82728;">dictPath</span><span>} </span><span style="color:#3e999f;">/&gt;
+</span><span>                &lt;</span><span style="color:#c82728;">Action
+</span><span>                  </span><span style="color:#c82728;">icon</span><span style="color:#3e999f;">=</span><span>{Icon.</span><span style="color:#c82728;">Circle</span><span>}
+</span><span>                  </span><span style="color:#c82728;">title</span><span style="color:#3e999f;">=</span><span>{isAll ? </span><span style="color:#839c00;">&#39;Add to New&#39; </span><span>: </span><span style="color:#839c00;">&#39;Remove from New&#39;</span><span>}
+</span><span>                  </span><span style="color:#c82728;">onAction</span><span style="color:#3e999f;">=</span><span>{() =&gt; {
+</span><span>                    </span><span style="color:#4271ae;">toggleNew</span><span>(</span><span style="color:#f07219;">word</span><span>, </span><span style="color:#f07219;">isAll</span><span>);
+</span><span>                    </span><span style="color:#4271ae;">setWords</span><span>(</span><span style="color:#f07219;">wordsFunction</span><span>());
+</span><span>                  }}
+</span><span>                /&gt;
+</span><span>              &lt;/</span><span style="color:#f07219;">ActionPanel</span><span>&gt;
+</span><span>            }
+</span><span>          /&gt;
+</span><span>        );
+</span><span>      })}
+</span><span>    </span><span style="color:#3e999f;">&lt;/</span><span style="color:#c82728;">List</span><span style="color:#3e999f;">&gt;
+</span><span>  );
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">Snippets</span><span>({ </span><span style="color:#f07219;">word </span><span>}</span><span style="color:#3e999f;">: </span><span>{ </span><span style="color:#c82728;">word</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">string </span><span>}) {
+</span><span>  </span><span style="color:#8959a8;">return </span><span>(
+</span><span>    &lt;List&gt;
+</span><span>      {</span><span style="color:#f07219;">allSnippets</span><span>(</span><span style="color:#f07219;">word</span><span>).</span><span style="color:#f07219;">map</span><span>((</span><span style="color:#f07219;">snippet</span><span>, </span><span style="color:#f07219;">i</span><span>) </span><span style="color:#3e999f;">=&gt; </span><span>{
+</span><span>        const </span><span style="color:#c82728;">videoPath </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">allWordsDir </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;/&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">word </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;/&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">snippet</span><span>;
+</span><span>        </span><span style="color:#4271ae;">return </span><span>(
+</span><span>          &lt;List.Item
+</span><span>            </span><span style="color:#f07219;">icon</span><span style="color:#3e999f;">=</span><span>{Icon.</span><span style="color:#c82728;">Video</span><span>}
+</span><span>            </span><span style="color:#f07219;">key</span><span style="color:#3e999f;">=</span><span>{</span><span style="color:#c82728;">i</span><span>}
+</span><span>            </span><span style="color:#f07219;">title</span><span style="color:#3e999f;">=</span><span>{</span><span style="color:#c82728;">snippet</span><span>}
+</span><span>            </span><span style="color:#f07219;">actions</span><span style="color:#3e999f;">=</span><span>{
+</span><span>              &lt;ActionPanel&gt;
+</span><span>                &lt;Action.Open </span><span style="color:#c82728;">target</span><span style="color:#3e999f;">=</span><span>{</span><span style="color:#c82728;">videoPath</span><span>} </span><span style="color:#c82728;">title</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&quot;Open Video&quot; </span><span style="color:#3e999f;">/&gt;
+</span><span>              &lt;/ActionPanel&gt;
+</span><span>            }
+</span><span>          /&gt;
+</span><span>        );
+</span><span>      })}
+</span><span>    </span><span style="color:#3e999f;">&lt;/</span><span style="color:#c82728;">List</span><span style="color:#3e999f;">&gt;
+</span><span>  );
+</span><span>}
+</span></code></pre>
+<p>通过这种方式，不仅让影视文件可以被再次唤醒，同时也有助于单词的记忆，还挺方便的。接下来就看能背多少个单词了。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/practical/">practical</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/english/">english</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/raycast/">raycast</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ffmpeg/">ffmpeg</a>
+    </li>
+    
+    
+  </ul>
+
+
+  <script src="https://giscus.app/client.js" data-repo="limboy/limboy.me" data-repo-id="R_kgDOGqD9cw"
+    data-category="General" data-category-id="DIC_kwDOGqD9c84CAoVe" data-mapping="pathname" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer class="flex border-t border-gray-300 text-gray-500 items-center justify-center h-12 text-sm mt-6">
+      <div class="flex inner justify-between">
+        <ul class="flex gap-2 sm:gap-4">
+          <li> <a class="footer-link" href="https://2010-2021.limboy.me" target="_blank"> Past Articles </a> </li>
+        </ul>
+
+        <p class="opacity-20">👻</p>
+
+        <ul class="flex gap-2 sm:gap-4">
+          <li> <a class="footer-link" href="https://limboy.me/index.xml">RSS</a> </li>
+        </ul>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 7.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 7.5rem)`
+    })
+  </script>
+</body>
+
+</html>

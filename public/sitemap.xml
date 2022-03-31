@@ -40,6 +40,10 @@
         <lastmod>2022-03-21</lastmod>
     </url>
     <url>
+        <loc>https://limboy.me/posts/english-video-clips/</loc>
+        <lastmod>2022-03-31</lastmod>
+    </url>
+    <url>
         <loc>https://limboy.me/posts/idiom/</loc>
         <lastmod>2022-03-22</lastmod>
     </url>
@@ -54,16 +58,25 @@
         <loc>https://limboy.me/tags/</loc>
     </url>
     <url>
+        <loc>https://limboy.me/tags/english/</loc>
+    </url>
+    <url>
         <loc>https://limboy.me/tags/essay/</loc>
+    </url>
+    <url>
+        <loc>https://limboy.me/tags/ffmpeg/</loc>
     </url>
     <url>
         <loc>https://limboy.me/tags/logseq/</loc>
     </url>
     <url>
-        <loc>https://limboy.me/tags/pratical/</loc>
+        <loc>https://limboy.me/tags/practical/</loc>
     </url>
     <url>
         <loc>https://limboy.me/tags/project/</loc>
+    </url>
+    <url>
+        <loc>https://limboy.me/tags/raycast/</loc>
     </url>
     <url>
         <loc>https://limboy.me/tags/review/</loc>
