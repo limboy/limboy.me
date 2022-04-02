@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+python的简单MapReduce实现：计算π
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/python-mapreduce-pi/">
+
+<meta name="twitter:title" content="python的简单MapReduce实现：计算π">
+<meta property="og:title" content="python的简单MapReduce实现：计算π">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;python-mapreduce-pi&#x2F;">python的简单MapReduce实现：计算π</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-09-10</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>MapReduce 是 Google 提出的一个软件架构，一般用于大规模数据集的并行运算。核心概念就是&quot;Map（映射）&quot;和&quot;Reduce（化简）&quot;。</p>
+<p>简单说来就是把一个任务分割成多个独立的子任务，子任务的分发由 map 实现，子任务计算结果的合并由 reduce 实现。</p>
+<p>mapreduce 的应用场景多是那种互不依赖，上下文无关的任务。所以类似 Fibonacci 数列这种对输入有依赖的就不适合使用 mapreduce。</p>
+<p>回到正题，要计算圆周率，我们先构建这么个模型</p>
+<img src="http://code.google.com/edu/parallel/img/inscribe.png" />
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span style="color:#8e908c;"># 外面的正方形面积
+</span><span>As </span><span style="color:#3e999f;">= </span><span>(2r)</span><span style="color:#4271ae;">(2r) </span><span style="color:#3e999f;">or</span><span> 4r</span><span style="color:#3e999f;">*</span><span>r
+</span><span style="color:#8e908c;"># 里面的圆的面积
+</span><span>Ac </span><span style="color:#3e999f;">= </span><span>pi</span><span style="color:#3e999f;">*</span><span>r</span><span style="color:#3e999f;">*</span><span>r
+</span><span>
+</span><span>pi </span><span style="color:#3e999f;">= </span><span>Ac </span><span style="color:#3e999f;">/ </span><span>(r</span><span style="color:#3e999f;">*</span><span>r)
+</span><span>As </span><span style="color:#3e999f;">=</span><span> 4r</span><span style="color:#3e999f;">*</span><span>r
+</span><span>r</span><span style="color:#3e999f;">*</span><span>r </span><span style="color:#3e999f;">= </span><span>As </span><span style="color:#3e999f;">/ </span><span style="color:#f07219;">4
+</span><span>pi </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">4 </span><span style="color:#3e999f;">* </span><span>Ac </span><span style="color:#3e999f;">/ </span><span>As
+</span></code></pre>
+<p>也就是说只要算出圆的面积与正方形面积的比，就可以求出圆周率。</p>
+<p>可以通过以下步骤计算 Ac / As：</p>
+<ol>
+<li>随机在正方形里生成许多点</li>
+<li>计算点在圆内与在正方形内的比例</li>
+</ol>
+<p>测试的随机点越多，结果越精确</p>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span style="color:#8e908c;">#coding=utf-8
+</span><span style="color:#8959a8;">import </span><span>random
+</span><span style="color:#8959a8;">import </span><span>multiprocessing
+</span><span style="color:#8959a8;">from </span><span>multiprocessing </span><span style="color:#8959a8;">import </span><span>Process
+</span><span>
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">MapReduce</span><span>(</span><span style="color:#839c00;">object</span><span>):
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">def </span><span style="color:#4271ae;">__init__</span><span>(</span><span style="color:#f07219;">self</span><span>, </span><span style="color:#f07219;">map_func</span><span>, </span><span style="color:#f07219;">reduce_func</span><span>, </span><span style="color:#f07219;">workers_num</span><span style="color:#3e999f;">=</span><span style="color:#f07219;">None</span><span>):
+</span><span>        </span><span style="color:#c82728;">self</span><span>.map_func </span><span style="color:#3e999f;">= </span><span>map_func
+</span><span>        </span><span style="color:#c82728;">self</span><span>.reduce_func </span><span style="color:#3e999f;">= </span><span>reduce_func
+</span><span>        </span><span style="color:#c82728;">self</span><span>.workers_num </span><span style="color:#3e999f;">= </span><span>workers_num
+</span><span>        </span><span style="color:#8959a8;">if </span><span style="color:#3e999f;">not </span><span>workers_num:
+</span><span>            workers_num </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">multiprocessing.</span><span style="color:#c82728;">cpu_count</span><span style="color:#4271ae;">()</span><span style="color:#3e999f;">*</span><span style="color:#f07219;">2
+</span><span>        </span><span style="color:#c82728;">self</span><span>.pool </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">multiprocessing.</span><span style="color:#c82728;">Pool</span><span style="color:#4271ae;">(workers_num)
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">def </span><span style="color:#4271ae;">__call__</span><span>(</span><span style="color:#f07219;">self</span><span>, </span><span style="color:#f07219;">inputs</span><span>):
+</span><span>        map_result </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.pool.</span><span style="color:#c82728;">map</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.map_func, inputs)
+</span><span>        reduce_result </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">reduce_func</span><span style="color:#4271ae;">(map_result)
+</span><span>        </span><span style="color:#8959a8;">return </span><span>reduce_result
+</span><span>
+</span><span style="color:#8959a8;">def </span><span style="color:#4271ae;">calculator</span><span>(</span><span style="color:#3e999f;">*</span><span style="color:#f07219;">args</span><span>):
+</span><span>    </span><span style="color:#8959a8;">print </span><span style="color:#4271ae;">multiprocessing.</span><span style="color:#c82728;">current_process</span><span style="color:#4271ae;">()</span><span>.name,</span><span style="color:#839c00;">&#39; processing&#39;
+</span><span>    points, circle_round </span><span style="color:#3e999f;">= </span><span>args[</span><span style="color:#f07219;">0</span><span>]
+</span><span>    points_in_circle </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0
+</span><span>    </span><span style="color:#8959a8;">for </span><span>i </span><span style="color:#8959a8;">in </span><span style="color:#4271ae;">range(points)</span><span>:
+</span><span>	    </span><span style="color:#8e908c;"># 这里其实只取了1/4圆
+</span><span>        x </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">random.</span><span style="color:#c82728;">random</span><span style="color:#4271ae;">()</span><span style="color:#3e999f;">*</span><span>circle_round
+</span><span>        y </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">random.</span><span style="color:#c82728;">random</span><span style="color:#4271ae;">()</span><span style="color:#3e999f;">*</span><span>circle_round
+</span><span>        </span><span style="color:#8959a8;">if </span><span>(x</span><span style="color:#3e999f;">**</span><span style="color:#f07219;">2 </span><span style="color:#3e999f;">+ </span><span>y</span><span style="color:#3e999f;">**</span><span style="color:#f07219;">2</span><span>) </span><span style="color:#3e999f;">&lt; </span><span>circle_round</span><span style="color:#3e999f;">**</span><span style="color:#f07219;">2</span><span>:
+</span><span>            points_in_circle </span><span style="color:#3e999f;">+= </span><span style="color:#f07219;">1
+</span><span>    </span><span style="color:#8959a8;">return </span><span>points_in_circle
+</span><span>
+</span><span style="color:#8959a8;">def </span><span style="color:#4271ae;">count_circle_points</span><span>(</span><span style="color:#f07219;">points_list</span><span>):
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">sum(points_list)
+</span><span>
+</span><span style="color:#8959a8;">if </span><span>__name__ </span><span style="color:#3e999f;">== </span><span style="color:#839c00;">&#39;__main__&#39;</span><span>:
+</span><span>    </span><span style="color:#8e908c;"># 半径
+</span><span>    </span><span style="color:#c82728;">CIRCLE_ROUND </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">10
+</span><span>    </span><span style="color:#8e908c;"># 总点数
+</span><span>    </span><span style="color:#c82728;">POINTS </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">10000000
+</span><span>    </span><span style="color:#8e908c;"># 总进程数
+</span><span>    </span><span style="color:#c82728;">WORKERS_NUM </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">10
+</span><span>
+</span><span>    map_reduce </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">MapReduce</span><span style="color:#4271ae;">(calculator, count_circle_points, </span><span style="color:#c82728;">WORKERS_NUM</span><span style="color:#4271ae;">)
+</span><span>    inputs </span><span style="color:#3e999f;">= </span><span>[(</span><span style="color:#c82728;">POINTS</span><span style="color:#3e999f;">/</span><span style="color:#c82728;">WORKERS_NUM</span><span>, </span><span style="color:#c82728;">CIRCLE_ROUND</span><span>)] </span><span style="color:#3e999f;">* </span><span style="color:#c82728;">WORKERS_NUM
+</span><span>    all_points_in_circle </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">map_reduce</span><span style="color:#4271ae;">(inputs)
+</span><span>    ac_as </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">float</span><span style="color:#4271ae;">(all_points_in_circle)</span><span style="color:#3e999f;">/</span><span style="color:#c82728;">POINTS
+</span><span>    </span><span style="color:#8959a8;">print </span><span style="color:#839c00;">&#39;pi approach to:</span><span>%7f</span><span style="color:#839c00;">&#39;</span><span style="color:#3e999f;">%</span><span>(</span><span style="color:#f07219;">4</span><span style="color:#3e999f;">*</span><span>ac_as)
+</span></code></pre>
+<p>这是比较简单的单机 mapreduce，用多进程就可以实现。如果是多机运算的话，就麻烦多了，类似这张图：</p>
+<img src="http://code.google.com/edu/parallel/img/mrfigure.png" width='700px'/>
+<p>参考链接[2]有对这张图的解释</p>
+<p>参考：</p>
+<ul>
+<li>[1] <a href="http://blog.doughellmann.com/2009/04/implementing-mapreduce-with.html">http://blog.doughellmann.com/2009/04/implementing-mapreduce-with.html</a></li>
+<li>[2] <a href="http://code.google.com/edu/parallel/mapreduce-tutorial.html">http://code.google.com/edu/parallel/mapreduce-tutorial.html</a></li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/python/">python</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/math/">math</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

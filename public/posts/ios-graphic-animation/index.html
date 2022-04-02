@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+简单说说iOS的图形和动画
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/ios-graphic-animation/">
+
+<meta name="twitter:title" content="简单说说iOS的图形和动画">
+<meta property="og:title" content="简单说说iOS的图形和动画">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;ios-graphic-animation&#x2F;">简单说说iOS的图形和动画</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2013-06-08</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <h3 id="core-graphics">Core Graphics</h3>
+<p>Core Graphics 是一组用来绘制 2D 图形的 API，使用 CPU 进行计算。 新建一个项目时，模板已经自动载入了 CoreGraphics.framwork。</p>
+<h3 id="core-animation">Core Animation</h3>
+<p>Core Animation 包含于 QuartzCore.framwork 中，是一组自由度更大的图形绘制和动画 API，但实现起来也会比 Core Graphics 麻烦一点。iOS 上的 UIKit 和动画效果大部分都是通过 Core Animation 实现的。</p>
+<h3 id="core-image">Core Image</h3>
+<p>Core Image 是一组用于图像、视频处理的 API，如添加滤镜之类的。</p>
+<h3 id="opengl-opengl-es">OpenGL / OpenGL ES</h3>
+<p>底层的图形绘制 API，自由度最大，但学习成本也很高。如果不是做大型游戏，推荐使用更高层的 API。</p>
+<h3 id="ying-jian-jia-su">硬件加速</h3>
+<p>硬件加速是指用到了 GPU 的 API，以下这些情况不会用到硬件加速</p>
+<ul>
+<li>所有在 drawRect 中完成的图形绘制。</li>
+<li>shouldRasterize 属性为 YES 的 CALayer。</li>
+<li>用到了 mask 或 drop shadow 的 CALayer。</li>
+<li>Text (包括 UILabels, CATextLayers, Core Text, 等等)。</li>
+<li>使用 CGContexts 绘制的图形</li>
+</ul>
+<h2 id="core-animation-1">Core Animation</h2>
+<p>虽然是 Animation，但实际上它也干 Drawing 的活，这就需要 CALayer 的帮助。iOS 中，所有的 UIView 都自带了一个 CALayer（可以通过 UIView.layer 访问），UIView 的渲染和动画最终也是通过 layer 来实现的。从这个意义上说，UIView 就是简单的一层壳，把图形绘制需要的信息传递给 layer。当然 UIView 还有一个重要的功能就是处理事件，如点击按钮，滑动等等。</p>
+<p>事实上 layer 也是一层壳(Model Tree)，背后还有呈现树(Presenting Tree)和渲染树(Render Tree)，渲染树对呈现树的数据进行渲染。</p>
+<p>跟 view 一样，layer 也存在着一个树状结构。可以直接创建，或通过 view.layer 获取。</p>
+<p>layer 有很多的动画属性，如 anchorPoint(view 没有这个属性)、frame、transform 等等，详细的属性列表<a href="http://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/CoreAnimation_guide/AnimatableProperties/AnimatableProperties.html#//apple_ref/doc/uid/TP40004514-CH11-SW1">见此</a>。配合 Core Animation 的 API 可以实现很多 UIView Animation 无法实现的效果，比如 3D 动画。</p>
+<h2 id="uiview-animation">UIView Animation</h2>
+<p>这个是我们经常会用到的，它对 Core Animation 做了更高层的封装，方便使用，当然自由度也降低了。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">+ </span><span>(</span><span style="color:#8959a8;">void</span><span>)animateWithDuration</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#c99e00;">NSTimeInterval</span><span>)duration delay</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#c99e00;">NSTimeInterval</span><span>)delay options</span><span style="color:#3e999f;">:</span><span>(UIViewAnimationOptions)options animations</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#8959a8;">void </span><span>(</span><span style="color:#3e999f;">^</span><span>)(</span><span style="color:#8959a8;">void</span><span>))animations completion</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#8959a8;">void </span><span>(</span><span style="color:#3e999f;">^</span><span>)(</span><span style="color:#8959a8;">BOOL</span><span> finished))completion
+</span></code></pre>
+<p>animation block 里可以设置 view 的动画属性的终止值，如 frame, rotation 等。options 可以设置动画的相关选项，如下：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">enum </span><span>{
+</span><span>    UIViewAnimationOptionLayoutSubviews            </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt;  </span><span style="color:#f07219;">0</span><span>,
+</span><span>    UIViewAnimationOptionAllowUserInteraction      </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt;  </span><span style="color:#f07219;">1</span><span>,
+</span><span>    UIViewAnimationOptionBeginFromCurrentState     </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt;  </span><span style="color:#f07219;">2</span><span>,
+</span><span>    UIViewAnimationOptionRepeat                    </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt;  </span><span style="color:#f07219;">3</span><span>,
+</span><span>    UIViewAnimationOptionAutoreverse               </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt;  </span><span style="color:#f07219;">4</span><span>,
+</span><span>    UIViewAnimationOptionOverrideInheritedDuration </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt;  </span><span style="color:#f07219;">5</span><span>,
+</span><span>    UIViewAnimationOptionOverrideInheritedCurve    </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt;  </span><span style="color:#f07219;">6</span><span>,
+</span><span>    UIViewAnimationOptionAllowAnimatedContent      </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt;  </span><span style="color:#f07219;">7</span><span>,
+</span><span>    UIViewAnimationOptionShowHideTransitionViews   </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt;  </span><span style="color:#f07219;">8</span><span>,
+</span><span>
+</span><span>    UIViewAnimationOptionCurveEaseInOut            </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">16</span><span>,
+</span><span>    UIViewAnimationOptionCurveEaseIn               </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">16</span><span>,
+</span><span>    UIViewAnimationOptionCurveEaseOut              </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">2 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">16</span><span>,
+</span><span>    UIViewAnimationOptionCurveLinear               </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">3 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">16</span><span>,
+</span><span>
+</span><span>    UIViewAnimationOptionTransitionNone            </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">20</span><span>,
+</span><span>    UIViewAnimationOptionTransitionFlipFromLeft    </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">20</span><span>,
+</span><span>    UIViewAnimationOptionTransitionFlipFromRight   </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">2 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">20</span><span>,
+</span><span>    UIViewAnimationOptionTransitionCurlUp          </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">3 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">20</span><span>,
+</span><span>    UIViewAnimationOptionTransitionCurlDown        </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">4 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">20</span><span>,
+</span><span>    UIViewAnimationOptionTransitionCrossDissolve   </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">5 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">20</span><span>,
+</span><span>    UIViewAnimationOptionTransitionFlipFromTop     </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">6 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">20</span><span>,
+</span><span>    UIViewAnimationOptionTransitionFlipFromBottom  </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">7 </span><span style="color:#3e999f;">&lt;&lt; </span><span style="color:#f07219;">20</span><span>,
+</span><span>};
+</span><span style="color:#8959a8;">typedef </span><span style="color:#c99e00;">NSUInteger </span><span>UIViewAnimationOptions;
+</span></code></pre>
+<p>所以一般的动画 view animation 都可以应付。</p>
+<h2 id="tableview-you-hua">TableView 优化</h2>
+<p>TableView 是 iOS 中非常重要的组成部分，如果处理不当，就很容易出现不流畅的现象。比如一个 TableViewCell 中有多个 subview。上面说过一个 view 对应了一个 layer，多个 view 自然也就对应多个 layer，好比 photoshop 的图层。滑动时 GPU 需要分别对每一个 layer 进行处理，如果不能在短时间内完成，就容易掉帧。</p>
+<p>要保证 TableView 的流畅，首先 TableViewCell 的生成时间要短（少于 1/60 秒），其次移动时帧频尽量保持在 60（也就是每秒 60 帧）。前者取决于 CPU，后者取决于 GPU。</p>
+<p>以 twitter 为例，可以通过 subviews 来实现，不过性能会有点影响，但实现起来简单。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_subviews.jpg"
+    srcset="&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_subviews.jpg 200w,&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_subviews.jpg 200w"
+    sizes="(max-width: 200px) 100vw, 200px" width="200" /></p>
+<p>因为 cell 在形态上不会经常改变，所以也可以通过 drawRect 直接绘制，只要这个时间足够短就可以。好处是 layer 不用处理多个子 layer 的组合和叠加，就像一张 jpg 图片一样，滑动会更流畅。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_drawrect.png"
+    srcset="&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_drawrect.png 200w,&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_drawrect.png 200w"
+    sizes="(max-width: 200px) 100vw, 200px" width="200" /></p><h3 id="can-kao">参考</h3>
+<ul>
+<li><a href="http://geeklu.com/2012/09/animation-in-ios/">http://geeklu.com/2012/09/animation-in-ios/</a></li>
+<li><a href="http://robots.thoughtbot.com/post/33427366406/designing-for-ios-taming-uibutton">http://robots.thoughtbot.com/post/33427366406/designing-for-ios-taming-uibutton</a></li>
+<li><a href="https://news.ycombinator.com/item?id=4645585">https://news.ycombinator.com/item?id=4645585</a></li>
+<li><a href="http://stackoverflow.com/q/6731545/94962">http://stackoverflow.com/q/6731545/94962</a></li>
+<li><a href="http://giorgiocalderolla.com/blog.html#customizing-uitableviewcells-a-better-way">http://giorgiocalderolla.com/blog.html#customizing-uitableviewcells-a-better-way</a></li>
+<li><a href="https://blog.twitter.com/2012/simple-strategies-smooth-animation-iphone">https://blog.twitter.com/2012/simple-strategies-smooth-animation-iphone</a></li>
+<li><a href="http://floriankugler.com/blog/2013/5/24/layer-trees-vs-flat-drawing-graphics-performance-across-ios-device-generations">layer trees vs flat drawing graphics performance across ios device generations</a></li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

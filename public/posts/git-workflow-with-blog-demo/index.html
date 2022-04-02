@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+git多人协作开发流程(以blog为例)
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/git-workflow-with-blog-demo/">
+
+<meta name="twitter:title" content="git多人协作开发流程(以blog为例)">
+<meta property="og:title" content="git多人协作开发流程(以blog为例)">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;git-workflow-with-blog-demo&#x2F;">git多人协作开发流程(以blog为例)</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-02-25</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>时间仓促，能力有限，错误难免(代码没有经过实际验证，所以可能会有问题)，欢迎指正 :)</p>
+<p>这个开发流程就是基于<a href="http://nvie.com/posts/a-successful-git-branching-model/">a successful git model</a>这篇文章而来的，如果对英文不感冒的话，我这有<a href="http://blog.leezhong.com/translate/2010/10/30/a-successful-git-branch.html">翻译版</a></p>
+<p><strong>项目背景：</strong></p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>张三 / 李四 / 王五 打算共同协作，开发一套博客系统
+</span></code></pre>
+<p><strong>项目分工：</strong></p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>张三 / 李四 负责文章系统
+</span><span>王五负责评论系统
+</span></code></pre>
+<h3 id="jian-li-fu-wu-duan-cang-ku">建立服务端仓库</h3>
+<p>git 虽然是分布式版本管理工具，但为了方便管理，我们需要建立一个中心仓库，先在服务端建立两条分支</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>master
+</span><span>develop
+</span></code></pre>
+<p>master 保存稳定版(production ready)，开发人员平时的代码都提交到 develop 分支上</p>
+<h3 id="kai-fa-zhe-de-git-fen-zhi">开发者的 Git 分支</h3>
+<h4 id="zhang-san-de-git-fen-zhi">张三的 Git 分支</h4>
+<p>因为张三和李四同时开发文章系统，所以就有了下面的分支</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># 张三的Git分支
+</span><span style="color:#c82728;">article</span><span style="color:#4271ae;"> (local</span><span>)
+</span><span style="color:#c82728;">lisi/article</span><span style="color:#4271ae;"> (via git remote add lisi http://lisi-server/lisi.git</span><span>)
+</span><span style="color:#c82728;">origin/master</span><span style="color:#4271ae;"> (via git remote add origin http://remote-server/blog.git</span><span>)
+</span><span style="color:#c82728;">origin/develop
+</span></code></pre>
+<h4 id="li-si-de-git-fen-zhi">李四的 Git 分支</h4>
+<p>跟张三类似，不过 article server 变成了张三的</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># 李四的Git分支
+</span><span style="color:#c82728;">article</span><span style="color:#4271ae;"> (local</span><span>)
+</span><span style="color:#c82728;">zhangsan/article</span><span style="color:#4271ae;"> (via git remote add zhangsan http://zhangsan-server/zhangsan.git</span><span>)
+</span><span style="color:#c82728;">origin/master</span><span style="color:#4271ae;"> (via git remote add origin http://remote-server/blog.git</span><span>)
+</span><span style="color:#c82728;">origin/develop
+</span></code></pre>
+<h4 id="wang-wu-de-git-fen-zhi">王五的 Git 分支</h4>
+<p>因为只有王五一个人开发评论系统，所以只要一条远程分支就行了</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># 王五的Git分支
+</span><span style="color:#c82728;">comment</span><span style="color:#4271ae;"> (local</span><span>)
+</span><span style="color:#c82728;">origin/master</span><span style="color:#4271ae;"> (via git remote add origin http://remote-server/blog.git</span><span>)
+</span><span style="color:#c82728;">origin/develop
+</span></code></pre>
+<h3 id="kai-fa-guo-cheng">开发过程</h3>
+<h4 id="zhang-san-he-li-si">张三和李四</h4>
+<p>假设张三负责文章的管理，及前端显示。李四负责文章的分类和标签系统。</p>
+<p>张三开发完一部分后(n 次本地 commit)，提交到本地的 git server(也就是李四添加的 http://zhangsan-server/zhangsan.git)。</p>
+<p>李四开发完一部分后，因为要与张三开发的部分合并，所以需要执行一下 rebase 或 merge</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># 当前在article分支中
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> rebase zhangsan/article
+</span><span style="color:#8e908c;"># 提交到本地的git server (也就是张三添加的http://lisi-server/lisi.git)。
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push local/article master
+</span></code></pre>
+<p>这时张三又开发完了一部分，他也会走跟李四一样的流程，rebase &amp; push (如果有冲突，解决之)。</p>
+<p>假设由张三统一负责将每日的开发进度提交到 remote develop 分支上，张三在执行了上面所说的流程后，提交到服务端的 develop 分支。但这时很可能王五已经把他写的代码提交了，所以要先执行一下 rebase</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">git</span><span style="color:#4271ae;"> rebase origin/develop
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push origin develop
+</span></code></pre>
+<p>这样张三和李四的代码就都提交到了服务端的 develop 分支上。王五那边的流程也一样，只是少了本地同步的过程。</p>
+<h3 id="kai-fa-wan-bi-jin-ru-ce-shi-jie-duan">开发完毕，进入测试阶段</h3>
+<p>经过几天的开发，各个功能都已基本完成，下面就要进入测试阶段。具体做法是在服务端新添加一个分支，命名为 release，所以这时服务端就有 3 个分支了</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">master
+</span><span style="color:#c82728;">develop
+</span><span style="color:#c82728;">release
+</span></code></pre>
+<p>三位同学都在本地新建一个 branch，对应服务端的 release 分支</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">git</span><span style="color:#4271ae;"> checkout</span><span style="color:#f07219;"> -b</span><span style="color:#4271ae;"> release origin/release
+</span></code></pre>
+<p>分别进行测试，如果发现问题，则执行 pull &amp; push</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># 当前在release分支下
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> pull origin release
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push origin develop
+</span></code></pre>
+<p>经过几天的测试后，发现没什么问题了，就可以发布稳定版了，假设为 0.1</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">git</span><span style="color:#4271ae;"> checkout master
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> rebase origin/release
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> tag 0.1
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push origin master</span><span style="color:#f07219;"> --tags
+</span></code></pre>
+<p>同时别忘了把 release 分支上的代码与 develop 分支合并，保证 develop 分支上不会有遗留的 bug。(没有找到如何直接 merge 两个服务端 branch 的方法)</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">git</span><span style="color:#4271ae;"> checkout develop
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> rebase origin/release
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push origin develop
+</span><span style="color:#8e908c;"># 删除服务端的release分支
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push origin :release
+</span></code></pre>
+<p>接下来就可以继续在 develop 分支上进行开发了。</p>
+<h3 id="tian-jia-xin-te-xing">添加新特性</h3>
+<p>博客系统需要添加 archives 功能，这个功能的开发就交给了新来的赵六。此时，在服务端新开一个分支，命名为 feature，这时服务端的分支就变成了这样</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">master
+</span><span style="color:#c82728;">develop
+</span><span style="color:#c82728;">feature/archive
+</span></code></pre>
+<p>赵六也在本地建立一个 archive 分支，每天提交到服务端的 feature/archive，赵六的 Git 分支是这样的(不相关的服务端 Git 已省去)</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">master
+</span><span style="color:#c82728;">archive
+</span><span style="color:#c82728;">origin/feature/archive
+</span></code></pre>
+<p>等到这个 feature 开发完了，与服务端的 develop 分支执行一下 rebase，然后再提交到服务端的 develop，这样博客的 archive 功能就有了</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">git</span><span style="color:#4271ae;"> checkout archive
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> rebase origin/feature/archive
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push origin feature/archive
+</span><span style="color:#8e908c;"># 如果要删除服务端的feature/archive分支的话
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push origin :feature/archive
+</span></code></pre>
+<p>接下来的流程跟上面的一样：开发完毕后，新建 release 分支，在那上面进行 bug 修复，修复完毕后，merge 到服务端的 master 和 develop</p>
+<h3 id="jin-ji-xiu-fu-lou-dong">紧急修复漏洞</h3>
+<p>博客出现了一个 xss 漏洞，需要尽快修复，这时新建一个 hotfix 分支(现在本地建，然后提交到服务端)，然后对漏洞进行修复，修复完后，提交到服务端的 master 和 develop</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">git</span><span style="color:#4271ae;"> checkout master
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> pull origin master
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> checkout</span><span style="color:#f07219;"> -b</span><span style="color:#4271ae;"> hotfix
+</span><span style="color:#8e908c;"># 漏洞修复...
+</span><span style="color:#8e908c;"># 修复完后
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push origin hotfix
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> checkout master
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> rebase hotfix
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push origin master
+</span><span style="color:#c82728;">git</span><span style="color:#4271ae;"> push origin develop
+</span></code></pre>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/git/">git</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+php程序员是否该学习python
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/php-vs-python/">
+
+<meta name="twitter:title" content="php程序员是否该学习python">
+<meta property="og:title" content="php程序员是否该学习python">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;php-vs-python&#x2F;">php程序员是否该学习python</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-09-08</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>其实标题可以变为&quot;xx 程序员是否该学习 yy&quot;，xx 和 yy 可以是任何编程语言，而答案总是&quot;应该&quot;。因为我本身跟 php 打了不少年的交道，同时 python 也学习了一段时间，所以就把这两种语言串起来了。</p>
+<p>php 和 python 上手都很容易，php 基本上是&quot;大把函数任你抓，抓来就能做项目&quot;，python 是&quot;大把模块任你选，事半功倍全靠它&quot;。双方都有强大的第三方扩展，很少需要自己费力去写一个，除非进行二次封装。</p>
+<p>先来看看 PHP 比较爽的几个特性</p>
+<h3 id="array">array</h3>
+<p>php 的<a href="http://php.net/manual/en/language.types.array.php">数组</a>几乎是所有语言中最强大的，同时扮演了 list, dictionary, stack, queue 甚至更多(相信这也是许多人喜欢 PHP 的一个重要原因)。而且使用还挺方便，提供了<a href="http://cn2.php.net/manual/en/ref.array.php">77 个数组相关方法</a>(这也不可避免地产生了另一个问题，下面会提到)。</p>
+<h3 id="yu-html-de-qin-mi-jie-he">与 html 的亲密结合</h3>
+<p>这也是其他语言少有的特性，php 本身就是一个模板引擎，可以与 html 天然融合。不过也有弊端，如 html 不应该包含复杂的业务逻辑，而且 php 与 html 混杂实在不够美观。</p>
+<h3 id="qi-quan-de-han-shu-he-feng-fu-de-di-san-fang-lei-ku">齐全的函数和丰富的第三方类库</h3>
+<p>函数是 php 的核心，这也是 php 容易上手的一个重要原因。要完成什么功能，只要找到该函数即可，从这个方面来说，php 更适合脚本化编程(貌似这也是 php 的初衷)。随着 php 的流行，第三方类库也开始丰富起来，甚至可以为 php 写插件来增强 php 的功能。</p>
+<h3 id="dui-oop-de-wan-mei-zhi-chi">对 OOP 的完美支持</h3>
+<p>php4 虽然也可以进行 oop 编程，但语言本身不给力，只能努力往 OOP 方向去靠。到了 php5，情况就有了很大的好转，支持 PPP(private, protected, public) method 和 property，以及 static/final 等语法。php5.3 还支持 LSB(late static bindings)，虽然我觉得支持得很不到位。</p>
+<h3 id="mo-zhu-fang-fa">魔术方法</h3>
+<pre>__get/__set/__call/__toString</pre>等等，这些魔术方法给类带来了很大的便利，随便找个流行的框架，查看源码都会发现这些魔术方法的影踪，仿佛一下子变得无所不能。
+<p>再来看看 PHP 几个让人不爽的地方</p>
+<h3 id="bian-liang-bei-fu-zhi-dan-que-bu-shi-yong">变量被赋值，但却不使用</h3>
+<p>不太好理解，写段代码就知道了</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#4271ae;">error_reporting(</span><span style="color:#3e999f;">-</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#c82728;">$str </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;hello world&#39;</span><span>;
+</span><span style="color:#8e908c;">// 下面这段代码会报NOTICE ERROR，但事实上$str_arr已经被赋值，只是current方法没有使用这个变量
+</span><span style="color:#8e908c;">// 这段代码的运行过程是执行explode方法，然后将结果赋给$str_arr，然后将结果作为参数传递给current方法
+</span><span style="color:#8e908c;">// 也就是说整个过程没$str_arr什么事，$str_arr收到结果后就被踢走了
+</span><span style="color:#8e908c;">// 但有时候，只能使用变量而不能使用函数的返回值，如empty
+</span><span style="color:#c82728;">$hello </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">current(</span><span style="color:#c82728;">$str_arr </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">explode(</span><span style="color:#839c00;">&#39; &#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$str</span><span style="color:#4271ae;">))</span><span>;
+</span></code></pre>
+<h3 id="bu-neng-zai-han-shu-fang-fa-hou-gen">不能在函数/方法后跟[]</h3>
+<p>还是不太好理解，继续上代码</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">arr</span><span>() {
+</span><span>	</span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">array</span><span>(</span><span style="color:#839c00;">&#39;hello&#39;</span><span>, </span><span style="color:#839c00;">&#39;world&#39;</span><span>);
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// 会报错，于是只能先把结果赋给变量，再从这个变量去获取相应值，用完之后再unset该变量
+</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">arr</span><span style="color:#4271ae;">()</span><span>[</span><span style="color:#f07219;">0</span><span>];
+</span></code></pre>
+<h3 id="hun-luan-de-ming-ming">混乱的命名</h3>
+<p>上面说的几点只是小问题，这个就严重了。php 的命名几乎没有规律可循，随便举几个例子</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">// 其中一个单词缩写，中间没有分割符
+</span><span style="color:#4271ae;">strpos()</span><span>;
+</span><span style="color:#4271ae;">tempnam()</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">// 两个单词没有缩写，其中有一个分割符
+</span><span style="color:#4271ae;">str_repeat()</span><span>;
+</span><span style="color:#4271ae;">file_exists()</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">// 驼峰命名
+</span><span style="color:#c82728;">__toString</span><span style="color:#4271ae;">()</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">// 下划线连接
+</span><span style="color:#c82728;">__set_state</span><span style="color:#4271ae;">()</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">// 这个太恐怖了，强烈怀疑是酒后编程
+</span><span style="color:#4271ae;">mysql_real_escape_string()
+</span></code></pre>
+<h3 id="nan-ji-de-can-shu">难记的参数</h3>
+<p>这个是很要命的，有些方法，我是用一次，看一次手册，比如 strpos/in_array/basename/...，完全没有套路可循。有些把$needle放到前面，$haystack 放到后面(如 explode)，有些正好倒过来(如 strpos)，太影响写程序的效率了。怪不得写 PHP 的基本都需要一个强大的 IDE(如 Zend/NetBeans)。</p>
+<h3 id="ming-ming-kong-jian-de-que-shi">命名空间的缺失</h3>
+<p>就好像一大堆能人异士挤在一个房子里，要用到什么功能了，就抓一个出来，如果要往这个房间加人的话，还得保证不能跟已有的重名。如果有命名空间的话，就方便了，新建一个屋子，只要这个屋子不跟别的屋子重名就行，屋子里的人爱起什么名起什么名，完全不用担心冲突。好在 php5.3 加入了命名空间，虽然用起来还是挺别扭。</p>
+<p>下面来说说 python 吧，其实 python 的职能是跨平台软件开发，但也可以用做 web 开发，而且出现了不少优秀的 web 框架，所以就不可避免地与 php 正面交锋(php 虽然也可以用来开发 gui 软件，但多少有点旁门左道的感觉)。</p>
+<p>python 给我的感觉是简洁，强大且优雅。</p>
+<h3 id="jian-ji">简洁</h3>
+<ul>
+<li>半个单词能搞定的就不用整个单词，如 def/elif/iter</li>
+<li>一行能搞定的就不用多行</li>
+</ul>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span style="color:#8e908c;">#generator expressions
+</span><span style="color:#4271ae;">sum(i</span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">i </span><span style="color:#8959a8;">for </span><span style="color:#4271ae;">i </span><span style="color:#8959a8;">in </span><span style="color:#4271ae;">range(</span><span style="color:#f07219;">10</span><span style="color:#4271ae;">))
+</span></code></pre>
+<ul>
+<li>同时对多个变量赋值</li>
+</ul>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span>a, b </span><span style="color:#3e999f;">= </span><span>(</span><span style="color:#839c00;">&#39;hello&#39;</span><span>, </span><span style="color:#839c00;">&#39;world&#39;</span><span>)
+</span></code></pre>
+<h3 id="qiang-da">强大</h3>
+<ul>
+<li>内置了 3 种常用数据结构：tuple/list/dictionary</li>
+<li>支持匿名函数</li>
+<li>多线程</li>
+<li>函数的参数(可以不按顺序传参，这是个亮点)</li>
+<li>...(php 有的，python 基本也少不了)</li>
+</ul>
+<h3 id="you-ya">优雅</h3>
+<ul>
+<li>一切皆对象</li>
+<li>一切皆引用</li>
+<li>模块机制</li>
+<li>独特的书写风格(这个因人而异吧，觉得换行+tab 很别扭的也大有人在)</li>
+<li>自我说明(docstring+pydoc)</li>
+</ul>
+<p>当然 python 也非完美，不爽的地方也挺多的，如参数的默认值如果是 mutable(可变的)，只会在第一次调用时初始化；class 的方法至少要传一个 self 参数等等。但瑕不掩瑜，php 程序员还是应该了解一下 python，即使不是全面转向 python。</p>
+<p>对了，使用 python 还有一个很重要的原因是：GAE(我知道有 SAE，但~~~)</p>
+<p>参考：</p>
+<ul>
+<li>http://ioreader.com/2007/08/19/12-things-you-should-dislike-about-php/</li>
+<li>http://ioreader.com/2007/08/17/11-cool-things-about-php-that-most-people-overlook</li>
+<li>http://wiki.python.org/moin/PythonVsPhp</li>
+<li>http://stackoverflow.com/questions/1486608/is-switching-from-php-to-python-worth-the-trouble</li>
+<li>http://stackoverflow.com/questions/3319261/php-devs-that-moved-to-python-is-the-experience-better</li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/php/">php</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/python/">python</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+开发新版花瓣iPhone客户端
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/huaban-app-redesign/">
+
+<meta name="twitter:title" content="开发新版花瓣iPhone客户端">
+<meta property="og:title" content="开发新版花瓣iPhone客户端">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;huaban-app-redesign&#x2F;">开发新版花瓣iPhone客户端</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2014-03-23</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>花瓣主客户端已经有些日子没有更新了，这次的新版 iPhone 客户端会带来不少的变动和改进，于是索性重新开个项目，从头开始。虽还没开发完成，但有些东西还是想跟大家分享下。</p>
+<h3 id="ru-he-rang-duo-ren-kai-fa-geng-jia-gao-xiao">如何让多人开发更加高效</h3>
+<p>如果是一个人开发，那怎么折腾都行。不用考虑冲突、不用考虑代码风格的差异、完全按自己的喜好设置目录结构、甚至在接口的设计上也可以自由一些。但参与的人一多这些问题就会暴露出来，如果处理不好，有可能会出现 1+1&lt;2，甚至 1+1&lt;1 的情况。</p>
+<p>正好在前些日子看到了这篇「<a href="http://dev.hubspot.com/blog/architecting-a-large-ios-app-with-cocoapods">使用 CocoaPods 来进行模块化开发</a>」文章，细细品了几遍，发现通过这种方式确实可以弥补多人开发带来的一些问题。简单说来就是把一个大项目按照功能模块划分为多个子项目，然后在一个主项目里，通过 CocoaPods 把这些子项目串起来，就变成了一个完整的 Project。</p>
+<h3 id="ji-ben-jia-gou">基本架构</h3>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;huaban-app-redesign&#x2F;huaban-app-arch.png"
+    srcset="&#x2F;posts&#x2F;huaban-app-redesign&#x2F;huaban-app-arch.png 350w,&#x2F;posts&#x2F;huaban-app-redesign&#x2F;huaban-app-arch.png 350w"
+    sizes="(max-width: 350px) 100vw, 350px" width="350" /></p>
+<p>其中最底层是其他项目也会引用的基础类库。<code>HBToolkit</code>包含了一些常用、好用的 Categories，如图片缩放、UIView Layout 等等；<code>HBBussiness</code>是跟业务相关的一些类库，如弹出新版本提示、登录等等；<code>HBAPI</code>是花瓣主站点的 API 接口。这些类库都是私有的 pod 源，可以通过<code>pod install</code>安装。</p>
+<p><code>AppCommon</code>是一个 xcode project，包含了该项目会用到的一些公共内容，如颜色值、按钮样式、图片、APIKey 等等，同样，也是私有 pod 源。</p>
+<p>再上层就是各个 sub app 了。所谓 sub app，就是功能单一，可独立运行的 app。同样，每个 sub app 会提供相应的 podspec 文件，可以在这个 podspec 里指定最后会用到的 Classes。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;huaban-app-redesign&#x2F;huaban-app-subapps.png"
+    srcset="&#x2F;posts&#x2F;huaban-app-redesign&#x2F;huaban-app-subapps.png 160w,&#x2F;posts&#x2F;huaban-app-redesign&#x2F;huaban-app-subapps.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+<p>进去之后会是这样</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;huaban-app-redesign&#x2F;huaban-app-subapp-index.png"
+    srcset="&#x2F;posts&#x2F;huaban-app-redesign&#x2F;huaban-app-subapp-index.png 320w,&#x2F;posts&#x2F;huaban-app-redesign&#x2F;huaban-app-subapp-index.png 320w"
+    sizes="(max-width: 320px) 100vw, 320px" width="320" /></p>
+<p>对于使用者来说，可以通过查看 demo，很快地了解接口的使用。对测试人员，也可以在 App 还没有开发完成的情况下，对各个子模块进行测试。</p>
+<p>各个 sub app 都完成了的话，就可以组装成最终的 App 了，这里用到了一个 URL Route 类：<a href="https://github.com/joeldev/JLRoutes">JLRoutes</a>，它的作用是让按钮的点击像网页里的链接一样，只是触发了某个 URL，而没有像 pushViewController 这样的行为。这样如果点击 A 模块的某个按钮，会 push 一个 B 模块的 ViewController，也不需要在 A 模块里 import 模块 B 的 ViewController，而只是<code>[JLRoutes routeURL:parameters]</code>即可，也就实现了解耦。</p>
+<p>每个 sub app 需要注册自己感兴趣的 URL，这样当某个 URL 被触发时，就能捕获到并做适当的处理。如果注册的行为统一放到最终的 App 里去做，会不够灵活，且显得杂乱。所以最好是在类加载的过程中就完成注册。 而 Class 正好有一个<code>+ (void)load</code>方法，会在该 Class 被加入到运行时触发，且只触发一次。</p>
+<h4 id="tips">Tips</h4>
+<p>每次新建一个 sub project 还蛮麻烦的，比如要新建 podfile，然后执行<code>pod install</code>(真心慢啊)，然后要写<code>XXX.podspec</code>，等等。于是写了一个 template project，并提供了脚本安装，然后每次要新建一个 project 时，只需执行<code>genproj XXX</code>就好了。</p>
+<p>开发过程中，经常会出现依赖的 pod 有更新（比如 Common 又添加了一些图片素材），然后就得再执行一次<code>pod update</code>，于是所有依赖的 pod 都得 update 一下，这个过程有点慢，目前还没想到太好的办法。</p>
+<h4 id="2014-03-25-geng-xin">2014/03/25 更新</h4>
+<p>用<code>pod update --verbose</code> 看了下，主要的时间都是花在了获取第三方 pod 的 meta 信息上，所以，使用时加上<code> --no-repo-update</code>就很快了。</p>
+<h3 id="reactivecocoa">ReactiveCocoa</h3>
+<p>这次改版的另一个尝试就是使用 RAC 和 MVVM，还是挺有些挑战的。之前的学习更多的是理论，并没有太多实际的使用，所以也遇到了不少问题。比如何时使用 property，何时使用 signal；多个 Controller 共用一个 VM，但其中一个又有一些独有的 property；潜意识里会使用原有的 cocoa 编程模式；出现问题，调试起来有点麻烦等等。尽管如此，RAC 还是很值得尝试的，就像一匹烈马，很难被驯服，但一旦被驾驭，这种成就感也是无可比拟的。</p>
+<h3 id="qi-ta">其他</h3>
+<ul>
+<li>使用 levelDB 来做持久化，放弃 CoreData。</li>
+<li>使用<a href="http://blog.leezhong.com/ios/2014/01/04/class-cluster.html">类族(class cluster)</a>来实现结构和功能基本一样，但数据源不同的场景。</li>
+<li>无意中发现<a href="https://www.youtube.com/watch?v=OJ94KqmsxiI">Facebook</a>也用了类似的架构，不过是通过 workspace 来实现的。</li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/huaban/">huaban</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Limboy - zhihu</title>
+        <link>https://limboy.me</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>zh</language>
+        <atom:link href="https://limboy.me/tags/zhihu/index.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Tue, 11 Sep 2012 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>我已经不在知乎了</title>
+            <pubDate>Tue, 11 Sep 2012 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/im-not-at-zhihu/</link>
+            <guid>https://limboy.me/posts/im-not-at-zhihu/</guid>
+            <description>&lt;p&gt;忽然间来了心绪，加上&lt;a target=&quot;_blank&quot; href=&quot;http:&#x2F;&#x2F;twitter.com&#x2F;gxxx&quot; target=&quot;_blank&quot;&gt;@gxxx&lt;&#x2F;a&gt;同学在推上日复一日的邀文，和抱着对广大关心我的同学们负责的心情，我觉得有必要阐述一个事实：我已经不在知乎了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;hui-gu&quot;&gt;回顾&lt;&#x2F;h3&gt;
+&lt;p&gt;在 7 月的某一天下午，李申申同学邀请我到知乎参观下，我纯净地答应了。大概参观了下工场和知乎，跟申申聊了会，然后申申说：来知乎吧。这让我有点措手不及，前面说过了，我是抱着很纯净的心态过去的，而且凤凰网那边还有 RSU 和年中技术部 A+员工奖金在那牵制着。但是看到了知乎的环境、氛围还有一堆优秀的人才，我觉得这是一个很好的学习机会，稍微做了会思想斗争后，就妥协了。&lt;&#x2F;p&gt;
+&lt;p&gt;知乎有很浓厚的苹果底蕴：第一个问题的编号为 19550225; MBP&#x2F;MBA 人手一台，唯一一台 windows 是财务在使用; iPhone 的普及率很高。这跟知乎的 apple4us 血统有很大关系。知乎其实还推崇海盗文化，这个我个人的感触倒不是很深。&lt;&#x2F;p&gt;
+&lt;p&gt;知乎很重视员工的快乐指数，努力营造家庭文化：桌球(god, i love it, though i suck)、免费的午餐、充足的零食和水果、DSP 人体工程学椅子等等。这一切都体现了一个字：诚意。我真的关心你们，关心你们的生活。作为员工自然也能领会这种诚意，那么还有什么好犹豫的，努力干活吧。&lt;&#x2F;p&gt;
+&lt;p&gt;知乎很乐意尝试并使用新兴技术：使用 Git 进行版本控制，Github 来管理代码，Basecamp 管理项目，python 作为开发语言，等等。其实这些都不是什么新东西，也都是经过了时间的验证，但很多公司由于技术主管自身的限制，和员工的技术能力，最终都选择了走最安稳的道路。&lt;&#x2F;p&gt;
+&lt;p&gt;知乎很重视工程师的质量，宁缺勿滥。也会给予他们很大的自由，比如可以随意选择上班时间，甚至不来公司都可以（由于工程师任务量的加大，现在的自由度也有所减少）；可以访问大部分的代码。每周会有一次技术分享活动，总是会有不少收获。&lt;&#x2F;p&gt;
+&lt;p&gt;关于加班。在知乎上班的感觉不那么强烈，不像很多公司，9 点之前要刷卡，不然算迟到，然后终于等到 6 点，刷卡下班挤地铁。因为在知乎不需要刷卡，上班和下班点都由你自己来控制。但很重要的一点是，不要让其他人因为你而拖延了进度。任务比较紧急时，连续熬个一两个通宵也正常（现在我还挺怀念那种感觉的）。&lt;&#x2F;p&gt;
+&lt;p&gt;知乎几乎没有等级制度，如 A 管 B，B 负责 C 等等。如果要实现一个新特性，比如图片上传，会有几个工程师和一个产品设计来负责这块，想出一个解决方案后，再和申申细细地碰一下，申申经常会提到一些比较容易遗漏或出错的地方。方案有了，大家就可以分头行动了，所以知乎也没有架构师这么一个职位。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;chi-kai&quot;&gt;离开&lt;&#x2F;h3&gt;
+&lt;p&gt;回过头来再说说我为什么离开知乎吧。原因大概有这么几个：&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;bei-jing-zao-gao-de-tian-qi&quot;&gt;北京糟糕的天气&lt;&#x2F;h4&gt;
+&lt;p&gt;是的，天气是一个很大的原因。记得有一阵每天晚上坐车回家，都得吐出好些分泌物。为了自己和 MM 的健康着想，打算换一个既适宜居住，又有点互联网氛围的城市，于是就选择了杭州。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;zi-ji-de-chuang-ye-xiang-mu&quot;&gt;自己的创业项目&lt;&#x2F;h4&gt;
+&lt;p&gt;嗯，当时比较迷摄影，于是很想做一个网站来提高下国内的摄影网站品位。也是在暗地里筹划了好久，最后决定应该认真地去尝试下。但是由于对现状分析地不够透彻，和过高地估计了自己的能力，此项目在推出不久后便搁浅，也正因如此，才有了后来的「Once Touch」&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;xiang-she-xi-ios-kai-fa&quot;&gt;想涉猎 iOS 开发&lt;&#x2F;h4&gt;
+&lt;p&gt;因为对苹果的喜爱，加上 app store 广大的用户群和方便的付费系统，加上相信苹果会持续改进产品，于是就动了这个念头。如果留在知乎，会推迟学习 iOS 的脚步。&lt;&#x2F;p&gt;
+&lt;p&gt;基于上述 3 点，我决定离开知乎，离开那群可爱的人们。可能要让&lt;a href=&quot;http:&#x2F;&#x2F;twitter.com&#x2F;gxxx&quot; target=&quot;_blank&quot;&gt;@gxxx&lt;&#x2F;a&gt;君失望了，不过这些就是我离开知乎的原因。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;huai-nian&quot;&gt;怀念&lt;&#x2F;h3&gt;
+&lt;p&gt;虽已时隔 4 个多月，回想起在知乎那段时光，依旧心有戚戚焉。&lt;&#x2F;p&gt;
+&lt;p&gt;感谢带给我们那么多欢乐的桌球&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;im-not-at-zhihu&amp;#x2F;zhihu_football.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;im-not-at-zhihu&amp;#x2F;zhihu_football.jpg 300w,&amp;#x2F;posts&amp;#x2F;im-not-at-zhihu&amp;#x2F;zhihu_football.jpg 300w&quot;
+    sizes=&quot;(max-width: 300px) 100vw, 300px&quot; width=&quot;300&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;感谢曾经共同奋战的队友&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;im-not-at-zhihu&amp;#x2F;zhihu_team.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;im-not-at-zhihu&amp;#x2F;zhihu_team.jpg 300w,&amp;#x2F;posts&amp;#x2F;im-not-at-zhihu&amp;#x2F;zhihu_team.jpg 300w&quot;
+    sizes=&quot;(max-width: 300px) 100vw, 300px&quot; width=&quot;300&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;感谢知乎&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;im-not-at-zhihu&amp;#x2F;zhihu_pai.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;im-not-at-zhihu&amp;#x2F;zhihu_pai.jpg 300w,&amp;#x2F;posts&amp;#x2F;im-not-at-zhihu&amp;#x2F;zhihu_pai.jpg 300w&quot;
+    sizes=&quot;(max-width: 300px) 100vw, 300px&quot; width=&quot;300&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
+        </item>
+        
+        
+        <item>
+            <title>知乎的困境</title>
+            <pubDate>Tue, 19 Jul 2011 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/zhihu/</link>
+            <guid>https://limboy.me/posts/zhihu/</guid>
+            <description>&lt;p&gt;个人观点，欢迎指正:)&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhi-hu-yao-jie-jue-yi-ge-shi-yao-wen-ti&quot;&gt;知乎要解决一个什么问题？&lt;&#x2F;h3&gt;
+&lt;p&gt;如果我遇到以下问题：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;为什么有的照片拍出来建筑物是倾斜的？&lt;&#x2F;li&gt;
+&lt;li&gt;陈奕迅的『爱情转移』到底想要表达什么？&lt;&#x2F;li&gt;
+&lt;li&gt;iphone4 升级到 ios5 beta3 后，可不可以降到 4.3.3？&lt;&#x2F;li&gt;
+&lt;li&gt;如何训练台球的基本功？&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;第一反应是到知乎提问，且能在较短时间内得到满意的答复，那么知乎就成了。其实从产品上是完全可以应付的，最难的是用户为什么要来这里提问？&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;如果我有 iphone4，第一反应肯定是去 weiphone。&lt;&#x2F;li&gt;
+&lt;li&gt;如果我想更了解电影，豆瓣或 mtime 都是不错的选择。&lt;&#x2F;li&gt;
+&lt;li&gt;如果我想精通摄影，会选择蜂鸟或无忌。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;什么时候会想到去知乎？&lt;&#x2F;p&gt;
+&lt;p&gt;知乎就好比是宾馆，如果要讨论某个领域的问题，先到前台领门牌号，然后到一个房间讨论。而垂直社区直接就是一个房间，打开门后就可以看到一大堆人在那讨论。&lt;&#x2F;p&gt;
+&lt;p&gt;用一段程序来表述大致如下&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;dang-qian-zhuang-tai&quot;&gt;当前状态&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span&gt;tags&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;摄影&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;电影&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;创业&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;摄影&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;tags:
+&lt;&#x2F;span&gt;&lt;span&gt;	goto: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;蜂鸟&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;or &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;无忌&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;电影&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;tags:
+&lt;&#x2F;span&gt;&lt;span&gt;	goto: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;mtime&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;or &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;douban&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;创业&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;tags:
+&lt;&#x2F;span&gt;&lt;span&gt;	goto: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;咖啡厅&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# when will you think of zhihu
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;li-xiang-zhuang-tai&quot;&gt;理想状态&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span&gt;tags&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;摄影&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;电影&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;创业&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;whatever &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;tags:
+&lt;&#x2F;span&gt;&lt;span&gt;	goto: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;知乎&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;answers found:
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;else&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;摄影&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;tags:
+&lt;&#x2F;span&gt;&lt;span&gt;			goto: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;蜂鸟&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;or &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;无忌&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;			&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;电影&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;tags:
+&lt;&#x2F;span&gt;&lt;span&gt;			goto: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;mtime&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;or &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;douban&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;			&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;创业&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span&gt;tags:
+&lt;&#x2F;span&gt;&lt;span&gt;			goto: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;咖啡厅&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;			&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;要让用户产生这种观念上的改变，那时的知乎在某个领域(如摄影)一定已经积累的相当的人气和问答。以摄影为例，摄影的初始问答从何而来？我觉得只可能是知乎重度用户打算学摄影，或者在学习过程中遇到问题，然后抱着试试看的心情发了个问题。为什么是知乎重度用户？因为如果只是偶尔过来逛逛的用户，在他眼里，这只是一个有点意思的网站，并没有太深的感情，就算遇到了摄影方面的问题，一看相关问题很少，直接就放弃了发问题的念头，因为对他来说浏览是一种习惯，而我们的行为都受习惯的支配。这也好解释为什么知乎重度用户明知可能得不到比较理想的答案，也可能会发问题，因为他习惯了参与，习惯了回答或提问。&lt;&#x2F;p&gt;
+&lt;p&gt;所以知乎如果要向各个领域扩展，至少要具备这几个条件：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;足够数量的重度用户&lt;&#x2F;li&gt;
+&lt;li&gt;重度用户的爱好最好广泛些&lt;&#x2F;li&gt;
+&lt;li&gt;各个领域都有些活跃的达人&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;第三个条件很难。假如一个摄影相关的问题被提出后没有很快地得到好的答案，会很打击用户的积极性，下次如果再有类似问题，可能会选择其他的专业论坛。这时就需要该领域的达人出现了，这里又有一些问题：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;达人一般都很忙，很难抽出时间静下心来回答问题&lt;&#x2F;li&gt;
+&lt;li&gt;有那么几天，达人关注的领域都没有什么新问题或有意思的问题，以后索性就不来了&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;达人很少制造问题，所以把某些领域的达人作为种子用户，问答的氛围也很难建立。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;nei-rong-wei-wang-zhu-bu-kai-fang&quot;&gt;内容为王，逐步开放&lt;&#x2F;h3&gt;
+&lt;p&gt;国内不乏人气很旺的大站，但普遍有一种很水的感觉，简单说来就是，社交氛围多于思维碰撞。这往往是站长们追求 pv&#x2F;用户数&#x2F;发贴数的结果。这也是知乎的吸引力所在，在知乎能感觉到一种宁静，如果让我给知乎写一个 slogan 的话，应该会是：正经提问和回答的地方。如果不是这样，那就没理由来知乎了，水区多的是。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ru-he-wei-chi-gao-zhi-liang-de-hui-da&quot;&gt;如何维持高质量的回答&lt;&#x2F;h3&gt;
+&lt;p&gt;业界达人不是回答的主力军，因为已经有足够的影响力了，也很少有时间来回答。但他们的回答能带来极好的效果。所以氛围的维系主要落在准达人身上，他们愿意回答是因为帮助别人是一种很自然的事，同时也可以向其他人展示自己的阅历、知识和才华。但是这些准达人是很挑剔的，如果问题的质量明显下降了，或者另一层次的用户大量入驻，或者感觉整个氛围不对，很可能就 say goodbye 了，所以如何让这些准达人持续贡献高质量的回答也是个问题。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;bu-ju-xian-yu-wen-da&quot;&gt;不局限于问答&lt;&#x2F;h3&gt;
+&lt;p&gt;单纯的问答很难持久，用户很难养成每天习惯性地上来看看这种行为。要让用户泡起来，还需要具备&amp;quot;信息&amp;quot;输出。我们习惯上 hacker news，因为那里总是能发现很酷的东西，或者行业新闻；上 weifeng 也是因为大量的信息和资源。所以 Quora 支持&amp;quot;Write Post&amp;quot;，支持 blog feed import。&lt;&#x2F;p&gt;
+&lt;p&gt;前面的路很难，但创业从来都是要披荆斩棘的，带着一颗不安份的心，奋斗吧&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+100 个囚犯的随机选择问题
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/100-prisoners/">
+
+<meta name="twitter:title" content="100 个囚犯的随机选择问题">
+<meta property="og:title" content="100 个囚犯的随机选择问题">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+<meta name="twitter:image" content="https://limboy.me/posts/100-prisoners/100-prisoners-cover.jpg" />
+<meta name="og:image" content="https://limboy.me/posts/100-prisoners/100-prisoners-cover.jpg" />
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+  <img class="w-full mb-6 rounded-lg" src="https://limboy.me/posts/100-prisoners/100-prisoners-cover.jpg" />
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;100-prisoners&#x2F;">100 个囚犯的随机选择问题</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2021-11-01</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>近日看到一道题，感觉挺有意思的，和大家分享下。题目的内容是这样的：</p>
+<blockquote>
+<ul>
+<li>有 100 个囚犯，每人被随机分配 1 - 100 其中的一个数（无重复）。</li>
+<li>在另一个房间中有 100 个抽屉，每个抽屉被随机分配了 1 - 100 其中的一个数（无重复）。</li>
+<li>囚犯只有打开抽屉才能知道抽屉里面的数字。</li>
+<li>如果该数字正好是自己被分配的数，则顺利通过，下一个囚犯继续找。</li>
+<li>100 个囚犯每个人都在 50 步（打开一个抽屉算一步）内找到自己的编号，游戏才算赢，才能被释放。</li>
+<li>游戏过程中抽屉里的数字不会变动，囚犯之间不能互相传递信息，但可以事先商定策略。</li>
+</ul>
+</blockquote>
+<p>囚犯的数是随机分配的，抽屉里的数也是随机放的，看起来很难形成有效策略。如果每个人都按随机打开抽屉的方式去找自己的编号，那么 100 个人都在 50 步内找到自己的数的概率是非常小的。多小呢，我们来算一下：</p>
+<ul>
+<li>1 个人在 50 步内找到跟自己编号相同的数的概率是 50%（想象把 100 个数字平均分成两堆，每堆 50 个数，自己的编号一定在其中一堆，也就是二选一）</li>
+<li>100 个人都选对的概率是：0.5 _ 0.5 _ ... * 0.5， 也就是 0.5 的 100 次方，数量级是 10 的 -31 次方，接近普朗克常数的数量级了</li>
+</ul>
+<p>如果从地球诞生开始算起，且 1 秒能完成该游戏，那么 45 亿年后的现在， 极大的概率这 100 个囚犯还没有成功完成过一次该游戏。所以盲猜的方式不可取。</p>
+<h3 id="zhuan-huan-si-lu">转换思路</h3>
+<p>每个抽屉有自己的顺序编号，如果把抽屉里的数用来指向下一个抽屉，那么抽屉和抽屉里的数就能形成链表。说来你可能不信，按照这种链表的思路，可以将成功率提高到 30% 以上。</p>
+<h3 id="ju-ti-zuo-fa">具体做法</h3>
+<p>假设某个囚犯抽到的数字是 5，也就是需要在 50 步内，找到放了 5 的那个抽屉。先找到第 5 个抽屉打开，然后看里面的数字是多少，如果不是 5，则找到该数字对应的抽屉再打开，以此类推。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-boxes.png"
+    srcset="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-boxes.png 493w,&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-boxes.png 493w"
+    sizes="(max-width: 493px) 100vw, 493px" width="493" /></p>
+<p>最终要么在 50 步内找到，要么没有。看起来并没有什么特别，为什么成功率能提高那么多呢？</p>
+<h3 id="tan-jiu-yuan-yin">探究原因</h3>
+<p>链表有一个重要的概念：环。如果这 100 个数字全部组成一个环，如 <code>1 -&gt; 4 -&gt; 38 -&gt; ... -&gt; 1</code>，那么并不会提高成功率。但如果这 100 个数字形成了多个环，如：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>1,5 -&gt; 5,10 -&gt; 10,1 -&gt; 1,5
+</span><span>2,36 -&gt; 36,70 -&gt; 70,8 -&gt; 8,19 -&gt; ... -&gt; 2,36
+</span><span>9,9 -&gt; 9,9 // 序号为 9 的抽屉里，正好放的是 9 这个数字
+</span><span>...
+</span></code></pre>
+<p>这就有意思了。首先这些链表一定会形成环，因为每一个抽屉里都有一个指针（放的那个随机数），且抽屉的序号可以与随机数完全对应（没有多余，也没有遗漏），所以没有一个抽屉是起点或终点。</p>
+<p>再来看，如果某个链表包含的抽屉数小于等于 50 意味着什么？意味着一定可以在 50 次内找到有自己序号的那个抽屉。</p>
+<p>假设囚犯拿到的数字还是 5，他打开序号为 5 的抽屉（一定要打开跟自己序号对应的抽屉，不能随机挑一个，可以带着这个问题往下看），然后一路按照数字与抽屉序号这种对应方式，来到了环形链表的最后一个抽屉前，打开它，里面放的就会是想要找的数字：5。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list.png"
+    srcset="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list.png 638w,&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list.png 638w"
+    sizes="(max-width: 638px) 100vw, 638px" width="638" /></p>
+<p>因为环形链表的长度不超过 50，因此抽屉打开次数也必然不超过 50。所以只要只要这 100 个数形成的环形链表中没有一个长度大于 50，按照这个策略，囚犯们就可以全部在 50 步内找到自己的数字。</p>
+<p>那接下来的问题就是，这个概率有多大？</p>
+<h3 id="suan-suan-gai-lu">算算概率</h3>
+<p>除去有一条链表长度大于 50 的情况（不可能存在多条环形链表的长度超过 50，毕竟一共只有 100 个），其他情况都能成功，所以成功的概率就是 <code>1 - 其中一条链表长度大于50的概率</code>。<code>一条链表长度大于 50</code> 的概率，就是把链表长度为 51 到 100 的概率相加。</p>
+<p>假设链表的长度为 n(n &gt; 50)，我们来算一下它出现的概率。首先，从 100 个抽屉里任选 n 个抽屉作为产生链表的抽屉，这个有 <code>C(100, n)</code> 种抽法（顺序无关，抽到 1，2，3 号抽屉，和 2，3，1 号抽屉没有区别，所以这里是组合的情况）。</p>
+<p>除了选出来的 n 个抽屉，在剩下抽屉里放随机数，有 <code>P(100-n, 100-n)</code> 种放法（顺序相关，所以是排列），也就是 <code>(100-n)!</code> 种。</p>
+<p>最后来看看选出来的 n 个抽屉要形成一个环，有几种放法。抽屉里的随机数不是随便放都可以的，比如跟抽屉序号相同的随机数就不能被放到该抽屉中。</p>
+<p>假设有 3 个抽屉，就只有两种放法：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-1.png"
+    srcset="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-1.png 773w,&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-1.png 773w"
+    sizes="(max-width: 773px) 100vw, 773px" width="773" /></p>
+<p>1 号抽屉里只能放 2 或者 3，如果放了 2，则 2 号抽屉里只能放 3，如果放了 3，则 3 号抽屉里就只能放 2，因此只有两种放法。</p>
+<p>如果是 4 个抽屉有几种放法呢？这个新的抽屉可以出现在原先 3 条链的其中一条链，每出现在其中一条链，就有 2 种放法，所以 4 个抽屉就有 3*2 = 6 种方法形成一个环。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-2.png"
+    srcset="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-2.png 278w,&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-2.png 278w"
+    sizes="(max-width: 278px) 100vw, 278px" width="278" /></p>
+<p>以此类推， 5 个抽屉有 <code>4*3*2</code> 种方法形成一个环，<code>n</code> 个抽屉就有 <code>(n-1)!</code> 种放法。</p>
+<p>把这些都乘起来就是长度为 n 的链表的可以摆放的个数：<code>C(100, n) * (100-n)! * (n-1)!</code>，其中 <code>C(100, n)</code> = <code>100!/((100-n)! * n!)</code>，这个表达式的结果为：<code>100!/n</code>，而这 100 个随机数所有可摆放的个数为：100!，也就是说，链表个数为 n 的可能性为 <code>1/n</code>。</p>
+<p>接下来就好办了，把这些可能性排除就是成功的可能性了：</p>
+<p>1 - ($\frac{1}{51}$ + $\frac{1}{52}$ + ... + $\frac{1}{100}$) ≈ 0.31183</p>
+<p>所以，按照这个链表的思路去找自己的号码，就有 30% 以上的概率能够全员通过。</p>
+<p>PS: 如果在玩游戏前，可以有一次交换抽屉里随机数的机会，那就可以让胜率达到 100% 了。</p>
+<h3 id="can-kao">参考</h3>
+<ul>
+<li><a href="https://datagenetics.com/blog/december42014/index.html">100 Prisoners Escape Problem</a></li>
+<li><a href="https://en.wikipedia.org/wiki/100_prisoners_problem">100 prisoners problem</a></li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/puzzle/">puzzle</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/algorithm/">algorithm</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"],
+        ["\[\[", "\]\]"],
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

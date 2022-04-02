@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+高性能MySQL小结
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/mysql-high-performance-tips/">
+
+<meta name="twitter:title" content="高性能MySQL小结">
+<meta property="og:title" content="高性能MySQL小结">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;mysql-high-performance-tips&#x2F;">高性能MySQL小结</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-01-05</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>其实只看到了 1/3，先记录一下，等以后有空了再补上。</p>
+<h3 id="jiang-cha-xun-jie-guo-dao-chu-dao-wen-jian">将查询结果导出到文件</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">mysql </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> SQL QUERY INTO OUTFILE </span><span style="color:#839c00;">&#39;/path/to/sql/file&#39;
+</span></code></pre>
+<h3 id="jiang-mei-ci-cao-zuo-du-dao-chu-dao-wen-jian">将每次操作都导出到文件</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">mysql </span><span style="color:#3e999f;">&gt; </span><span style="color:#f07219;">\T</span><span style="color:#4271ae;"> /path/to/file
+</span><span style="color:#c82728;">mysql </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> ... //这些操作，及操作的结果都会输出到对应的文件
+</span><span style="color:#c82728;">mysql </span><span style="color:#3e999f;">&gt; </span><span style="color:#f07219;">\t
+</span></code></pre>
+<p>文件内容大概会是这样</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span>(</span><span style="color:#c82728;">root@localhost</span><span>) </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">(none)</span><span style="color:#8959a8;">]</span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> use noah</span><span style="color:#3e999f;">;
+</span><span style="color:#c82728;">Reading</span><span style="color:#4271ae;"> table information for completion of table and column names
+</span><span style="color:#c82728;">You</span><span style="color:#4271ae;"> can turn off this feature to get a quicker startup with</span><span style="color:#f07219;"> -A
+</span><span>
+</span><span style="color:#c82728;">Database</span><span style="color:#4271ae;"> changed
+</span><span>(</span><span style="color:#c82728;">root@localhost</span><span>) </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">noah</span><span style="color:#8959a8;">]</span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> show tables</span><span style="color:#3e999f;">;
+</span><span style="color:#c82728;">+----------------+
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">Tables_in_noah </span><span style="color:#3e999f;">|
+</span><span style="color:#c82728;">+----------------+
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">blog_category  </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">blog_comment   </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">blog_post      </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">blog_res       </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">blog_role      </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">blog_role_res  </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">blog_role_user </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">blog_tag       </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">blog_user      </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">test           </span><span style="color:#3e999f;">|
+</span><span style="color:#c82728;">+----------------+
+</span><span style="color:#c82728;">10</span><span style="color:#4271ae;"> rows in set (0.00 sec</span><span>)
+</span><span>
+</span><span>(</span><span style="color:#c82728;">root@localhost</span><span>) </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">noah</span><span style="color:#8959a8;">]</span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> select </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;"> from test</span><span style="color:#3e999f;">;
+</span><span style="color:#c82728;">+----+------+
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">id </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">name </span><span style="color:#3e999f;">|
+</span><span style="color:#c82728;">+----+------+
+</span><span style="color:#3e999f;">|  </span><span style="color:#c82728;">1 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">foo  </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">|  </span><span style="color:#c82728;">2 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">bar  </span><span style="color:#3e999f;">|
+</span><span style="color:#c82728;">+----+------+
+</span><span style="color:#c82728;">2</span><span style="color:#4271ae;"> rows in set (0.02 sec</span><span>)
+</span></code></pre>
+<h3 id="xian-shi-mysql-dang-qian-zhuang-tai-ji-qi-ta-xin-xi">显示 MySQL 当前状态及其他信息</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">SHOW</span><span style="color:#4271ae;"> STATUS</span><span style="color:#3e999f;">; </span><span style="color:#c82728;">//显示MySQL当前状态
+</span><span style="color:#c82728;">SHOW</span><span style="color:#4271ae;"> VARIABLES</span><span style="color:#3e999f;">; </span><span style="color:#c82728;">//显示MySQL的变量信息，如version/data_dir等等
+</span><span style="color:#c82728;">SHOW</span><span style="color:#4271ae;"> VARIABLES LIKE </span><span style="color:#839c00;">&#39;%home%&#39;</span><span style="color:#3e999f;">; </span><span style="color:#c82728;">//获取包含home的变量
+</span><span style="color:#c82728;">SHOW</span><span style="color:#4271ae;"> TABLE STATUS</span><span style="color:#f07219;">\G</span><span style="color:#4271ae;"> //显示当前表的状态，注意后面的</span><span style="color:#f07219;">\G</span><span style="color:#4271ae;">，垂直显示结果
+</span><span style="color:#c82728;">DESCRIBE</span><span style="color:#4271ae;"> tbl</span><span style="color:#3e999f;">; </span><span style="color:#c82728;">//获取表结构
+</span><span style="color:#c82728;">SHOW</span><span style="color:#4271ae;"> FULL COLUMNS FROM tbl</span><span style="color:#3e999f;">; </span><span style="color:#c82728;">//类似上面
+</span></code></pre>
+<h3 id="xian-shi-mysql-dang-qian-de-lian-jie-zhuang-kuang">显示 MySQL 当前的连接状况</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># 使用mysqladmin
+</span><span style="color:#c82728;">mysqladmin</span><span style="color:#4271ae;"> processlist
+</span><span style="color:#8e908c;"># 或进入到mysql cli后执行
+</span><span style="color:#c82728;">mysql </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> show processlist</span><span style="color:#3e999f;">;
+</span><span>
+</span><span style="color:#8e908c;"># 结果大概是这样
+</span><span style="color:#c82728;">+-----+------+-----------+------+---------+------+-------+------------------+
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">Id  </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">User </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">Host      </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">db   </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">Command </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">Time </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">State </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">Info             </span><span style="color:#3e999f;">|
+</span><span style="color:#c82728;">+-----+------+-----------+------+---------+------+-------+------------------+
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">409 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">root </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">localhost </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">noah </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">Query   </span><span style="color:#3e999f;">|    </span><span style="color:#c82728;">0 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">NULL  </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">show</span><span style="color:#4271ae;"> processlist </span><span style="color:#3e999f;">|
+</span><span style="color:#c82728;">+-----+------+-----------+------+---------+------+-------+------------------+
+</span></code></pre>
+<h3 id="guan-yu-timestamp">关于 TIMESTAMP</h3>
+<ul>
+<li>第一个 TIMESTAMP 字段会随着表其他字段的更新而自动更新，之后的 TIMESTAMP 字段则不会。</li>
+<li>TIMESTAMP 的范围是：1970-2037；而 DATETIME 的范围是：1000-9999</li>
+</ul>
+<h3 id="yi-chu-zhong-fu-de-xing">移除重复的行</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># 注意这个IGNORE参数，如果没加的话会报错，且执行失败
+</span><span style="color:#8e908c;"># 假设要去除a,b项重复的行
+</span><span style="color:#c82728;">ALTER</span><span style="color:#4271ae;"> IGNORE TABLE tbl ADD UNIQUE INDEX(a,b</span><span>)</span><span style="color:#3e999f;">;
+</span></code></pre>
+<h3 id="cha-kan-dang-qian-zai-cao-zuo-de-shu-ju-ku">查看当前在操作的数据库</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">SELECT</span><span style="color:#4271ae;"> DATABASE(</span><span>)</span><span style="color:#3e999f;">;
+</span></code></pre>
+<p>也可以在 mysql 的提示符上动点手脚</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># edit /etc/mysql/my.cnf
+</span><span style="color:#c82728;">[mysql]
+</span><span style="color:#8e908c;">#no-auto-rehash	# faster start of mysql but no tab completition
+</span><span style="color:#c82728;">prompt</span><span style="color:#3e999f;">=</span><span>(</span><span style="color:#f07219;">\\</span><span>u@</span><span style="color:#f07219;">\\</span><span>h) </span><span style="color:#c82728;">[</span><span style="color:#f07219;">\\</span><span style="color:#c82728;">d]</span><span style="color:#3e999f;">&gt; </span><span style="color:#f07219;">\\
+</span></code></pre>
+<h3 id="fu-zhi-yi-ge-biao">复制一个表</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">CREATE</span><span style="color:#4271ae;"> TABLE tbl1 LIKE tbl</span><span style="color:#3e999f;">;
+</span><span style="color:#c82728;">INSERT</span><span style="color:#4271ae;"> INTO tbl1 SELECT </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;"> FROM tbl</span><span style="color:#3e999f;">;
+</span><span style="color:#8e908c;"># 也可以先用mysqladmin导出数据，再导入
+</span></code></pre>
+<h3 id="ding-chang-biao-yu-bian-chang-biao">定长表与变长表</h3>
+<p>包含任何 varchar、text 等变长字段的数据表，即为变长表，反之则为定长表。所以 CHAR 和 VARCHAR 不共存</p>
+<p>CHAR(30)，最多可以容纳 30 个字符，但如果字符数不到 30 个的话，也会占用这些空间，只不过会在后面补上空格，但我们查询时又会发现尾部没有空格，这是因为空格已经被 CHAR 处理掉了。</p>
+<p>VARCHAR(30)，也是最多可以容纳 30 个字符，但如果不足 30 个的话，有多少字符占多少空间，不会浪费。</p>
+<p>变长表的优势在于有效利用空间，但由于记录大小不同，在其上进行许多删除或更新操作会使表中的碎片增多，需要定期 OPTIMIZE TABLE 以保持性能。</p>
+<p>定长表的查询，检索和更新速度都比变长表快，但占用的空间也大。</p>
+<p>PS:MySQL 5.0.3 之后 VARCHAR 的最大字符数为 65535</p>
+<h3 id="zhuan-huan-bian-ma">转换编码</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">SET</span><span style="color:#4271ae;"> NAMES utf8
+</span><span style="color:#8e908c;"># CHARSET utf8
+</span></code></pre>
+<h3 id="ju-he-han-shu">聚合函数</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">COUNT </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">GROUP BY</span><span style="color:#8959a8;">]
+</span><span style="color:#c82728;">COUNT</span><span style="color:#4271ae;"> + HAVING + GROUP BY (HAVING可以看作后置WHERE语句</span><span>)
+</span><span style="color:#c82728;">MIN/MAX </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">GROUP BY</span><span style="color:#8959a8;">]
+</span><span style="color:#c82728;">SUM/AVG </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">GROUP BY</span><span style="color:#8959a8;">]
+</span><span style="color:#c82728;">DISTINCT </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">GROUP BY</span><span style="color:#8959a8;">]
+</span><span style="color:#c82728;">所有的这些聚合函数加上GROUP</span><span style="color:#4271ae;"> BY之后，都只对GROUP BY部分有效。(不好理解，忽略</span><span>)
+</span></code></pre>
+<h3 id="bing-fa-kong-zhi">并发控制</h3>
+<h4 id="du-suo-gong-xiang-suo-xie-suo-pai-ta-suo">读锁(共享锁)/写锁(排他锁)</h4>
+<p>当某一用户修改一部分数据时，MySQL 会禁止其他用户读取同一数据。大多数时，MySQL 都是以透明的方式实现锁的内部管理</p>
+<h4 id="suo-li-du">锁粒度</h4>
+<p>只锁定部分修改的数据，而不是所有的资源，或者只对要修改的数据片精确加锁。任何时间，在给定的资源上，被加锁的数据量越小，就可以允许更多的并发修改，只要相互之间互不冲突即可</p>
+<p>这么做的问题是加锁也会消耗系统资源。如获得锁，检查锁是否已解除，以及释放锁等，都会增加系统开销。如果系统花费大量时间来管理锁，而不是读/写数据，那么系统整体性能都可能会受到影响</p>
+<p>所谓的锁策略，就是在锁开销和数据安全之间寻求一种平衡。</p>
+<h4 id="biao-suo-myisam">表锁(MyISAM)</h4>
+<p>开销最小，但不适合频繁写操作</p>
+<h4 id="xing-suo-innodb">行锁(InnoDb)</h4>
+<p>可以支持最大的并发处理，但同时也会增加开销（InnoDb），由存储引擎实现，而不是 MySQL 服务器</p>
+<h4 id="shi-wu">事务</h4>
+<p>一组原子性的 SQL 语句。要么全部执行(commit)，要么全部不执行(rollback)</p>
+<p>正像锁粒度的增加会导致锁开销的增加一样，这种事务处理中的额外安全措施，也会导致数据库服务器要完成更多的额外工作</p>
+<p>MySQL 默认操作是 AutoCommit，这意味着除非显示地开始一个事务，否则将把每个 SQL 操作视为一个单独事务自动执行</p>
+<h4 id="si-suo">死锁</h4>
+<p>两个或多个事务在同一资源上相互占用，并请求加锁时，导致的恶性循环现象</p>
+<p>解决办法：死锁检测/死锁超时机制。InnoDb 处理死锁的方法是，回滚拥有最少排他行级锁的事务。</p>
+<h4 id="yin-shi-he-xian-shi-suo-ding">隐式和显式锁定</h4>
+<p>InnoDb: 一个事务在执行过程中的任何时候，都可以获得锁，但只有在执行 COMMIT 或 ROLLBACK 语句后，才可以释放这些锁。</p>
+<p>InnoDb 也支持显式锁定，如：</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">SELECT</span><span style="color:#4271ae;"> ... LOCK IN SHARE MODE
+</span><span style="color:#c82728;">SELECT</span><span style="color:#4271ae;"> ... FOR UPDATE
+</span></code></pre>
+<h4 id="duo-ban-ben-bing-fa-kong-zhi">多版本并发控制</h4>
+<p>MySQL 事务性存储引擎，如 InnoDb，不是简单使用行加锁机制，而是 MVCC 和行加锁机制关联使用。</p>
+<p>MVCC 不是 MySQL 独有的技术，其他如 Oracle, Postgresql 等都在使用</p>
+<p>可以将 MVCC 设想成一种行级加锁的变形，它避免了很多情况下的锁操作，大大降低了系统的开销</p>
+<p>MVCC 是通过及时保存在某些时刻的数据快照，而得以实现的。</p>
+<p>所谓&quot;版本号&quot;，其实是 InnoDb 维护的一个计数器，每启动一个事务，计数器随着递增，并将该号作为事务的版本号</p>
+<p><strong>[INSERT]</strong>
+InnoDb 将系统当前的版本号设为新增行的版本号</p>
+<p><strong>[DELETE]</strong>
+InnoDb 将系统当前的版本号设为被删除行的删除号，该行并未立即被物理删除</p>
+<p><strong>[UPDATE]</strong>
+INSERT+DELETE</p>
+<p><strong>[SELECT]</strong></p>
+<ol>
+<li>行版本号不大于事务版本号。这确保了该行在事务开始时已存在，或者由当前事务创建、更新</li>
+<li>行删除号不存在，或者删除号大于事务版本号。这确保事务开始前行未被删除</li>
+</ol>
+<p>对于被标记为删除的行，InnoDb 有专门的线程负责物理删除，当行满足如下条件时认为可以将其物理删除：当前不存在版本号小于该行删除号的事务，这样可以确保不会有事务再引用到该行</p>
+<p>保存这些额外记录的好处，是使大多数读操作都不必申请加锁</p>
+<h3 id="guan-yu-myisam">关于 MyISAM</h3>
+<ul>
+<li>表加锁。并发低/开销少</li>
+<li>将每个表存储成两个文件：数据文件(.MYD)和索引文件(.MYI)</li>
+<li>使用 CHECK TABLE mytable 和 REPAIR TABLE mytable 来修复表，也可以使用 myisamchk 命令</li>
+<li>索引长度不能超过 1000(注意，如果是 utf8 的话，长度 x3)，InnoDb 没有此限制</li>
+<li>可以延迟索引。使用表创建选项 DELAY_KEY_WRITE 创建的 MyISAM 表，在 SQL 结束之后，不会将索引的改变数据写入磁盘，而是在内存的键缓冲区中缓存索引改变数据，只有在清理缓冲区或关闭表时才将索引块转到磁盘。对于数据经常改变，并且频繁使用的表，这种模式大大提高了表的处理性能。不过，如果服务器或系统崩溃，索引将肯定损坏，并需要修复</li>
+</ul>
+<h3 id="guan-yu-innodb">关于 InnoDb</h3>
+<ul>
+<li>行级锁。并发高/开销相对高</li>
+<li>高性能</li>
+<li>崩溃后自动恢复</li>
+<li>主键聚簇索引，辅助索引非聚簇索引(单独索引树)，辅助索引也会包含主键列，所以如果主键列较大，则它的辅助索引也会较大</li>
+<li>任何改变 InnoDb 表结构的操作会导致整个表的重建，包括重建所有索引</li>
+<li>外键约束</li>
+<li>自动提交性能差？</li>
+<li>可以显示锁定</li>
+<li>不要对 InnoDb 使用不带 WHERE 语句的 count(*)，这会导致 InnoDb 执行全表扫描或索引扫描，而 MyISAM 只需要从相关记录中读取该值即可。</li>
+</ul>
+<h3 id="xing-neng-jian-ce">性能检测</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">mysql </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> SET PROFILING = 1</span><span style="color:#3e999f;">;
+</span><span style="color:#c82728;">mysql </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> ...
+</span><span style="color:#c82728;">mysql </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> SHOW PROFILES</span><span style="color:#3e999f;">;
+</span><span>
+</span></code></pre>
+<p>会把执行的语句和执行时间都打印出来，如下</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">+----------+------------+-----------------------------------+
+</span><span style="color:#3e999f;">| </span><span style="color:#c82728;">Query_ID </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">Duration   </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">Query                             </span><span style="color:#3e999f;">|
+</span><span style="color:#c82728;">+----------+------------+-----------------------------------+
+</span><span style="color:#3e999f;">|        </span><span style="color:#c82728;">1 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">0.00011700 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">select</span><span style="color:#4271ae;"> count(</span><span style="color:#3e999f;">*</span><span>) </span><span style="color:#c82728;">from</span><span style="color:#4271ae;"> user         </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">|        </span><span style="color:#c82728;">2 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">0.00033500 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">select</span><span style="color:#4271ae;"> count(</span><span style="color:#3e999f;">*</span><span>) </span><span style="color:#c82728;">from</span><span style="color:#4271ae;"> user_copy    </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">|        </span><span style="color:#c82728;">3 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">0.59868300 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">select</span><span style="color:#4271ae;"> count(created</span><span>) </span><span style="color:#c82728;">from</span><span style="color:#4271ae;"> user   </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">|        </span><span style="color:#c82728;">4 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">0.51746400 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">select</span><span style="color:#4271ae;"> count(name</span><span>) </span><span style="color:#c82728;">from</span><span style="color:#4271ae;"> user_copy </span><span style="color:#3e999f;">|
+</span><span style="color:#3e999f;">|        </span><span style="color:#c82728;">5 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">0.00846700 </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">show</span><span style="color:#4271ae;"> table status like </span><span style="color:#839c00;">&#39;user&#39;     </span><span style="color:#3e999f;">|
+</span><span style="color:#c82728;">+----------+------------+-----------------------------------+
+</span></code></pre>
+<p>还可以针对某个 query 进行更细致的分析</p>
+<p>也可以使用 FLUSH STATUS + SHOW SESSION STATUS</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">mysql </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;"> SHOW PROFILE FOR QUERY 1</span><span style="color:#3e999f;">;
+</span><span>
+</span></code></pre>
+<h3 id="cha-xun-huan-cun">查询缓存</h3>
+<p>MySQL 在第二次执行相同的 SQL 查询语句时，默认会使用查询缓存。加上&quot;SQL_NO_CACHE&quot;不使用查询缓存</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">SELECT</span><span style="color:#4271ae;"> SQL_NO_CACHE username, ...
+</span></code></pre>
+<h3 id="guan-yu-null">关于 NULL</h3>
+<ul>
+<li>尽量避免 NULL</li>
+<li>MySQL 难以优化引用了可空列的查询，它会使索引，索引统计和值更加复杂</li>
+<li>即使要在表中存储&quot;没有值&quot;的字段，还是有可能不使用 NULL 的，考虑使用 0 或空字符来代替它。</li>
+</ul>
+<h3 id="suo-yin">索引</h3>
+<p>索引是性能问题的首要原因，先搞定索引，再去搞查询优化</p>
+<h4 id="b-tree-suo-yin">B-Tree 索引</h4>
+<ul>
+<li>根节点保存了指向子节点的指针，存储引擎根据指针寻找数据</li>
+<li>当一个数据块不能放下所有索引字段数据时，就会形成树形的根节点或分支节点，所以树的深度和广度是由数据量决定的</li>
+<li>每个节点包含了下层节点的链接，(没有相邻节点链接，上层链接可有可没有)</li>
+</ul>
+<p>假设建立了一个(last_name, first_name, birth)的索引，此索引对于以下类型可用</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>匹配全名 (例如可以找到一个叫Cuba Allen，并且出生于1960-01-01的人)
+</span><span>匹配最左前缀 (例如可以找到姓为Allen的人，仅适用于索引中的第一列)
+</span></code></pre>
+<p>由于树的节点是排好序的，它们可以用于查找和 ORDER BY 查询</p>
+<p>B-Tree 的局限在于如果查询不是从索引列的最左边开始，就无法使用索引。所以索引列的顺序至关重要。</p>
+<h3 id="gao-xing-neng-suo-yin-ce-lue">高性能索引策略</h3>
+<h4 id="ge-chi-lie">隔离列</h4>
+<p>如果在查询中没有隔离索引的列，MySQL 通常不会是使用索引。&quot;隔离&quot;列意味着它不是表达式的一部分，也没有位于函数中。</p>
+<h4 id="qian-zhui-suo-yin">前缀索引</h4>
+<p>找到合适的前缀长度(计算全列的选择性，并使前缀的选择性接近于它)</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">SELECT</span><span style="color:#4271ae;"> COUNT(DISTINCT city</span><span>)</span><span style="color:#c82728;">/COUNT</span><span style="color:#4271ae;">(</span><span style="color:#3e999f;">*</span><span>) </span><span style="color:#c82728;">FROM</span><span style="color:#4271ae;"> city_demo
+</span><span style="color:#c82728;">SELECT</span><span style="color:#4271ae;"> COUNT(DISTINCE LEFT(city, 4</span><span>))</span><span style="color:#c82728;">/COUNT</span><span style="color:#4271ae;">(</span><span style="color:#3e999f;">*</span><span>) </span><span style="color:#c82728;">FROM</span><span style="color:#4271ae;"> city_demo
+</span></code></pre>
+<p>也要注意如果数据分布非常不均匀，可能就会有问题</p>
+<p>前缀索引能很好的减少索引的大小及提高速度，但 MySQL 不能在 ORDER BY 和 GROUP BY 中使用索引</p>
+<h4 id="ju-ji-suo-yin-innodb">聚集索引 (InnoDb)</h4>
+<p>当表有聚集索引时，它的数据行实际保存在索引的叶子页(而不是指针)，所谓&quot;聚集&quot;就是指实际的数据行和相关的键值都保存在一起，每个表只能由一个聚集索引(主索引)，因为不能以此把行保存在两个地方</p>
+<p><strong>优点：</strong></p>
+<ul>
+<li>可以把相关数据保存在一起。如果没有使用聚集，读取每个邮件都会访问磁盘</li>
+<li>数据访问快。聚集索引把索引和数据都保存到了同一棵 B-Tree 中，因此从聚集索引中取得的数据通常比在非聚集索引进行查找要快</li>
+<li>聚集索引能最大限度地提升 I/O 密集负载的性能。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>更新索引列代价是庞大的，因为它强制 InnoDb 把每个更新的行移到新位置</li>
+<li>辅助索引会比较大，因为它们的叶子包含了被引用行的主键列</li>
+<li>辅助索引访问需要两次索引查找</li>
+</ul>
+<h4 id="fu-gai-suo-yin">覆盖索引</h4>
+<p>所有满足查询需要的数据的索引(只需要读取索引，不需要再读取行数据)，比如这条 SQL 语句</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">SELECT</span><span style="color:#4271ae;"> state_id, city, address FROM userinfo WHERE state_id = 5
+</span></code></pre>
+<p>如果只在 state_id 上建索引，则 city,address 都要从表里读取行数据</p>
+<p>如果建立 index (state_id, city, address)，既能使用 state_id 索引，同时又可以使用覆盖索引，速度就快多了</p>
+<h4 id="duo-yu-he-zhong-fu-suo-yin">多余和重复索引</h4>
+<ul>
+<li>MySQL 允许你在统一列上创建多个索引，所以 MySQL 不得不单独维护每一个索引</li>
+<li>如果列(A,B)上有索引，那么另外一个列(A)上的索引就是多余的(B-Tree)</li>
+<li>大多数情况下，多余索引都是不好的，为了避免它，应该扩展已有索引，而不是添加新索引</li>
+<li>索引越多，更新索引的开销越大，尤其是在数据很多的情况下</li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/mysql/">mysql</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/book/">book</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

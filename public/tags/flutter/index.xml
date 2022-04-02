@@ -1,0 +1,917 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Limboy - flutter</title>
+        <link>https://limboy.me</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>zh</language>
+        <atom:link href="https://limboy.me/tags/flutter/index.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Fri, 11 Jan 2019 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>关于 Flutter Layout 你应该知道的</title>
+            <pubDate>Fri, 11 Jan 2019 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/flutter-layout/</link>
+            <guid>https://limboy.me/posts/flutter-layout/</guid>
+            <description>&lt;p&gt;这篇文章首发于 &lt;a href=&quot;https:&#x2F;&#x2F;medium.com&#x2F;@limboy&#x2F;flutter-layout-in-a-nutshell-f2ed3cb66d72&quot;&gt;Medium&lt;&#x2F;a&gt;，略显生硬的英文看来并不太妨碍理解。&lt;&#x2F;p&gt;
+&lt;p&gt;与 Flutter 的布局系统搏斗一段时间之后，感觉终于找到了点门道，于是花了点时间整理了下。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;he-xin-gai-nian&quot;&gt;核心概念&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;unbounded-constraints&quot;&gt;Unbounded Constraints&lt;&#x2F;h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;either the maximum width or the maximum height is set to double.INFINITY&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-scrollview.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-scrollview.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-scrollview.png 73w&quot;
+    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;ScrollView&lt;&#x2F;code&gt; 和它的子类比如 &lt;code&gt;ListView&lt;&#x2F;code&gt; 或 &lt;code&gt;GridView&lt;&#x2F;code&gt; 是常见的 Unbounded Constraints. 也就是在某一个方向没有限制大小。其他的 widget 只要能够设置 &lt;code&gt;width&lt;&#x2F;code&gt; 或 &lt;code&gt;height&lt;&#x2F;code&gt; 为 &lt;code&gt;double.INFINITY&lt;&#x2F;code&gt; 的也算。有时也会用 &lt;strong&gt;as big as possible&lt;&#x2F;strong&gt; 来描述这些 widgets。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;flex&quot;&gt;Flex&lt;&#x2F;h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;when in bounded constraints, try to be as big as possible in that direction.&lt;&#x2F;p&gt;
+&lt;p&gt;when in unbounded constraints, try to fit their children in that direction.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;当在有限的空间内，会撑满整个空间；如果在一个 unbounded constraints 容器里，就匹配子 widget 的大小。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-row-column.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-row-column.png 187w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-row-column.png 187w&quot;
+    sizes=&quot;(max-width: 187px) 100vw, 187px&quot; width=&quot;187&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;最常见的是 &lt;code&gt;Row&lt;&#x2F;code&gt; 和 &lt;code&gt;Column&lt;&#x2F;code&gt;，如果不嫌麻烦的话，也可以使用 &lt;code&gt;Flex&lt;&#x2F;code&gt; widget。里面可以放 &lt;code&gt;Flexible&lt;&#x2F;code&gt; widget，也可以不是。如果有 &lt;code&gt;Flexible&lt;&#x2F;code&gt; widgets 会把剩余空间计算出来分配给这些 widgets。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;flexible&quot;&gt;Flexible&lt;&#x2F;h4&gt;
+&lt;p&gt;跟 &lt;code&gt;Flex&lt;&#x2F;code&gt; 搭配使用，&lt;code&gt;Flexible&lt;&#x2F;code&gt; 可以用来声明使用百分之多少的空间。比如 &lt;code&gt;flex = 1&lt;&#x2F;code&gt; 也就是 &lt;code&gt;1&#x2F;all&lt;&#x2F;code&gt;，如果有两个 widgets，另一个也是 1，那么 &lt;code&gt;all = 2&lt;&#x2F;code&gt;，每个 widget 分配到 50% 的空间。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-expanded.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-expanded.png 187w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-expanded.png 187w&quot;
+    sizes=&quot;(max-width: 187px) 100vw, 187px&quot; width=&quot;187&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;Expanded&lt;&#x2F;code&gt; 是最常见的 &lt;code&gt;Flexible&lt;&#x2F;code&gt; widget，它会填满主方向上可用的空间（比如 Row 的水平空间或 Column 的垂直空间）。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhu-yao-widgets&quot;&gt;主要 Widgets&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;container&quot;&gt;Container&lt;&#x2F;h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Containers with no children try to be as big as possible unless the incoming constraints are unbounded, in which case they try to be as small as possible.&lt;&#x2F;p&gt;
+&lt;p&gt;Containers with children size themselves to their children.&lt;&#x2F;p&gt;
+&lt;p&gt;The width, height, and constraints arguments to the constructor override this.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;这是 Container 的三个主要表现：当没有子 widgets 且没有指定 constraints 时，尽可能地充满可用空间，如果有 constraints 就以 constraints 为准（除非跟 parent constraints 冲突）；如果有子 widgets 则以 children 的 size 为准；可以设置 &lt;code&gt;width&lt;&#x2F;code&gt;, &lt;code&gt;height&lt;&#x2F;code&gt;， &lt;code&gt;constraints&lt;&#x2F;code&gt; 来约束 size。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MaterialApp&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  home&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Scaffold&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;    body&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Container&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;      color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Colors&lt;&#x2F;span&gt;&lt;span&gt;.yellow,
+&lt;&#x2F;span&gt;&lt;span&gt;    ),
+&lt;&#x2F;span&gt;&lt;span&gt;  ),
+&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这是一个没有孩子的 container，因此它会表现地尽量大，就像这样：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container.png 73w&quot;
+    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;如果设置了 &lt;code&gt;width&lt;&#x2F;code&gt; 或 &lt;code&gt;height&lt;&#x2F;code&gt;，则会根据设置的值来表现：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MaterialApp&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  home&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Scaffold&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;    body&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Container&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;      color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Colors&lt;&#x2F;span&gt;&lt;span&gt;.yellow,
+&lt;&#x2F;span&gt;&lt;span&gt;      width&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;100&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;      height&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;100&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    ),
+&lt;&#x2F;span&gt;&lt;span&gt;  ),
+&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-width.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-width.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-width.png 73w&quot;
+    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;如果有 child，则会以 child 的 size 为准：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MaterialApp&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  home&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Scaffold&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;    body&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Container&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;      color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Colors&lt;&#x2F;span&gt;&lt;span&gt;.yellow,
+&lt;&#x2F;span&gt;&lt;span&gt;      child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Text&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hello&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    ),
+&lt;&#x2F;span&gt;&lt;span&gt;  ),
+&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-child.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-child.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-child.png 73w&quot;
+    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;除此之外，还可以设置 padding, margin, child 的对齐方式，等等。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;stack&quot;&gt;Stack&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;Stack&lt;&#x2F;code&gt; 有点像 css 的绝对布局，可以在上面盖一些 widgets，比如 profile 页的背景图上放一些个人信息。&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Each child of a Stack widget is either positioned or non-positioned.&lt;&#x2F;p&gt;
+&lt;p&gt;Positioned children are those wrapped in a Positioned widget that has at least one non-null property.&lt;&#x2F;p&gt;
+&lt;p&gt;The stack sizes itself to contain all the non-positioned children, which are positioned according to alignment.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Stack 的 children 如果没有用 &lt;code&gt;Positioned&lt;&#x2F;code&gt; 修饰的话，就会用 Stack 的 &lt;code&gt;fit&lt;&#x2F;code&gt; 和 &lt;code&gt;alighment&lt;&#x2F;code&gt; 来帮它们找到合适的位置。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Stack&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  fit&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StackFit&lt;&#x2F;span&gt;&lt;span&gt;.loose,
+&lt;&#x2F;span&gt;&lt;span&gt;  alignment&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Alignment&lt;&#x2F;span&gt;&lt;span&gt;.center,
+&lt;&#x2F;span&gt;&lt;span&gt;  children&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Widget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;[
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Text&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;world&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Positioned&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;     bottom&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;     child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Text&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hello&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;   )
+&lt;&#x2F;span&gt;&lt;span&gt; ],
+&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-1.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-1.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-1.png 73w&quot;
+    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;StackFit.loose&lt;&#x2F;code&gt; 的意思是，如果 child size 不比 Stack 的大，就用 child 的 size。而如果设置为 &lt;code&gt;StackFit.expand&lt;&#x2F;code&gt; 则会让所有非 &lt;code&gt;Positioned&lt;&#x2F;code&gt; 的 widgets 使用 Stack 的 size。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-2.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-2.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-2.png 73w&quot;
+    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;Text(&#x27;world&#x27;)&lt;&#x2F;code&gt; 现在就跟 Stack 一样大了，所以看起来像是 &lt;code&gt;alignment.center&lt;&#x2F;code&gt; 没有生效。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;row-and-column&quot;&gt;Row and Column&lt;&#x2F;h4&gt;
+&lt;p&gt;它们都是 Flex widgets，Row 可以将 children 横着放，column 可以将 children 竖着放。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;crossAxisAlignment&lt;&#x2F;code&gt; 表示要如何对齐另一侧，比如横着一排的 widgets，垂直方向上它们应该顶部对齐还是居中对齐呢。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;mainAxisSize&lt;&#x2F;code&gt; 默认是 &lt;code&gt;MainAxisSize.max&lt;&#x2F;code&gt;，如果想让它变成 Row 或 Column 的真实高度，可以将它设置为 &lt;code&gt;MainAxisSize.min&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;sizedbox&quot;&gt;SizedBox&lt;&#x2F;h4&gt;
+&lt;p&gt;使用它可以得到一个确定尺寸的 widget。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;safearea&quot;&gt;SafeArea&lt;&#x2F;h4&gt;
+&lt;p&gt;使用 &lt;code&gt;SafeArea&lt;&#x2F;code&gt; 可以让 child widget 在顶部和底部腾出足够的空间方便处理 iPhoneX 这类的手机。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;yuan-ze&quot;&gt;原则&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;bu-yao-zai-flex-widget-li-fang-zhi-unbounded-constraints&quot;&gt;不要在 Flex widget 里放置 unbounded constraints&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;Column&lt;&#x2F;code&gt; 是 Flex widget，所以在里面放 &lt;code&gt;ListView&lt;&#x2F;code&gt; 的话，系统不会答应的。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MaterialApp&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  home&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Column&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;    children&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Widget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;[
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ListView&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;builder&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        itemBuilder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; (context, index){
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Text&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hello&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;        },
+&lt;&#x2F;span&gt;&lt;span&gt;        itemCount&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;      )
+&lt;&#x2F;span&gt;&lt;span&gt;    ],
+&lt;&#x2F;span&gt;&lt;span&gt;  ),
+&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;系统会给出这样的 error&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;flutter: The following assertion was thrown during performResize():
+&lt;&#x2F;span&gt;&lt;span&gt;flutter: Vertical viewport was given unbounded height.
+&lt;&#x2F;span&gt;&lt;span&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;因为 Column 作为 Flex 它不知道应该如何安放一个 &lt;strong&gt;as big as possible&lt;&#x2F;strong&gt; 的 widget。解决方法也很简单，只要设置 ListView 的 &lt;code&gt;shrinkWrap=true&lt;&#x2F;code&gt; 即可。这就是告诉 ListView 把自己尽可能地缩小。&lt;&#x2F;p&gt;
+&lt;p&gt;可以在 &lt;code&gt;Column&lt;&#x2F;code&gt; 或 &lt;code&gt;Row&lt;&#x2F;code&gt; 里使用 &lt;code&gt;Expanded&lt;&#x2F;code&gt;，因为它是 &lt;code&gt;Flexible&lt;&#x2F;code&gt;，就应该待在 Flex 里面。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;bu-yao-zai-unbounded-widgets-li-she-zhi-flex-wei-bu-deng-yu-0-de-shu-zhi&quot;&gt;不要在 unbounded widgets 里设置 flex 为不等于 0 的数值&lt;&#x2F;h4&gt;
+&lt;p&gt;因为空间无限，如果两个 &lt;code&gt;Flexible&lt;&#x2F;code&gt; 分别为 1 和 2，那么 &lt;code&gt;Flex&lt;&#x2F;code&gt; 根本不知道该如何将空间划分成 1:2。如果真这么做的话，会收到这样的 error:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;RenderFlex children have non-zero flex but incoming height constraints are unbounded.
+&lt;&#x2F;span&gt;&lt;span&gt;...
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;xiao-ce-yan&quot;&gt;小测验&lt;&#x2F;h3&gt;
+&lt;p&gt;下面这段代码会让 &lt;code&gt;Hello World&lt;&#x2F;code&gt; 被包裹在中间的小方块里吗？&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MaterialApp&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  home&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Container&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;    alignment&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Alignment&lt;&#x2F;span&gt;&lt;span&gt;.center,
+&lt;&#x2F;span&gt;&lt;span&gt;    constraints&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BoxConstraints&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;tight&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Size&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;100&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;100&lt;&#x2F;span&gt;&lt;span&gt;)),
+&lt;&#x2F;span&gt;&lt;span&gt;    decoration&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BoxDecoration&lt;&#x2F;span&gt;&lt;span&gt;(color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Colors&lt;&#x2F;span&gt;&lt;span&gt;.yellow),
+&lt;&#x2F;span&gt;&lt;span&gt;    child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Text&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;Hello World&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;  ),
+&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squrebox.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squrebox.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squrebox.png 73w&quot;
+    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;答案是，不会，它会变成这样：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squarebox-real.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squarebox-real.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squarebox-real.png 73w&quot;
+    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;不是设置了 constraints 系统就要按着这个 constraints 来，在经过计算之后，系统会发现这个 constraints 无法满足需求，而被舍弃，具体过程如下：&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;Container&lt;&#x2F;code&gt; 的 &lt;code&gt;build&lt;&#x2F;code&gt; 方法里，发现有设置过 constraints，最终会返回一个 &lt;code&gt;BoxConstraints&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BoxConstraints&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  minWidth&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; minWidth.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;clamp&lt;&#x2F;span&gt;&lt;span&gt;(constraints.minWidth, constraints.maxWidth),
+&lt;&#x2F;span&gt;&lt;span&gt;  maxWidth&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; maxWidth.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;clamp&lt;&#x2F;span&gt;&lt;span&gt;(constraints.minWidth, constraints.maxWidth),
+&lt;&#x2F;span&gt;&lt;span&gt;  minHeight&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; minHeight.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;clamp&lt;&#x2F;span&gt;&lt;span&gt;(constraints.minHeight, constraints.maxHeight),
+&lt;&#x2F;span&gt;&lt;span&gt;  maxHeight&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; maxHeight.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;clamp&lt;&#x2F;span&gt;&lt;span&gt;(constraints.minHeight, constraints.maxHeight)
+&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里的 &lt;code&gt;clamp&lt;&#x2F;code&gt; 方法指的是当 minWidth 值比左边的值小时，取左边值，比右边的值大时，取右边值。因为 parent 的 constraints 也就是 screen size 是固定的，因此，&lt;code&gt;minWidth&lt;&#x2F;code&gt; 在跟它们比较之后，还是使用了它们的值。&lt;&#x2F;p&gt;
+&lt;p&gt;正确的做法是在外面套一层 &lt;code&gt;Center&lt;&#x2F;code&gt; 或 &lt;code&gt;Align&lt;&#x2F;code&gt; widget。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;ru-he-de-dao-fu-widget-de-constraints&quot;&gt;如何得到父 widget 的 constraints？&lt;&#x2F;h4&gt;
+&lt;p&gt;使用 &lt;code&gt;LayoutBuilder&lt;&#x2F;code&gt;。有时会需要这些信息来做一些显示上的调整。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; borrowed from https:&#x2F;&#x2F;stackoverflow.com&#x2F;a&#x2F;41558369&#x2F;94962
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; container &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Container&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Toggling width from 100 to 300 will change what is rendered
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; in the child container
+&lt;&#x2F;span&gt;&lt;span&gt;  width&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;100.0&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; width: 300.0
+&lt;&#x2F;span&gt;&lt;span&gt;  child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;LayoutBuilder&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;    builder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BuildContext&lt;&#x2F;span&gt;&lt;span&gt; context, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BoxConstraints&lt;&#x2F;span&gt;&lt;span&gt; constraints) {
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt;(constraints.maxWidth &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;200.0&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Text&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;BIG&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;      } &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;else&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Text&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;SMALL&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;      }
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;  ),
+&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;ru-he-huo-qu-ping-mu-chi-cun&quot;&gt;如何获取屏幕尺寸&lt;&#x2F;h4&gt;
+&lt;p&gt;使用 &lt;code&gt;MediaQuery&lt;&#x2F;code&gt;，除了 &lt;code&gt;size&lt;&#x2F;code&gt; 外，还能拿到 &lt;code&gt;devicePixelRatio&lt;&#x2F;code&gt; 之类的 device 信息。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h3&gt;
+&lt;p&gt;差不多就这些了，对于理解 Flutter 的布局应该够用了，希望能带来些帮助，如果有什么错误欢迎指出 :)&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+        
+        <item>
+            <title>为什么我觉得 Flutter 短期内不会流行但依然选择学习它</title>
+            <pubDate>Mon, 07 Jan 2019 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/is-flutter-the-future/</link>
+            <guid>https://limboy.me/posts/is-flutter-the-future/</guid>
+            <description>&lt;p&gt;Flutter 在去年小火了一把：连续两年在 Google IO 上亮相；1.0 正式版 Release；在闲鱼的大规模使用；各种教程文章的释出等等。我在去年 5 月份那样体验过一阵，觉得还挺不错的，但也没有进一步挖掘，感觉还尚早。我对跨平台框架有种抵触心理，因为它们通常打着提升开发效率的幌子，结果却是降低了效率，除了学习成本外，还有以下几个原因:&lt;&#x2F;p&gt;
+&lt;p&gt;首先要抹平平台之间的差异这就不是一件小事，很容易出现各种吊诡的 bug，然后就要投入不少精力去找原因，还不一定能找到。而如果采用 Native 开发，相关的资料会多一些，出了问题找到解决方案的可能性也会大一些。&lt;&#x2F;p&gt;
+&lt;p&gt;其次 Native 的沉淀会多很多，当你想要实现某个效果时，通常会有一些现成的（虽然不一定成熟）library 可供选择，即使不完全满足需求，也能从代码中找到思路，而跨平台框架的积累一定没有 Native 的多，因此这块也是个较大的劣势。&lt;&#x2F;p&gt;
+&lt;p&gt;最后一定有一些场景是跨平台框架解决不了的，这时就需要求助于 Native。如果是多人，就涉及到了协作效率，如果是单人，那为什么不直接用 Native 开发呢？&lt;&#x2F;p&gt;
+&lt;p&gt;因此当时虽然觉得 Flutter 不错，还是没有入坑。Flutter 除了要面对这三个问题外，它的学习成本还不低，使用 dart 语言开发，这本身就是一道足够高的槛; 使用声明式写法来表达 UI 也不一定能被接受; 那一大坨的 API 也着实让人发怵；再加上还有很多 issues 待解决。因此我认为短期内它不会流行。&lt;&#x2F;p&gt;
+&lt;p&gt;那为什么我依然选择学习它呢，最重要的几个原因是：开发体验超预期；带来的副作用较小；插件机制弥补了局限性；活跃的社区。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;kai-fa-ti-yan&quot;&gt;开发体验&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;ide&quot;&gt;IDE&lt;&#x2F;h4&gt;
+&lt;p&gt;能够使用 VSCode 作为主力 IDE 这本身就有足够的吸引力，Debug、Widget Inspector、Hot Reload、Automatically get packages 等等一应俱全，就连被诟病的嵌套过深，VSCode 也提供了一些便利：在每个括号后面以注释形式标注（但不是真的注释）&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-nested.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-nested.jpg 278w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-nested.jpg 278w&quot;
+    sizes=&quot;(max-width: 278px) 100vw, 278px&quot; width=&quot;278&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;对某个类的参数不太清楚，光标移上去即可，想看下实现，Cmd+Click。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-hover.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-hover.jpg 264.5w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-hover.jpg 264.5w&quot;
+    sizes=&quot;(max-width: 264.5px) 100vw, 264.5px&quot; width=&quot;264.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;想快速看下 Framework 里某个类的实现，Cmd+T&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-cmd-t.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-cmd-t.jpg 306.5w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-cmd-t.jpg 306.5w&quot;
+    sizes=&quot;(max-width: 306.5px) 100vw, 306.5px&quot; width=&quot;306.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;还有一些贴心的小功能&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-widget.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-widget.jpg 112w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-widget.jpg 112w&quot;
+    sizes=&quot;(max-width: 112px) 100vw, 112px&quot; width=&quot;112&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;当然也有改进空间，比如特别想要 auto import 功能。如果想要更完善的支持，可以使用 Android Studio，后者还提供了 Widget Tree、Performance Chart 等功能。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;kai-fa-yu-yan&quot;&gt;开发语言&lt;&#x2F;h4&gt;
+&lt;p&gt;Dart 这门语言本身并不复杂，看着挺舒服的，没有新发明一些概念，尽量简单（有些地方感觉过于简单了，比如 class 可以同时表示 interface），对异步编程有着很好的支持，自带的标准库基本够用。如果真静下心来看的话，不出三天，语言方面应该不会有太大的障碍了。&lt;&#x2F;p&gt;
+&lt;p&gt;Dart 是一门类型安全的语言，跟多数静态语言一样，也支持类型推导，写起来比较舒服。泛型、匿名函数等常见的语言特性都有，甚至支持 mixins。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;bian-xie-ti-yan&quot;&gt;编写体验&lt;&#x2F;h4&gt;
+&lt;p&gt;得益于 Flutter 的设计，大多数情况下 UI 展示通过 Widget 的组合就基本搞定了，Widget 就是 Description 或者 Config，告诉框架这个 Widget 的一些信息，框架拿到后再构建一个真实的 View 出来。&lt;&#x2F;p&gt;
+&lt;p&gt;状态管理和信息流处理也都有很好的支持，基本上可以用 GUI 编程的最佳体验来写。由于 Flutter 是基于最底层的 VSync 信号结合 Skia &#x2F; Text 等引擎来构建视图，有时会遇到 Native 很方便地支持但 Flutter 不支持或者需要额外开发的场景，比如 TextFiled 的 Context Menu，Native 什么都不用做，这个 menu 就有了，而 Flutter 并没有，需要自己实现。&lt;&#x2F;p&gt;
+&lt;p&gt;举一个点击事件的例子：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Container&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;GestureDetector&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;      onTap&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; () {
+&lt;&#x2F;span&gt;&lt;span&gt;        bloc.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;deleteHabit&lt;&#x2F;span&gt;&lt;span&gt;(habit, context);
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Navigator&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;pop&lt;&#x2F;span&gt;&lt;span&gt;(context);
+&lt;&#x2F;span&gt;&lt;span&gt;      },
+&lt;&#x2F;span&gt;&lt;span&gt;      child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Text&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;delete&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;        style&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;TextStyle&lt;&#x2F;span&gt;&lt;span&gt;(color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Colors&lt;&#x2F;span&gt;&lt;span&gt;.red),
+&lt;&#x2F;span&gt;&lt;span&gt;      )),
+&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;是不是很直观：给 Text Widget 添加一个手势，当点击时，执行 &lt;code&gt;onTap&lt;&#x2F;code&gt; 里面的逻辑。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;fu-zuo-yong&quot;&gt;副作用&lt;&#x2F;h3&gt;
+&lt;p&gt;一般来说，引入了跨平台框架后会带来一些性能上的损失，App 的 Size 也会大一些，可能还会增加 Crash 率。那 Flutter 在这几块的表现如何呢？&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;xing-neng-biao-xian&quot;&gt;性能表现&lt;&#x2F;h4&gt;
+&lt;p&gt;我自己试过一个有点复杂的 Demo，Release 模式在 iOS 上跑起来很流畅，效果如下，在 Nexus 6P 上也大致如此&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;camo.githubusercontent.com&#x2F;be369abc92c87ee76810c33719c35161c02b885d&#x2F;68747470733a2f2f692e6c6f6c692e6e65742f323031382f31322f30362f356330393432383237653436332e676966&quot; alt=&quot;&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;不过网上有说官方的 Demo 在部分 Android 设备上(系统主要为 4.4)出现了卡顿（iOS 正常），可能在 Android 低端机上表现还不够理想。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;bao-da-xiao&quot;&gt;包大小&lt;&#x2F;h4&gt;
+&lt;p&gt;我的一个比较简单的 App，上架了之后，在 Google Play 的大小为 7.8M，在 AppStore 上是 15 M，所以大致是 Android 的比原生大 5 M，iOS 的比原生大 10 M 那样。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-android-size.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-android-size.jpg 153.5w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-android-size.jpg 153.5w&quot;
+    sizes=&quot;(max-width: 153.5px) 100vw, 153.5px&quot; width=&quot;153.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-ios-size.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-ios-size.jpg 377w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-ios-size.jpg 377w&quot;
+    sizes=&quot;(max-width: 377px) 100vw, 377px&quot; width=&quot;377&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h4 id=&quot;crash&quot;&gt;Crash&lt;&#x2F;h4&gt;
+&lt;p&gt;目前还没有这方面的数据，因为量不大，不好下结论。从个人体验来说，遇到的概率比较少，在 Develop 模式下倒是遇到过开机 Crash，Release 模式下还没有遇到过。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;cha-jian-ji-zhi&quot;&gt;插件机制&lt;&#x2F;h3&gt;
+&lt;p&gt;Flutter 提供了一套完善的插件机制方便与 Native 端进行数据传送、方法调用、流式处理。大致的实现是定义好两端都认识的基础类型，然后对消息进行编码和解码，再根据不同的消息使用目的（数据传送还是方法调用还是事件订阅）来执行不同的操作，这就给了 Flutter 很大的扩展空间。&lt;&#x2F;p&gt;
+&lt;p&gt;有了这套插件机制，Native 和 Flutter 就可以各司其职。Flutter 负责展示相关的，Native 负责提供需要的数据，以及暴露 Native 的能力供调用。比如 App 需要实现跟服务端实时通信的功能，可以在 Native 端开发好功能，然后通过 EventChannel 把数据同步过去即可。&lt;&#x2F;p&gt;
+&lt;p&gt;在性能这块，我记得看过闲鱼的一份报告，大概是 10K 以下的数据耗时不到 1ms，因此小数据的互传问题不大。&lt;&#x2F;p&gt;
+&lt;p&gt;在 pub.dartlang.org 上，Flutter 相关的插件数量有 2k 多，评分在 90 及以上的差不多有 1k。不多，但也不算少了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;huo-yue-de-she-qu&quot;&gt;活跃的社区&lt;&#x2F;h3&gt;
+&lt;p&gt;Flutter 项目在 Github 上有近 5 万个关注； 在掘金上，Flutter 标签下有 800 多篇文章；闲鱼团队也在主推 Flutter；Reddit 上 FlutterDev 有近 1 万个关注者；StackOverflow 上也有近万个 Flutter 相关的提问。关注社区的活跃度其实就是想知道会不会在短期内挂掉，从目前的状况看，我觉得可能性比较小，而它被另一个同类产品 PK 掉的可能性则更小，因此值得投入时间去了解它。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h3&gt;
+&lt;p&gt;目前 Fluter 比较适合 Side Project 或探索性的项目，就我有限的开发经验来讲，还是挺舒服的，毕竟用优雅的姿势同时搞定两端还是有吸引力的，这也是我选择学习 Flutter 的主要原因。而公司的主打 App 引入 Flutter 则需要冒一定的风险，遇到问题不一定能够 hold 住，短时间内也不一定能带来多少效率上的提升，还要对支持体系进行改造，可能也就大厂玩得起吧。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+        
+        <item>
+            <title>Architecture Flutter App the Bloc_Redux Way</title>
+            <pubDate>Sat, 05 Jan 2019 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/bloc-redux/</link>
+            <guid>https://limboy.me/posts/bloc-redux/</guid>
+            <description>&lt;p&gt;这是&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;lzyy&#x2F;bloc_redux&quot;&gt;项目地址&lt;&#x2F;a&gt;，下面来阐述下产生背景和它的一些特点。&lt;&#x2F;p&gt;
+&lt;p&gt;接触 Flutter 也有一段时间了，在如何管理状态和处理数据流这块，并没有一个可以直接拿来用的现成方案。好吧，其实有，一个是 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;brianegan&#x2F;flutter_redux&quot;&gt;flutter_redux&lt;&#x2F;a&gt;，一个是 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;felangel&#x2F;bloc&quot;&gt;flutter_bloc&lt;&#x2F;a&gt;。先来说说 flutter_redux，这个可以算是 redux 在 flutter 的官方实现了，主要由两部分组成: &lt;code&gt;StoreProvider&lt;&#x2F;code&gt; 和 &lt;code&gt;StoreConnector&lt;&#x2F;code&gt;，前者用来保存 store，后者用来响应新的 state，看一个代码片段：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Every time the button is tapped, an action is dispatched and
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; run through the reducer. After the reducer updates the state,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; the Widget will be automatically rebuilt with the latest
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; count. No need to manually manage subscriptions or Streams!
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;new &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StoreConnector&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  converter&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; (store) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; store.state.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;toString&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;  builder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; (context, count) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return new &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Text&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;      count,
+&lt;&#x2F;span&gt;&lt;span&gt;      style&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Theme&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;of&lt;&#x2F;span&gt;&lt;span&gt;(context).textTheme.display1,
+&lt;&#x2F;span&gt;&lt;span&gt;    );
+&lt;&#x2F;span&gt;&lt;span&gt;  },
+&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这段代码的问题在于只要 reducer 有更新 state，那么所有消费该 Store 的 Connector 就会被 rebuild，哪怕这个 state 有 10 个属性，而 reducer 只是改了其中的一个 bool 值。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Creates the base [NextDispatcher].
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; The base NextDispatcher will be called after all other middleware provided
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; by the user have been run. Its job is simple: Run the current state through
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; the reducer, save the result, and notify any subscribers.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;NextDispatcher &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;_createReduceAndNotify&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;bool&lt;&#x2F;span&gt;&lt;span&gt; distinct) {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;dynamic&lt;&#x2F;span&gt;&lt;span&gt; action) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; state &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;reducer&lt;&#x2F;span&gt;&lt;span&gt;(_state, action);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (distinct &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;amp;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt; state &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;==&lt;&#x2F;span&gt;&lt;span&gt; _state) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    _state &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; state;
+&lt;&#x2F;span&gt;&lt;span&gt;    _changeController.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;add&lt;&#x2F;span&gt;&lt;span&gt;(state);
+&lt;&#x2F;span&gt;&lt;span&gt;  };
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这是 redux 这个 library 里的 Notify 机制，采用的是 &lt;code&gt;==&lt;&#x2F;code&gt; 判断，这就是问题。在 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;reduxjs&#x2F;react-redux&quot;&gt;react-redux&lt;&#x2F;a&gt; 中，这块是有优化的，通过 &lt;code&gt;connect&lt;&#x2F;code&gt; 的 &lt;code&gt;mapStateToProps&lt;&#x2F;code&gt;，可以让 Component 指定关心 State 的哪些属性，然后在 react-redux 内部会对 &lt;code&gt;mapStateToProps&lt;&#x2F;code&gt; 的返回值和上次保存的进行比较，如果不一样再 rebuild，这样的好处是只有当 Component 关心的哪些属性真的变化时才进行 render。而 flutter_redux 无法做到这点(可能跟 flutter 不让用反射有关)，效率上就会打折扣。&lt;&#x2F;p&gt;
+&lt;p&gt;再来看看 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;felangel&#x2F;bloc&quot;&gt;flutter_bloc&lt;&#x2F;a&gt;，这也是关注度蛮高的一个项目，说这个之前先说说 bloc，这是 flutter 提的一个概念，运行机制大致如下：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;bloc-redux&amp;#x2F;movie250-bloc.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;bloc-redux&amp;#x2F;movie250-bloc.png 280.5w,&amp;#x2F;posts&amp;#x2F;bloc-redux&amp;#x2F;movie250-bloc.png 280.5w&quot;
+    sizes=&quot;(max-width: 280.5px) 100vw, 280.5px&quot; width=&quot;280.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;它更像一个提案，缺少标准和实现。flutter_bloc 就是对这个提案的一个实现。这个实现本质上没觉得跟 flutter_redux 有太大的区别，而复杂度倒是增加了不少，还提出了一些新的概念(比如 BlocSupervisor, BlocDelegate, Transation)，增加了理解上的困难。在处理核心的 state 问题上依旧跟 flutter_redux 一样，甚至都没有做 &lt;code&gt;==&lt;&#x2F;code&gt; check。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;_bindStateSubject&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Event&lt;&#x2F;span&gt;&lt;span&gt; currentEvent;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;transform&lt;&#x2F;span&gt;&lt;span&gt;(_eventSubject) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;as &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Observable&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Event&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;concatMap&lt;&#x2F;span&gt;&lt;span&gt;((&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Event&lt;&#x2F;span&gt;&lt;span&gt; event) {
+&lt;&#x2F;span&gt;&lt;span&gt;    currentEvent &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; event;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;mapEventToState&lt;&#x2F;span&gt;&lt;span&gt;(_stateSubject.value, event);
+&lt;&#x2F;span&gt;&lt;span&gt;  }).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;forEach&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;    (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;State&lt;&#x2F;span&gt;&lt;span&gt; nextState) {
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; transition &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Transition&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        currentState&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; _stateSubject.value,
+&lt;&#x2F;span&gt;&lt;span&gt;        event&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; currentEvent,
+&lt;&#x2F;span&gt;&lt;span&gt;        nextState&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; nextState,
+&lt;&#x2F;span&gt;&lt;span&gt;      );
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocSupervisor&lt;&#x2F;span&gt;&lt;span&gt;().delegate&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;?&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;onTransition&lt;&#x2F;span&gt;&lt;span&gt;(transition);
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;onTransition&lt;&#x2F;span&gt;&lt;span&gt;(transition);
+&lt;&#x2F;span&gt;&lt;span&gt;      _stateSubject.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;add&lt;&#x2F;span&gt;&lt;span&gt;(nextState);
+&lt;&#x2F;span&gt;&lt;span&gt;    },
+&lt;&#x2F;span&gt;&lt;span&gt;  );
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;可以看到在往 &lt;code&gt;_stateSubject&lt;&#x2F;code&gt; 里塞 nextState 时甚至都没有跟之前的 state 进行判断。同时从作者的意图上是希望多个 bloc 一起使用的，这也会造成使用上的不便（比如我这个 Event 到底应该 dispatch 给哪个 bloc？）。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocBuilder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;LoginEvent&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;LoginState&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  bloc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; widget.loginBloc,
+&lt;&#x2F;span&gt;&lt;span&gt;  builder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; (
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BuildContext&lt;&#x2F;span&gt;&lt;span&gt; context,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;LoginState&lt;&#x2F;span&gt;&lt;span&gt; loginState,
+&lt;&#x2F;span&gt;&lt;span&gt;  ) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;_loginSucceeded&lt;&#x2F;span&gt;&lt;span&gt;(loginState)) {
+&lt;&#x2F;span&gt;&lt;span&gt;      widget.authBloc.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;dispatch&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Login&lt;&#x2F;span&gt;&lt;span&gt;(token&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; loginState.token));
+&lt;&#x2F;span&gt;&lt;span&gt;      widget.loginBloc.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;dispatch&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;LoggedIn&lt;&#x2F;span&gt;&lt;span&gt;());
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;综上，这两格 Library 都无法满足我，只能再造一个轮子了。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;bloc-redux&quot;&gt;Bloc_Redux&lt;&#x2F;h2&gt;
+&lt;p&gt;其实只要让 flutter_redux 能够更高效地把状态变化传递给 widgets，问题就解决了。那如何做呢？返回一个新的 state，也就是 reducer 之路，应该是行不通了，因为无法高效地找到变化过的属性，即使可以，还要维护一个属性跟 widgets 的 map，太复杂了。换一个想法，Flutter 不是提供了 &lt;code&gt;StreamBuilder&lt;&#x2F;code&gt; 么，那让 Widget 自己选择 listen 哪些 stream，然后当一个 action dispatch 过来后，这些 stream 获得相应的改变不就行了么？&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;raw.githubusercontent.com&#x2F;limboy&#x2F;bloc_redux&#x2F;master&#x2F;lib&#x2F;bloc_redux&#x2F;bloc_redux.png&quot; alt=&quot;&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;其中处理 action 的 reducer 被替换成了 bloc，来看一下核心代码。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; Action
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; every action should extends this class
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;abstract class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRAction&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T&lt;&#x2F;span&gt;&lt;span&gt; payload;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; State
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; Input are used to change state.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; usually filled with StreamController &#x2F; BehaviorSubject.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; handled by blocs.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; implements disposable because stream controllers needs to be disposed.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; they will be called within store&amp;#39;s dispose method.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;abstract class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRStateInput &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;implements &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Disposable&lt;&#x2F;span&gt;&lt;span&gt; {}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; Output are streams.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; followed by input. like someController.stream
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; UI will use it as data source.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;abstract class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRStateOutput&lt;&#x2F;span&gt;&lt;span&gt; {}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; State
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; Combine these two into one.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;abstract class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRState&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRStateInput&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;U &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRStateOutput&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T&lt;&#x2F;span&gt;&lt;span&gt; input;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;U&lt;&#x2F;span&gt;&lt;span&gt; output;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; Bloc
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; like reducers in redux, but don&amp;#39;t return a new state.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; when they found something needs to change, just update state&amp;#39;s input
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; then state&amp;#39;s output will change accordingly.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;typedef &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Bloc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRStateInput&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt; = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Function&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRAction&lt;&#x2F;span&gt;&lt;span&gt; action, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T&lt;&#x2F;span&gt;&lt;span&gt; input);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; Store
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; widget use `store.dispatch` to send action
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; store will iterate all blocs to handle this action
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; if this is an async action, blocs can dispatch another action
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; after data has received from remote.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;abstract class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRStore&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRStateInput&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;U &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRState&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;implements &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Disposable&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;List&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Bloc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; blocs;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;U&lt;&#x2F;span&gt;&lt;span&gt; state;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;dispatch&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRAction&lt;&#x2F;span&gt;&lt;span&gt; action) {
+&lt;&#x2F;span&gt;&lt;span&gt;    blocs.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;forEach&lt;&#x2F;span&gt;&lt;span&gt;((f) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;f&lt;&#x2F;span&gt;&lt;span&gt;(action, state.input));
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;dispose&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    state.input.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;dispose&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;其中 State 被分成了 StateInput 和 StateOutput，其中 Input 部分给 Bloc，方便更新 Stream；Output 部分给 Widgets，方便接收最新数据。同时 Store 也有一个 dispose 方法，因为到时 store 会被放到 StoreProvider 里，当它被 dispose 时，可以让 store 也 dispose，让那些 stream 可以被 close。&lt;&#x2F;p&gt;
+&lt;p&gt;就这么简单，我们来看一个 demo：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; Actions
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorActionSelect &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRAction&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; {}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; State
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStateInput &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRStateInput&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BehaviorSubject&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; selectedColor &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BehaviorSubject&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BehaviorSubject&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;List&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorModel&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; colors &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BehaviorSubject&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;dispose&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    selectedColor.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;close&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    colors.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;close&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStateOutput &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRStateOutput&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StreamWithInitialData&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; selectedColor;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StreamWithInitialData&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;List&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorModel&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; colors;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStateOutput&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStateInput&lt;&#x2F;span&gt;&lt;span&gt; input) {
+&lt;&#x2F;span&gt;&lt;span&gt;    selectedColor &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StreamWithInitialData&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        input.selectedColor.stream, input.selectedColor.value);
+&lt;&#x2F;span&gt;&lt;span&gt;    colors &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StreamWithInitialData&lt;&#x2F;span&gt;&lt;span&gt;(input.colors.stream, input.colors.value);
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorState &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRState&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStateInput&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStateOutput&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorState&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    input &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStateInput&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    output &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStateOutput&lt;&#x2F;span&gt;&lt;span&gt;(input);
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; Blocs
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Bloc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStateInput&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; colorSelectHandler &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; (action, input) {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (action &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;is &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorActionSelect&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    input.selectedColor.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;add&lt;&#x2F;span&gt;&lt;span&gt;(action.payload);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; colors &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; input.colors.value
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;map&lt;&#x2F;span&gt;&lt;span&gt;((colorModel) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; colorModel
+&lt;&#x2F;span&gt;&lt;span&gt;          ..isSelected &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; colorModel.color.value &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;==&lt;&#x2F;span&gt;&lt;span&gt; action.payload.value)
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;toList&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    input.colors.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;add&lt;&#x2F;span&gt;&lt;span&gt;(colors);
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; Store
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStore &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BRStore&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStateInput&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorState&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStore&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    state &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorState&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    blocs &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; [colorSelectHandler];
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; init
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; _colors &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;List&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorModel&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;generate&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;30&lt;&#x2F;span&gt;&lt;span&gt;, (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; index) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorModel&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;RandomColor&lt;&#x2F;span&gt;&lt;span&gt;(index).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;randomColor&lt;&#x2F;span&gt;&lt;span&gt;()));
+&lt;&#x2F;span&gt;&lt;span&gt;    _colors[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;].isSelected &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    state.input.colors.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;add&lt;&#x2F;span&gt;&lt;span&gt;(_colors);
+&lt;&#x2F;span&gt;&lt;span&gt;    state.input.selectedColor.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;add&lt;&#x2F;span&gt;&lt;span&gt;(_colors[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;].color);
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Store 就像人的大脑，负责接收信息做出决策，而信息的处理者就是一个个的 Bloc。再来看看 Widget 是如何接收数据，发送 action 的。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorsWidget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StatelessWidget&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;@override
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Widget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;build&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BuildContext&lt;&#x2F;span&gt;&lt;span&gt; context) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; store &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StoreProvider&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;of&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorStore&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;(context);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; colors &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; store.state.output.colors;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StreamBuilder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;List&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorModel&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;      stream&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; colors.stream,
+&lt;&#x2F;span&gt;&lt;span&gt;      initialData&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; colors.initialData,
+&lt;&#x2F;span&gt;&lt;span&gt;      builder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; (context, snapshot) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; colors &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; snapshot.data;
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;SliverGrid&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;count&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;            crossAxisCount&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;6&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;            children&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; colors.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;map&lt;&#x2F;span&gt;&lt;span&gt;((colorModel) {
+&lt;&#x2F;span&gt;&lt;span&gt;              &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;GestureDetector&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                onTap&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; () {
+&lt;&#x2F;span&gt;&lt;span&gt;                  store.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;dispatch&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ColorActionSelect&lt;&#x2F;span&gt;&lt;span&gt;()..payload &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; colorModel.color);
+&lt;&#x2F;span&gt;&lt;span&gt;                },
+&lt;&#x2F;span&gt;&lt;span&gt;                child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Container&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                  decoration&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BoxDecoration&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                      color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; colorModel.color,
+&lt;&#x2F;span&gt;&lt;span&gt;                      border&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Border&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;all&lt;&#x2F;span&gt;&lt;span&gt;(width&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; colorModel.isSelected &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;? &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;4 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;)),
+&lt;&#x2F;span&gt;&lt;span&gt;                ),
+&lt;&#x2F;span&gt;&lt;span&gt;              );
+&lt;&#x2F;span&gt;&lt;span&gt;            }).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;toList&lt;&#x2F;span&gt;&lt;span&gt;());
+&lt;&#x2F;span&gt;&lt;span&gt;      },
+&lt;&#x2F;span&gt;&lt;span&gt;    );
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;通过 &lt;code&gt;StreamBuilder&lt;&#x2F;code&gt; 来消费 state output，通过 &lt;code&gt;store.dispatch&lt;&#x2F;code&gt; 来发送 action，It&#x27;s that simple.&lt;&#x2F;p&gt;
+&lt;p&gt;最后，附上项目地址：&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;bloc_redux&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;bloc_redux&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+        
+        <item>
+            <title>一个 Demo 入门 Flutter</title>
+            <pubDate>Fri, 07 Dec 2018 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/flutter-demo/</link>
+            <guid>https://limboy.me/posts/flutter-demo/</guid>
+            <description>&lt;p&gt;Flutter 是 Google 研发的一套移动端开发框架，也是 Google 正在研发的下一代操作系统 Fuchsia 的 App 开发框架（Web 和 Desktop 也都在进行积极的尝试），前几天刚发布了 1.0 正式版。关于 Flutter 的原理和介绍可以参考美团的&lt;a href=&quot;https:&#x2F;&#x2F;tech.meituan.com&#x2F;waimai_flutter_practice.html&quot;&gt;这篇文章&lt;&#x2F;a&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;本文希望通过一个 Demo 来更深入地了解 Flutter 的布局、状态管理等细节。这个 Demo 可以获取豆瓣的 Top 250 电影，以自定义列表形式呈现，可以收藏&#x2F;取消收藏，可以点击查看详情页。&lt;&#x2F;p&gt;
+&lt;p&gt;源码: &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;lzyy&#x2F;flutter-demo-topmovies&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;lzyy&#x2F;flutter-demo-topmovies&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;video.twimg.com&#x2F;ext_tw_video&#x2F;1070286725656662017&#x2F;pu&#x2F;vid&#x2F;360x640&#x2F;uoeUgoq2-EigTzi7.mp4?tag=6&quot;&gt;这里&lt;&#x2F;a&gt;可以查看最终的效果。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-demo.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-demo.png 482w,&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-demo.png 482w&quot;
+    sizes=&quot;(max-width: 482px) 100vw, 482px&quot; width=&quot;482&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;mu-lu-hua-fen&quot;&gt;目录划分&lt;&#x2F;h3&gt;
+&lt;p&gt;接到这个需求后首先要考虑的是目录结构应该怎么划分，这也是架构的一部分，我是这么分的:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;blocs&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;widgets&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;models&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;pages&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;routes&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;services&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;main.dart
+&lt;&#x2F;span&gt;&lt;span&gt;env.dart
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;bloc&quot;&gt;BLoC&lt;&#x2F;h4&gt;
+&lt;p&gt;&lt;code&gt;BLoC&lt;&#x2F;code&gt; 是 Business Logic of Components 的缩写，也就是负责所有业务逻辑的，跟 &lt;code&gt;ViewModel&lt;&#x2F;code&gt; 的职能挺像的。是一个纯洁的 Dart 类，跟 UI 完全解耦，更加详细的说明可以参见&lt;a href=&quot;https:&#x2F;&#x2F;juejin.im&#x2F;post&#x2F;5bb6f344f265da0aa664d68a&quot;&gt;这篇文章&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;widgets&quot;&gt;Widgets&lt;&#x2F;h4&gt;
+&lt;p&gt;这个目录下面放的是所有的 Widget，Widget 位于 Flutter Framework 的最上层，用来描述 UI 元素的 Layout &#x2F; Animation 等，或者非 UI 元素(如 DataProvider)，最终这些 Widget 会被组装起来形成 Page。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;models&quot;&gt;Models&lt;&#x2F;h4&gt;
+&lt;p&gt;服务端的 JSON 过来后，需要转换成对应的 Model 方便使用，Model 不需要包含业务逻辑，但可以有一些简单的 Model 相关的操作，比如 CRUD。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;pages&quot;&gt;Pages&lt;&#x2F;h4&gt;
+&lt;p&gt;通常一个 App 会有多个页面组成，这些页面就可以放到这个目录下。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;routes&quot;&gt;Routes&lt;&#x2F;h4&gt;
+&lt;p&gt;虽然 Flutter 也支持直接 push 一个 Widget，但这样不方便页面管理，对于像「外部的 URL 可以直接跳转到某个页面」这样的功能处理起来也会麻烦些。因此，需要有一个地方可以对 URL 进行注册。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;services&quot;&gt;Services&lt;&#x2F;h4&gt;
+&lt;p&gt;这个是放 Remote API 相关的，理论上来说，加一层 Repository 抽象会更加合适，出于方便，就去掉了这一层。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;main-dart&quot;&gt;main.dart&lt;&#x2F;h4&gt;
+&lt;p&gt;入口文件，用来初始化 App&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;env-dart&quot;&gt;env.dart&lt;&#x2F;h4&gt;
+&lt;p&gt;用来设置一些环境变量，类似于 Config。&lt;&#x2F;p&gt;
+&lt;p&gt;设置好了目录后，接下来进行任务分解，首先要完成的就是布局，进行布局之前需要有数据源，方便模拟，最好跟正式接口一致，那就先来完成这一项工作。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;she-zhi-shu-ju-jie-kou&quot;&gt;设置数据接口&lt;&#x2F;h3&gt;
+&lt;p&gt;我们希望从模拟环境到真实环境只需改一个配置即可，为了达到这个目的，我们先把协议定好，到时只要换一个实现就行。这里会用到两个接口&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;package:topmovies&#x2F;models&#x2F;movie.dart&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;abstract class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;API&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Future&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieEnvelope&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getMovieList&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; start);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Future&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Movie&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getMovie&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt; movieID);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后新建一个 Mock API 类来实现这个接口&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MockAPI &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;API&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;@override
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Future&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Movie&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getMovie&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt; movieID) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;createMockMovieWithTitle&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;我是电影 $&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;movieID&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;@override
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Future&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieEnvelope&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getMovieList&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; start) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 现在还用不着
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;null&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;然后在 &lt;code&gt;env.dart&lt;&#x2F;code&gt; 里新建一个 Env 类&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;services&#x2F;api.dart&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Env&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;static &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;API&lt;&#x2F;span&gt;&lt;span&gt; apiClient;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;其实就是提供一个全局的 apiClient 注入接口，App 初始化时，设置好 apiClient，使用时不需要关心是哪个 apiClient 实例，这样也方便单元测试。&lt;&#x2F;p&gt;
+&lt;p&gt;经过这两步后，数据接口就准备好了，接下来需要设置 BLoC。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;she-zhi-shou-ye-de-bloc&quot;&gt;设置首页的 BLoC&lt;&#x2F;h3&gt;
+&lt;p&gt;BLoC 其实就是 ViewModel，有了 API 实现之后，接下来就要让 Widget 可以用上这些数据，这就是 BLoC 做的事。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-bloc.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-bloc.png 280.5w,&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-bloc.png 280.5w&quot;
+    sizes=&quot;(max-width: 280.5px) 100vw, 280.5px&quot; width=&quot;280.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Widget 告诉 BLoC 发生了什么，BLoC 告诉 Widget 哪些数据更新了。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MoviesBloc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocBase&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BehaviorSubject&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieEnvelope&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; _movieEnvelope &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BehaviorSubject&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; _currentStart &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Observable&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieEnvelope&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;get &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;movieEnvelope&lt;&#x2F;span&gt;&lt;span&gt; =&amp;gt; _movieEnvelope.stream;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MoviesBloc&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;_getMovies&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;_getMovies&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Env&lt;&#x2F;span&gt;&lt;span&gt;.apiClient.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getMovieList&lt;&#x2F;span&gt;&lt;span&gt;(_currentStart).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;then&lt;&#x2F;span&gt;&lt;span&gt;((movieEnvelope) {
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; newMovieEnvelope &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; movieEnvelope;
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (_movieEnvelope.value &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;!= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;null&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        newMovieEnvelope.movies &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; _movieEnvelope.value.movies
+&lt;&#x2F;span&gt;&lt;span&gt;          ..&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;addAll&lt;&#x2F;span&gt;&lt;span&gt;(movieEnvelope.movies);
+&lt;&#x2F;span&gt;&lt;span&gt;      }
+&lt;&#x2F;span&gt;&lt;span&gt;      _movieEnvelope.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;add&lt;&#x2F;span&gt;&lt;span&gt;(newMovieEnvelope);
+&lt;&#x2F;span&gt;&lt;span&gt;      _currentStart &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; movieEnvelope.movies.length;
+&lt;&#x2F;span&gt;&lt;span&gt;    });
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;对于 Widget 来说，只要 listen &lt;code&gt;bloc.movieEnvelope&lt;&#x2F;code&gt; 就能第一时间拿到最新的 movie 数据，然后把它们展示出来即可。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;streambuilder&quot;&gt;StreamBuilder&lt;&#x2F;h3&gt;
+&lt;p&gt;如果直接用 &lt;code&gt;setState&lt;&#x2F;code&gt; 的话，使用姿势是在 state 的 &lt;code&gt;initState&lt;&#x2F;code&gt; 时 listen &lt;code&gt;bloc.movieEnvelope&lt;&#x2F;code&gt;，当收到新的内容时，setState，这样系统就会 rebuild widget，然后用上最新的数据。Flutter 很贴心地提供了便捷的类 &lt;code&gt;StreamBuilder&lt;&#x2F;code&gt;，只要告诉它 &lt;code&gt;stream&lt;&#x2F;code&gt;，那么当这个 stream 有新数据时，&lt;code&gt;itemBuilder&lt;&#x2F;code&gt; 就会自动 rebuild。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Movies &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StatefulWidget&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;@override
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;State&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StatefulWidget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;createState&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;_MoviesState&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;_MoviesState &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;State&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Movies&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;@override
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Widget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;build&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BuildContext&lt;&#x2F;span&gt;&lt;span&gt; context) {
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; bloc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocProvider&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;of&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MoviesBloc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;(context);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StreamBuilder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieEnvelope&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        stream&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; bloc.movieEnvelope,
+&lt;&#x2F;span&gt;&lt;span&gt;        builder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; (context, snapshot) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; snapshot.data 就是最新的内容
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 返回一个新的 widget 即可
+&lt;&#x2F;span&gt;&lt;span&gt;        })
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;注意到这里有一个 &lt;code&gt;BlocProvider&lt;&#x2F;code&gt;，这是何物？它其实也是个 Widget（是的，Flutter 的 Widget 并不局限于 UI）。&lt;&#x2F;p&gt;
+&lt;p&gt;为什么通过&lt;code&gt;of&lt;&#x2F;code&gt;方法能拿到这个 bloc？因为在构建 Tree 时，&lt;code&gt;BlocProvider&lt;&#x2F;code&gt; 套在了当前视图的上层(只要从当前节点向上追溯能找到就行)，就像这样：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MyApp &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;StatelessWidget&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;@override
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Widget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;build&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BuildContext&lt;&#x2F;span&gt;&lt;span&gt; context) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocProvider&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        bloc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MoviesBloc&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;        child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MaterialApp&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;          title&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;Douban Movie Top 250&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;          home&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Home&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;        ));
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;而这个 &lt;code&gt;of&lt;&#x2F;code&gt; 方法也很简单：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;static &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;of&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocBase&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BuildContext&lt;&#x2F;span&gt;&lt;span&gt; context) {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; type &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;_typeOf&lt;&#x2F;span&gt;&lt;span&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocProvider&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 这句话的意思就是从当前 context 向上找，找到第一个该类型的实例为止，找不到就返回 null
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocProvider&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;T&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; provider &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; context.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;ancestorWidgetOfExactType&lt;&#x2F;span&gt;&lt;span&gt;(type);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span&gt; provider.bloc;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;BLoC 差不多有了之后，接下来就可以进入布局阶段了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shou-ye-bu-ju&quot;&gt;首页布局&lt;&#x2F;h3&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-home-layout.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-home-layout.png 127.5w,&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-home-layout.png 127.5w&quot;
+    sizes=&quot;(max-width: 127.5px) 100vw, 127.5px&quot; width=&quot;127.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Flutter 提供了两种列表布局方式: &lt;code&gt;ListView&lt;&#x2F;code&gt; 和 &lt;code&gt;GridView&lt;&#x2F;code&gt;，如果页面里除了列表还有其他元素（比如顶部的 SlideView 等），就需要用到 &lt;code&gt;CustomScrollView&lt;&#x2F;code&gt; 或者 &lt;code&gt;NestedScrollView&lt;&#x2F;code&gt;，首页除了列表没有其他元素，同时一行可能包含多个视图，因此我们选择 &lt;a href=&quot;https:&#x2F;&#x2F;docs.flutter.io&#x2F;flutter&#x2F;widgets&#x2F;GridView-class.html&quot;&gt;GridView&lt;&#x2F;a&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;GridView 的构建可以使用 &lt;code&gt;GridView.builder&lt;&#x2F;code&gt;, 它需要提供几个关键信息:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;GridView&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;builder&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;  gridDelegate&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 提供最终的布局信息，x,y,width.height
+&lt;&#x2F;span&gt;&lt;span&gt;  itemCount&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 一共有多少元素
+&lt;&#x2F;span&gt;&lt;span&gt;  itemBuilder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; (context, index) {} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 每个 item 具体长啥样
+&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;如果是固定的每行几列或固定宽度，且每个 item 的呈现形式几乎一样，可以直接使用自带的 &lt;code&gt;SliverGridDelegateWithFixedCrossAxisCount&lt;&#x2F;code&gt; 或 &lt;code&gt;SliverGridDelegateWithMaxCrossAxisExtent&lt;&#x2F;code&gt;，我们这个 case 中，每一行的列表不都是一样的，因此不能直接拿来用，这就需要进入到高级模式了，自己实现 &lt;code&gt;gridDelegate&lt;&#x2F;code&gt;。 &lt;code&gt;SliverGridDelegate&lt;&#x2F;code&gt; 的核心方法是 &lt;code&gt;SliverGridLayout getLayout(SliverConstraints constraints);&lt;&#x2F;code&gt; 也就是返回一个 &lt;code&gt;SliverGridLayout&lt;&#x2F;code&gt;，系统拿到这个 layout 之后，就知道该怎么布局了。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;abstract class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;SliverGridLayout&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; 针对某个 scroll 的偏移量，最小的 index 是多少
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getMinChildIndexForScrollOffset&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;double&lt;&#x2F;span&gt;&lt;span&gt; scrollOffset);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; 针对某个 scroll 的偏移量，最大的 index 是多少
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getMaxChildIndexForScrollOffset&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;double&lt;&#x2F;span&gt;&lt;span&gt; scrollOffset);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; 给一个 index，告诉我它的 x,y,width,height
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;SliverGridGeometry &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getGeometryForChildIndex&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; index);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; 这些 childcount 一共能产生多大的偏移量
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;&#x2F; 知道了这个信息后，系统就可以展示滚动条的长短了
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;double &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;computeMaxScrollOffset&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; childCount);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;具体实现这里就不贴出来了，感兴趣的可以在源码里看。还是有点小复杂的，尤其是加上 loadmore 的逻辑后，不过知道了系统想要什么，想尽办法满足它就是了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zai-ru-geng-duo&quot;&gt;载入更多&lt;&#x2F;h3&gt;
+&lt;p&gt;第一次请求的布局是完成了，如何实现载入更多的效果呢？在 iOS 中会通过判断是否拉到了底部来触发加载更多的逻辑，在 Flutter 中我们可以换一种方式来达到效果。&lt;&#x2F;p&gt;
+&lt;p&gt;什么时候需要加载更多？当前视图的 item 都展示完了的时候，而在展示 item 时，builder 会传入一个 &lt;code&gt;index&lt;&#x2F;code&gt;，用来告知当前 item 处于哪个 &lt;code&gt;index&lt;&#x2F;code&gt;，我们可以把这个信息告诉 BLoC。比如第一页一共展示 20 部电影，当 BLoC 收到 index 19 时，就知道这 20 部都已经被展示过了，就可以通过 API 去拿更多的数据，等拿到后，跟原先的数据进行合并，然后作为新的值告诉 widget，widget 的 StreamBuilder 发现有新数据后，自动刷新 widget，这样新的电影就被展示出来了。&lt;&#x2F;p&gt;
+&lt;p&gt;稍微复杂的一点是加载更多时，需要展示一个 indicator，当没有更多数据时，又是另一个样式，这又该如何处理呢？可以思考下。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;real-api-jie-ru&quot;&gt;Real API 接入&lt;&#x2F;h3&gt;
+&lt;p&gt;前面这几步都走完后，列表的布局应该没问题了，接下来就要接入真实的数据了。这个接入过程还是挺简单的，新建一个实现了 &lt;code&gt;API&lt;&#x2F;code&gt; 的类，然后在 App 入口处，用它替换掉 MockAPI&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;RealAPI &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;API&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;@override
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Future&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieEnvelope&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getMovieList&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; start) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;async&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; client &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;HttpClient&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; request &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;await&lt;&#x2F;span&gt;&lt;span&gt; client.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getUrl&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Uri&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;parse&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;https:&#x2F;&#x2F;api.douban.com&#x2F;v2&#x2F;movie&#x2F;top250?start=$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;start&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;amp;count=40&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;));
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; response &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;await&lt;&#x2F;span&gt;&lt;span&gt; request.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;close&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; responseBody &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;await&lt;&#x2F;span&gt;&lt;span&gt; response.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;transform&lt;&#x2F;span&gt;&lt;span&gt;(utf8.decoder).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;join&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Map&lt;&#x2F;span&gt;&lt;span&gt; data &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; json.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;decode&lt;&#x2F;span&gt;&lt;span&gt;(responseBody);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieEnvelope&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;fromJSON&lt;&#x2F;span&gt;&lt;span&gt;(data);
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;@override
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Future&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Movie&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getMovie&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt; movieID) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;async&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 暂时还用不到，先忽略
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;null&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Dart 内置了对异步请求的支持，分为两大块，&lt;code&gt;async + await + Future&lt;&#x2F;code&gt; 和 &lt;code&gt;Stream + async* + yield&lt;&#x2F;code&gt;，前者用来处理单次或少量的异步请求，后者用来实现异步的 &lt;code&gt;iterator&lt;&#x2F;code&gt;，也就是数据可能会源源不断地冒出来。&lt;&#x2F;p&gt;
+&lt;p&gt;在这个例子中，通过 await 来拿异步数据就可以了，拿到之后把它转换为 model(方便起见，错误处理就先忽略)。 然后在入口处设置&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Env&lt;&#x2F;span&gt;&lt;span&gt;.apiClient &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;RealAPI&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;runApp&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MyApp&lt;&#x2F;span&gt;&lt;span&gt;());
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;item-de-nei-rong-zhan-shi&quot;&gt;item 的内容展示&lt;&#x2F;h3&gt;
+&lt;p&gt;这块是个细致活，对于 Widget 元素的使用可以参考官方的&lt;a href=&quot;https:&#x2F;&#x2F;flutter.io&#x2F;docs&#x2F;development&#x2F;ui&#x2F;layout&quot;&gt;这个教程&lt;&#x2F;a&gt;，需要提一点的是 &lt;code&gt;LayoutBuilder&lt;&#x2F;code&gt; 这个 widget，默认 child widget 是拿不到 parent 的布局信息的，但有时又需要拿它来进行一些计算，这时就可以在外面套一层 &lt;code&gt;LayoutBuilder&lt;&#x2F;code&gt;，它的 &lt;code&gt;builder&lt;&#x2F;code&gt; 属性是一个 function，会传一个 &lt;code&gt;BoxConstraints&lt;&#x2F;code&gt; 进来，通过它就能拿到 parent 的布局信息。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shou-cang-ying-pian&quot;&gt;收藏影片&lt;&#x2F;h3&gt;
+&lt;p&gt;点击影片 title 旁边的 &lt;code&gt;...&lt;&#x2F;code&gt;， 如果是 iOS 平台，则弹出一个 &lt;code&gt;ActionSheet&lt;&#x2F;code&gt;，Android 则弹出 &lt;code&gt;BottomSheet&lt;&#x2F;code&gt;，选择收藏的话，这个 &lt;code&gt;...&lt;&#x2F;code&gt; 会变成红色。&lt;&#x2F;p&gt;
+&lt;p&gt;如果要针对不同平台进行不同的展示，可以使用 &lt;code&gt;Platform.isIOS&lt;&#x2F;code&gt; 来区分(这个类在 &lt;code&gt;dart:io&lt;&#x2F;code&gt; package 下)，关于 &lt;code&gt;ActionSheet&lt;&#x2F;code&gt; 和 &lt;code&gt;BottomSheet&lt;&#x2F;code&gt; 的使用，查看相应的 API 即可。比较麻烦的是 &lt;code&gt;...&lt;&#x2F;code&gt; 的变色处理，倒不是变色麻烦，而是要让这个状态得到保持，不然下次再滑到该 item 时，又会回到原先的颜色。&lt;&#x2F;p&gt;
+&lt;p&gt;大多数的教程里，对这部分的处理都是更新 list 中该 item 对应的 model，然后让更新后的 list 触发 StreamBuilder 重新渲染 widget，我觉得这样实在有点小题大做了。我的做法是给每个 item 配一个对应的 bloc，item 的 model 和状态都保存在这个 bloc 中，在这个例子中，当某个 movie item widget 需要更新状态时，从它对应的 bloc 中拿即可。&lt;&#x2F;p&gt;
+&lt;p&gt;如果这时要新加一个 Feature，当收藏电影时，顶部 AppBar 的右边要有对应的数字显示。在 Google 官方的 &lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=RS36gBEp8OI&quot;&gt;Demo&lt;&#x2F;a&gt; 里是直接在 widget 的 &lt;code&gt;onTap&lt;&#x2F;code&gt; callback 里调用另一个 bloc 的方法(&lt;code&gt;CartBloc.addition&lt;&#x2F;code&gt;)，这样其实把业务逻辑也耦合到了 UI 里面（如果 CartBloc 的 addition 逻辑变了，或者在添加到 Cart 的同时，还要更新用户状态等，就需要在这个 callback 里调整这些逻辑），因此更好的方法是自己的 bloc 处理完后向上抛 Notification，外层接收到 Notification 后再去更新其他 Bloc。就好像要进行跨部门沟通时，最好让共同的上级知道这件事，或者由他来协调。&lt;&#x2F;p&gt;
+&lt;p&gt;这里简单说下 Flutter 里的 Notification 机制，它不像 iOS 里的 &lt;code&gt;NotificationCenter&lt;&#x2F;code&gt; 可以全局接收，而是只有在 widget 上层路径中的 &lt;code&gt;NotificationListener&lt;&#x2F;code&gt; 才能收到通知，这样可以避免通知泛滥的情况。而且使用时，必须继承系统的 &lt;code&gt;Notification&lt;&#x2F;code&gt;，这样每一个通知就是一个特定类，阅读代码或排查起来也会很方便。&lt;&#x2F;p&gt;
+&lt;p&gt;至此，首页的电影列表页基本完成了，该进入详情页了，在这之前，还有一件事情要做，那就是 Router 的注册。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;router-zhu-ce&quot;&gt;Router 注册&lt;&#x2F;h3&gt;
+&lt;p&gt;&lt;code&gt;MaterialApp&lt;&#x2F;code&gt; 自带了 Router 注册，乍一看还挺方便的，不过有一个坑就是不支持通过 URL 传递动态参数，比如 &lt;code&gt;&#x2F;movie&#x2F;1024&lt;&#x2F;code&gt;，必须完全匹配才可以。如果真要实现 pattern 匹配就要设置 &lt;code&gt;onGenerateRoute&lt;&#x2F;code&gt; 参数，当通过 Navigator 进行 push 时，这个参数对应的方法就会被触发，可以在这个方法里面进行 URL 的解析。&lt;&#x2F;p&gt;
+&lt;p&gt;我在这里实现了个简单的通过 URL 注册 Widget 的方法，URL 支持 pattern，比如 &lt;code&gt;&#x2F;movie&#x2F;{id}&lt;&#x2F;code&gt; 就能匹配 &lt;code&gt;&#x2F;movie&#x2F;1024&lt;&#x2F;code&gt;，使用时，通过 URL 来拿 widget，再把这个 widget push 出去即可。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Router&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;static var&lt;&#x2F;span&gt;&lt;span&gt; _routerEntry &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;_Router&lt;&#x2F;span&gt;&lt;span&gt;(name&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; param should wrap with {}, eg: &#x2F;movie&#x2F;{id}
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;static &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;register&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt; pattern, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;WidgetBuilder&lt;&#x2F;span&gt;&lt;span&gt; widgetBuilder) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; patternSections &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; pattern.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;split&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;&#x2F;&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; routerEntry &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; _routerEntry;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;; i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt; patternSections.length; i&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; _pattern &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; patternSections[i];
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; _router &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;_Router&lt;&#x2F;span&gt;&lt;span&gt;(name&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; _pattern);
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;==&lt;&#x2F;span&gt;&lt;span&gt; patternSections.length &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        _router.widgetBuilder &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; widgetBuilder;
+&lt;&#x2F;span&gt;&lt;span&gt;      }
+&lt;&#x2F;span&gt;&lt;span&gt;      routerEntry.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;addChild&lt;&#x2F;span&gt;&lt;span&gt;(_router);
+&lt;&#x2F;span&gt;&lt;span&gt;      routerEntry &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; _router;
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;static &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Widget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getWidget&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt; url, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BuildContext&lt;&#x2F;span&gt;&lt;span&gt; context, {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Map&lt;&#x2F;span&gt;&lt;span&gt; params}) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; urlSections &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; url.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;split&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;&#x2F;&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; routerEntry &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; _routerEntry;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Widget&lt;&#x2F;span&gt;&lt;span&gt; widget;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Map&lt;&#x2F;span&gt;&lt;span&gt; urlParams &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; {};
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;; i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span&gt; urlSections.length; i&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; _urlSection &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; urlSections[i];
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var&lt;&#x2F;span&gt;&lt;span&gt; found &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;for&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;_Router&lt;&#x2F;span&gt;&lt;span&gt; _router &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;in&lt;&#x2F;span&gt;&lt;span&gt; routerEntry.children) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (_router.name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;==&lt;&#x2F;span&gt;&lt;span&gt; _urlSection &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;||&lt;&#x2F;span&gt;&lt;span&gt; _router.name.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;startsWith&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;{&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)) {
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (_router.name.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;startsWith&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;{&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)) {
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final&lt;&#x2F;span&gt;&lt;span&gt; param &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; _router.name.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;substring&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;, _router.name.length &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;            urlParams[param] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; _urlSection;
+&lt;&#x2F;span&gt;&lt;span&gt;          }
+&lt;&#x2F;span&gt;&lt;span&gt;          found &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;          routerEntry &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; _router;
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;==&lt;&#x2F;span&gt;&lt;span&gt; urlSections.length &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (_router.widgetBuilder &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;!= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;null&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;              widget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=
+&lt;&#x2F;span&gt;&lt;span&gt;                  _router.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;widgetBuilder&lt;&#x2F;span&gt;&lt;span&gt;(context, urlParams, params&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; params);
+&lt;&#x2F;span&gt;&lt;span&gt;            }
+&lt;&#x2F;span&gt;&lt;span&gt;          }
+&lt;&#x2F;span&gt;&lt;span&gt;        }
+&lt;&#x2F;span&gt;&lt;span&gt;      }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;!&lt;&#x2F;span&gt;&lt;span&gt;found) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;break&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;      }
+&lt;&#x2F;span&gt;&lt;span&gt;    }
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span&gt; widget;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;路由的注册&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Routes&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;static &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt; root &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;&#x2F;&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;static &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;String&lt;&#x2F;span&gt;&lt;span&gt; detail &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;&#x2F;movie&#x2F;{id}&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;static &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;configureRoutes&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Router&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;register&lt;&#x2F;span&gt;&lt;span&gt;(root, (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BuildContext&lt;&#x2F;span&gt;&lt;span&gt; context, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Map&lt;&#x2F;span&gt;&lt;span&gt; urlParams, {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Map&lt;&#x2F;span&gt;&lt;span&gt; params}) {
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Home&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    });
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Router&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;register&lt;&#x2F;span&gt;&lt;span&gt;(detail, (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BuildContext&lt;&#x2F;span&gt;&lt;span&gt; context, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Map&lt;&#x2F;span&gt;&lt;span&gt; urlParams,
+&lt;&#x2F;span&gt;&lt;span&gt;        {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Map&lt;&#x2F;span&gt;&lt;span&gt; params}) {
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MoviePage&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        movieID&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; urlParams[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;id&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;],
+&lt;&#x2F;span&gt;&lt;span&gt;        movie&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;            params &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;!= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;null &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;amp;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt; params[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;movie&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;!= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;null &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;?&lt;&#x2F;span&gt;&lt;span&gt; params[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;movie&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;null&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;      );
+&lt;&#x2F;span&gt;&lt;span&gt;    });
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;xiang-qing-ye-bu-ju-xuan-ze&quot;&gt;详情页-布局选择&lt;&#x2F;h3&gt;
+&lt;p&gt;详情页主要分为 4 个部分，顶部的海报图，中间的概要、横向可滚动的影人列表页和 Tab 标签，以及最下面的列表页。有两个方案可以选，&lt;code&gt;NestedScrollView&lt;&#x2F;code&gt; 和 &lt;code&gt;CustomScrollView&lt;&#x2F;code&gt;，前者分为 header 和 body 两部分，可以在里面套 scrollView，最开始选择了这个方案，后来发现 &lt;code&gt;TabbarView&lt;&#x2F;code&gt; 怎么都处理不好，如果把它单独放到 body 里，那么所有剩下的部分就都要放到 header 里，虽然可行，但跑起来会发现，&lt;code&gt;TabbarView&lt;&#x2F;code&gt; 里的 scroll offset 是错的，一部分内容会「钻」进 Tabbar 里，而且底部空了很大一部分。如果把除了海报图，剩下的部分都放到 body 里，也不行，被迫只能选择 &lt;code&gt;CustomScrollView&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;CustomScrollView&lt;&#x2F;code&gt; 方案的一个难点是处理 &lt;code&gt;TabbarView&lt;&#x2F;code&gt;，因为不能直接把它放到 &lt;code&gt;slivers&lt;&#x2F;code&gt; 里，于是换了个思路，抛弃 &lt;code&gt;TabbarView&lt;&#x2F;code&gt; 手动实现 tabbar 点击之后，下面的内容切换效果。&lt;&#x2F;p&gt;
+&lt;p&gt;详情页的核心代码大概像这样：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Widget &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;build&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BuildContext&lt;&#x2F;span&gt;&lt;span&gt; context) {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Scaffold&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;      backgroundColor&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Color&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0xfff4f4f4&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;      body&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocProvider&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;        bloc&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; bloc,
+&lt;&#x2F;span&gt;&lt;span&gt;        child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; (() {
+&lt;&#x2F;span&gt;&lt;span&gt;          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span&gt; (movie &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;null&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Center&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;              child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Text&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;loading&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;            );
+&lt;&#x2F;span&gt;&lt;span&gt;          } &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;else&lt;&#x2F;span&gt;&lt;span&gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;            &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;NotificationListener&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;TabSwitchNotification&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;              onNotification&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; (notification) {
+&lt;&#x2F;span&gt;&lt;span&gt;                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;setState&lt;&#x2F;span&gt;&lt;span&gt;(() {
+&lt;&#x2F;span&gt;&lt;span&gt;                  currentTabType &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; notification.tabContentType;
+&lt;&#x2F;span&gt;&lt;span&gt;                });
+&lt;&#x2F;span&gt;&lt;span&gt;              },
+&lt;&#x2F;span&gt;&lt;span&gt;              child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;DefaultTabController&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                  length&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;                  child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;SafeArea&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                      top&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;                      child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;CustomScrollView&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                        slivers&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Widget&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt;[
+&lt;&#x2F;span&gt;&lt;span&gt;                          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieHero&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;                          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;SliverToBoxAdapter&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                            child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieSummary&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;                          ),
+&lt;&#x2F;span&gt;&lt;span&gt;                          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;SliverToBoxAdapter&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                            child&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieActors&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;                          ),
+&lt;&#x2F;span&gt;&lt;span&gt;                          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;SliverPadding&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                            padding&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;EdgeInsets&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;all&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;7.0&lt;&#x2F;span&gt;&lt;span&gt;),
+&lt;&#x2F;span&gt;&lt;span&gt;                          ),
+&lt;&#x2F;span&gt;&lt;span&gt;                          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieReviewTabbar&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;                          &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieReviewTabbarContent&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;                            tabContentType&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt; currentTabType,
+&lt;&#x2F;span&gt;&lt;span&gt;                          ),
+&lt;&#x2F;span&gt;&lt;span&gt;                        ],
+&lt;&#x2F;span&gt;&lt;span&gt;                      ))),
+&lt;&#x2F;span&gt;&lt;span&gt;            );
+&lt;&#x2F;span&gt;&lt;span&gt;          }
+&lt;&#x2F;span&gt;&lt;span&gt;        }()),
+&lt;&#x2F;span&gt;&lt;span&gt;      ));
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;对于 tabbar 来说，需要提供一个 controller，要么通过属性设置，要么外面包一层，这里选择了后者，所以可以看到最外面是 &lt;code&gt;DefaultTabController&lt;&#x2F;code&gt;，这样就可以在里面通过 &lt;code&gt;DefaultTabController.of(context)&lt;&#x2F;code&gt; 来拿到这个 controller，进而了解当前选中的 tab，以及控制 tab 的选中情况。&lt;&#x2F;p&gt;
+&lt;p&gt;普通的 Widget 要通过 &lt;code&gt;SliverToBoxAdapter&lt;&#x2F;code&gt; 转换才能被放到 slivers 里面，slivers 其实就是 &lt;code&gt;CustomScrollView&lt;&#x2F;code&gt; 的组成部分。通过上面的代码，我们可以知道这个 scrollview 是由哪几部分组成的，非常清晰。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xiang-qing-ye-ding-bu-hai-bao-xiao-guo&quot;&gt;详情页-顶部海报效果&lt;&#x2F;h3&gt;
+&lt;p&gt;这个效果看上去满复杂的，实现起来很简单，只要使用 &lt;a href=&quot;https:&#x2F;&#x2F;docs.flutter.io&#x2F;flutter&#x2F;material&#x2F;SliverAppBar-class.html&quot;&gt;SliverAppBar&lt;&#x2F;a&gt; 这个 Widget 即可。&lt;a href=&quot;https:&#x2F;&#x2F;medium.com&#x2F;@diegoveloper&#x2F;flutter-collapsing-toolbar-sliver-app-bar-14b858e87abe&quot;&gt;这里&lt;&#x2F;a&gt; 有比较详细的介绍。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xiang-qing-ye-ying-pian-jie-shao&quot;&gt;详情页-影片介绍&lt;&#x2F;h3&gt;
+&lt;p&gt;这里主要是使用 Text Widget，一个难点是默认内容是截断和收起的，当点击按钮后，展开。如果是在 iOS 里，需要分别计算两者的高度，然后调用 &lt;code&gt;reloadRowsAtIndexPaths&lt;&#x2F;code&gt; 方法，有点麻烦，Flutter 里很简单，widget 自己更新内容即可，不需要考虑高度的计算，也不要显式地调用 reload 方法。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xiang-qing-ye-ying-ren-lie-biao&quot;&gt;详情页-影人列表&lt;&#x2F;h3&gt;
+&lt;p&gt;这是一个横向滑动列表，把 &lt;code&gt;ListView&lt;&#x2F;code&gt; 的 &lt;code&gt;scrollDirection&lt;&#x2F;code&gt; 设置为 &lt;code&gt;horizontal&lt;&#x2F;code&gt; 即可&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xiang-qing-ye-tabbar&quot;&gt;详情页-Tabbar&lt;&#x2F;h3&gt;
+&lt;p&gt;Tabbar 需要有一个 controller，我们在外面包了一层 &lt;code&gt;DefaultTabController&lt;&#x2F;code&gt;，这里就不需要操心了。比较坑的一点是，&lt;code&gt;TabBar&lt;&#x2F;code&gt; 这个 Widget 没有提供 &lt;code&gt;onTap&lt;&#x2F;code&gt; 方法，只能通过监听 controller 来获取 tab 的变化，不过这样也好，管理起来更方便。&lt;&#x2F;p&gt;
+&lt;p&gt;PS: 这里的 Tabbar 是需要吸顶的，因此要用 &lt;code&gt;SliverPersistentHeader&lt;&#x2F;code&gt; 包一下。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xiang-qing-ye-dian-ping-lie-biao&quot;&gt;详情页-点评列表&lt;&#x2F;h3&gt;
+&lt;p&gt;点评列表是一个 &lt;code&gt;SliverList&lt;&#x2F;code&gt;，配置起来还算简单，那么点击 tab 切换内容这个该如何实现呢？可以思考下。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h3&gt;
+&lt;p&gt;我个人很喜欢 Flutter， 用它来写 GUI 感觉非常自然和舒服。不需要借助 JSX 或 XML，用编程语言就能搞定，方便 Local Reasoning，不需要在 JSX &#x2F; XML 和 Code 之间来回切换。同时通过 Widget 来配置视图的方式也很方便，GUI 非常适合这种声明式编程。&lt;&#x2F;p&gt;
+&lt;p&gt;刚开始接触 Flutter 时，容易被那一大堆的类搞晕，其实了解了核心理念后，啃透几个 Demo，就会慢慢找到感觉。自己再多写写，踩踩坑，就熟练了。&lt;&#x2F;p&gt;
+&lt;p&gt;至于性能方面，debug 跟 release 模式还是会有些差距，因此如果在 debug 模式下发现不够流畅，可以切换到 release 模式再试下。&lt;&#x2F;p&gt;
+&lt;p&gt;我也是接触 Flutter 不久，如果有不对的地方欢迎指正，如果能给你带来些帮助，备感荣幸。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

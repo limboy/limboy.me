@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+说说REST
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/rest/">
+
+<meta name="twitter:title" content="说说REST">
+<meta property="og:title" content="说说REST">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;rest&#x2F;">说说REST</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-11-14</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <h3 id="rest-jiu-jing-shi-shi-yao-dong-dong">REST 究竟是什么东东</h3>
+<p>REST(Representational State Transfer)是 Roy Fielding 在他的博士论文中提出来的。他也是 HTTP 协议的制定者之一。REST 是一种针对网络应用的设计和开发方式，可以降低开发的复杂性，提高系统的可伸缩性。</p>
+<h3 id="rest-de-te-xing">REST 的特性</h3>
+<h3 id="c-s-jia-gou">C/S 架构</h3>
+<p>客户端主动向服务端发起请求，服务端收到请求后，返回格式化的结果。</p>
+<h3 id="wu-zhuang-tai">无状态</h3>
+<p>每个请求必须包含服务端所需的所有信息，不要指望从服务端&quot;借&quot;点数据。</p>
+<h3 id="yi-kuo-zhan">易扩展</h3>
+<p>如果因为业务需要，要新添加几个资源，可以横向扩展，而不需要改变原来的结构。</p>
+<h3 id="tong-yi-qing-qiu-lei-xing">统一请求类型</h3>
+<p>GET/POST/PUT/DELETE，实际中以 GET 和 POST 用的最多。</p>
+<h3 id="zi-yuan">资源</h3>
+<p>服务端要提供资源供客户端调用，每个资源都有独立的 URL。</p>
+<h3 id="qing-liang-ji">轻量级</h3>
+<p>使用标准的 http 请求，各个语言几乎都支持，所以由丰富的客户端。</p>
+<h3 id="fang-bian-tian-jia-zhong-jian-ceng">方便添加中间层</h3>
+<p>如代理/集群/缓存等等，对客户端而言它们是透明的。</p>
+<h3 id="fang-bian-ce-shi">方便测试</h3>
+<p>不牵扯具体的业务逻辑，而且格式化的数据很容易解析</p>
+<h3 id="demo">DEMO</h3>
+<p>以 twitter 为例(请自动切换到翻|墙模式)</p>
+<h3 id="huo-qu-xin-xi-get">获取信息(GET)</h3>
+<p>如果要获得某条 tweet 的信息，直接访问 api 即可，如 http://api.twitter.com/1/statuses/show/3657615682838528.json，将会返回如下结果</p>
+<pre data-lang="json" style="background-color:#f9f9f9;color:#111111;" class="language-json "><code class="language-json" data-lang="json"><span>{
+</span><span>    </span><span style="font-style:italic;color:#c82829;">place</span><span>: </span><span style="color:#f07219;">null
+</span><span>    </span><span style="font-style:italic;color:#c82829;">geo</span><span>: </span><span style="color:#f07219;">null
+</span><span>    </span><span style="color:#8e908c;">// ...
+</span><span>    </span><span style="font-style:italic;color:#c82829;">created_at</span><span>: </span><span style="color:#839c00;">&quot;Sun Nov 14 03:56:58 +0000 2010&quot;
+</span><span>    </span><span style="font-style:italic;color:#c82829;">in_reply_to_status_id_str</span><span>: </span><span style="color:#f07219;">null
+</span><span>
+</span><span>    </span><span style="font-style:italic;color:#c82829;">user</span><span>: {
+</span><span>        </span><span style="font-style:italic;color:#c82829;">profile_image_url</span><span>: </span><span style="font-style:italic;color:#c82829;">http</span><span>:</span><span style="color:#8e908c;">//a2.twimg.com/profile_images/259632038/DuanziLogoBig_normal.jpg
+</span><span>        </span><span style="color:#8e908c;">// ...
+</span><span>        </span><span style="font-style:italic;color:#c82829;">description</span><span>: </span><span style="color:#839c00;">&quot;官网：www.JokeCook.com | When that happens.当下那些事儿 | 欢迎回复@duanzi 投稿。&quot;
+</span><span>    }
+</span><span>    </span><span style="font-style:italic;color:#c82829;">truncated</span><span>: </span><span style="color:#f07219;">false
+</span><span>    </span><span style="font-style:italic;color:#c82829;">id</span><span>: </span><span style="color:#f07219;">3657615682838528
+</span><span>    </span><span style="font-style:italic;color:#c82829;">in_reply_to_user_id_str</span><span>: </span><span style="color:#f07219;">null
+</span><span>    </span><span style="font-style:italic;color:#c82829;">text</span><span>: </span><span style="color:#839c00;">&quot;Via @ruoxiaosu: 有时候吧，取消对一个人的关注，...via琦殿&quot;
+</span><span>}
+</span></code></pre>
+<p>省略了部分结果，可以看到是一个包含了很多信息的 json，想怎样展现那就是客户端的事情了。</p>
+<h3 id="ti-jiao-xin-xi-post">提交信息(POST)</h3>
+<p>这个就要复杂一点了，因为涉及到用户验证，前面说过了，REST 是无状态的。也就是说，服务端不知道你到底有没有登录，除非出示证件。是的，每次请求都得出示。服务端验证通过后，查询到用户 id，保存 POST 数据，返回提交结果。</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">POST</span><span style="color:#4271ae;"> /1/statuses/update.json
+</span><span style="color:#c82728;">HOST</span><span style="color:#4271ae;"> api.twitter.com
+</span><span>
+</span><span style="color:#c82728;">status</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">blahblah...&amp;oauth_consumer_key=GDdmIQH6jhtm...&amp;oauth_nonce=oElnnMTQIZvqvlfXM56aB...
+</span></code></pre>
+<p>可以看到除了 status，还有 oauth_consumer_key 和 oauth_nonce(还有其他 oauth 相关的参数)，这些就是用来进行身份验证的，如果验证通过了，tweet 就会被正常发布，同时返回该 tweet 的相关信息。</p>
+<p>顺便说说用户验证，一般有三种验证方式：Basic Auth/Digest Auth/OAuth(XAuth)，就安全性来说 OAuth 是最高的，用户无须输入密码，但部署起来难度也最大。Basic Auth 安全性最低，部署起来也最方便，用户只需提供用户名和密码即可，但如果第三方记录了这些信息，那就... Digest Auth 的安全性和部署成本介于两者之间。</p>
+<p>其他更新内容和删除内容也类似，都是先进行用户验证，再进行权限验证，最后返回执行结果。</p>
+<h3 id="rest-de-yuan-ze">REST 的原则</h3>
+<h3 id="chou-xiang-chu-suo-you-ke-gong-diao-yong-de-zi-yuan-yue-jing-que-yue-hao">抽象出所有可供调用的资源，越精确越好</h3>
+<p>如果一个事物可以抽象成资源，那它就是 RESTful，可以通过 URL 进行调用。</p>
+<h3 id="wei-mei-ge-zi-yuan-ti-gong-yi-ge-url-qie-zi-yuan-ying-gai-shi-ming-ci-er-bu-shi-dong-ci">为每个资源提供一个 URL，且资源应该是名词而不是动词</h3>
+<p>如，下面这个 url 是不建议采用的</p>
+<p>bq. http://www.twitter.com/getUser/10</p>
+<p>应该改为这样</p>
+<p>bq. http://www.twitter.com/user/10</p>
+<h3 id="jiang-zi-yuan-fen-lei">将资源分类</h3>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">Tweets</span><span style="color:#4271ae;"> resources
+</span><span>	</span><span style="color:#c82728;">-</span><span style="color:#4271ae;"> status/show/:id
+</span><span>	</span><span style="color:#c82728;">-</span><span style="color:#4271ae;"> status/update
+</span><span>	</span><span style="color:#c82728;">-</span><span style="color:#4271ae;"> status/destroy/:id
+</span><span>	</span><span style="color:#c82728;">-</span><span style="color:#4271ae;"> ...
+</span><span style="color:#c82728;">Timeline</span><span style="color:#4271ae;"> resources
+</span><span>	</span><span style="color:#c82728;">-</span><span style="color:#4271ae;"> status/public_timeline
+</span><span>	</span><span style="color:#c82728;">...
+</span><span style="color:#c82728;">User</span><span style="color:#4271ae;"> resources
+</span><span style="color:#c82728;">...
+</span></code></pre>
+<h3 id="suo-you-get-qing-qiu-du-bu-ying-gai-ying-xiang-shu-ju-ku-nei-rong">所有 GET 请求都不应该影响数据库内容</h3>
+<p>GET 顾名思义，就是用来获取某个资源，如果要修改，则应该执行 POST/PUT/DELETE。千万不要因为偷懒，而给 GET 留下后门。</p>
+<h3 id="fan-hui-jie-guo-bu-yi-ding-shi-dan-du-de-nei-rong-ke-yi-bao-han-xiang-guan-lian-jie">返回结果不一定是单独的内容，可以包含相关链接</h3>
+<p>有时候，这是一种双输的局面：用户不想要那么多的数据，服务端又多了不必要的运算。只要包含可以获取信息的链接即可。</p>
+<h3 id="ming-que-fan-hui-ge-shi">明确返回格式</h3>
+<p>如 json/xml/html 等等，不过目前来看 json 基本是主流。</p>
+<h3 id="ru-he-shi-yong-rest">如何使用 REST</h3>
+<p>REST 不仅仅是一种崭新的架构，它带来的更是一种全新的 Web 开发过程中的思维方式：通过 URL 来设计系统结构。在 REST 中，所有的 URL 都对应着资源，只要 URL 的设计是良好的，那么其呈现的系统结构也就是良好的。这点和 TDD (Test Driven Development)很相似，他是通过测试用例来设计系统的接口，每一个测试用例都表示一系列用户的需求。开发人员不应该一开始就编写功能，而是先细分资源。对资源抽象地越精确，对 REST 的应用来说就更好，这个和传统的 MVC 中基于 Action 的思想差别很大。设计良好的 URL， 不但对于开发人员来说可以更明确的认识系统结构，对使用者来说也方便记忆和识别资源，因为 URL 足够简单和有意义。</p>
+<p>REST 对开发者友好。Amazon 和 Ebay 的 service 结果显示：60%的用户使用 REST。提供 REST 服务，开发者可以很容易通过各种语言各种平台来开发一个 app，手机/ipad/网站/cli 等等，这也是 web2.0 的一大特征，想想如果 flickr/twitter/delicious 没有开放简洁易用的 api，其火爆程度肯定大打折扣。</p>
+<p>使用 REST 还有一个好处是，可以避免 Controller 直接操作数据。假如是 MVC 模式，Controller 很可能途省事，直接把 ORM 拿过来就开始进行数据操作了，如</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Controller_Post </span><span style="color:#8959a8;">extends </span><span style="color:#839c00;">Controller </span><span>{
+</span><span>	</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">actionAdd</span><span>() {
+</span><span>		</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c99e00;">Validate</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">check</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$_POST</span><span style="color:#4271ae;">)</span><span>) {
+</span><span>			</span><span style="color:#c82728;">$post </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">ORM</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">factory</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;post&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>			</span><span style="color:#c82728;">$post</span><span>-&gt;</span><span style="color:#c82728;">title </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$_POST</span><span>[</span><span style="color:#839c00;">&#39;title&#39;</span><span>];
+</span><span>			</span><span style="color:#c82728;">$post</span><span>-&gt;</span><span style="color:#c82728;">content </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$_POST</span><span>[</span><span style="color:#839c00;">&#39;content&#39;</span><span>];
+</span><span>			</span><span style="color:#8e908c;">//...
+</span><span>			</span><span style="color:#c82728;">$post</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">save</span><span style="color:#4271ae;">()</span><span>;
+</span><span>		}
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>如果有一天保存的操作改了，如加了一个 status 字段，那就很糟糕了。</p>
+<p>实际使用中，可能会发现不是所有的需求都可以抽象为资源，这时可以混用 MVC/MVVM。尽可能地抽象成资源，对其他需求使用 MVC/MVVM 开发。</p>
+<p>目前已经有<a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">不少</a>基于/支持 REST 的框架，有兴趣的话不妨尝试一下。也可以看一下<a href="http://www.peej.co.uk/articles/rmr-architecture.html">这篇文章</a></p>
+<h3 id="zong-jie">总结</h3>
+<ul>
+<li>REST 和 MVC 的关系就好像 Div 和 Table 的关系。在 web 标准没推广前，都是使用 Table 布局，Table 原本是用来做数据展示的，不知是哪一位天才发现对 Table 进行各种改造后，可以用作前端展示，于是就这么流传开了。</li>
+<li>REST 是一种架构风格，不是标准。但使用了很多标准：http/url/mime 等等。</li>
+<li>REST 概念从提出到现在已经有 10 年了，越来越趋于成熟。它是为 http 而生的，而 MVC 最开始是用来开发桌面软件的。</li>
+<li>如果你的网站有提供 API 的打算，推荐使用 REST 架构，开始可能会麻烦一点，但将来会发现这些付出是值得的。</li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

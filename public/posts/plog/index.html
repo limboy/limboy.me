@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+写了一款php日志系统——plog
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/plog/">
+
+<meta name="twitter:title" content="写了一款php日志系统——plog">
+<meta property="og:title" content="写了一款php日志系统——plog">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;plog&#x2F;">写了一款php日志系统——plog</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-12-06</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>日志是一个应用程序的重要组成部分，今天在看 pylons 对日志的处理时，受到启发，于是 plog 就诞生了。</p>
+<p>很多 php 框架都忽略了日志的重要性(如 kohana)，往往只是能用，自定义和可扩展性不够，等到程序出了问题，再想找原因时就比较麻烦了。</p>
+<h3 id="plog-jian-jie">plog 简介</h3>
+<p>plog 是一款轻量级，易定制，易使用，易扩展的 php 日志系统。可以很方便地添加日志处理工具、自定义输出格式、自定义日志类型等等。</p>
+<h3 id="plog-shi-yong">plog 使用</h3>
+<p>使用 plog 很简单，在每个要加日志的文件里，输入以下代码</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">// 载入plog类
+</span><span style="color:#8959a8;">require </span><span style="color:#839c00;">&#39;../../plog/classes/plog.php&#39;</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">// 设置config，config文件位置可以自定义
+</span><span style="color:#8e908c;">// 对于单入口文件，这两段代码可以放在入口文件处
+</span><span style="color:#c99e00;">Plog</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">set_config</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">include </span><span style="color:#839c00;">&#39;path/to/config.php&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">// 把下面这段代码放到对应的文件里
+</span><span style="color:#c82728;">$log </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">Plog</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">factory</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">__FILE__</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">// 使用
+</span><span style="color:#c82728;">$log</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">debug</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;this is debug message&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#c82728;">$log</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">info</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;this is info message&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>{{</span><span style="color:#3e999f;">&lt; / </span><span>highlight </span><span style="color:#3e999f;">&gt;</span><span>}}
+</span><span>
+</span><span style="color:#8e908c;">### plog的配置
+</span><span>
+</span><span>plog的配置很灵活，下面是个demo config
+</span><span>
+</span><span>{{</span><span style="color:#3e999f;">&lt; </span><span>highlight php </span><span style="color:#3e999f;">&gt;</span><span>}}
+</span><span style="color:#3e999f;">&lt;</span><span>?php
+</span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">array</span><span>(
+</span><span>	</span><span style="color:#8e908c;">// 设置日志的类型，如有些是系统日志，有些是应用日志
+</span><span>	</span><span style="color:#839c00;">&#39;loggers&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>		</span><span style="color:#8e908c;">// base是个特殊变量，会自动添加到其他配置的前面
+</span><span>		</span><span style="color:#839c00;">&#39;base&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">dirname(dirname(</span><span style="color:#f07219;">__FILE__</span><span style="color:#4271ae;">))</span><span style="color:#3e999f;">.</span><span style="color:#f07219;">DIRECTORY_SEPARATOR</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;demo&#39;</span><span style="color:#3e999f;">.</span><span style="color:#f07219;">DIRECTORY_SEPARATOR</span><span>,
+</span><span>		</span><span style="color:#839c00;">&#39;system&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;system&#39;</span><span>, </span><span style="color:#8e908c;">// key为日志类型，value为文件夹路径，base路径会被自动添加
+</span><span>		</span><span style="color:#839c00;">&#39;app&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;app&#39; </span><span style="color:#8e908c;">// 同上
+</span><span>	),
+</span><span>	</span><span style="color:#8e908c;">// 日志的等级
+</span><span>	</span><span style="color:#839c00;">&#39;levels&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(</span><span style="color:#839c00;">&#39;DEBUG&#39;</span><span>, </span><span style="color:#839c00;">&#39;INFO&#39;</span><span>, </span><span style="color:#839c00;">&#39;ERROR&#39;</span><span>, </span><span style="color:#839c00;">&#39;WARN&#39;</span><span>, </span><span style="color:#839c00;">&#39;FATAL&#39;</span><span>),
+</span><span>	</span><span style="color:#8e908c;">// 日志处理工具，可以添加多个，设置enabled为true表示已启用
+</span><span>	</span><span style="color:#839c00;">&#39;handlers&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>		</span><span style="color:#839c00;">&#39;file&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>			</span><span style="color:#8e908c;">// 处理引擎
+</span><span>			</span><span style="color:#839c00;">&#39;driver&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;file&#39;</span><span>,
+</span><span>			</span><span style="color:#8e908c;">// 记录哪种类型的日志
+</span><span>			</span><span style="color:#839c00;">&#39;level&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(</span><span style="color:#839c00;">&#39;DEBUG&#39;</span><span>),
+</span><span>			</span><span style="color:#8e908c;">// 日志格式，可以在formatters处添加
+</span><span>			</span><span style="color:#839c00;">&#39;formatter&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;generic&#39;</span><span>,
+</span><span>			</span><span style="color:#8e908c;">// 是否启用该引擎
+</span><span>			</span><span style="color:#839c00;">&#39;enabled&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">true</span><span>,
+</span><span>			</span><span style="color:#8e908c;">// 针对该handler的特处配置
+</span><span>			</span><span style="color:#839c00;">&#39;config&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>				</span><span style="color:#839c00;">&#39;dir&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">dirname(dirname(</span><span style="color:#f07219;">__FILE__</span><span style="color:#4271ae;">))</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;/demo/var/log&#39;</span><span>,
+</span><span>			),
+</span><span>		),
+</span><span>	),
+</span><span>	</span><span style="color:#8e908c;">// 日志格式
+</span><span>	</span><span style="color:#839c00;">&#39;formatters&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>		</span><span style="color:#839c00;">&#39;generic&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;{time} {level} [{logger}] {uri} &quot;&quot;&quot;{message}&quot;&quot;&quot;&#39;</span><span>,
+</span><span>	),
+</span><span>);
+</span></code></pre>
+<h3 id="ji-dian-shuo-ming">几点说明</h3>
+<ul>
+<li>levels 项，每一个值都是一个方法，不过是小写的，如$log-&gt;debug('message')。如果某个方法不在这些 levels 里会触发异常。</li>
+<li>日志格式的可选变量在 plog/formatter.php 里，每一个 get 开头的方法就是，如果觉得不够用，可以自己添加。</li>
+</ul>
+<h3 id="ri-zhi-nei-rong">日志内容</h3>
+<p>日志内容取决于日志格式，下面是 demo</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">2010/12/07</span><span style="color:#4271ae;"> 16:00:26 DEBUG </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">app.test</span><span style="color:#8959a8;">]</span><span style="color:#4271ae;"> /projects/os/plog/demo/app/test.php</span><span style="color:#3e999f;">?</span><span style="color:#4271ae;">id=1 </span><span style="color:#839c00;">&quot;&quot;&quot;hello world&quot;&quot;&quot;
+</span><span style="color:#c82728;">2010/12/07</span><span style="color:#4271ae;"> 16:00:26 INFO </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">app.test</span><span style="color:#8959a8;">]</span><span style="color:#4271ae;"> /projects/os/plog/demo/app/test.php</span><span style="color:#3e999f;">?</span><span style="color:#4271ae;">id=1 </span><span style="color:#839c00;">&quot;&quot;&quot;今晚打老虎&quot;&quot;&quot;
+</span><span style="color:#c82728;">2010/12/07</span><span style="color:#4271ae;"> 16:01:17 DEBUG </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">system.core</span><span style="color:#8959a8;">]</span><span style="color:#4271ae;"> /projects/os/plog/demo/system/core.php</span><span style="color:#3e999f;">?</span><span style="color:#4271ae;">_profiler=1 </span><span style="color:#839c00;">&quot;&quot;&quot;heal the world&quot;&quot;&quot;
+</span><span style="color:#c82728;">2010/12/07</span><span style="color:#4271ae;"> 16:37:29 DEBUG </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">system.core</span><span style="color:#8959a8;">]</span><span style="color:#4271ae;"> /projects/os/plog/demo/system/core.php</span><span style="color:#3e999f;">?</span><span style="color:#4271ae;">_profiler=1 </span><span style="color:#839c00;">&quot;&quot;&quot;heal the world&quot;&quot;&quot;
+</span></code></pre>
+<h3 id="xia-zai">下载</h3>
+<p><a href="https://github.com/limboy/plog">https://github.com/limboy/plog</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/project/">project</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

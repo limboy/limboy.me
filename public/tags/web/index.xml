@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Limboy - web</title>
+        <link>https://limboy.me</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>zh</language>
+        <atom:link href="https://limboy.me/tags/web/index.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Fri, 06 May 2011 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>iframe无刷新跨域上传文件并获取返回值</title>
+            <pubDate>Fri, 06 May 2011 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/crossdomain-upload/</link>
+            <guid>https://limboy.me/posts/crossdomain-upload/</guid>
+            <description>&lt;p&gt;通常我们会有一个统一的上传接口，这个接口会被其他的服务调用。如果出现不同域，还需要无刷新上传文件，并且获取返回值，这就有点麻烦了。比如，新浪微博启用了新域名www.weibo.com，但接口还是使用原来的域：picupload.t.sina.com.cn。&lt;&#x2F;p&gt;
+&lt;p&gt;研究了一下新浪微博的处理方法，这里大概演示一下。&lt;&#x2F;p&gt;
+&lt;p&gt;首先是一个正常的上传页面 upload.html&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;html&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 这个函数将来会被iframe用到
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getIframeVal&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;val&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;val&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&amp;lt;!-- 我把upload.com指向了127.0.0.1 --&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;form
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;  method=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;post&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;  target=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;if&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;  enctype=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;multipart&#x2F;form-data&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;  action=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;http:&#x2F;&#x2F;upload.com&#x2F;playground&#x2F;js&#x2F;deal.php?cb=http:&#x2F;&#x2F;localhost&#x2F;playground&#x2F;js&#x2F;deal_cd.html&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;input type=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;file&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;name=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;file&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;input type=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;SUBMIT&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;value=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;upload&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;form&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;iframe id&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;if&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;if&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;src&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;about:blank&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;frameborder&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;0&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;iframe&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里有一个关键点是 form 的 target 要指向 iframe，同时把 iframe 隐藏起来，这样上传的处理结果就会显示在该 iframe 里。action 里的 cb(callback)参数表示处理完成后要跳转的 url，因为我们的目标是 iframe，所以只会把跳转的页面输出到 iframe，而不会让当前页面跳转。&lt;&#x2F;p&gt;
+&lt;p&gt;还有一点，callback url 要和当前页面同域。跨域的 iframe 无法调用父页面的内容。&lt;&#x2F;p&gt;
+&lt;p&gt;再来看看 deal.php，也就是 form 的 action&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;php&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-php &quot;&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;&amp;lt;?php
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; deal upload file
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; and get file id, you can pass other params either
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;header(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;location:&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$_GET&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;cb&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;?file_id=123&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里可以处理文件，然后入库。操作完成后，把文件的 id 及其他信息都放在 url 里，最后跳转到这个 url。&lt;&#x2F;p&gt;
+&lt;p&gt;最后来看看 deal_cd.html，也就是刚刚 deal.php 跳转到的 url，这个文件的内容会填充到页面的 iframe 里。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;html&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;script type=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;text&#x2F;javascript&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span&gt;rs &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;window&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.location.search.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;split&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;?&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;slice&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;window&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.parent.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;getIframeVal&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span&gt;rs&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.toString().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;split&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;=&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;slice&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;))&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这里调用了父窗口的 getIframeVal 方法，这样父页面就获得了文件的 id。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

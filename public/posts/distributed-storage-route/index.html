@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+浅谈分布式存储的路由设置
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/distributed-storage-route/">
+
+<meta name="twitter:title" content="浅谈分布式存储的路由设置">
+<meta property="og:title" content="浅谈分布式存储的路由设置">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;distributed-storage-route&#x2F;">浅谈分布式存储的路由设置</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-12-14</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>程序设计中很重要的一个思想是：隔离变化的部分。在开发之前就应该想到哪些部分在不远的将来是可能会变的或一定会变的，开发时，就应该将这些部分隔离出来，同时可以优雅地进行控制。</p>
+<p>对于大数据量高并发的网站，存储经常会有变动：添加/移除数据库服务器、分表分库、添加/移除缓存服务器、添加/移除文件存储服务器等等。怎样才能在这些存储设施调整后，代码上只要进行局部的修改就行了，这就是本文要探讨的主题：分布式存储的路由设置。</p>
+<h3 id="wen-jian-cun-chu-lu-you">文件存储路由</h3>
+<p>平时我们操作文件时，一般都会用 file_put_contents/file_get_contents/fopen 之类的文件操作函数，这就需要给出文件的路径，如</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#4271ae;">file_get_contents(dirname(</span><span style="color:#f07219;">__FILE__</span><span style="color:#4271ae;">)</span><span style="color:#3e999f;">.</span><span style="color:#f07219;">DIRECTORY_SEPARATOR</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;destfile.txt&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#4271ae;">file_put_contents(dirname(</span><span style="color:#f07219;">__FILE__</span><span style="color:#4271ae;">)</span><span style="color:#3e999f;">.</span><span style="color:#f07219;">DIRECTORY_SEPARATOR</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;destfile.txt&#39;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;hello world&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span></code></pre>
+<p>确实挺方便，但随着文件数的增多，需要对文件重新规划，如原来是'dir/abcd.txt'，要调整为'dir/ab/abcd.txt'。这时就只能去手动修改代码，结果很有可能改了这，忘了那。比如有些是通过 file_put_contents 方法；有些是通过 fopen 方法；有些不需要调整，有些需要调整等等。</p>
+<p>如果有文件路由机制，事情就好办了，看看下面的使用代码</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#c82728;">$file </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">new </span><span style="color:#c99e00;">File</span><span>(</span><span style="color:#4271ae;">array</span><span>(
+</span><span>	</span><span style="color:#839c00;">&#39;basepath&#39; </span><span style="color:#3e999f;">=&gt; </span><span>DATA_PATH</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;file&#39;</span><span style="color:#3e999f;">.</span><span style="color:#f07219;">DIRECTORY_SEPARATOR</span><span>,
+</span><span>));
+</span><span style="color:#c82728;">$file</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">open</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;test.txt&#39;</span><span style="color:#4271ae;">)-&gt;</span><span style="color:#c82728;">write</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;hello world&#39;</span><span style="color:#4271ae;">)-&gt;</span><span style="color:#c82728;">execute</span><span style="color:#4271ae;">() </span><span>;
+</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$file</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">open</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;test.txt&#39;</span><span style="color:#4271ae;">)-&gt;</span><span style="color:#c82728;">get</span><span style="color:#4271ae;">()-&gt;</span><span style="color:#c82728;">execute</span><span style="color:#4271ae;">()</span><span>;
+</span></code></pre>
+<p>实例化 File 类后，只需传入文件名，加上要执行的操作，最后 execute()一下就行了，不必关心文件的存储状态。如果要重新调整文件的存储结构，对客户端是透明的，也就是说不用对代码进行任何调整。</p>
+<p>调整的规则写在 File 类里</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">File </span><span style="color:#8959a8;">extends </span><span style="color:#839c00;">Core_File
+</span><span>{
+</span><span>	</span><span style="color:#8e908c;">/**
+</span><span style="color:#8e908c;">	 * 自定义文件存储规则，对使用者是透明的。
+</span><span style="color:#8e908c;">	 */
+</span><span>	</span><span style="color:#8959a8;">protected function </span><span style="color:#4271ae;">_route</span><span>()
+</span><span>	{
+</span><span>		</span><span style="color:#8e908c;">// 将abcd.txt保存为ab/cd/abcd.txt
+</span><span>		</span><span style="color:#c82728;">$pathinfo </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">pathinfo(</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">_filename</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		</span><span style="color:#c82728;">$extension </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">empty(</span><span style="color:#c82728;">$pathinfo</span><span style="color:#4271ae;">[</span><span style="color:#839c00;">&#39;extension&#39;</span><span style="color:#4271ae;">])</span><span> ? </span><span style="color:#839c00;">&#39;&#39;</span><span> : </span><span style="color:#839c00;">&#39;.&#39;</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$pathinfo</span><span>[</span><span style="color:#839c00;">&#39;extension&#39;</span><span>];
+</span><span>		</span><span style="color:#c82728;">$fhn </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">md5(</span><span style="color:#c82728;">$pathinfo</span><span style="color:#4271ae;">[</span><span style="color:#839c00;">&#39;filename&#39;</span><span style="color:#4271ae;">])</span><span>;
+</span><span>		</span><span style="color:#c82728;">$filepath </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_config</span><span>[</span><span style="color:#839c00;">&#39;basepath&#39;</span><span>]</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$fhn</span><span>[</span><span style="color:#f07219;">0</span><span>]</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$fhn</span><span>[</span><span style="color:#f07219;">1</span><span>]</span><span style="color:#3e999f;">.</span><span style="color:#f07219;">DIRECTORY_SEPARATOR</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$fhn</span><span>[</span><span style="color:#f07219;">2</span><span>]</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$fhn</span><span>[</span><span style="color:#f07219;">3</span><span>]</span><span style="color:#3e999f;">.</span><span style="color:#f07219;">DIRECTORY_SEPARATOR</span><span>;
+</span><span>		</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#3e999f;">!</span><span style="color:#4271ae;">is_dir(</span><span style="color:#c82728;">$filepath</span><span style="color:#4271ae;">)</span><span>)
+</span><span>		{
+</span><span>			</span><span style="color:#4271ae;">mkdir(</span><span style="color:#c82728;">$filepath</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">0777</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">true</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		}
+</span><span>		</span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_filename </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$filepath</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$fhn</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$extension</span><span>;
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>如果要改规则，只要修改_route 方法就行了。</p>
+<h3 id="huan-cun-lu-you">缓存路由</h3>
+<p>以 memcached 为例，可能会有多个 memcached 服务器，每个 memcached 服务器的职责可能还不一样，还可能经常变动。如果在代码里强行指定连接某台 memcached 服务器，一旦变动，事情就麻烦了。这时可以做个 memcached 路由，如果业务逻辑或 memcached 服务器有变，就在这个路由里做文章。</p>
+<p><strong>使用方式</strong></p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#c82728;">$cache </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">new </span><span style="color:#c99e00;">Cache_Adapter_Memcache</span><span>(</span><span style="color:#4271ae;">array</span><span>(
+</span><span>	</span><span style="color:#839c00;">&#39;servers&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>		</span><span style="color:#839c00;">&#39;server1&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>			</span><span style="color:#839c00;">&#39;host&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;localhost&#39;</span><span>,
+</span><span>			</span><span style="color:#839c00;">&#39;port&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">11211</span><span>,
+</span><span>			</span><span style="color:#839c00;">&#39;persistent&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">false</span><span>,
+</span><span>		),
+</span><span>		</span><span style="color:#8e908c;">//array (&#39;server2&#39; =&gt; array(
+</span><span>		</span><span style="color:#8e908c;">//	&#39;host&#39; =&gt; &#39;192.168.1.100&#39;,
+</span><span>		</span><span style="color:#8e908c;">//	&#39;port&#39; =&gt; 11211,
+</span><span>		</span><span style="color:#8e908c;">//	&#39;persistent&#39; =&gt; false,
+</span><span>		</span><span style="color:#8e908c;">//),
+</span><span>	)
+</span><span>));
+</span><span>
+</span><span style="color:#c82728;">$cache</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">set</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;bar&#39;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;foo&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$cache</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">get</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;bar&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span></code></pre>
+<p><strong>自定义路由</strong></p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Cache_Adapter_Memcache </span><span style="color:#8959a8;">extends </span><span style="color:#839c00;">Core_Cache_Adapter_Memcache
+</span><span>{
+</span><span>	</span><span style="color:#8e908c;">/**
+</span><span style="color:#8e908c;">	 * 自定义规则，根据key来指定memcache服务器，如果不指定的话，memcache会自动从连接池中取一个连接。
+</span><span style="color:#8e908c;">	 */
+</span><span>	</span><span style="color:#8959a8;">protected function </span><span style="color:#4271ae;">_route</span><span>(</span><span style="color:#f07219;">$key</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#8e908c;">// demo
+</span><span>		</span><span style="color:#8959a8;">if</span><span>(</span><span style="color:#4271ae;">substr(</span><span style="color:#c82728;">$key</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">0</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">4</span><span style="color:#4271ae;">) </span><span style="color:#3e999f;">== </span><span style="color:#839c00;">&#39;sess&#39;</span><span>)
+</span><span>		{
+</span><span>			</span><span style="color:#c82728;">$server1 </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_config</span><span>[</span><span style="color:#839c00;">&#39;server1&#39;</span><span>];
+</span><span>			</span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_memcache</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">connect</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$server1</span><span style="color:#4271ae;">[</span><span style="color:#839c00;">&#39;host&#39;</span><span style="color:#4271ae;">], </span><span style="color:#c82728;">$server1</span><span style="color:#4271ae;">[</span><span style="color:#839c00;">&#39;port&#39;</span><span style="color:#4271ae;">], </span><span style="color:#c82728;">$server1</span><span style="color:#4271ae;">[</span><span style="color:#839c00;">&#39;timeout&#39;</span><span style="color:#4271ae;">])</span><span>;
+</span><span>		}
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>将来只要调整_route 方法即可，调用代码不变。</p>
+<h3 id="shu-ju-ku-lu-you">数据库路由</h3>
+<p>数据库是应用的核心，随着数据量和并发的增大，分表分库是早晚的事，通过路由机制可以实现只修改路由方法，而保持调用的代码不变。为了方便演示，简单封装了一下 PDO。</p>
+<p><strong>使用方式</strong></p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#c82728;">$db </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">new </span><span style="color:#c99e00;">Database</span><span>(</span><span style="color:#4271ae;">array</span><span>(
+</span><span>		</span><span style="color:#839c00;">&#39;servers&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>			</span><span style="color:#839c00;">&#39;server1&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>				</span><span style="color:#839c00;">&#39;dsn&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;mysql:dbname=test;host=127.0.0.1&#39;</span><span>,
+</span><span>				</span><span style="color:#839c00;">&#39;user&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;root&#39;</span><span>,
+</span><span>				</span><span style="color:#839c00;">&#39;password&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;123456&#39;</span><span>,
+</span><span>			),
+</span><span>			</span><span style="color:#8e908c;">//&#39;server2&#39; =&gt; array(
+</span><span>			</span><span style="color:#8e908c;">//	&#39;dsn&#39; =&gt; &#39;mysql:dbname=test;host=192.168.1.100&#39;,
+</span><span>			</span><span style="color:#8e908c;">//	&#39;user&#39; =&gt; &#39;root&#39;,
+</span><span>			</span><span style="color:#8e908c;">//	&#39;password&#39; =&gt; &#39;123456&#39;,
+</span><span>			</span><span style="color:#8e908c;">//),
+</span><span>		),
+</span><span>	)
+</span><span>);
+</span><span>
+</span><span style="color:#8e908c;">// 实际情况中，SQL都是通过Query Builder或ORM在内部拼接而成的
+</span><span style="color:#c82728;">$rows </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$db</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">query</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;</span><span style="color:#8959a8;">SELECT </span><span style="color:#c82728;">* </span><span style="color:#8959a8;">FROM</span><span style="color:#839c00;"> user </span><span style="color:#8959a8;">WHERE </span><span style="color:#839c00;">`id` </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">100000</span><span style="color:#839c00;">&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">foreach </span><span>(</span><span style="color:#c82728;">$rows </span><span style="color:#3e999f;">as </span><span style="color:#c82728;">$row</span><span>)
+</span><span>{
+</span><span>	</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$row</span><span>[</span><span style="color:#839c00;">&#39;username&#39;</span><span>];
+</span><span>}
+</span></code></pre>
+<p>看上去我们好像执行了 query 里的 SQL 语句，但经过_route 方法转换后就不一定了。</p>
+<p><strong>自定义路由</strong></p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Database </span><span style="color:#8959a8;">extends </span><span style="color:#839c00;">Core_Database
+</span><span>{
+</span><span>	</span><span style="color:#8e908c;">/**
+</span><span style="color:#8e908c;">	 * 根据SQL的内容，选择不同的数据库服务器，不同的数据库，不同的表
+</span><span style="color:#8e908c;">	 */
+</span><span>	</span><span style="color:#8959a8;">protected function </span><span style="color:#4271ae;">_route</span><span>(</span><span style="color:#f07219;">$sql</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#c82728;">$sql </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">strtolower(</span><span style="color:#c82728;">$sql</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#4271ae;">strpos(</span><span style="color:#c82728;">$sql</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;from user&#39;</span><span style="color:#4271ae;">) </span><span style="color:#3e999f;">!== </span><span style="color:#f07219;">FALSE</span><span>)
+</span><span>		{
+</span><span>			</span><span style="color:#4271ae;">preg_match(</span><span style="color:#839c00;">&#39;/`id` = (</span><span>[0-9]</span><span style="color:#3e999f;">+</span><span style="color:#839c00;">)/&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$sql</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$match</span><span style="color:#4271ae;">)</span><span>;
+</span><span>			</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#3e999f;">!</span><span style="color:#4271ae;">empty(</span><span style="color:#c82728;">$match</span><span style="color:#4271ae;">[</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">])</span><span>)
+</span><span>			{
+</span><span>				</span><span style="color:#c82728;">$user_id </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$match</span><span>[</span><span style="color:#f07219;">1</span><span>];
+</span><span>				</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">$user_id </span><span style="color:#3e999f;">&gt; </span><span style="color:#f07219;">10000</span><span>)
+</span><span>				{
+</span><span>					</span><span style="color:#c82728;">$tbl </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;user1&#39;</span><span>;
+</span><span>				}
+</span><span>				</span><span style="color:#c82728;">$sql </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">str_replace(</span><span style="color:#839c00;">&#39;from user&#39;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;from user1&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$sql</span><span style="color:#4271ae;">)</span><span>;
+</span><span>			}
+</span><span>		}
+</span><span>		</span><span style="color:#8e908c;">// 如果需要连接到其他的数据库服务器，重写_conn方法
+</span><span>		</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">_conn</span><span style="color:#4271ae;">()</span><span>;
+</span><span>		</span><span style="color:#8959a8;">return </span><span style="color:#c82728;">$sql</span><span>;
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>这里直接解析 SQL 确实暴力了点，实际使用中应该是解析 Query Builder 或 ORM，不过能够说明问题就行了。这样，业务逻辑改变或者数据库服务器变动都可以在_route 方法里修改，使用时，代码无须任何改动。</p>
+<p>如果规则很复杂，可以单独写一个 route 类，在_route 方法里调用。</p>
+<h3 id="yuan-ma-xia-zai">源码下载</h3>
+<p><a href="https://github.com/limboy/storage-route">https://github.com/limboy/storage-route</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

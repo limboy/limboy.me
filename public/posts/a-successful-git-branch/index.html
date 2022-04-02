@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+(译)Git开发管理之道
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/a-successful-git-branch/">
+
+<meta name="twitter:title" content="(译)Git开发管理之道">
+<meta property="og:title" content="(译)Git开发管理之道">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;a-successful-git-branch&#x2F;">(译)Git开发管理之道</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-10-30</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>Git 的强大是众所周知的，本文要分享的是关于&quot;使用 Git 的分支和合并功能来进行版本管理的开发模型&quot;。以下是译文，<a href="http://nvie.com/posts/a-successful-git-branching-model/">原文地址</a></p>
+<p>这篇文章我想介绍一下一年前就提到过的我所有项目(工作/私有)都在使用的开发模式，经过事实验证，确实非常可行。很早就想写了，一直没腾出时间。我不会涉及项目的细节，只是谈谈分支的使用策略和发布管理。</p>
+<img src="http://nvie.com/img/git-model@2x.png" />
+<p>上图是使用 Git 这个版本控制工具来管理所有源码的。</p>
+<h3 id="wei-shi-yao-shi-yong-git">为什么使用 Git</h3>
+<p>如果要看详细的 Git 与集中式源码管理工具的优势与劣势，可以参见<a href="http://git.or.cz/gitwiki/GitSvnComparsion">这篇文章</a>，那里有很多口水仗。作为一个开发人员，所有的源码管理工具中，我最喜欢 Git。Git 从根本上改变了开发人员对分支和合并的使用，传统的 CVS/SVN，分支和合并都是高级话题，而且使用起来稍显麻烦，隔一段时间才会用一次。但是有了 Git，这些操作就成了家常便饭。</p>
+<p>由于使用简单，方便重复操作，分支和合并不再是让人望而生畏的操作，版本管理工具应该尽可能地对分支/合并提供最好的支持。</p>
+<p>工具谈得差不多了，回到开发上。我待会要讲到的模型其实是一些每个开发人员都应该遵守的步骤，如果想管理好软件的开发流程的话。</p>
+<h3 id="fen-bu-shi-dan-ji-zhong-hua">分布式但集中化</h3>
+<p>我们要使用的仓库是一个&quot;中心库&quot;，当然这个中心库只是被认为是这样(因为 Git 是分布式的，从技术层面上来说是没有中心库的)，我们将把这个仓库叫做&quot;origin&quot;，因为 Git 用户都熟悉这个名字。</p>
+<img src="http://nvie.com/img/centr-decentr@2x.png" />
+<p>每个开发者 pull 和 push 到 origin，但除了中心化的 push-pull 关系外，每个开发者还可以从其他开发者那 pull changes。比如说，对于一个比较大的新特性，在把代码提交到 origin 之前，很可能会安排 2 个或多个开发者。上图中有几个小团队：Alice 和 Bob，Alice 和 David，Clair 和 David。</p>
+<p>从技术角度来说，其实就是 Alice 定义了一个叫 Bob 的 Git remote，指向到 Bob 的仓库。</p>
+<h3 id="main-fen-zhi">main 分支</h3>
+<p>中心仓库有两个分支：</p>
+<ul>
+<li>master</li>
+<li>develop</li>
+</ul>
+<p>origin 上的 master 分支，Git 用户应该很熟悉，跟 master 并行的有一个 develop 分支</p>
+<img src="http://nvie.com/img/main-branches@2x.png" />
+<p>我们把 origin/master 作为主要分支，源码的 HEAD 总是表示 production-ready(可随时部署)状态。而 origin/develop 上的代码是为下一次的代码发布准备的。每日构建也是基于此分支。</p>
+<p>当 develop 分支达到了一个稳定状态并准备发布时，所有的改变都要合并到 master 分支，并标上版本号。如何实现的下面细说。</p>
+<p>这样每次与 master 合并都会有新的部署发布。这点可以自动化，如使用 Git hook 脚本来实现自动部署代码到线上。</p>
+<h3 id="zhi-chi-supporting-fen-zhi">支持(supporting)分支</h3>
+<p>我们的开发模型使用了一些支持分支放在 master 和 develop 分支的旁边，方便开发小组之间的并行开发。不像 main 分支，这些分支是有时间限制的，因为他们最终都会被移除。</p>
+<p>我们会使用到的不同的分支</p>
+<ul>
+<li>Feature branches</li>
+<li>Release branches</li>
+<li>Hotfix branches</li>
+</ul>
+<p>每个分支都有各自的作用，并且有严格的规定，如：只能从哪个分支上去新开分支，只能合并到那个分支。这个待会细说。</p>
+<h3 id="feature-branches">Feature branches</h3>
+<img src="http://nvie.com/img/fb@2x.png" />
+<p>继承分支: develop
+合并分支：develop
+命名规范：除了 master,develop,release-<em>,hotfix-</em></p>
+<p>Feature branches 是用来开发新特性的(短期，远期都可以)。当开始开发新特性时，很可能不知道这个特性会出现在哪个目标版本。一旦开发完成就可以合并到 develop，当然如果开发失败，就可以抛弃。</p>
+<h3 id="chuang-jian-yi-ge-feature-branch">创建一个 Feature branch</h3>
+<p>当要创建一个新特性时，从 develop 分支上再进行分支</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git checkout</span><span style="color:#f07219;"> -b</span><span style="color:#4271ae;"> myfeature develop
+</span><span style="color:#c82728;">Switched</span><span style="color:#4271ae;"> to a new branch </span><span style="color:#839c00;">&quot;myfeature&quot;
+</span></code></pre>
+<p>新特性完成时，可以合并到 develop</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git checkout develop
+</span><span style="color:#c82728;">Switched</span><span style="color:#4271ae;"> to branch </span><span style="color:#839c00;">&#39;develop&#39;
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git merge</span><span style="color:#f07219;"> --no-ff</span><span style="color:#4271ae;"> myfeature
+</span><span style="color:#c82728;">Updating</span><span style="color:#4271ae;"> ea1b82a..05e9557
+</span><span>(</span><span style="color:#c82728;">Summary</span><span style="color:#4271ae;"> of changes</span><span>)
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git branch</span><span style="color:#f07219;"> -d</span><span style="color:#4271ae;"> myfeature
+</span><span style="color:#c82728;">Deleted</span><span style="color:#4271ae;"> branch myfeature (was 05e9557</span><span>)</span><span style="color:#4271ae;">.
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git push origin develop
+</span></code></pre>
+<aside class="info" >
+  --no-ff (译者注：no fast foward)标签，使得每一次的合并都创建一个新的 commit 记录。即使这个 commit 只是 fast-foward，这样可以避免丢失信息
+</aside><img src="http://nvie.com/img/merge-without-ff@2x.png" />
+<p>不幸的是，我没有找到让--no-ff 成为 commit 默认参数的方法(译者注：修改.consolerc?)，但确实应该提供一个方法。</p>
+<h3 id="release-branch">Release branch</h3>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>继承分支: develop
+</span><span>合并分支：develop 和 master
+</span><span>命名规范：release-\*
+</span></code></pre>
+<p>Release branch 是为新的 production release 准备的(译者注：相当于 RC 版)，可以有一些小的 bug，并为发布准备一些元数据(版本号，构建日期等等)。把所有的这些工作都放到 Release branch，develop branch 就能更清晰地知道下一个版本要开发哪些特性。</p>
+<p>从 develop 分支合并到 release 分支的关键因素是:develop 分支达到了 release 分支所要求的状态。至少所有针对该 release 的特性要被合并。至于那些将来会有的特性可以先放一放。然后就是为接下来即将要发布的版本分配一个版本号。</p>
+<h3 id="chuang-jian-yi-ge-release-branch">创建一个 Release branch</h3>
+<p>Release branch 是通过 develop 分支而创建。举个例子，假如 1.1.5 是当前的 production release，然后会有一个比较大的版本发布。develop 的状态已经可以发布版本了，经过商榷后，决定发布为 1.2 版本(而不是 1.1.6 或 2.0)，所以我们创建一个 release 分支，并给这个分支一个新的版本号</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git checkout</span><span style="color:#f07219;"> -b</span><span style="color:#4271ae;"> release-1.2 develop
+</span><span style="color:#c82728;">Switched</span><span style="color:#4271ae;"> to a new branch </span><span style="color:#839c00;">&quot;release-1.2&quot;
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> ./bump-version.sh 1.2
+</span><span style="color:#c82728;">Files</span><span style="color:#4271ae;"> modified successfully, version bumped to 1.2.
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git commit</span><span style="color:#f07219;"> -a -m </span><span style="color:#839c00;">&quot;Bumped version number to 1.2&quot;
+</span><span style="color:#c82728;">[release-1.2</span><span style="color:#4271ae;"> 74d9424] Bumped version number to 1.2
+</span><span style="color:#c82728;">1</span><span style="color:#4271ae;"> files changed, 1 insertions(+</span><span>)</span><span style="color:#c82728;">,</span><span style="color:#4271ae;"> 1 deletions(-</span><span>)
+</span></code></pre>
+<p>这个新分支可能会存在一定的时间，直到可以被合并到 production branch。这段时间内，bug 修补可以在这个分支上进行(而不是 develop 分支)。添加新特性(尤其比较大的)是不允许的。最后还是要被合并到 develop，然后继续在 develop 分支上开发，直到下一个版本。</p>
+<h3 id="wan-cheng-yi-ge-release-branch">完成一个 release branch</h3>
+<p>当 release branch 已经准备就绪，需要做几件事。首先，release 分支被合并到 master 分支上(每一个提交到 master 上的 commit 都是一个新版本，切记)。然后 master 上的 commit 都要添加 tag，方便将来查看和回滚。最后 release 上所做的修改必须合并到 develop 分支上，保证 bug 已被修补。</p>
+<p>前两个步骤：</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git checkout master
+</span><span style="color:#c82728;">Switched</span><span style="color:#4271ae;"> to branch </span><span style="color:#839c00;">&#39;master&#39;
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git merge</span><span style="color:#f07219;"> --no-ff</span><span style="color:#4271ae;"> release-1.2
+</span><span style="color:#c82728;">Merge</span><span style="color:#4271ae;"> made by recursive.
+</span><span>(</span><span style="color:#c82728;">Summary</span><span style="color:#4271ae;"> of changes</span><span>)
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git tag</span><span style="color:#f07219;"> -a</span><span style="color:#4271ae;"> 1.2
+</span></code></pre>
+<p>为了把 release 上的改变保存到 develop，我们需要合并到 develop</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git checkout develop
+</span><span style="color:#c82728;">Switched</span><span style="color:#4271ae;"> to branch </span><span style="color:#839c00;">&#39;develop&#39;
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git merge</span><span style="color:#f07219;"> --no-ff</span><span style="color:#4271ae;"> release-1.2
+</span><span style="color:#c82728;">Merge</span><span style="color:#4271ae;"> made by recursive.
+</span><span>(</span><span style="color:#c82728;">Summary</span><span style="color:#4271ae;"> of changes</span><span>)
+</span></code></pre>
+<p>这个步骤可能会导致冲突，如果这样的话，解决冲突，然后再提交。</p>
+<p>现在一切都完成了，可以把 release branch 干掉了。</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git branch</span><span style="color:#f07219;"> -d</span><span style="color:#4271ae;"> release-1.2
+</span><span style="color:#c82728;">Deleted</span><span style="color:#4271ae;"> branch release-1.2 (was ff452fe</span><span>)</span><span style="color:#4271ae;">.
+</span></code></pre>
+<h3 id="hotfix-branch">Hotfix branch</h3>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>继承分支: master
+</span><span>合并分支：develop 和 master
+</span><span>命名规范：hotfix-\*
+</span></code></pre>
+<p>Hotfix branch 和 Release branch 有几分相似，都是为了新的 production release 而准备的。比如运行过程中发现了 bug，就必须快速解决，这时就可以创建一个 Hotfix branch，解决完后合并到 master 分支上。好处是开发人员可以继续工作，有专人来负责搞定这个 bug。</p>
+<h3 id="chuang-jian-hotfix-branch">创建 Hotfix branch</h3>
+<img src="http://nvie.com/img/hotfix-branches@2x.png" />
+<p>Hotfix 是从 master 分支上创建的。假如当前运行版本是 1.2，然后发现有 bug，但是 develop 还在开发中，不太稳定，这时就可以新开一个 Hotfix branch，然后开始解决问题。</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git checkout</span><span style="color:#f07219;"> -b</span><span style="color:#4271ae;"> hotfix-1.2.1 master
+</span><span style="color:#c82728;">Switched</span><span style="color:#4271ae;"> to a new branch </span><span style="color:#839c00;">&quot;hotfix-1.2.1&quot;
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> ./bump-version.sh 1.2.1
+</span><span style="color:#c82728;">Files</span><span style="color:#4271ae;"> modified successfully, version bumped to 1.2.1.
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git commit</span><span style="color:#f07219;"> -a -m </span><span style="color:#839c00;">&quot;Bumped version number to 1.2.1&quot;
+</span><span style="color:#c82728;">[hotfix-1.2.1</span><span style="color:#4271ae;"> 41e61bb] Bumped version number to 1.2.1
+</span><span style="color:#c82728;">1</span><span style="color:#4271ae;"> files changed, 1 insertions(+</span><span>)</span><span style="color:#c82728;">,</span><span style="color:#4271ae;"> 1 deletions(-</span><span>)
+</span></code></pre>
+<p>解决问题，一次或几次 commit</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git commit</span><span style="color:#f07219;"> -m </span><span style="color:#839c00;">&quot;Fixed severe production problem&quot;
+</span><span style="color:#c82728;">[hotfix-1.2.1</span><span style="color:#4271ae;"> abbe5d6] Fixed severe production problem
+</span><span style="color:#c82728;">5</span><span style="color:#4271ae;"> files changed, 32 insertions(+</span><span>)</span><span style="color:#c82728;">,</span><span style="color:#4271ae;"> 17 deletions(-</span><span>)
+</span></code></pre>
+<h3 id="wan-cheng-hotfix-branch">完成 Hotfix branch</h3>
+<p>当结束时，bugfix 要被合并到 master，同时也要合并到 develop，保证下个版本发布时该 bug 已被修复。这跟 release branch 完成时一样。</p>
+<p>首先更新 master 和 tag release</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git checkout master
+</span><span style="color:#c82728;">Switched</span><span style="color:#4271ae;"> to branch </span><span style="color:#839c00;">&#39;master&#39;
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git merge</span><span style="color:#f07219;"> --no-ff</span><span style="color:#4271ae;"> hotfix-1.2.1
+</span><span style="color:#c82728;">Merge</span><span style="color:#4271ae;"> made by recursive.
+</span><span>(</span><span style="color:#c82728;">Summary</span><span style="color:#4271ae;"> of changes</span><span>)
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git tag</span><span style="color:#f07219;"> -a</span><span style="color:#4271ae;"> 1.2.1
+</span></code></pre>
+<p>接下来与 develop 合并</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git checkout develop
+</span><span style="color:#c82728;">Switched</span><span style="color:#4271ae;"> to branch </span><span style="color:#839c00;">&#39;develop&#39;
+</span><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git merge</span><span style="color:#f07219;"> --no-ff</span><span style="color:#4271ae;"> hotfix-1.2.1
+</span><span style="color:#c82728;">Merge</span><span style="color:#4271ae;"> made by recursive.
+</span><span>(</span><span style="color:#c82728;">Summary</span><span style="color:#4271ae;"> of changes</span><span>)
+</span></code></pre>
+<p>有一个例外，就是当一个 release branch 存在时，bugfix 要被合并到 release 而不是 develop，因为 release 最终会被合并到 develop。</p>
+<p>最后移除 branch</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">$</span><span style="color:#4271ae;"> git branch</span><span style="color:#f07219;"> -d</span><span style="color:#4271ae;"> hotfix-1.2.1
+</span><span style="color:#c82728;">Deleted</span><span style="color:#4271ae;"> branch hotfix-1.2.1 (was abbe5d6</span><span>)</span><span style="color:#4271ae;">.
+</span></code></pre>
+<h3 id="zong-jie">总结</h3>
+<p>这个开发模型其实没有什么新颖的，一开始提到的&quot;大图&quot;确实在我们的项目起到了非常大的作用。这是很优雅的一个模型，很容易实现，也容易在团队成员之间达成一致。</p>
+<p>PS:需要这个模型大图的，可以去<a href="http://nvie.com/posts/a-successful-git-branching-model/">原文地址</a>下载</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/git/">git</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/translation/">translation</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

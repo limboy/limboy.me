@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+数据分离并快速显示网页
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/rest-flush-template/">
+
+<meta name="twitter:title" content="数据分离并快速显示网页">
+<meta property="og:title" content="数据分离并快速显示网页">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;rest-flush-template&#x2F;">数据分离并快速显示网页</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-09-02</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>传统网站一般都是用户发出一个 http 请求，服务端接收到请求后开始业务逻辑的处理，然后把处理后的数据渲染到模板页，最后把内容输出到用户的浏览器。</p>
+<p>这个过程有个问题: 如果服务端处理的时间过长(比如某个费时的 SQL 语句)，那么用户将看不到任何内容，即使有些数据已经处理完毕。</p>
+<p>解决办法很简单，就是使用 php 的<a href="http://php.net/flush">flush</a>方法，它可以将内容立刻输出到用户的浏览器。也就是处理完哪些就输出哪些，这样即使卡在了某个操作，用户也能看到已经处理完的结果。</p>
+<h3 id="flush-de-shi-xian-yuan-li">flush 的实现原理</h3>
+<p>正常的 http 返回头信息里会包含&quot;Content-Length&quot;一项，标明本次传输的字节数。http 1.1 新增了&quot;Transfer-Encoding&quot;选项，可以指定为&quot;chunked&quot;，这样就不用理会&quot;Content-Length&quot;选项了(因为不知道到底会传输多少字节)。服务端按照 chunked 标准输出内容，客户端收到&quot;Transfer-Encoding:chunked&quot;头信息后，也会按照 chunked 标准去解析内容。</p>
+<p>举个例子，有一条河，河的一边着火了，需要到河的另一边找人救火，然后你迅速架了一座桥(TCP/IP)，然后跑到对岸(发送 http 请求)，跟那里的村长说明了情况(服务器收到 http 请求)，以前的做法是村长到各家各户召集劳动力(服务器集群)，等把劳动力都召集完了，统一过河去救火(发送处理完的结果)。但在召集的过程中，某家正在干架，这时村长得先苦口婆心地做思想工作，等工作做完了，再把男人召集出来，但这段时间里，河对岸的火依旧在着(用户漫长的等待，可能真的要火了)，所以很可能由于某家或某几家的特殊情况导致延误了救火的最佳时机。现在的做法是只要召集到人了，马上过河去救火，把平常最容易出状况的几户人家留到最后去召集(负担比较重的几台服务器)，这样火被扑灭的可能性就大大增加了。</p>
+<p>flush 就好比是服务端推(push)，ajax 是客户端拉(pull)。推的话可以利用已经建立的 http 连接，如果是拉的话，每拉一次就要建立一次 http 连接，代价还是比较大的。</p>
+<h3 id="shi-yong-rest-he-client-template">使用 REST 和 Client Template</h3>
+<p>flush 解决了内容的即时显示问题，如果要做到数据与结构分离，可以使用 REST(当然其他的 web service 也没有问题，REST 只是个人喜好)。REST 作为数据源，Controller 收到请求后，先通过 REST 去取数据，取到数据后，封装到一段 js 里，然后 flush 给客户端，循环此过程，直到客户端需要的所有数据都传输完毕。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">// controller
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Controller_Post </span><span style="color:#8959a8;">extends </span><span style="color:#839c00;">Controller
+</span><span>{
+</span><span>	</span><span style="color:#8e908c;">// 显示某篇具体的文章
+</span><span>	</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">action_index</span><span>(</span><span style="color:#f07219;">$id</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#8e908c;">// 输出页面模板
+</span><span>		</span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">template</span><span>-&gt;</span><span style="color:#c82728;">content </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">View</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">factory</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;post_index&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">template</span><span>;
+</span><span>		</span><span style="color:#4271ae;">flush()</span><span>;
+</span><span>
+</span><span>		</span><span style="color:#8e908c;">// 开始获取REST数据，并flush
+</span><span>		</span><span style="color:#c82728;">$post_info </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">REST_Post</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">get</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$id</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		</span><span style="color:#c82728;">js_render</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;post&#39;</span><span style="color:#4271ae;">, json_encode(</span><span style="color:#c82728;">$post_info</span><span style="color:#4271ae;">))</span><span>;
+</span><span>
+</span><span>		</span><span style="color:#8e908c;">// 获取该文章的评论
+</span><span>		</span><span style="color:#c82728;">$comments </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">REST_Comment</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">get</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$id</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		</span><span style="color:#c82728;">js_render</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;comments&#39;</span><span style="color:#4271ae;">, json_encode(</span><span style="color:#c82728;">$comments</span><span style="color:#4271ae;">))</span><span>;
+</span><span>	}
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">//js_render方法，定义在其他文件
+</span><span style="color:#8e908c;">/**
+</span><span style="color:#8e908c;"> * </span><span style="color:#8959a8;">@param</span><span style="color:#8e908c;"> string $id 页面的dom id
+</span><span style="color:#8e908c;"> * </span><span style="color:#8959a8;">@param</span><span style="color:#8e908c;"> array $data 使用到的数据
+</span><span style="color:#8e908c;"> */
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">js_render</span><span>(</span><span style="color:#f07219;">$id</span><span>, </span><span style="color:#f07219;">$data</span><span>)
+</span><span>{
+</span><span>	</span><span style="color:#8e908c;">// 模板页已经定义了js的render方法
+</span><span>	</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;&lt;script&gt;render(&#39;&quot;</span><span>{</span><span style="color:#c82728;">$id</span><span>}</span><span style="color:#839c00;">&quot;&#39;, </span><span style="color:#c82728;">$data</span><span style="color:#839c00;">)&lt;/script&gt;</span><span style="color:#f07219;">\n</span><span style="color:#839c00;">&quot;</span><span>;
+</span><span>	</span><span style="color:#4271ae;">flush()</span><span>;
+</span><span>}
+</span></code></pre>
+<p>再来看看模板页</p>
+<pre data-lang="html" style="background-color:#f9f9f9;color:#111111;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">html</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script src=</span><span style="color:#839c00;">&quot;http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#8e908c;">&lt;!-- 模板引擎 --&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script src=</span><span style="color:#839c00;">&quot;http://trimpath.googlecode.com/files/trimpath-template-1.0.38.js&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>      </span><span style="color:#8e908c;">// 这个就是在js_render方法里用到的render方法
+</span><span>      </span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">render</span><span>(</span><span style="color:#f07219;">id</span><span>, </span><span style="color:#f07219;">data</span><span>) {
+</span><span>        </span><span style="color:#8959a8;">var </span><span>result </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">TrimPath</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">processDOMTemplate</span><span style="color:#4271ae;">(</span><span>id</span><span style="color:#4271ae;">, </span><span>data</span><span style="color:#4271ae;">)</span><span>;
+</span><span>        </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;#&#39; </span><span style="color:#3e999f;">+ </span><span>id</span><span style="color:#4271ae;">)</span><span>.</span><span style="color:#c82728;">replaceWith</span><span style="color:#4271ae;">(</span><span>result</span><span style="color:#4271ae;">)</span><span>;
+</span><span>      }
+</span><span>    </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">textarea id=</span><span style="color:#839c00;">&quot;post&quot; </span><span style="color:#c82728;">style=</span><span style="color:#839c00;">&quot;display</span><span style="color:#c82728;">:</span><span style="color:#3e999f;">none</span><span style="color:#839c00;">&quot;</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">h1</span><span style="color:#5d9be5;">&gt;</span><span>${title}</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">h1</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">div class</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;content&quot;</span><span style="color:#5d9be5;">&gt;
+</span><span>${content}
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">div</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">textarea
+</span><span style="color:#c82728;">  </span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">html</span><span style="color:#5d9be5;">&gt;
+</span></code></pre>
+<p>这个模板页没有<code>&lt;/body&gt;</code>和<code>&lt;/html&gt;</code>，因为我们之后还要往这个页面里输入内容，最后渲染完的页面大概是这样</p>
+<pre data-lang="html" style="background-color:#f9f9f9;color:#111111;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">html</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#8e908c;">&lt;!-- //... --&gt;
+</span><span>
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">textarea id=</span><span style="color:#839c00;">&quot;post&quot; </span><span style="color:#c82728;">style=</span><span style="color:#839c00;">&quot;display</span><span style="color:#c82728;">:</span><span style="color:#3e999f;">none</span><span style="color:#839c00;">&quot;</span><span style="color:#5d9be5;">&gt;
+</span><span>// template here
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">textarea
+</span><span style="color:#c82728;">    </span><span style="color:#5d9be5;">&gt;
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">&lt;!-- more textarea template --&gt;
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">&lt;!-- 这些是flush出来的 --&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>      </span><span style="color:#c82728;">render</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;post&#39;</span><span style="color:#4271ae;">, {
+</span><span style="color:#4271ae;">        title: </span><span style="color:#839c00;">&#39;hello world&#39;</span><span style="color:#4271ae;">,
+</span><span style="color:#4271ae;">        content: </span><span style="color:#839c00;">&#39;what a wonderful life&#39;</span><span style="color:#4271ae;">,
+</span><span style="color:#4271ae;">      })</span><span>;
+</span><span>    </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>      </span><span style="color:#c82728;">render</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;comments&#39;</span><span style="color:#4271ae;">, {[</span><span>content</span><span style="color:#4271ae;">:</span><span style="color:#839c00;">&#39;blah blah&#39;</span><span style="color:#3e999f;">, </span><span>created</span><span style="color:#4271ae;">:</span><span style="color:#839c00;">&#39;2010-09-20&#39;</span><span style="color:#4271ae;">], [</span><span>content</span><span style="color:#4271ae;">:</span><span style="color:#839c00;">&#39;blah blah&#39;</span><span style="color:#3e999f;">, </span><span>created</span><span style="color:#4271ae;">:</span><span style="color:#839c00;">&#39;2010-09-30&#39;</span><span style="color:#4271ae;">]})</span><span>;
+</span><span>    </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">html</span><span style="color:#5d9be5;">&gt;
+</span></code></pre>
+<p>这样服务端只提供数据，客户端负责解析这些数据，并显示到页面。将来如果开放 API，或者要针对手机开发，也很方便了，因为网站本身用的就是 API，而手机的话，只要换个显示的模板就行了。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+inotify-rsync实时同步脚本
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/inotify-rsync/">
+
+<meta name="twitter:title" content="inotify-rsync实时同步脚本">
+<meta property="og:title" content="inotify-rsync实时同步脚本">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;inotify-rsync&#x2F;">inotify-rsync实时同步脚本</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-12-13</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <h3 id="wei-shi-yao-yao-xie-zhe-ge-jiao-ben">为什么要写这个脚本</h3>
+<p>rsync 是 linux 下一款非常强大的同步工具，采用差异同步的方法，只上传文件/文件夹的不同部分，同时可以对上传部分先进行压缩，所以 rsync 的传输效率是很高的。</p>
+<p>但 rsync 也有缺点，最大的问题就是每次执行 rsync 命令都会遍历目标目录，当文件不多时，这没什么问题，一旦文件数到了一定规模，那么每次遍历都会消耗很多资源。但事实上改动的文件并不多，如果可以只 sync 改动的文件，问题就迎刃而解了。</p>
+<p>这时就得请出本文的另一个主角：inotify。inotify 是一种文件系统的变化通知机制，如文件增加、删除等事件可以立刻让用户态得知。要使用 inotify，linux 的内核版本不能低于 2.6.13</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">~$</span><span style="color:#4271ae;"> uname</span><span style="color:#f07219;"> -a
+</span><span style="color:#c82728;">Linux</span><span style="color:#4271ae;"> lzyy-laptop 2.6.32-26-generic </span><span style="color:#8e908c;">#48-Ubuntu SMP Wed Nov 24 09:00:03 UTC 2010 i686 GNU/Linux
+</span></code></pre>
+<p>但 inotify 只提供了 C 语言接口，不方便调用，所以我们需要先安装<a href="https://github.com/rvoicilas/inotify-tools/wiki/">inotify-tools</a>，大多数的 linux 发行版应该都可以直接通过 apt-get 或 yum 来安装。</p>
+<h3 id="jiao-ben-shuo-ming-yu-shi-yong">脚本说明与使用</h3>
+<p>其实<a href="http://blog.chinaunix.net/u/32831/showart_1289758.html">前人</a>已经做了类似的工作，不过有些地方尚未完善(如删除文件的同步)，于是我改进和简化了一下。</p>
+<h3 id="fu-wu-duan">服务端</h3>
+<p>以下是服务端脚本，运行这段脚本后，这个机器上对应的文件夹将会同步到其他机器上</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;">#!/bin/bash
+</span><span>
+</span><span style="color:#8e908c;">###########################
+</span><span style="color:#8e908c;"># 在这里配置本地文件夹,目标host,目标的rsync_module。rsync_module在同步机器的/etc/rsyncd.conf文件中配置
+</span><span style="color:#8e908c;"># 逗号前后不要有空格
+</span><span style="color:#c82728;">sync[</span><span style="color:#f07219;">0</span><span style="color:#c82728;">]</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&#39;/path/to/local/dir,1.2.3.4,test&#39; </span><span style="color:#8e908c;"># localdir,host,rsync_module
+</span><span style="color:#8e908c;"># sync[1]=&#39;/path/to/local/dir,host,rsync_module&#39;
+</span><span style="color:#8e908c;">###########################
+</span><span>
+</span><span style="color:#8959a8;">for</span><span> item </span><span style="color:#8959a8;">in </span><span>${</span><span style="color:#c82728;">sync[@]</span><span>}</span><span style="color:#3e999f;">; </span><span style="color:#8959a8;">do
+</span><span>
+</span><span style="color:#c82728;">dir</span><span style="color:#3e999f;">=</span><span style="color:#4271ae;">`echo $</span><span style="color:#c82728;">item </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">awk</span><span style="color:#f07219;"> -F</span><span style="color:#839c00;">&quot;,&quot; &#39;{print $1}&#39;</span><span style="color:#4271ae;">`
+</span><span style="color:#c82728;">host</span><span style="color:#3e999f;">=</span><span style="color:#4271ae;">`echo $</span><span style="color:#c82728;">item </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">awk</span><span style="color:#f07219;"> -F</span><span style="color:#839c00;">&quot;,&quot; &#39;{print $2}&#39;</span><span style="color:#4271ae;">`
+</span><span style="color:#c82728;">module</span><span style="color:#3e999f;">=</span><span style="color:#4271ae;">`echo $</span><span style="color:#c82728;">item </span><span style="color:#3e999f;">| </span><span style="color:#c82728;">awk</span><span style="color:#f07219;"> -F</span><span style="color:#839c00;">&quot;,&quot; &#39;{print $3}&#39;</span><span style="color:#4271ae;">`
+</span><span>
+</span><span style="color:#c82728;">inotifywait</span><span style="color:#f07219;"> -mrq --timefmt </span><span style="color:#839c00;">&#39;%d/%m/%y %H:%M&#39;</span><span style="color:#f07219;"> --format  </span><span style="color:#839c00;">&#39;%T %w%f %e&#39; </span><span style="color:#4271ae;">\
+</span><span style="color:#f07219;"> --event</span><span style="color:#4271ae;"> CLOSE_WRITE,create,move,delete  $</span><span style="color:#c82728;">dir </span><span style="color:#3e999f;">| </span><span style="color:#8959a8;">while </span><span style="color:#4271ae;">read  date time file event
+</span><span>	</span><span style="color:#8959a8;">do
+</span><span>		</span><span style="color:#4271ae;">echo $</span><span style="color:#c82728;">event</span><span style="color:#839c00;">&#39;-&#39;</span><span style="color:#4271ae;">$</span><span style="color:#c82728;">file
+</span><span>		</span><span style="color:#8959a8;">case </span><span>$</span><span style="color:#c82728;">event </span><span style="color:#8959a8;">in
+</span><span>			MODIFY</span><span style="color:#3e999f;">|</span><span>CREATE</span><span style="color:#3e999f;">|</span><span>MOVE</span><span style="color:#3e999f;">|</span><span>MODIFY,ISDIR</span><span style="color:#3e999f;">|</span><span>CREATE,ISDIR</span><span style="color:#3e999f;">|</span><span>MODIFY,ISDIR</span><span style="color:#8959a8;">)
+</span><span>				</span><span style="color:#8959a8;">if </span><span style="color:#4271ae;">[ </span><span style="color:#839c00;">&quot;${</span><span style="color:#c82728;">file</span><span style="color:#3e999f;">: -</span><span style="color:#f07219;">4</span><span style="color:#839c00;">}&quot; </span><span style="color:#3e999f;">!= </span><span style="color:#839c00;">&#39;4913&#39; </span><span style="color:#4271ae;">]  </span><span style="color:#3e999f;">&amp;&amp; </span><span style="color:#4271ae;">[ </span><span style="color:#839c00;">&quot;${</span><span style="color:#c82728;">file</span><span style="color:#3e999f;">: -</span><span style="color:#f07219;">1</span><span style="color:#839c00;">}&quot; </span><span style="color:#3e999f;">!= </span><span style="color:#839c00;">&#39;~&#39; </span><span style="color:#4271ae;">]</span><span style="color:#3e999f;">; </span><span style="color:#8959a8;">then
+</span><span>					</span><span style="color:#c82728;">cmd</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&quot;rsync -avz --exclude=&#39;*&#39; --include=$</span><span style="color:#c82728;">file </span><span style="color:#839c00;">$</span><span style="color:#c82728;">dir </span><span style="color:#839c00;">$</span><span style="color:#c82728;">host</span><span style="color:#839c00;">::$</span><span style="color:#c82728;">module</span><span style="color:#839c00;">&quot;
+</span><span>					</span><span style="color:#8e908c;"># echo $cmd
+</span><span>					</span><span style="color:#c82728;">$cmd
+</span><span>				</span><span style="color:#8959a8;">fi
+</span><span>				;;
+</span><span>
+</span><span>			MOVED_FROM</span><span style="color:#3e999f;">|</span><span>MOVED_FROM,ISDIR</span><span style="color:#3e999f;">|</span><span>DELETE</span><span style="color:#3e999f;">|</span><span>DELETE,ISDIR</span><span style="color:#8959a8;">)
+</span><span>				</span><span style="color:#8959a8;">if </span><span style="color:#4271ae;">[ </span><span style="color:#839c00;">&quot;${</span><span style="color:#c82728;">file</span><span style="color:#3e999f;">: -</span><span style="color:#f07219;">4</span><span style="color:#839c00;">}&quot; </span><span style="color:#3e999f;">!= </span><span style="color:#839c00;">&#39;4913&#39; </span><span style="color:#4271ae;">]  </span><span style="color:#3e999f;">&amp;&amp; </span><span style="color:#4271ae;">[ </span><span style="color:#839c00;">&quot;${</span><span style="color:#c82728;">file</span><span style="color:#3e999f;">: -</span><span style="color:#f07219;">1</span><span style="color:#839c00;">}&quot; </span><span style="color:#3e999f;">!= </span><span style="color:#839c00;">&#39;~&#39; </span><span style="color:#4271ae;">]</span><span style="color:#3e999f;">; </span><span style="color:#8959a8;">then
+</span><span>					</span><span style="color:#c82728;">cmd</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">&quot;rsync -avz --delete-excluded --exclude=&quot;$</span><span style="color:#c82728;">file</span><span style="color:#839c00;">&quot; $</span><span style="color:#c82728;">dir </span><span style="color:#839c00;">$</span><span style="color:#c82728;">host</span><span style="color:#839c00;">::$</span><span style="color:#c82728;">module</span><span style="color:#839c00;">&quot;
+</span><span>					</span><span style="color:#8e908c;"># echo $cmd
+</span><span>					</span><span style="color:#c82728;">$cmd
+</span><span>				</span><span style="color:#8959a8;">fi
+</span><span>				;;
+</span><span>		</span><span style="color:#8959a8;">esac
+</span><span>	</span><span style="color:#8959a8;">done </span><span style="color:#3e999f;">&amp;
+</span><span style="color:#8959a8;">done
+</span></code></pre>
+<p>运行脚本</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#4271ae;">cd /path/to/inotify-rsync
+</span><span style="color:#c82728;">chmod</span><span style="color:#4271ae;"> +x inotify-rsync.sh
+</span><span style="color:#c82728;">./inotify-rsync
+</span></code></pre>
+<p>可以把这个脚本设置为开机启动，这样就可以自动同步了。</p>
+<h3 id="tong-bu-duan">同步端</h3>
+<p>同步机器上要做两件事</p>
+<p><strong>1. 设置/etc/rsyncd.conf 文件</strong></p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;"># vim /etc/rsyncd.conf
+</span><span>
+</span><span style="color:#c82728;">uid</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">root
+</span><span style="color:#c82728;">gid</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">root
+</span><span style="color:#8e908c;"># 这个test就是上面脚本中用到的rsync_module名
+</span><span style="color:#8e908c;"># path指定同步过来的文件存放的路径
+</span><span style="color:#8e908c;"># 如果只允许部分ip的机器进行同步的话，设置allow为 192.168.1.1/100 类似的格式
+</span><span style="color:#c82728;">[test]
+</span><span style="color:#c82728;">path</span><span style="color:#3e999f;">=</span><span style="color:#839c00;">/path/to/your/dir
+</span><span style="color:#c82728;">allow </span><span style="color:#3e999f;">*
+</span><span style="color:#c82728;">{{</span><span style="color:#3e999f;">&lt;</span><span style="color:#4271ae;"> / highlight </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;">}}
+</span><span>
+</span><span style="color:#c82728;">**2.</span><span style="color:#4271ae;"> 启动rsync daemon</span><span style="color:#3e999f;">**
+</span><span>
+</span><span style="color:#c82728;">{{</span><span style="color:#3e999f;">&lt;</span><span style="color:#4271ae;"> highlight console </span><span style="color:#3e999f;">&gt;</span><span style="color:#4271ae;">}}
+</span><span style="color:#c82728;">rsync</span><span style="color:#f07219;"> --daemon
+</span></code></pre>
+<h3 id="qi-ta">其他</h3>
+<p>金山的周洋同学用 C++写了个<a href="http://hi.baidu.com/johntech/blog/item/f8bdaec8fb3c268dc81768c0.html">Sersync</a>，也是利用的 inotify+rsync 来实现实时同步，有兴趣的可以关注一下</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

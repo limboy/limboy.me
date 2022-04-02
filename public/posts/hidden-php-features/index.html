@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+PHP特性小结
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/hidden-php-features/">
+
+<meta name="twitter:title" content="PHP特性小结">
+<meta property="og:title" content="PHP特性小结">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;hidden-php-features&#x2F;">PHP特性小结</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-08-27</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>其实就是总结了一下<a href="http://stackoverflow.com/questions/61401/hidden-features-of-php">这个帖子</a></p>
+<h3 id="wen-dang">文档</h3>
+<p>PHP 文档的特点：</p>
+<ul>
+<li>浏览方便</li>
+<li>用户评论是一大亮点</li>
+<li>要查询某个函数，输入：www.php.net/function 就会跳转到该函数的具体页</li>
+</ul>
+<h3 id="shu-zu">数组</h3>
+<p>PHP 的数组是我用过的语言中最强大的，其实就是个有序映射表(ordered map)，并为各种使用作了优化。可以看作列表、哈希表、字典、集合、栈、队列。</p>
+<h3 id="liu-chu-li">流处理</h3>
+<p>可以扩展文件流，比如<a href="http://www.phpclasses.org/browse/package/1919.html">excel 流处理</a>，可以通过下面的语句来创建一个 excel 文件</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#c82728;">$fp </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">fopen(</span><span style="color:#839c00;">&quot;xlsfile://tmp/test.xls&quot;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&quot;wb&quot;</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#3e999f;">!</span><span style="color:#4271ae;">is_resource(</span><span style="color:#c82728;">$fp</span><span style="color:#4271ae;">)</span><span>) {
+</span><span>    </span><span style="color:#8959a8;">die</span><span>(</span><span style="color:#839c00;">&quot;Cannot open excel file&quot;</span><span>);
+</span><span>}
+</span><span>
+</span><span style="color:#c82728;">$data</span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array</span><span>(
+</span><span>    </span><span style="color:#4271ae;">array</span><span>(</span><span style="color:#839c00;">&quot;Name&quot; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&quot;Bob Loblaw&quot;</span><span>, </span><span style="color:#839c00;">&quot;Age&quot; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">50</span><span>),
+</span><span>    </span><span style="color:#4271ae;">array</span><span>(</span><span style="color:#839c00;">&quot;Name&quot; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&quot;Popo Jijo&quot;</span><span>, </span><span style="color:#839c00;">&quot;Age&quot; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">75</span><span>),
+</span><span>    </span><span style="color:#4271ae;">array</span><span>(</span><span style="color:#839c00;">&quot;Name&quot; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&quot;Tiny Tim&quot;</span><span>, </span><span style="color:#839c00;">&quot;Age&quot; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">90</span><span>)
+</span><span>);
+</span><span>
+</span><span style="color:#4271ae;">fwrite(</span><span style="color:#c82728;">$fp</span><span style="color:#4271ae;">, serialize(</span><span style="color:#c82728;">$data</span><span style="color:#4271ae;">))</span><span>;
+</span><span style="color:#4271ae;">fclose(</span><span style="color:#c82728;">$fp</span><span style="color:#4271ae;">)</span><span>;
+</span></code></pre>
+<h3 id="mo-zhu-fang-fa">魔术方法</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span>	</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">__get</span><span>(</span><span style="color:#f07219;">$key</span><span>) { </span><span style="color:#3e999f;">... </span><span>}
+</span><span>	</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">__set</span><span>(</span><span style="color:#f07219;">$key</span><span>, </span><span style="color:#f07219;">$value</span><span>) { </span><span style="color:#3e999f;">... </span><span>}
+</span><span>	</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">__call</span><span>(</span><span style="color:#f07219;">$func</span><span>, </span><span style="color:#f07219;">$args</span><span>) { </span><span style="color:#3e999f;">... </span><span>}
+</span><span>	</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">__toString</span><span>() { </span><span style="color:#3e999f;">... </span><span>}
+</span><span>	</span><span style="color:#8e908c;">//...
+</span></code></pre>
+<h3 id="or-and">or/and</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#4271ae;">isset(</span><span style="color:#c82728;">$foo</span><span style="color:#4271ae;">) </span><span style="color:#3e999f;">OR </span><span style="color:#4271ae;">print </span><span style="color:#839c00;">&#39;$foo is not defined&#39;</span><span>;
+</span></code></pre>
+<h3 id="spl-autoload-register">spl_autoload_register</h3>
+<p>使用 spl_autoload_register，而不是__autoload，因为 spl_autoload_register 允许设置多个实例，而不会覆盖。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#4271ae;">spl_autoload_register(</span><span style="color:#839c00;">&#39;autoloader&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">autoloader</span><span>(</span><span style="color:#f07219;">$class</span><span>)
+</span><span>{
+</span><span>	</span><span style="color:#8e908c;">//这里可以对$class进行处理
+</span><span>}
+</span></code></pre>
+<h3 id="set-include-path">set_include_path</h3>
+<p>设置引用路径，比如引用 zend 的 libraries 时。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#4271ae;">set_include_path(get_include_path() </span><span style="color:#3e999f;">. </span><span style="color:#f07219;">PATH_SEPARATOR </span><span style="color:#3e999f;">. </span><span style="color:#839c00;">&#39;../libs/&#39;</span><span style="color:#4271ae;">)</span><span>;</span><span style="color:#839c00;">`
+</span></code></pre>
+<h3 id="chu-li-yuan-cheng-wen-jian-url">处理远程文件/url</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#c82728;">$fp </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">fopen(</span><span style="color:#839c00;">&#39;http://example.com&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#c82728;">$str </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">file_get_contents(</span><span style="color:#839c00;">&#39;http://example.com/file&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#c82728;">$imageInfo </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">getimagesize(</span><span style="color:#839c00;">&#39;ftp://user:password@ftp.example.com/image/name.jpg&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span></code></pre>
+<p>虽然这些函数的健壮性和稳定性不如 curl，但毕竟使用方便。</p>
+<h3 id="strtr">strtr</h3>
+<p>使用方便，效率高，用来替换字符串内的特定值。有点类似 str_replace，但更灵活。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#4271ae;">echo strtr(</span><span style="color:#839c00;">&#39;hello world&#39;</span><span style="color:#4271ae;">, array(</span><span style="color:#839c00;">&#39;world&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;hell&#39;</span><span style="color:#4271ae;">))</span><span>;
+</span></code></pre>
+<h3 id="extract">extract</h3>
+<p>顾名思义，释放一个数组内的元素，构造模板引擎的时候尤为有用</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#c82728;">$arr </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array</span><span>(</span><span style="color:#839c00;">&#39;foo&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;bar&#39;</span><span>);
+</span><span style="color:#4271ae;">extract(</span><span style="color:#c82728;">$arr</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$foo</span><span>; </span><span style="color:#8e908c;">// output &#39;bar&#39;
+</span></code></pre>
+<h3 id="func-get-args">func_get_args</h3>
+<p>获取传递过来的参数</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">test</span><span>() {
+</span><span>    </span><span style="color:#c82728;">$args </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">func_get_args()</span><span>;
+</span><span>    </span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$args</span><span>[</span><span style="color:#f07219;">2</span><span>]; </span><span style="color:#8e908c;">// will print &#39;d&#39;
+</span><span>    </span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$args</span><span>[</span><span style="color:#f07219;">1</span><span>]; </span><span style="color:#8e908c;">// will print 3
+</span><span>}
+</span><span>
+</span><span style="color:#c82728;">test</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">,</span><span style="color:#f07219;">3</span><span style="color:#4271ae;">,</span><span style="color:#839c00;">&#39;d&#39;</span><span style="color:#4271ae;">,</span><span style="color:#f07219;">4</span><span style="color:#4271ae;">)</span><span>;
+</span></code></pre>
+<h3 id="cli">cli</h3>
+<p>command line interface，可以在命令行里运行 php 脚本，用来处理日常任务也非常方便。对了别忘了一个非常有用的参数 -a，进入交互模式</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span>php </span><span style="color:#3e999f;">-</span><span>a
+</span><span>
+</span><span>Interactive shell
+</span><span>php </span><span style="color:#3e999f;">&gt;
+</span></code></pre>
+<h3 id="zai-ru-de-wen-jian-ke-yi-you-fan-hui-zhi">载入的文件可以有返回值</h3>
+<p>这个比.ini 文件更加灵活，你可以在文件里运行一段程序后，返回运行结果</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">// config.php
+</span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">array</span><span>(
+</span><span>    </span><span style="color:#839c00;">&#39;db&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>	</span><span style="color:#839c00;">&#39;host&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#c82728;">$_SERVER</span><span>[</span><span style="color:#839c00;">&#39;HTTP_HOST&#39;</span><span>] </span><span style="color:#3e999f;">== </span><span style="color:#839c00;">&#39;127.0.0.1&#39;</span><span>?</span><span style="color:#839c00;">&#39;localhost&#39;</span><span>:</span><span style="color:#839c00;">&#39;example.org&#39;</span><span>,
+</span><span>        </span><span style="color:#839c00;">&#39;user&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;usr&#39;</span><span>,
+</span><span>        </span><span style="color:#8e908c;">// ...
+</span><span>    ),
+</span><span>    </span><span style="color:#8e908c;">// ...
+</span><span>);
+</span><span>
+</span><span style="color:#8e908c;">// index.php
+</span><span style="color:#c82728;">$config </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">include </span><span style="color:#839c00;">&#39;config.php&#39;</span><span>;
+</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$config</span><span>[</span><span style="color:#839c00;">&#39;db&#39;</span><span>][</span><span style="color:#839c00;">&#39;host&#39;</span><span>]; </span><span style="color:#8e908c;">// example.org
+</span></code></pre>
+<h3 id="zai-han-shu-nei-ding-yi-jing-tai-bian-liang">在函数内定义静态变量</h3>
+<p>把类的特性移植到函数里了，比如有一些运算量较大的函数，可以把运算结果放到这个静态变量，下次调用时检查一下该变量是否已经被赋值。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">foo</span><span>(</span><span style="color:#f07219;">$arg1</span><span>)
+</span><span>{
+</span><span>    </span><span style="color:#8959a8;">static </span><span style="color:#c82728;">$cache</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">if</span><span>( </span><span style="color:#3e999f;">!</span><span style="color:#4271ae;">isset(</span><span style="color:#c82728;">$cache</span><span style="color:#4271ae;">[md5(</span><span style="color:#c82728;">$arg1</span><span style="color:#4271ae;">)]) </span><span>)
+</span><span>    {
+</span><span>        </span><span style="color:#8e908c;">// Do the work here
+</span><span>        </span><span style="color:#c82728;">$cache</span><span>[</span><span style="color:#4271ae;">md5(</span><span style="color:#c82728;">$arg1</span><span style="color:#4271ae;">)</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$results</span><span>;
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">$cache</span><span>[</span><span style="color:#4271ae;">md5(</span><span style="color:#c82728;">$arg1</span><span style="color:#4271ae;">)</span><span>];
+</span><span>}
+</span></code></pre>
+<h3 id="heredoc">heredoc</h3>
+<p>不用再为引号发愁了</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&lt;&lt;&lt;</span><span style="color:#3e999f;">EOM
+</span><span style="color:#839c00;">  &lt;div id=&quot;someblock&quot;&gt;
+</span><span style="color:#839c00;">    &lt;img src=&quot;{</span><span style="color:#c82728;">$file</span><span style="color:#839c00;">}&quot; /&gt;
+</span><span style="color:#839c00;">  &lt;/div&gt;
+</span><span style="color:#3e999f;">EOM</span><span>;
+</span></code></pre>
+<h3 id="ba-zi-fu-chuan-dang-zuo-shu-zu">把字符串&quot;当作&quot;数组</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#c82728;">$str </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;hell o World&#39;</span><span>;
+</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$str</span><span>; </span><span style="color:#8e908c;">//outputs: &quot;hell o World&quot;
+</span><span>
+</span><span style="color:#c82728;">$str</span><span>[</span><span style="color:#f07219;">0</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;H&#39;</span><span>;
+</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$str</span><span>; </span><span style="color:#8e908c;">//outputs: &quot;Hell o World&quot;
+</span><span>
+</span><span style="color:#c82728;">$str</span><span>[</span><span style="color:#f07219;">4</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">null</span><span>;
+</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$str</span><span>; </span><span style="color:#8e908c;">//outputs: &quot;Hello World&quot;
+</span></code></pre>
+<h3 id="kuai-su-zhu-shi-fan-zhu-shi-yi-duan-dai-ma">快速注释/反注释一段代码</h3>
+<p>这个确实很有意思</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">//*
+</span><span>	</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&#39;blah&#39;</span><span>;
+</span><span>	</span><span style="color:#8959a8;">die</span><span>(</span><span style="color:#839c00;">&#39;not commented&#39;</span><span>);
+</span><span style="color:#8e908c;">//*/
+</span><span>
+</span><span>
+</span><span style="color:#8e908c;">/*
+</span><span style="color:#8e908c;">	echo &#39;blah&#39;;
+</span><span style="color:#8e908c;">	die(&#39;commented&#39;);
+</span><span style="color:#8e908c;">//*/
+</span></code></pre>
+<h3 id="han-shu-can-shu-lei-xing-ti-shi">函数参数类型提示</h3>
+<p>相对于其他编程语言(java/c#)，php 这块比较弱，只能判断数组和对象</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">foo </span><span>( </span><span style="color:#8959a8;">array </span><span style="color:#f07219;">$param0</span><span>, </span><span style="color:#c99e00;">stdClass </span><span style="color:#f07219;">$param1 </span><span>);
+</span></code></pre>
+<h3 id="shu-zu-he-bing">数组合并</h3>
+<p>不用 array_merge，而是使用'+'，使用更方便，也更易理解。在处理默认值和用户定义值时尤为方便。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">// Set the normal defaults.
+</span><span style="color:#c82728;">$control_defaults </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array</span><span>( </span><span style="color:#839c00;">&#39;type&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;text&#39;</span><span>, </span><span style="color:#839c00;">&#39;size&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">30 </span><span>);
+</span><span>
+</span><span style="color:#c82728;">$control </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$control_defaults </span><span style="color:#3e999f;">+ </span><span style="color:#4271ae;">array</span><span>( </span><span style="color:#839c00;">&#39;name&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;surname&#39;</span><span>, </span><span style="color:#839c00;">&#39;size&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">40 </span><span>);
+</span></code></pre>
+<h3 id="shu-chu-huan-chong">输出缓冲</h3>
+<p>使用 ob_start，关键是 ob_start 还支持 callback，真是太贴心了。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">censor</span><span>(</span><span style="color:#f07219;">$text</span><span>) {
+</span><span>	</span><span style="color:#4271ae;">strtr(</span><span style="color:#c82728;">$text</span><span style="color:#4271ae;">, array(</span><span style="color:#839c00;">&#39;胡萝卜&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;***&#39;</span><span style="color:#4271ae;">))</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#4271ae;">ob_start(</span><span>censor</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&#39;小白兔最爱吃胡萝卜&#39;</span><span>;
+</span><span style="color:#4271ae;">ob_end_flush()</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">//输出：小白兔最爱吃***
+</span></code></pre>
+<h3 id="fan-she">反射</h3>
+<p><a href="http://ca.php.net/manual/en/book.reflection.php">reflection</a>，很强大，基本上能还原一个类的实际面貌。</p>
+<h3 id="ctype-function">ctype function</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span>ctype_alnum </span><span style="color:#8e908c;">//是否为字母和数字的组合
+</span><span>ctype_digit </span><span style="color:#8e908c;">//是否为数字
+</span><span>ctype_alpha </span><span style="color:#8e908c;">//是否为字母
+</span><span style="color:#3e999f;">...
+</span></code></pre>
+<h3 id="kuai-su-xiang-shu-zu-tian-jia-yuan-su">快速向数组添加元素</h3>
+<p>如果是追加一个元素的话，推荐使用这种方法，而不是 array_push</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#c82728;">$arr </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array</span><span>();
+</span><span style="color:#c82728;">$arr</span><span>[] </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;foo&#39;</span><span>;
+</span><span style="color:#c82728;">$arr</span><span>[] </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;bar&#39;</span><span>;
+</span></code></pre>
+<h3 id="qi-ta">其他</h3>
+<h3 id="xu-lie-hua-fan-xu-lie-hua">序列化/反序列化</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span>serialize </span><span style="color:#3e999f;">/ </span><span>unserialize
+</span></code></pre>
+<h3 id="json-zhi-chi">json 支持</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span>json_encode </span><span style="color:#3e999f;">/ </span><span>json_decode
+</span></code></pre>
+<h3 id="huo-qu-dui-xiang-de-lei">获取对象的类</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#4271ae;">get_class(</span><span style="color:#c82728;">$obj</span><span style="color:#4271ae;">)
+</span></code></pre>
+<h3 id="dong-tai-diao-yong-han-shu-fang-fa">动态调用函数/方法</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span>call_user_func_array
+</span></code></pre>
+<h3 id="cuo-wu-yi-chang-chu-li">错误/异常处理</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span>set_error_handler </span><span style="color:#3e999f;">/ </span><span>set_exception_handler
+</span></code></pre>
+<br />
+<h3 id="wang-you-ti-gong">网友提供</h3>
+<h3 id="array-walk-via-cloudchen">array_walk (via cloudchen)</h3>
+<p>array_walk() 能让结构化数据的处理逻辑更清晰.
+实现接近 js 的传入函数 as 参数</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">create_sth</span><span>(</span><span style="color:#f07219;">$walked_value</span><span>, </span><span style="color:#f07219;">$key</span><span>, </span><span style="color:#f07219;">$other_arg</span><span>) {
+</span><span>	</span><span style="color:#8e908c;">//...
+</span><span>}
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">delete_sth</span><span>(</span><span style="color:#8959a8;">&amp; </span><span style="color:#f07219;">$walked_value</span><span>, </span><span style="color:#f07219;">$key</span><span>, </span><span style="color:#f07219;">$other_arg</span><span>) {
+</span><span>	</span><span style="color:#8e908c;">//...
+</span><span>}
+</span><span>
+</span><span style="color:#c82728;">$contents </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">fetch_directory_contents</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$folder</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span style="color:#4271ae;">array_walk(</span><span style="color:#c82728;">$contents</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;create_sth&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$other_arg</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#4271ae;">array_walk(</span><span style="color:#c82728;">$contents</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;delete_sth&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$other_arg</span><span style="color:#4271ae;">)</span><span>;
+</span></code></pre>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/php/">php</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

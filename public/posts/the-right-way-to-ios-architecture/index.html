@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+The Right Way to Architect iOS App with Swift
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/the-right-way-to-ios-architecture/">
+
+<meta name="twitter:title" content="The Right Way to Architect iOS App with Swift">
+<meta property="og:title" content="The Right Way to Architect iOS App with Swift">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;the-right-way-to-ios-architecture&#x2F;">The Right Way to Architect iOS App with Swift</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2017-06-22</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>关于 iOS 架构的文章感觉已经泛滥了，前一阵正好 Android 官方推了一套 <a href="https://developer.android.com/topic/libraries/architecture/guide.html">App Architecture</a> ，于是就在想，对于 iOS 来说，怎样的架构才是最适合的。带着这个问题，我开始了探索。</p>
+<h2 id="why-architecture-matters">Why Architecture Matters?</h2>
+<p>这是第一个也是最重要的问题，为什么会出现各种 Architecture Pattern？真的那么重要么？</p>
+<p>我们来想一下，无论是做一个 App 还是搭一套后台系统，如果是一次性的，今天用完明天就可以扔掉，那么怎么快怎么来，代码重复、代码逻辑、代码格式统统不重要。</p>
+<p>这种场景比较适合黑客马拉松，而真实情况往往是我们的代码需要上线，要对用户负责，而一套好的架构会让这些事情变得更加容易。</p>
+<h3 id="hao-de-jia-gou-jian-ji-qie-zheng-ji">好的架构简洁且整洁</h3>
+<p><img src="http://s3.mogucdn.com/mlcdn/c45406/170619_4e7gif674kdad56l6iek5lj8i7dl9_984x329.png" alt="" /></p>
+<p>说到架构，往往会想到建筑，软件架构跟建筑不同的点是软件架构会随着时间的推移进行演进，而实体建筑则没这个特性。抛开时间维度，这二者还是有一定的相似性的。</p>
+<p>好的架构容易催生好的代码，就像住在干净整洁的房子里，会下意识地让其中的家具、电器、摆饰等也井井有条。</p>
+<h3 id="hao-de-jia-gou-rang-dai-ma-geng-jia-rong-yi-wei-hu">好的架构让代码更加容易维护</h3>
+<p>不容易维护的代码往往有这么几个特点：</p>
+<ol>
+<li>抽象程度低</li>
+<li>职责不明确</li>
+<li>喜欢走捷径</li>
+</ol>
+<p>好的架构能对 2 和 3 有一定的作用，对于第 1 点还是要看程序员的能力和经验。</p>
+<h4 id="chou-xiang-cheng-du-di">抽象程度低</h4>
+<p>这样的代码往往是命令式编程产生的，也就是像 CPU 那样的思考方式，把产品经理的需求直观地翻译成代码，而不对其中的共性、本质进行抽离和抽象，时间一长就容易看不懂其中的逻辑，需求一变就要改核心代码。</p>
+<p>比如下面这段代码，不知道具体要完成什么任务。</p>
+<p><img src="http://ww1.sinaimg.cn/large/afe37136gy1fgtcs43v88j20nk0damzy.jpg" alt="" /></p>
+<h4 id="zhi-ze-bu-ming-que">职责不明确</h4>
+<p>这也是产生「一大坨代码」的原因之一，就像 MVC 模式里，没有说明用户的操作应该在哪里处理，业务逻辑放在什么地方，这样就容易走捷径，怎么方便怎么来，而越是方便到后来就越容易出问题。</p>
+<h4 id="xi-huan-zou-jie-jing">喜欢走捷径</h4>
+<p>这是我们的天性，毕竟能够更快更方便地达到目标，为什么不做呢？</p>
+<p>比如我们都知道「通知」用起来很方便，所有涉及到单向数据传递的地方都可以使用，比如 Cell 通过通知向 VC 传递点击事件信息、Model 通过通知向 VC 传递数据信息、VC 之间通过通知进行解耦等等。</p>
+<p>又比如可以很方便地在 VC 存储状态信息，慢慢地 VC 里这些状态变量就多了起来，到后来要维护这些变量就变得非常困难，出了问题也不好排查。</p>
+<p>Clojure 的作者 Rich Hickey 有一个非常著名的 <a href="https://www.infoq.com/presentations/Simple-Made-Easy">Simple Made Easy</a> 分享</p>
+<blockquote>
+<p>Simple is often erroneously mistaken for easy. &quot;Easy&quot; means &quot;to be at hand&quot;, &quot;to be approachable&quot;. &quot;Simple&quot; is the opposite of &quot;complex&quot; which means &quot;being intertwined&quot;, &quot;being tied together&quot;. Simple != easy.</p>
+</blockquote>
+<p>Simple 是我们所追求的，而 Easy 往往会让事情往反方向发展。</p>
+<h3 id="hao-de-jia-gou-neng-gou-fu-gai-da-duo-shu-chang-jing">好的架构能够覆盖大多数场景</h3>
+<p>产品经理：老板说要做一个插座，具体怎么实现我不管，下周一就要。拿到这个需求之后，你觉得很简单，完美符合需求，就像这样：</p>
+<p><img src="http://ww1.sinaimg.cn/large/afe37136gy1fgtctgc56dj206u06ujrp.jpg" alt="" /></p>
+<p>可是好景不长，老板新买了一个电脑，只支持两相的插座，而且现在就要，作为工程师，你不能被这么简单朴实的需求难倒，于是稍微动了下脑筋，就出了一个解决方案：</p>
+<p><img src="http://ww1.sinaimg.cn/large/afe37136gy1fgtctvnyggj206c065dhe.jpg" alt="" /></p>
+<p>虽然丑陋，但是可以工作。但我们的目标不只是可以工作（紧急情况除外），更要优雅地工作。</p>
+<p>举一个现实的例子，比如页面间支持通过 Router 进行跳转，但有一天发现有页面间通信的需求，然后就会出来一些 trick 的解决方案，比如发通知或者给 Router 加一个 <code>- (id)objectForURL:</code> 的方法，本质上跟上图的解决方案没什么区别。</p>
+<h3 id="hao-de-jia-gou-neng-gou-ti-sheng-kai-fa-xiao-lu-fang-bian-ding-wei-wen-ti">好的架构能够提升开发效率，方便定位问题</h3>
+<p>好的架构能够支持多人并行开发、一定程度的代码复用、单元测试，出了问题能比较方便地找到原因。这几点是架构要解决的主要问题。</p>
+<h2 id="dang-qian-de-zhuang-tai">当前的状态</h2>
+<p>目前主流的主要有 MVC 和 MVVM，VIPER 用的会少一些，它们之间的优劣对比这里就不展开了，可以查看这篇文章来了解：<a href="https://blog.coding.net/blog/ios-architecture-patterns">iOS 架构模式 - 简述 MVC, MVP, MVVM 和 VIPER (译) - Coding 博客</a></p>
+<p>简单总结下：</p>
+<ul>
+<li>MVC 模式过于简单，定的标准过于粗放， 容易滋生捷径。</li>
+<li>MVVM 会好很多，但场景的覆盖还不够全，比如缺少页面间跳转／通信、数据获取等。</li>
+<li>VIPER 更加细致，但有点臃肿。</li>
+</ul>
+<h2 id="how-to-define-right">How to Define “Right”</h2>
+<p>每种架构都有自己的特点，如果要定义「Right」的话，至少要符合一些标准，以下是我整理的觉得比较重要的几条：</p>
+<ul>
+<li>尽量简单</li>
+<li>结构清晰</li>
+<li>职责明确</li>
+<li>符合 GUI 编程的特点</li>
+</ul>
+<h3 id="jin-liang-jian-dan">尽量简单</h3>
+<p>简单的事物容易理解，也比较容易接受，用爱因斯坦的话来说「尽量简单，但不要过于简单」。VIPER 其实已经挺完善的了，但就是有点复杂，可以看<a href="https://www.objc.io/issues/13-architecture/viper/">这篇文章</a>感受下。</p>
+<h3 id="jie-gou-qing-xi">结构清晰</h3>
+<p>清晰的结构让外人也能很快地知道每个目录是做什么的，里面的文件起着怎样的作用，自己维护起来也方便。</p>
+<h3 id="zhi-ze-ming-que">职责明确</h3>
+<p>也就是 <code>Separation of Concern</code> ，每个单元只需要关心自己的事情，跟外部尽量解耦，这样无论是对代码复用和测试都会很有帮助。</p>
+<h3 id="fu-he-gui-bian-cheng-de-te-dian">符合 GUI 编程的特点</h3>
+<p>GUI 编程和其他的非界面编程还是有差异的，对 GUI 编程的特点进行合适地抽象，并在此基础上形成的架构才更有「对」的感觉。</p>
+<p>我比较认同 <code>view = render(state) + handle(event)</code> 这个定义，view 本身只做两件事，给 state 包一层漂亮的外衣，同时对用户的操作做出响应。</p>
+<h2 id="inspiring">Inspiring</h2>
+<p>差不多心里有谱了，现在来看看相关领域的架构大概是怎样的，找点启发。</p>
+<h3 id="android-architecture">Android Architecture</h3>
+<p>Android 最近出了一套官方推荐的<a href="https://developer.android.com/topic/libraries/architecture/index.html">架构</a>，挺细致的，主要的流程如下图所示</p>
+<p><img src="https://developer.android.com/topic/libraries/architecture/images/final-architecture.png" alt="" /></p>
+<p>大意就是 <code>ViewModel</code> 通过调用 <code>Repository</code> 从 <code>Model</code> 或 <code>Remote</code> 中获取数据，然后放到内置的 <code>LiveData</code> 里，而 <code>LiveData</code> 在 <code>Activity</code> 初始化时即被绑定，因此当 <code>LiveData</code> 变化时，可以马上反馈到界面。</p>
+<p>当用户操作界面时，<code>Activity</code> 会捕获到这些事件，然后调用 <code>ViewModel</code> 的特定方法，这些方法最终会导致 <code>LiveData</code> 发生改变，再次反馈到界面。</p>
+<p>整体也是 MVVM 的模式，但也有自己的特点：</p>
+<ul>
+<li>通过 <code>LiveData</code> 来做单向绑定。</li>
+<li>使用 <code>Repository</code> 来统一数据的交互。</li>
+<li>内置 <code>Room</code> 作为持久层。</li>
+<li>内置 <code>ViewModel</code> 供使用。</li>
+<li>内置 <code>LifeCycle</code> 来简化跟生命周期相关的对象的操作，避免内存泄漏。（比如 ViewModel）</li>
+<li>使用 <code>Dagger2</code> 这个依赖注入工具来避免依赖。</li>
+</ul>
+<h3 id="elm-architecture">Elm Architecture</h3>
+<blockquote>
+<p>Elm is a functional language that compiles to JavaScript. It competes with projects like React as a tool for creating websites and web apps. Elm has a very strong emphasis on simplicity, ease-of-use, and quality tooling.</p>
+</blockquote>
+<p>Elm 是一个主打函数式编程，同时通过强大的编译器来尽量确保没有 runtime error 的编程语言，著名的 Redux 就是受它启发。来感受下它的代码：</p>
+<pre data-lang="elm" style="background-color:#f9f9f9;color:#111111;" class="language-elm "><code class="language-elm" data-lang="elm"><span style="color:#8959a8;">import </span><span>Html </span><span style="color:#8959a8;">exposing </span><span>(</span><span style="color:#8959a8;">Html</span><span>, </span><span style="color:#4271ae;">button</span><span>, </span><span style="color:#4271ae;">div</span><span>, </span><span style="color:#4271ae;">text</span><span>)
+</span><span style="color:#8959a8;">import </span><span>Html.Events </span><span style="color:#8959a8;">exposing </span><span>(</span><span style="color:#4271ae;">onClick</span><span>)
+</span><span>
+</span><span style="color:#4271ae;">main </span><span style="color:#3e999f;">=
+</span><span>  Html</span><span style="color:#3e999f;">.</span><span>beginnerProgram </span><span style="color:#4271ae;">{</span><span> model </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span style="color:#4271ae;">,</span><span> view </span><span style="color:#3e999f;">=</span><span> view</span><span style="color:#4271ae;">,</span><span> update </span><span style="color:#3e999f;">=</span><span> update </span><span style="color:#4271ae;">}
+</span><span>
+</span><span style="color:#8959a8;">type Msg </span><span style="color:#3e999f;">= </span><span>Increment </span><span style="color:#3e999f;">| </span><span>Decrement
+</span><span>
+</span><span style="color:#4271ae;">update </span><span>msg model </span><span style="color:#3e999f;">=
+</span><span>  </span><span style="color:#8959a8;">case </span><span>msg </span><span style="color:#8959a8;">of
+</span><span>    Increment </span><span style="color:#3e999f;">-&gt;
+</span><span>      model </span><span style="color:#3e999f;">+ </span><span style="color:#f07219;">1
+</span><span>
+</span><span>    Decrement </span><span style="color:#3e999f;">-&gt;
+</span><span>      model </span><span style="color:#3e999f;">- </span><span style="color:#f07219;">1
+</span><span>
+</span><span style="color:#4271ae;">view </span><span>model </span><span style="color:#3e999f;">=
+</span><span>  div </span><span style="color:#4271ae;">[]
+</span><span>    </span><span style="color:#4271ae;">[</span><span> button </span><span style="color:#4271ae;">[</span><span> onClick Decrement </span><span style="color:#4271ae;">] [</span><span> text </span><span style="color:#839c00;">&quot;-&quot; </span><span style="color:#4271ae;">]
+</span><span>    </span><span style="color:#4271ae;">,</span><span> div </span><span style="color:#4271ae;">[] [</span><span> text </span><span style="color:#8959a8;">(</span><span>toString model</span><span style="color:#8959a8;">) </span><span style="color:#4271ae;">]
+</span><span>    </span><span style="color:#4271ae;">,</span><span> button </span><span style="color:#4271ae;">[</span><span> onClick Increment </span><span style="color:#4271ae;">] [</span><span> text </span><span style="color:#839c00;">&quot;+&quot; </span><span style="color:#4271ae;">]
+</span><span>    </span><span style="color:#4271ae;">]
+</span></code></pre>
+<p>主要分为 4 块，<code>model</code> , <code>view</code> , <code>update</code> , <code>message</code></p>
+<ul>
+<li>view 展示 model 数据，同时将用户的操作作为 message 抛出。</li>
+<li>model 包含了页面所需的所有信息。</li>
+<li>当 message 被抛出时，会自动进入到 update 方法，update 返回的新 model 自动进入到 view 里被展示。</li>
+</ul>
+<p><img src="http://ww1.sinaimg.cn/large/afe37136gy1fgtcussf1ij20e00983yw.jpg" alt="" /></p>
+<p>跟其他的前端框架不同，Elm 不喜欢 parent-child communication, 也不提倡 components，作为函数式编程语言，它在乎的就是创建 function，通过 <a href="https://guide.elm-lang.org/reuse/">helper function</a> 来达到类似的效果。</p>
+<h3 id="vue-architecture">Vue Architecture</h3>
+<p><img src="http://ww1.sinaimg.cn/large/afe37136gy1fgtcv8rgczj20io09wq3l.jpg" alt="" /></p>
+<p>Vue 也是采用的 MVVM 模式，把数据绑定在内部处理了，对外部来说只要在 <code>data</code> 里声明特定的 key，在 <code>view</code> 里就可以直接使用，并且实时响应。对于 <code>view</code> 的事件，也会映射到 <code>ViewModel</code> 的特定方法。</p>
+<p>Vue 的 <code>Router</code> 是把 path 映射到 component 上，看着也比较清晰。</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">const </span><span style="color:#c82728;">routes </span><span style="color:#3e999f;">= </span><span>[
+</span><span>  { path: </span><span style="color:#839c00;">&#39;/foo&#39;</span><span>, component: </span><span style="color:#c82728;">Foo </span><span>},
+</span><span>  { path: </span><span style="color:#839c00;">&#39;/bar&#39;</span><span>, component: </span><span style="color:#c82728;">Bar </span><span>},
+</span><span>  { path: </span><span style="color:#839c00;">&#39;/user/:id&#39;</span><span>, component: </span><span style="color:#c82728;">User </span><span>},
+</span><span>];
+</span></code></pre>
+<h2 id="the-right-way-imo">The Right Way (IMO)</h2>
+<h3 id="mu-lu-jie-gou">目录结构</h3>
+<p><img src="http://ww1.sinaimg.cn/large/afe37136gy1fgtcvlcjgyj20dw0xg76t.jpg" alt="" /></p>
+<p>目录结构需要能够让不同职责的文件找到自己的归属，同时尽量清晰。这个是我目前觉得还不错的分类</p>
+<ul>
+<li><code>External</code> ：一些第三方的 framework。</li>
+<li><code>Extensions</code> : 针对当前 App 做的一些针对性扩展。</li>
+<li><code>Infrastructure</code> : 比较重要的基础组件，在前期就要管控起来。</li>
+<li><code>Models</code> : 对应服务端的 Objects。</li>
+<li><code>Views</code> : 页面。</li>
+<li><code>Shared</code> : 会在 App 内部被公用的部分，方便统一管控。</li>
+<li><code>Utilities</code> : 一些帮助类。</li>
+</ul>
+<h3 id="architecture">Architecture</h3>
+<p><img src="http://ww1.sinaimg.cn/large/afe37136gy1fgtcxzpz4yj218m0mw0vs.jpg" alt="" /></p>
+<p>本质上跟 MVVM 差不多，只是多补充了些细节。之前也有考虑过采用 ReSwift + RxSwift 的方式，也就是 Redux，后来写下来发现还是有点复杂：比如下拉刷新的 3 个 state （ loading / loaded / failed），action 要定义（毕竟获取数据的逻辑写在 Action 中），state 中也要定义（视图最终关心的是 state 的变化）；没有很方便的 diff 支持等。于是就回归到了 MVVM 模式。</p>
+<h4 id="viewmodel">ViewModel</h4>
+<p>ViewModel 主要有 3 个职责：</p>
+<ul>
+<li>通过 Repository 获取/修改数据。</li>
+<li>提供 <code>Observable Properties</code> 供 View 使用。</li>
+<li>提供 <code>Functions</code> 供 View 调用，通常会导致 <code>Observable Properties</code> 的改变。</li>
+</ul>
+<p>这块也算是常规手法，需要注意的一点是 Repository 的初始化，如果要方便测试的话，最好提供注入点（比如初始化时注入或提供 set 方法注入）。</p>
+<h4 id="repository">Repository</h4>
+<p>Repository 的职责就是跟数据打交道，获取远程／本地数据，并将其转换成 Model 返回给 ViewModel。</p>
+<h4 id="ye-mian-jian-tiao-zhuan-he-tong-xin">页面间跳转和通信</h4>
+<p>使用 Router 即可，如果是内部的 VC 之间跳转，还可以携带 model 信息。</p>
+<h4 id="tong-yong-de-xiao-mo-kuai-components">通用的小模块( Components )</h4>
+<p>我发现前端开发里，<code>Components</code> 用得还蛮多的，客户端开发倒不那么常见。这些小模块其实就是一些可在多个页面复用的业务相关的视图（Widget），可能带有业务逻辑，方便复用，比如「赞」按钮。</p>
+<h4 id="fu-wu-diao-yong">服务调用</h4>
+<p>比如在详情页要使用购物车的「加购」功能，通常做法是采用 <code>Register Procotol</code> 方式，维护一个 Protocol 和 Class 的注册表，并且在 App 启动时进行注册。我发现使用 Swift 的 POP 就不需要这么麻烦了，具体怎么做，我们后面讲。</p>
+<h3 id="demo">Demo</h3>
+<p>这个 Demo 演示了知乎日报的列表和详情页：</p>
+<p><img src="http://ww1.sinaimg.cn/large/afe37136gy1fgtcx5hukwj20lt0ijq3x.jpg" alt="" /></p>
+<p>看起来蛮简单的，不过事实可能并非如此，我们来慢慢捋一下。</p>
+<h4 id="chu-shi-ye">初始页</h4>
+<p><img src="http://ww1.sinaimg.cn/large/afe37136gy1fgtcxfxauej20af0ijwek.jpg" alt="" /></p>
+<p>刚进来时，会处于原始的 loading 状态，这个状态不同于下拉刷新，可能是一个萌萌的 loading 图。</p>
+<p>首先这个页面属于 <code>NewsFeed</code> 页，因此在该目录下新建 3 个文件</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>|- NewsFeedViewModel.swift
+</span><span>|- NewsFeedViewController.swift
+</span><span>|- NewsFeedRepository.swift
+</span></code></pre>
+<p>本着 view 只是展示 state 的原则，我们首先要处理的就是 state，那么怎么处理？ 这个 Event 是从 View 那边触发的，触发之后，对于 View 来说只能求助于 ViewModel，于是 VM 就提供了一个 <code>initialLoading</code> 方法。</p>
+<p>那这个 <code>initialLoading</code> 里该做些什么呢？其实也就是根据 repository 的不同结果，设置不同的 state，然后 view 来响应这些 state。同时考虑到之后的「下拉刷新」和「加载更多」，顺便分离出一个通用的 <code>loadData:</code> 方法</p>
+<h4 id="viewmodel-1">ViewModel</h4>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">class</span><span> NewsFeedViewModel {
+</span><span>	</span><span style="color:#8959a8;">func </span><span>initialLoading() {
+</span><span>        loadData(</span><span style="color:#3e999f;">.</span><span>initial)
+</span><span>    }
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">func </span><span>loadData(_ loadingType: LoadingType, offset: </span><span style="color:#c99e00;">String </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&quot;&quot;</span><span>) {
+</span><span>		</span><span style="color:#8e908c;">// todo
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>那么 <code>Observable Properties</code> 应该是怎样的呢？在 OC 时代，只要简单的暴露 readonly 的 property，外部无论是 KVO 还是 RAC 都能很方便地进行绑定，到了 swift 时代，如果要做 KVO 就要继承 <code>NSObject</code>，还要加一个 <code>@dynamic</code> 前缀，不优雅。比较理想的状态是使用 RxSwift 的 <code>Observable</code> 作为属性，外部只要 <code>subscribe</code> 就行了。不过在内部如何给这个 <code>Observable</code> 塞数据又有点小问题。最终决定使用 <code>Variable</code> 作为暴露的属性，它的好处是内部不需要再新建一个变量，直接设置这个 <code>Variable</code> 的 <code>value</code> 即可，弊端就是对于使用方需要先通过 <code>asObservable()</code> 转一下再进行 subscribe，并且只要愿意，也可以设置 <code>value</code> 值，存在误操作的风险。在这里我们先简单起见用 <code>Variable</code> 来做。</p>
+<p>接下来的问题就是这个 <code>Variable</code> 里应该放什么？肯定要放一些当前的 loading 状态，比如 loaded，failed，loading 这些，那么要不要带上 data？如果不一起带上 data，那么状态的改变和数据的改变就不是一个原子操作，有可能会带来一些异常（比如 view 发现 loading 状态变为 loaded，自动去取最新的 data，但此时 data 可能还没有改变）。因此，我把它们都放到了一起，首先来看一下 <code>ResultModel</code></p>
+<h4 id="model">Model</h4>
+<p>这是一个通用的数据结构</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8e908c;">// ResultModel.swift
+</span><span>
+</span><span style="color:#8959a8;">enum</span><span> LoadingType {
+</span><span>    </span><span style="color:#8959a8;">case</span><span> initial, refresh, more
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">enum</span><span> LoadingStatus: Equatable {
+</span><span>    </span><span style="color:#8959a8;">case none
+</span><span>    </span><span style="color:#8959a8;">case</span><span> loading
+</span><span>    </span><span style="color:#8959a8;">case</span><span> loaded
+</span><span>    </span><span style="color:#8959a8;">case</span><span> failure(Error)
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">static func </span><span>==(lhs: LoadingStatus, rhs: LoadingStatus) </span><span style="color:#3e999f;">-&gt; </span><span style="color:#c99e00;">Bool </span><span>{
+</span><span>        </span><span style="color:#8959a8;">switch</span><span> (lhs, rhs) {
+</span><span>        </span><span style="color:#8959a8;">case</span><span> (</span><span style="color:#3e999f;">.</span><span style="color:#8959a8;">none</span><span>, </span><span style="color:#3e999f;">.</span><span style="color:#8959a8;">none</span><span>):
+</span><span>            </span><span style="color:#8959a8;">return true
+</span><span>        </span><span style="color:#8959a8;">case</span><span> (</span><span style="color:#3e999f;">.</span><span>loading, </span><span style="color:#3e999f;">.</span><span>loading):
+</span><span>            </span><span style="color:#8959a8;">return true
+</span><span>        </span><span style="color:#8959a8;">case</span><span> (</span><span style="color:#3e999f;">.</span><span>loaded, </span><span style="color:#3e999f;">.</span><span>loaded):
+</span><span>            </span><span style="color:#8959a8;">return true
+</span><span>        </span><span style="color:#8959a8;">default</span><span>:
+</span><span>            </span><span style="color:#8959a8;">return false
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">struct</span><span> ResultModel</span><span style="color:#3e999f;">&lt;</span><span>T</span><span style="color:#3e999f;">&gt;</span><span> {
+</span><span>    </span><span style="color:#8959a8;">var</span><span> loadingStatus: LoadingStatus </span><span style="color:#3e999f;">= .</span><span style="color:#8959a8;">none
+</span><span>    </span><span style="color:#8959a8;">var</span><span> loadingType: LoadingType </span><span style="color:#3e999f;">= .</span><span>initial
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">var</span><span> previousItems </span><span style="color:#3e999f;">=</span><span> [T]()
+</span><span>    </span><span style="color:#8959a8;">var</span><span> currentItems </span><span style="color:#3e999f;">=</span><span> [T]()
+</span><span>}
+</span></code></pre>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8e908c;">// NewsModel.swift
+</span><span>
+</span><span style="color:#8959a8;">class</span><span> NewsFeedViewModel {
+</span><span>    </span><span style="color:#8e908c;">// 1
+</span><span>	  </span><span style="color:#8959a8;">static var</span><span> news:Variable</span><span style="color:#3e999f;">&lt;</span><span>ResultModel</span><span style="color:#3e999f;">&lt;</span><span>NewsItem</span><span style="color:#3e999f;">&gt;&gt; =</span><span> Variable(ResultModel())
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">func </span><span>initialLoading() {
+</span><span>        loadData(</span><span style="color:#3e999f;">.</span><span>initial)
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">func </span><span>loadData(_ loadingType: LoadingType, offset: </span><span style="color:#c99e00;">String </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&quot;&quot;</span><span>) {
+</span><span>        </span><span style="color:#8e908c;">// 2 如果当前处于 loading 状态，就不继续处理了
+</span><span>        </span><span style="color:#8959a8;">if</span><span> (NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>loadingStatus </span><span style="color:#3e999f;">== .</span><span>loading) {
+</span><span>            </span><span style="color:#8959a8;">return
+</span><span>        }
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">// 3 设置新的 loading 类型和状态
+</span><span>        </span><span style="color:#8959a8;">var</span><span> value </span><span style="color:#3e999f;">=</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value
+</span><span>        value</span><span style="color:#3e999f;">.</span><span>loadingStatus </span><span style="color:#3e999f;">= .</span><span>loading
+</span><span>        value</span><span style="color:#3e999f;">.</span><span>loadingType </span><span style="color:#3e999f;">=</span><span> loadingType
+</span><span>        NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value </span><span style="color:#3e999f;">=</span><span> value
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">// 4 接下来就是发网络请求，根据不同的请求结果设置 state
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<ol>
+<li>这里使用 <code>static</code> 主要是出于方便。</li>
+<li>这里纠结了一段时间，之前是新建了 3 个 loading status（initial, refresh, loadmore），然后每个 status 再细分为 3 种状态(loading, loaded, error)，后来发现这样的话，「当前是哪个 loading status，该 status 目前处于什么状态」判断起来会比较麻烦。于是就按照现在这样进行了拆分。</li>
+<li>在这里对状态进行更改之后，UI 那边可以自动收到更新。</li>
+<li>这里会调用 Repository 来获取数据。</li>
+</ol>
+<h4 id="repository-1">Repository</h4>
+<p>Repository 这块由于是异步交互，因此直接就上 RxSwift 了，返回一个 <code>Observable</code> ，VM 作为消费方来订阅。</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">import </span><span style="color:#c99e00;">Foundation
+</span><span style="color:#8959a8;">import </span><span style="color:#c99e00;">RxSwift
+</span><span>
+</span><span style="color:#8959a8;">class</span><span> NewsFeedRepository {
+</span><span>    </span><span style="color:#8959a8;">static func </span><span>news(_ offset: </span><span style="color:#c99e00;">String </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&quot;&quot;</span><span>) </span><span style="color:#3e999f;">-&gt;</span><span> Observable&lt;[</span><span style="color:#c99e00;">String</span><span>:Any]?&gt; {
+</span><span>        </span><span style="color:#8959a8;">return</span><span> Observable</span><span style="color:#3e999f;">.</span><span>create({ observer </span><span style="color:#8959a8;">in
+</span><span>            </span><span style="color:#8959a8;">let</span><span> path </span><span style="color:#3e999f;">=</span><span> offset</span><span style="color:#3e999f;">.</span><span>characters</span><span style="color:#3e999f;">.</span><span>count </span><span style="color:#3e999f;">&gt; </span><span style="color:#f07219;">0 </span><span style="color:#3e999f;">? </span><span style="color:#839c00;">&quot;/api/4/news/before/</span><span>\(offset)</span><span style="color:#839c00;">&quot; </span><span style="color:#3e999f;">: </span><span style="color:#839c00;">&quot;/api/4/news/latest&quot;
+</span><span>            </span><span style="color:#8959a8;">let</span><span> resource </span><span style="color:#3e999f;">=</span><span> Resource(path: path, method: </span><span style="color:#3e999f;">.</span><span>GET, requestBody: nil, headers: [</span><span style="color:#839c00;">&quot;Content-Type&quot;</span><span>: </span><span style="color:#839c00;">&quot;application/json&quot;</span><span>], parse: decodeJSON)
+</span><span>
+</span><span>            </span><span style="color:#8e908c;">// 这个用的是 chris 开源的简单的 API 请求封装 http://chris.eidhof.nl/posts/tiny-networking-in-swift.html
+</span><span>            apiRequest(baseURL: URL(string: </span><span style="color:#839c00;">&quot;https://news-at.zhihu.com&quot;</span><span>)</span><span style="color:#3e999f;">!</span><span>, resource: resource, failure: { (reason, result) </span><span style="color:#8959a8;">in
+</span><span>                observer</span><span style="color:#3e999f;">.</span><span>on(</span><span style="color:#3e999f;">.</span><span>error(reason))
+</span><span>            }, success: { result </span><span style="color:#8959a8;">in
+</span><span>                observer</span><span style="color:#3e999f;">.</span><span>on(</span><span style="color:#3e999f;">.</span><span>next(result))
+</span><span>                observer</span><span style="color:#3e999f;">.</span><span>on(</span><span style="color:#3e999f;">.</span><span>completed)
+</span><span>            })
+</span><span>
+</span><span>            </span><span style="color:#8959a8;">return</span><span> Disposables</span><span style="color:#3e999f;">.</span><span>create()
+</span><span>        })
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>也可以在这里直接返回解析后的 Model，这样 VM 那边就不用处理了。</p>
+<h4 id="viewmodel-diao-yong-repository">ViewModel 调用 Repository</h4>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">class</span><span> NewsFeedViewModel {
+</span><span>    </span><span style="color:#8e908c;">// 4
+</span><span>    NewsFeedRepository</span><span style="color:#3e999f;">.</span><span>news(offset)</span><span style="color:#3e999f;">.</span><span>asObservable()</span><span style="color:#3e999f;">.</span><span>subscribe(onNext: {[</span><span style="color:#8959a8;">unowned self</span><span>] (result) </span><span style="color:#8959a8;">in
+</span><span>        </span><span style="color:#8e908c;">// 把 json 转换为 model
+</span><span>        </span><span style="color:#8959a8;">let</span><span> parsedResult </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>_parseResult(result: result)
+</span><span>        </span><span style="color:#8959a8;">var</span><span> value </span><span style="color:#3e999f;">=</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value
+</span><span>        value</span><span style="color:#3e999f;">.</span><span>previousItems </span><span style="color:#3e999f;">=</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>currentItems
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">// 设置对应的 value
+</span><span>        </span><span style="color:#8959a8;">if</span><span> value</span><span style="color:#3e999f;">.</span><span>loadingType </span><span style="color:#3e999f;">== .</span><span>more {
+</span><span>            value</span><span style="color:#3e999f;">.</span><span>currentItems </span><span style="color:#3e999f;">=</span><span> value</span><span style="color:#3e999f;">.</span><span>previousItems </span><span style="color:#3e999f;">+</span><span> (parsedResult?</span><span style="color:#3e999f;">.</span><span>news ?? [])
+</span><span>        } </span><span style="color:#8959a8;">else</span><span> {
+</span><span>            value</span><span style="color:#3e999f;">.</span><span>currentItems </span><span style="color:#3e999f;">=</span><span> parsedResult?</span><span style="color:#3e999f;">.</span><span>news ?? []
+</span><span>        }
+</span><span>
+</span><span>        value</span><span style="color:#3e999f;">.</span><span>loadingStatus </span><span style="color:#3e999f;">= .</span><span>loaded
+</span><span>        NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value </span><span style="color:#3e999f;">=</span><span> value
+</span><span>        </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>offset </span><span style="color:#3e999f;">=</span><span> parsedResult?</span><span style="color:#3e999f;">.</span><span>date ?? </span><span style="color:#839c00;">&quot;&quot;
+</span><span>        value</span><span style="color:#3e999f;">.</span><span>loadingStatus </span><span style="color:#3e999f;">= .</span><span style="color:#8959a8;">none
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">// 统一设置 value，对外部 subscriber 来说就是原子操作
+</span><span>        NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value </span><span style="color:#3e999f;">=</span><span> value
+</span><span>    }, onError: { (error) </span><span style="color:#8959a8;">in
+</span><span>        NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>loadingStatus </span><span style="color:#3e999f;">= .</span><span>failure(error)
+</span><span>    }, onCompleted: {
+</span><span>    }) {
+</span><span>    }</span><span style="color:#3e999f;">.</span><span>addDisposableTo(disposeBag)
+</span><span>}
+</span></code></pre>
+<p>这里你会注意到有一个 <code>previousItems</code> 和 <code>currentItems</code> ，这个主要是提供灵活性，避免暴力的 <code>reloadData()</code> ，比如获取到了更多的数据之后，可以只 reload 新的数据。</p>
+<h4 id="view">View</h4>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8e908c;">// NewsFeedViewController.swift
+</span><span style="color:#8959a8;">class</span><span> NewsFeedViewController: UITableViewController {
+</span><span>    </span><span style="color:#8959a8;">override func </span><span>viewDidLoad() {
+</span><span>        handleDataChange()
+</span><span>        viewModel</span><span style="color:#3e999f;">.</span><span>initialLoading()
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">func </span><span>handleDataChange() {
+</span><span>        NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>asObservable()
+</span><span>            </span><span style="color:#3e999f;">.</span><span>observeOn(MainScheduler</span><span style="color:#3e999f;">.</span><span>instance)
+</span><span>            </span><span style="color:#3e999f;">.</span><span>subscribe(onNext: {[</span><span style="color:#8959a8;">unowned self</span><span>] item </span><span style="color:#8959a8;">in
+</span><span>                </span><span style="color:#8959a8;">if</span><span> item</span><span style="color:#3e999f;">.</span><span>loadingStatus </span><span style="color:#3e999f;">!= .</span><span>loading {
+</span><span>                    </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>initialLoadingIndicator</span><span style="color:#3e999f;">.</span><span>stopAnimating()
+</span><span>                }
+</span><span>                </span><span style="color:#8959a8;">if</span><span> item</span><span style="color:#3e999f;">.</span><span>loadingStatus </span><span style="color:#3e999f;">== .</span><span>loaded {
+</span><span>                    </span><span style="color:#8e908c;">// 这里调用 Diff 这个 framework 提供的 extension
+</span><span>                    </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>tableView</span><span style="color:#3e999f;">.</span><span>animateRowChanges(oldData: item</span><span style="color:#3e999f;">.</span><span>previousItems, newData: item</span><span style="color:#3e999f;">.</span><span>currentItems)
+</span><span>                }
+</span><span>                </span><span style="color:#8959a8;">if</span><span> item</span><span style="color:#3e999f;">.</span><span>loadingType </span><span style="color:#3e999f;">== .</span><span>initial </span><span style="color:#3e999f;">&amp;&amp;</span><span> item</span><span style="color:#3e999f;">.</span><span>loadingStatus </span><span style="color:#3e999f;">== .</span><span>loading {
+</span><span>                    </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>initialLoadingIndicator</span><span style="color:#3e999f;">.</span><span>startAnimating()
+</span><span>                }
+</span><span>            })</span><span style="color:#3e999f;">.</span><span>addDisposableTo(disposeBag)
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>「正在加载」和「已经加载」的场景已经处理完了，「加载失败」的处理也类似，比如失败之后显示一个 reload button，点击 reload button 之后，再调用一下 <code>viewModel.initialLoading()</code></p>
+<h4 id="tableview">TableView</h4>
+<p>接下来就来看看如何处理 TableView 的数据展示，其实就是消费 VM 的 property</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">extension</span><span> NewsFeedViewController {
+</span><span>    </span><span style="color:#8959a8;">override func </span><span>tableView(_ tableView: UITableView, numberOfRowsInSection section: </span><span style="color:#c99e00;">Int</span><span>) </span><span style="color:#3e999f;">-&gt; </span><span style="color:#c99e00;">Int </span><span>{
+</span><span>        </span><span style="color:#8959a8;">return</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>currentItems</span><span style="color:#3e999f;">.</span><span>count
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">override func </span><span>tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) </span><span style="color:#3e999f;">-&gt;</span><span> UITableViewCell {
+</span><span>        </span><span style="color:#8959a8;">let</span><span> cell </span><span style="color:#3e999f;">=</span><span> tableView</span><span style="color:#3e999f;">.</span><span>dequeueReusableCell(withIdentifier: </span><span style="color:#839c00;">&quot;Cell&quot;</span><span>) </span><span style="color:#3e999f;">as!</span><span> NewsCell
+</span><span>        </span><span style="color:#8959a8;">let</span><span> newsItem: NewsItem </span><span style="color:#3e999f;">=</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>currentItems[indexPath</span><span style="color:#3e999f;">.</span><span>row]
+</span><span>        cell</span><span style="color:#3e999f;">.</span><span>configure(newsItem)
+</span><span>        </span><span style="color:#8959a8;">return</span><span> cell
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>到这里最基本的首页数据展示就基本完成了。</p>
+<h3 id="jia-zai-geng-duo">加载更多</h3>
+<p>之前一直在纠结这块到底该怎么做才比较合适，如果直接把 newItems append 到原有的 items 列表，形成新的列表，UI 那边拿到之后就只能 <code>reloadData()</code> 了，最好能让 UI 那边知道新的和旧的之间发生了哪些变化，于是就找到了 <a href="https://github.com/wokalski/Diff.swift">Diff</a> 这个 framework，它能够定位出两个 collection 之间的差异，但前提是 collection item 要实现 <code>Equatable</code> 协议。于是就有了 <code>previousItems</code> 和 <code>currentItems</code> 的设计。</p>
+<h3 id="xi-huan-gong-neng">喜欢功能</h3>
+<p>喜欢功能本质上是修改 NewsItem 的 <code>hasFaved</code> 属性，然后让 UI 可以感知到这个变化。这里问题就来了：如何对列表中的一个 <code>struct</code> 进行调整？我们知道 <code>struct</code> 是值拷贝的，只要发生赋值行为，拿到的就不再是原先的那个 struct 了（比如把 items 通过参数传递，要修改的话就要进行拷贝，除非设置为 <code>inout</code>）。</p>
+<p>这个问题本质上是如何操作 Immutable Objects，然后就想到了 <a href="https://facebook.github.io/immutable-js/">Immutable.js</a>，它也提供了一些修改 List 的方法，只不过都是返回一个新的：</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">const </span><span>{ </span><span style="color:#c82728;">List </span><span>} </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">require</span><span>(</span><span style="color:#839c00;">&#39;immutable&#39;</span><span>);
+</span><span style="color:#8959a8;">const </span><span style="color:#c82728;">list </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">List</span><span>([</span><span style="color:#f07219;">0</span><span>, </span><span style="color:#f07219;">1</span><span>, </span><span style="color:#f07219;">2</span><span>, </span><span style="color:#4271ae;">List</span><span>([</span><span style="color:#f07219;">3</span><span>, </span><span style="color:#f07219;">4</span><span>])]);
+</span><span style="color:#c82728;">list</span><span style="color:#4271ae;">.setIn</span><span>([</span><span style="color:#f07219;">3</span><span>, </span><span style="color:#f07219;">0</span><span>], </span><span style="color:#f07219;">999</span><span>);
+</span><span style="color:#8e908c;">// List [ 0, 1, 2, List [ 999, 4 ] ]
+</span></code></pre>
+<p>因此，这里简单的处理方式就是通过传进来的 <code>newsItem</code> 找到它在 list 中的 index（<code>newsItem</code> 已经实现了 <code>Equatable</code> 协议），然后把修改过 <code>hasFaved</code> 属性的新的 <code>newsItem</code> 放到 index 位置来达到替换的效果。</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">class</span><span> NewsFeedViewModel {
+</span><span>    </span><span style="color:#8959a8;">func </span><span>toggleFav(_ newsItem: NewsItem) {
+</span><span>        </span><span style="color:#8959a8;">if let</span><span> newsIndex </span><span style="color:#3e999f;">=</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>currentItems</span><span style="color:#3e999f;">.</span><span>index(of: newsItem) {
+</span><span>            </span><span style="color:#8959a8;">var</span><span> _newsItem </span><span style="color:#3e999f;">=</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>currentItems[newsIndex]
+</span><span>            _newsItem</span><span style="color:#3e999f;">.</span><span>hasFaved </span><span style="color:#3e999f;">= !</span><span>_newsItem</span><span style="color:#3e999f;">.</span><span>hasFaved
+</span><span>
+</span><span>            </span><span style="color:#8959a8;">var</span><span> value </span><span style="color:#3e999f;">=</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value
+</span><span>            value</span><span style="color:#3e999f;">.</span><span>currentItems[newsIndex] </span><span style="color:#3e999f;">=</span><span> _newsItem
+</span><span>
+</span><span>            NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value </span><span style="color:#3e999f;">=</span><span> value
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<h4 id="components">Components</h4>
+<p>由于新闻列表和喜欢的新闻列表表现上一致，那么就可以进行一些复用，比如可以把 Cell 作为 Component。</p>
+<p>那对于一个 Component 来说，需要具备哪些特性呢？这个并没有什么约定，本质上就是一个或几个函数，外部调用后会返回一个 view，或者提供一些 block 回调，仅此而已。</p>
+<h4 id="truth-and-computed-properties">Truth and Computed Properties</h4>
+<p>这里的 <code>Truth</code> 是指最源头的数据，比如一个数组，<code>Computed Properties</code> 是指对源头数据进行消费可以得到的结果，比如数组的长度，或数组中的正数等。</p>
+<p>在这个例子中，<code>Truth</code> 就是 <code>newsItems</code> 列表，而喜欢的 <code>newsItems</code> 就是 <code>Computed Properties</code> 。因此只要 newsItems 发生变化，就重新计算喜欢的 NewsItems。</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span>NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>asObservable()</span><span style="color:#3e999f;">.</span><span>subscribe(onNext: { item </span><span style="color:#8959a8;">in
+</span><span>    NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>favedNews</span><span style="color:#3e999f;">.</span><span>value </span><span style="color:#3e999f;">=</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>currentItems</span><span style="color:#3e999f;">.</span><span>filter { (item) </span><span style="color:#3e999f;">-&gt; </span><span style="color:#c99e00;">Bool </span><span style="color:#8959a8;">in
+</span><span>         </span><span style="color:#8959a8;">return</span><span> item</span><span style="color:#3e999f;">.</span><span>hasFaved
+</span><span>    }
+</span><span>})</span><span style="color:#3e999f;">.</span><span>addDisposableTo(disposeBag)
+</span></code></pre>
+<h4 id="xi-huan-gong-neng-de-view">喜欢功能的 View</h4>
+<p>主要就是两件事：</p>
+<ol>
+<li>点击 Fav 按钮时，调用 VM 的 <code>toggleFav</code> 方法。</li>
+<li>当 Fav 列表更新时，刷新 TableView。</li>
+</ol>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">extension</span><span> FavedViewController {
+</span><span>    </span><span style="color:#8959a8;">func </span><span>handleDataChange() {
+</span><span>        NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>favedNews</span><span style="color:#3e999f;">.</span><span>asObservable()</span><span style="color:#3e999f;">.</span><span>subscribe(onNext:{[</span><span style="color:#8959a8;">unowned self</span><span>] item </span><span style="color:#8959a8;">in
+</span><span>            </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>tableView</span><span style="color:#3e999f;">.</span><span>reloadData()
+</span><span>        })</span><span style="color:#3e999f;">.</span><span>addDisposableTo(disposeBag)
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">extension</span><span> FavedViewController {
+</span><span>    </span><span style="color:#8959a8;">override func </span><span>tableView(_ tableView: UITableView, numberOfRowsInSection section: </span><span style="color:#c99e00;">Int</span><span>) </span><span style="color:#3e999f;">-&gt; </span><span style="color:#c99e00;">Int </span><span>{
+</span><span>        </span><span style="color:#8959a8;">return</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>favedNews</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>count
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">override func </span><span>tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) </span><span style="color:#3e999f;">-&gt;</span><span> UITableViewCell {
+</span><span>        </span><span style="color:#8959a8;">let</span><span> cell </span><span style="color:#3e999f;">=</span><span> tableView</span><span style="color:#3e999f;">.</span><span>dequeueReusableCell(withIdentifier: </span><span style="color:#839c00;">&quot;Cell&quot;</span><span>) </span><span style="color:#3e999f;">as!</span><span> NewsCell
+</span><span>        </span><span style="color:#8959a8;">var</span><span> newsItem: NewsItem </span><span style="color:#3e999f;">=</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>favedNews</span><span style="color:#3e999f;">.</span><span>value[indexPath</span><span style="color:#3e999f;">.</span><span>row]
+</span><span>
+</span><span>        cell</span><span style="color:#3e999f;">.</span><span>configure(newsItem) { [</span><span style="color:#8959a8;">unowned self</span><span>] (button) </span><span style="color:#8959a8;">in
+</span><span>            </span><span style="color:#8959a8;">if</span><span> button</span><span style="color:#3e999f;">.</span><span>tag </span><span style="color:#3e999f;">== </span><span style="color:#f07219;">0</span><span> {
+</span><span>                button</span><span style="color:#3e999f;">.</span><span>tag </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1
+</span><span>                button</span><span style="color:#3e999f;">.</span><span>setTitle(</span><span style="color:#839c00;">&quot;♥︎&quot;</span><span>, </span><span style="color:#8959a8;">for</span><span>: </span><span style="color:#3e999f;">.</span><span>normal)
+</span><span>            } </span><span style="color:#8959a8;">else</span><span> {
+</span><span>                button</span><span style="color:#3e999f;">.</span><span>tag </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0
+</span><span>                button</span><span style="color:#3e999f;">.</span><span>setTitle(</span><span style="color:#839c00;">&quot;♡&quot;</span><span>, </span><span style="color:#8959a8;">for</span><span>: </span><span style="color:#3e999f;">.</span><span>normal)
+</span><span>            }
+</span><span>            </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>viewModel</span><span style="color:#3e999f;">.</span><span>toggleFav(newsItem)
+</span><span>            </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>tableView</span><span style="color:#3e999f;">.</span><span>reloadData()
+</span><span>        }
+</span><span>
+</span><span>        </span><span style="color:#8959a8;">return</span><span> cell
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<h3 id="ye-mian-tiao-zhuan">页面跳转</h3>
+<p>页面间的跳转用到了 <code>Router</code> ，也就是 open 一个 url 就能到达特定的页面，这么做的好处是可以和外部跳转进来的情况统一处理（因为从外部跳到某个 app 只能通过 openURL）。</p>
+<p>但在内部直接输入 URL 总觉得不优雅，而且容易出错，将来如果要修改 URL 也不方便。因此做了一个简单的 <code>Router</code> 来达到这个效果：</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span>
+</span><span style="color:#8959a8;">import </span><span style="color:#c99e00;">Foundation
+</span><span style="color:#8959a8;">import </span><span style="color:#c99e00;">UIKit
+</span><span>
+</span><span style="color:#8e908c;">// 1
+</span><span style="color:#8959a8;">enum</span><span> RouterTable: </span><span style="color:#c99e00;">String</span><span> {
+</span><span>    </span><span style="color:#8959a8;">case</span><span> home </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&quot;home&quot;
+</span><span>    </span><span style="color:#8959a8;">case</span><span> detail </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&quot;detail/:id&quot;
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">func </span><span>asController() </span><span style="color:#3e999f;">-&gt;</span><span> UIViewController.Type {
+</span><span>        </span><span style="color:#8959a8;">switch self</span><span> {
+</span><span>        </span><span style="color:#8959a8;">case </span><span style="color:#3e999f;">.</span><span>home:
+</span><span>            </span><span style="color:#8959a8;">return</span><span> NewsFeedViewController</span><span style="color:#3e999f;">.</span><span style="color:#8959a8;">self
+</span><span>        </span><span style="color:#8959a8;">case </span><span style="color:#3e999f;">.</span><span>detail:
+</span><span>            </span><span style="color:#8959a8;">return</span><span> NewsDetailViewController</span><span style="color:#3e999f;">.</span><span style="color:#8959a8;">self
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// 2
+</span><span style="color:#8959a8;">class</span><span> Router {
+</span><span>    </span><span style="color:#8959a8;">static func </span><span>to(_ route: RouterTable, parameters: </span><span style="color:#c99e00;">Dictionary</span><span>&lt;</span><span style="color:#c99e00;">String</span><span>, Any&gt;?) </span><span style="color:#3e999f;">-&gt; </span><span style="color:#c99e00;">Void </span><span>{
+</span><span>        </span><span style="color:#8959a8;">let</span><span> viewController </span><span style="color:#3e999f;">=</span><span> route</span><span style="color:#3e999f;">.</span><span>asController()</span><span style="color:#3e999f;">.</span><span style="color:#8959a8;">init</span><span>()
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">// 2.1
+</span><span>        </span><span style="color:#8959a8;">if let</span><span> parameters </span><span style="color:#3e999f;">=</span><span> parameters {
+</span><span>            </span><span style="color:#8959a8;">for</span><span> (key, value) </span><span style="color:#8959a8;">in</span><span> parameters {
+</span><span>                viewController</span><span style="color:#3e999f;">.</span><span>putExtra(key, value)
+</span><span>            }
+</span><span>        }
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">//TODO: 添加 shouldBePushed 调用，比如有些页面需要先登录
+</span><span>        DispatchQueue</span><span style="color:#3e999f;">.</span><span>main</span><span style="color:#3e999f;">.</span><span>async {
+</span><span>            UINavigationController</span><span style="color:#3e999f;">.</span><span>current()</span><span style="color:#3e999f;">.</span><span>pushViewController(viewController, animated: </span><span style="color:#8959a8;">true</span><span>)
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// 3
+</span><span style="color:#8959a8;">extension</span><span> Router {
+</span><span>    </span><span style="color:#8959a8;">func </span><span>parseURL(_ url: </span><span style="color:#c99e00;">String</span><span>) </span><span style="color:#3e999f;">-&gt;</span><span> (RouterTable, </span><span style="color:#c99e00;">Dictionary</span><span>&lt;</span><span style="color:#c99e00;">String</span><span>, </span><span style="color:#c99e00;">String</span><span>&gt;?) {
+</span><span>        </span><span style="color:#8e908c;">//TODO: add implementation
+</span><span>        </span><span style="color:#8959a8;">return</span><span> (</span><span style="color:#3e999f;">.</span><span>home, nil)
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>主要分为 3 部分：</p>
+<ol>
+<li>这个跟 vue-router 里定义 url 和 components 的关系一样，主要是为了方便统一管理。</li>
+<li>这里主要是把 enum 转换为对应的 Controller，因为限制了类型，也就不会出现找不到 VC 的情况。</li>
+<li>这个是用来应对外部跳转进来的 URL，把它解析成 <code>RouterTable</code>，统一逻辑。</li>
+</ol>
+<p>针对 2 重点说一下，这个是最简实现，真实场景会比这复杂得多，比如有些页面是 present 出来的，有些页面 push 前需要先判断是否登录等等。</p>
+<p>注意到 <code>2.1</code> 的部分，这里有一个 <code>putExtra</code> 方法，这是新添加的一个扩展，参考了 Android 的 <code>Intent</code> <code>putExtra</code> 。实现如下：</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">protocol</span><span> ViewCotrollerIntent {
+</span><span>    </span><span style="color:#8959a8;">func </span><span>putExtra(_ key: </span><span style="color:#c99e00;">String</span><span>, _ value: Any)
+</span><span>    func getExtra(_ key: </span><span style="color:#c99e00;">String</span><span>) </span><span style="color:#3e999f;">-&gt;</span><span> Any?
+</span><span>}
+</span><span>
+</span><span>extension UIViewController: ViewCotrollerIntent {
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">private struct</span><span> IntentStorage {
+</span><span>        </span><span style="color:#8959a8;">static var</span><span> extra: [</span><span style="color:#c99e00;">String</span><span>:Any] </span><span style="color:#3e999f;">=</span><span> [</span><span style="color:#3e999f;">:</span><span>]
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">func </span><span>putExtra(_ key: </span><span style="color:#c99e00;">String</span><span>, _ value: Any) {
+</span><span>        IntentStorage</span><span style="color:#3e999f;">.</span><span>extra[key] </span><span style="color:#3e999f;">=</span><span> value
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">func </span><span>getExtra(_ key: </span><span style="color:#c99e00;">String</span><span>) </span><span style="color:#3e999f;">-&gt;</span><span> Any? {
+</span><span>        </span><span style="color:#8959a8;">return</span><span> IntentStorage</span><span style="color:#3e999f;">.</span><span>extra[key]
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>由于 extension 不支持 associated properties，因此用 struct 做了个中转。这样，VC 之间的跳转如果要带上额外的参数，只要放到 extra 里即可。</p>
+<h3 id="xiang-qing-ye">详情页</h3>
+<p>详情页比较简单，只是展示一个 webview，这里比较棘手的问题是 model 数据的同步。由于详情页也可以修改 <code>NewsItem</code> 的 <code>hasFaved</code> 属性，这个改变需要能够实时同步到列表页，不然就会出现状态不同步的情况。</p>
+<p>这块的设计也想了一段时间，Pinterest 采用的是<a href="https://medium.com/@Pinterest_Engineering/immutable-models-and-data-consistency-in-our-ios-app-d10e248bfef8">通知的方式</a>，并且额外开发了一个用来支持这种方式的<a href="https://github.com/pinterest/plank">库</a>，不想整的这么麻烦。本质需求是：当传过去的 model 发生变化时通知我。而 RxSwift 里的 <code>Variable</code> 不是正好可以达到这个效果么？于是就有了基于 <code>Variable</code> 的解决方案。</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">extension</span><span> NewsFeedViewController {
+</span><span>    </span><span style="color:#8959a8;">override func </span><span>tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+</span><span>        </span><span style="color:#8959a8;">let</span><span> newsItem: NewsItem </span><span style="color:#3e999f;">=</span><span> NewsFeedViewModel</span><span style="color:#3e999f;">.</span><span>news</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>currentItems[indexPath</span><span style="color:#3e999f;">.</span><span>row]
+</span><span>        </span><span style="color:#8959a8;">let</span><span> newsItemVariable </span><span style="color:#3e999f;">=</span><span> Variable</span><span style="color:#3e999f;">&lt;</span><span>NewsItem</span><span style="color:#3e999f;">&gt;</span><span>(newsItem)
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">// 详情页可能会对这个 newsItemVariable 进行调整
+</span><span>        newsItemVariable</span><span style="color:#3e999f;">.</span><span>asObservable()</span><span style="color:#3e999f;">.</span><span>subscribe(onNext: { [</span><span style="color:#8959a8;">unowned self</span><span>] item </span><span style="color:#8959a8;">in
+</span><span>            </span><span style="color:#8e908c;">// 找到这个 item 所在的 index，并进行替换
+</span><span>            </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>viewModel</span><span style="color:#3e999f;">.</span><span>update(item: item)
+</span><span>            </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>tableView</span><span style="color:#3e999f;">.</span><span>reloadData()
+</span><span>        })</span><span style="color:#3e999f;">.</span><span>addDisposableTo(disposeBag)
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">// 带上这个 Variable 到新的 VC
+</span><span>        Router</span><span style="color:#3e999f;">.</span><span>to(</span><span style="color:#3e999f;">.</span><span>detail, parameters: [</span><span style="color:#839c00;">&quot;model&quot;</span><span>: newsItemVariable])
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<h4 id="xiang-qing-ye-view-de-chu-li">详情页 View 的处理</h4>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">class</span><span> NewsDetailViewController: UIViewController {
+</span><span>    </span><span style="color:#8959a8;">override func </span><span>viewDidLoad() {
+</span><span>        </span><span style="color:#8e908c;">// favButton
+</span><span>        navigationItem</span><span style="color:#3e999f;">.</span><span>rightBarButtonItem </span><span style="color:#3e999f;">=</span><span> favButton
+</span><span>        favButton</span><span style="color:#3e999f;">.</span><span>rx</span><span style="color:#3e999f;">.</span><span>tap
+</span><span>            </span><span style="color:#3e999f;">.</span><span>subscribe(onNext: { [</span><span style="color:#8959a8;">unowned self</span><span>] item </span><span style="color:#8959a8;">in
+</span><span>                </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>viewModel</span><span style="color:#3e999f;">.</span><span>toggleFav()
+</span><span>            })
+</span><span>            </span><span style="color:#3e999f;">.</span><span>addDisposableTo(disposeBag)
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">// 1
+</span><span>        </span><span style="color:#8959a8;">if let</span><span> id </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>getExtra(</span><span style="color:#839c00;">&quot;id&quot;</span><span>) </span><span style="color:#3e999f;">as? </span><span style="color:#c99e00;">Int</span><span> {
+</span><span>            </span><span style="color:#8e908c;">// viewModel.load(id)
+</span><span>        }
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">// 2
+</span><span>        </span><span style="color:#8959a8;">if let</span><span> model </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>getExtra(</span><span style="color:#839c00;">&quot;model&quot;</span><span>) </span><span style="color:#3e999f;">as?</span><span> Variable</span><span style="color:#3e999f;">&lt;</span><span>NewsItem</span><span style="color:#3e999f;">&gt;</span><span> {
+</span><span>            favButton</span><span style="color:#3e999f;">.</span><span>title </span><span style="color:#3e999f;">=</span><span> model</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>hasFaved </span><span style="color:#3e999f;">? </span><span style="color:#839c00;">&quot;♥︎&quot; </span><span style="color:#3e999f;">: </span><span style="color:#839c00;">&quot;♡&quot;
+</span><span>            viewModel</span><span style="color:#3e999f;">.</span><span>load(</span><span style="color:#c99e00;">Int</span><span>(model</span><span style="color:#3e999f;">.</span><span>value</span><span style="color:#3e999f;">.</span><span>id))
+</span><span>            NewsDetailViewModel</span><span style="color:#3e999f;">.</span><span>newsItem </span><span style="color:#3e999f;">=</span><span> model
+</span><span>        }
+</span><span>
+</span><span>        handleDataChange()
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">// 3
+</span><span>    </span><span style="color:#8959a8;">func </span><span>handleDataChange() {
+</span><span>        NewsDetailViewModel</span><span style="color:#3e999f;">.</span><span>newsDetail</span><span style="color:#3e999f;">.</span><span>asObservable()
+</span><span>            </span><span style="color:#3e999f;">.</span><span>subscribe(onNext:{ [</span><span style="color:#8959a8;">unowned self</span><span>] item </span><span style="color:#8959a8;">in
+</span><span>                </span><span style="color:#8959a8;">if let</span><span> item </span><span style="color:#3e999f;">=</span><span> item {
+</span><span>                    </span><span style="color:#8959a8;">let</span><span> request </span><span style="color:#3e999f;">=</span><span> URLRequest(url: URL(string: item</span><span style="color:#3e999f;">.</span><span>shareURL)</span><span style="color:#3e999f;">!</span><span>)
+</span><span>                    </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>webView</span><span style="color:#3e999f;">.</span><span>loadRequest(request)
+</span><span>                }
+</span><span>            })
+</span><span>            </span><span style="color:#3e999f;">.</span><span>addDisposableTo(disposeBag)
+</span><span>
+</span><span>        NewsDetailViewModel</span><span style="color:#3e999f;">.</span><span>newsItem?</span><span style="color:#3e999f;">.</span><span>asObservable()
+</span><span>            </span><span style="color:#3e999f;">.</span><span>subscribe(onNext: { [</span><span style="color:#8959a8;">unowned self</span><span>] item </span><span style="color:#8959a8;">in
+</span><span>                </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>favButton</span><span style="color:#3e999f;">.</span><span>title </span><span style="color:#3e999f;">=</span><span> item</span><span style="color:#3e999f;">.</span><span>hasFaved </span><span style="color:#3e999f;">? </span><span style="color:#839c00;">&quot;♥︎&quot; </span><span style="color:#3e999f;">: </span><span style="color:#839c00;">&quot;♡&quot;
+</span><span>            })
+</span><span>            </span><span style="color:#3e999f;">.</span><span>addDisposableTo(disposeBag)
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<ol>
+<li>这里为通过外部 URL 进来的留一个入口。</li>
+<li>通过 <code>getExtra</code> 拿到 <code>Variable</code> 后，接下来就交给 VM 了。</li>
+<li><code>handleDataChange</code> 做的事情就是响应 VM 的 properties 的变化，做一些 UI 上的调整。</li>
+</ol>
+<h3 id="service">Service</h3>
+<p>之前说过使用 Swift 提供 Service 会比较方便，都不需要在 App 启动时进行注册，利用自带的 Protocol Extension 就能达到效果。这个例子中没有用到，就举个其他的例子吧，以购物车为例：</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8e908c;">// 放在 Services 目录下的 Protocols.swift
+</span><span style="color:#8959a8;">protocol</span><span> Cart {
+</span><span>    </span><span style="color:#8959a8;">public func </span><span>add(_ item: Item) </span><span style="color:#3e999f;">-&gt; </span><span style="color:#c99e00;">Bool
+</span><span>}
+</span><span>
+</span><span>// 具体的实现可以放到对应的页面
+</span><span>extension Cart {
+</span><span>    </span><span style="color:#8959a8;">public func </span><span>add(_ item: Item) </span><span style="color:#3e999f;">-&gt; </span><span style="color:#c99e00;">Bool </span><span>{
+</span><span>        </span><span style="color:#8e908c;">// business logic
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>对于想要使用这个功能的开发来说，只要看 <code>Services/Protocols.swift</code> 就行了。跟 Objective-C 不同，extension 里如果有两个相同的方法，编译器会直接报错，这样就避免了运行期可能出现多个实现的问题。</p>
+<h3 id="local-reasoning">Local Reasoning</h3>
+<p>Local Reasoning 的意思是对于数据的改动都发生在某一个特定的单元。这也是使用 Value Type 的好处，因为如果使用 Reference Type，只要把其中的一个 Reference 给了出去，就不知道什么时间什么场景下数据会在外部被改变，就像给了你一张银行卡，今天看还剩 1 万，可能明天再去看就只剩 1 千了。</p>
+<p>使用 VM 后，所有对数据的改动都发生在 VM 里面，同时对数据的消费也尽量在一个地方，方便维护。</p>
+<h2 id="xiao-jie">小结</h2>
+<p>以上是我自己对「Right Architecture」的一些理解和实践，实际过程中肯定还有很多细节要调整，如果你有什么想法欢迎交流～</p>
+<h2 id="update">Update</h2>
+<p>Demo 在这里：https://github.com/limboy/ZhihuDailyDemo</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

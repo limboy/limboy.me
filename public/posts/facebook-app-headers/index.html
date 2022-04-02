@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+读 Facebook App 头文件的一些收获
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/facebook-app-headers/">
+
+<meta name="twitter:title" content="读 Facebook App 头文件的一些收获">
+<meta property="og:title" content="读 Facebook App 头文件的一些收获">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;facebook-app-headers&#x2F;">读 Facebook App 头文件的一些收获</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2014-11-28</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>最近在看一些 App 架构相关的文章，也看了 Facebook 分享的两个不同时期的架构（2013 和 2014），于是就想一窥 Facebook App 的头文件，看看会不会有更多的收获，确实有，还不少。由于在选择 ipa 上的失误，下了个 7.0 版的 Facebook（最新的是 18.1），会稍有过时，不过后来又下了个 18.1 的看了下，发现变动其实不大。以下是我从头文件中获取到的一些信息（20 多万行，浏览起来还是挺累的）</p>
+<h3 id="rang-shi-tu-zu-jian-ke-yi-fang-bian-di-pei-zhi">让视图组件可以方便地配置</h3>
+<p>这个在 Facebook 的演讲中也提到过，自定义的 UI 组件在初始化时可以传一些数值来表示想要呈现的效果，就像 HTML 和 CSS 一样，Dom 结构表示这是什么，CSS 对该结构进行个性化定制。 Facebook 是通过 Struct 来做这件事的，比如</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">struct </span><span>FBActionSheetButtonMetrics {
+</span><span>    CDUnknownFunctionPointerType </span><span style="color:#3e999f;">*</span><span>_vptr$FBMetrics;
+</span><span>    </span><span style="color:#8959a8;">_Bool</span><span> _initialized;
+</span><span>    </span><span style="color:#8959a8;">float</span><span> leftMargin;
+</span><span>    </span><span style="color:#8959a8;">float</span><span> textLeftMargin;
+</span><span>    </span><span style="color:#8959a8;">float</span><span> bottomSeperatorSideMargin;
+</span><span>    </span><span style="color:#8959a8;">float</span><span> bottomSeperatorHeight;
+</span><span>    </span><span style="color:#8959a8;">int</span><span> detailMaxNumLines;
+</span><span>    UIColor </span><span style="color:#3e999f;">*</span><span>titleColor;
+</span><span>	</span><span style="color:#8e908c;">//...
+</span><span>};
+</span></code></pre>
+<p>好处是减少了代码量，而且直观，方便复用。</p>
+<h3 id="jin-liang-shi-yong-zu-he-gua-du-shi-yong-ji-cheng">尽量使用组合，适度使用继承</h3>
+<p>如果过度使用继承，尤其是继承层次过深，往往会带来更大的维护成本。有新需求或需求变更时，会花很多时间在「是否需要在基类/子类增加一个方法」，「是否需要新建一个子类」等设计相关的问题上。而组合则没有这个问题，大不了换一个组件。</p>
+<p>不过 Objective-C 对于组合并没有特别的支持，所以实现起来会略麻烦</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@interface </span><span>People {}
+</span><span style="color:#8959a8;">@property id </span><span>&lt;Vehicle&gt; vehicle;
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">move</span><span>;
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span style="color:#8959a8;">@implementation </span><span>People
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">initWithVehicle: </span><span>(</span><span style="color:#8959a8;">id </span><span>&lt;Vehicle&gt;)</span><span style="color:#f07219;">vehicle </span><span>{
+</span><span>	</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">self </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#c82728;">super </span><span style="color:#4271ae;">init</span><span>]) {
+</span><span>		</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">vehicle </span><span style="color:#3e999f;">=</span><span> vehicle;
+</span><span>	}
+</span><span>	</span><span style="color:#8959a8;">return </span><span style="color:#c82728;">self</span><span>;
+</span><span>}
+</span><span>
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">move </span><span>{
+</span><span>	[</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">vehicle</span><span> move];
+</span><span>}
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<p>如果有很多类似 move 这样需要交给外部的 object 来做的方法，就会显得冗余，尽管如此，比起继承来还是更方便维护的。</p>
+<p>使用组合的话，一般会使用「依赖注入」，比如这里的 Vehicle，并不需要特别指出是 Bike 还是 Car，只要有 move 方法就可以，这样就可以很方便地替换，对于 People 来说不需要做任何改动。在 Objective-C 里是通过 protocol 来实现的。</p>
+<p>所以 Facebook 定义了一大堆的接口，包括 Delegate, DataSource 和 Protocol，ViewController 有 Protocol，也有 Delegate(如 FBMediaGalleryViewControllerDelegate)，View / Cell 也有 Delegate(如 FBMediaGalleryViewDelegate)，还有各种零零碎碎的 Protocol，如 FBDiscoveryCardProtocol, FBEventProtocol 等。</p>
+<p>定义接口的过程也是梳理架构的过程，如果对架构理解不够深刻，是很难将接口恰当地抽象出来的。很多人放弃使用组合，有一部分原因也是架构上的不合理。</p>
+<p>组件的粒度也是个问题，过细会导致组件过多，组合的过程就会花去很多时间；过粗又导致组件臃肿，难以复用。</p>
+<p>当组件的接口定义完之后，使用起来大概会是这样：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@interface </span><span>FBResponseHandler : </span><span style="color:#839c00;">NSObject </span><span>&lt;FBTestable, FBReceivedDataBufferDelegate, FBResponseHandlerProtocol&gt;
+</span><span>
+</span><span>@interface FBPhotoViewController </span><span style="color:#3e999f;">:</span><span> UIViewController &lt;FBPagingViewDelegate, FBPagingViewDataSource, FBPresentableViewController&gt;
+</span></code></pre>
+<p>这样一眼就大概能看出来这个 Class 大概会有哪些功能，如果某个组件要作调整，只需修改一处，就可以全局通用。</p>
+<p>适度使用继承，可以在易维护和便利上达到平衡，比如 FBTableViewController, FBDialog 等，自定义的组件可以在它们的基础上进行开发。继承的层次一般不超过 2 层，比如 UITableViewController &lt;- FBTableViewController &lt;- FBFriendsNearbyTableViewController</p>
+<h3 id="yi-lai-zhu-ru">依赖注入</h3>
+<p>前面讲过，组合往往和依赖注入搭配使用，Facebook 主要是通过 FBProvider, FBProviderMapData, FBProviderMap 来实现依赖注入的。</p>
+<p>Provider 会产生一个 Object，比如 CameraControllerProvider 调用 get 方法后，会生成一个 MNCameraController 的实例。同时 Provider 还有两个子类 SingletonProvider 和 BlockProvider，前者用来生成一个单例，后者用在需要初始化参数的情景。</p>
+<p>ProviderMap 跟 ProviderMapData 有些重复，它们之间的关系我也没有捋清，感觉 ProviderMap 像是一个 Manager，注册了一堆 Provider，然后可以通过 Provider 的 ID 来找到之前注册的 Provider。</p>
+<h3 id="mo-kuai-hua">模块化</h3>
+<p>不光是在 Cocoa 开发领域，其他的编程领域也一样，模块化是一个理想的状态，高内聚，低耦合。像 shell 命令一样，接受参数或标准输入，生成格式化的标准输出，通过管道传递给其他支持标准输入的命令行工具。</p>
+<p>但现实场景要复杂的多，模块化的实现也更加困难。Facebook 有一个 FBAppModule 协议</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@protocol </span><span>FBAppModule &lt;NSObject&gt;
+</span><span>+ (</span><span style="color:#8959a8;">id </span><span>&lt;FBAppModule&gt;)</span><span style="color:#4271ae;">instanceForSession:</span><span>(FBSession </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">providerMap:</span><span>(FBProviderMap </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">arg2</span><span>;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSArray </span><span style="color:#3e999f;">*</span><span>supportedURLSchemes;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSArray </span><span style="color:#3e999f;">*</span><span>supportedKeys;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">retain</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#8959a8;">id </span><span>&lt;FBMenuItem&gt; activeMenuItem;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>defaultIcon;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>ID;
+</span><span>- (UIViewController </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#4271ae;">viewControllerForMenuItem:</span><span>(</span><span style="color:#8959a8;">id </span><span>&lt;FBMenuItem&gt;)</span><span style="color:#f07219;">arg1</span><span>;
+</span></code></pre>
+<p>初始化时传入一个 FBSession (后面会讲到) 和 ProviderMap，然后设置支持的 url schemes，keys(具体作用未知)，对应的 menuItem，icon(用于在 menuItem 显示) 和 ID</p>
+<p>有了 Module ，自然还有 ModuleManager，它的作用是注册 Module，当一个 url 过来时，可以遍历 Module，看看是不是有模块可以处理这个 url，有的话，就调用该 Module 的 openURL: 方法。当然也可以根据 ModuleID 来获取 Module。</p>
+<p>FBAppModule 是一个 Protocol，FBNativeAppModule 是对该协议的实现，所以具体的模块都继承该类。</p>
+<h3 id="dao-hang-guan-li">导航管理</h3>
+<p>一般来说系统的 UINavigationController 已经够使用了，如果需要更大的自由度和更高的可定制性，可以自定义一个导航管理器，Facebook 使用了 FBUINavigationController (Protocol) 来实现自定义导航的管理，属性和方法跟系统的差不多。 它有多个实现：FBTariffedNavigationController, FBSwipeNavigationController, FBCustomNavigationController, FBNavigationController。前面讲过继承一般不超过 2 层，这里是一般之外的情况，有 3 层。</p>
+<h3 id="mvvm">MVVM</h3>
+<p>MVVM 是解决 Massive View Controller 的一个有效方法，独立出一个 ViewModel 作为 View 的数据源，以及处理 View 的一些交互操作，而 VC 只需要将 ViewModel 和 View 关联起来即可。一般会搭配某种绑定的实现，KVO 或 ReactiveCocoa 都可以，这样 ViewModel 的数据有变化就可以自动映射到 View 上。</p>
+<p>Facebook 也采用了这种方式，有一个 FBViewModel 基类</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@interface </span><span>FBViewModel : </span><span style="color:#839c00;">NSObject
+</span><span>
+</span><span style="color:#8e908c;">// 省略了一些相关性不大的属性和方法
+</span><span style="color:#8959a8;">@property</span><span> __weak FBViewModelManager </span><span style="color:#3e999f;">*</span><span>viewModelManager; </span><span style="color:#8e908c;">// @synthesize viewModelManager=_viewModelManager;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#8959a8;">unsigned int</span><span> viewModelSource; </span><span style="color:#8e908c;">// @synthesize viewModelSource=_viewModelSource;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">retain</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) FBViewModelConfiguration </span><span style="color:#3e999f;">*</span><span>viewModelConfiguration; </span><span style="color:#8e908c;">// @synthesize viewModelConfiguration=_viewModelConfiguration;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#8959a8;">unsigned int</span><span> viewModelVersion; </span><span style="color:#8e908c;">// @synthesize viewModelVersion=_viewModelVersion;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>viewModelUUID; </span><span style="color:#8e908c;">// @synthesize viewModelUUID=_viewModelUUID;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">retain</span><span>) FBMemModelObject </span><span style="color:#3e999f;">*</span><span>memModel; </span><span style="color:#8e908c;">// @synthesize memModel=_memModel;
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">setNilValueForKey:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">initWithViewModelUUID:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">viewModelVersion:</span><span>(</span><span style="color:#8959a8;">unsigned int</span><span>)</span><span style="color:#f07219;">arg2</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">setViewModelVersion:</span><span>(</span><span style="color:#8959a8;">unsigned int</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">humanDescription</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">loadPermanentDataModelObjectIDFromDataModelObjectID:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">block:</span><span>(CDUnknownBlockType)</span><span style="color:#f07219;">arg2</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">didUpdateWithChangedProperties:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span style="color:#8959a8;">@property</span><span> __weak FBViewModelController </span><span style="color:#3e999f;">*</span><span>modelController;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#8959a8;">int</span><span> loadState;
+</span><span>
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<p>Facebook 自己实现了一套 ViewModel 的更新通知机制，因为 ViewModel 都是 Immutable 的，所以无法改变，那么就需要有一个地方去集中管理这些 ViewModel，有更新时可以及时通知到， FBViewModelController 应该就是干这事的，里面有一个方法 <code>- (void)_notifyViewModel:(id)arg1 didUpdateWithChanges:(id)arg2;</code> 。但 FBViewModelManager 看起来更合适，二者的功能没有太理清楚。</p>
+<p>FBViewModelController 还有一个 Delegate，主要有 3 个方法 <code>didUpdate[Delegate][Insert]ViewModel:</code>，可以做一些事后的操作。</p>
+<h3 id="builder-pattern">Builder Pattern</h3>
+<p>在定义一个 ViewController 时，往往需要接收很多个参数，以 <code>initWith:</code> 这种形式出现不太合适，除非你能容忍一个 10 行的方法声明。通常的做法是把这些参数声明为 property，然后在初始化 VC 后，对这些 property 赋值，然后在 ViewDidLoad 里使用这些 property。这样做有几个问题：1) 不知道哪些是需要在 ViewDidLoad 前设置的，会出现忘了设置的现象。2) 这些属性可以在外部被改动。 3) 代码不够优雅。</p>
+<p>Builder Pattern 就是用来解决这个问题的，它跟工厂模式有点像。Facebook 也用到了这个模式，比如有一个 FBMUserFetchStatus 类，该类初始化时需要一些参数，于是就有了 FBMUserFetchStatusBuilder 类</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@interface </span><span>FBMUserFetchStatusBuilder : </span><span style="color:#839c00;">NSObject
+</span><span>
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">aMUserFetchStatusFromExistingMUserFetchStatus:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">aMUserFetchStatus</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">withIdentifiers:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">withImageUrls:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">withHasVerifiedPhone:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">withCanInstallMessenger:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">withHasMessenger:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">withIsFriend:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">withNickname:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">withPhoneticName:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">withName:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">withUserId:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">build</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<p>最后的 build 方法会生成一个 FBMUserFetchStatus 实例，有了这个 Builder 就知道有哪些参数是可以在初始化时进行设置的。</p>
+<h3 id="data-manager">Data Manager</h3>
+<p>这是重头戏，所以看起来略累，东西很多，很可能推断错误。</p>
+<p>先来看看实体类，首先是 FBEntityRequest</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@protocol </span><span>FBEntityRequestParse
+</span><span>@optional
+</span><span>+ (</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#4271ae;">canParse:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">error:</span><span>(</span><span style="color:#8959a8;">id </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">arg2</span><span>;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">retain</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSError </span><span style="color:#3e999f;">*</span><span>syncError;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">nonatomic</span><span>, </span><span style="color:#8959a8;">getter</span><span>=isSyncing) </span><span style="color:#8959a8;">BOOL</span><span> syncing;
+</span><span>- (</span><span style="color:#8959a8;">unsigned int</span><span>)</span><span style="color:#4271ae;">parse:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">request:</span><span>(</span><span style="color:#8959a8;">id </span><span>&lt;FBRequest&gt;)</span><span style="color:#f07219;">arg2 </span><span style="color:#4271ae;">error:</span><span>(</span><span style="color:#8959a8;">id </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">arg3</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id </span><span>&lt;FBRequest&gt;)</span><span style="color:#4271ae;">request</span><span>;
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<p>所以实体都是可以被解析和同步的，还自带了一个 Request。</p>
+<p>再来看看 FBEntity</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@protocol </span><span>FBEntity &lt;FBEntityRequestParse, NSObject&gt;
+</span><span>+ (</span><span style="color:#c99e00;">NSURL </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#4271ae;">entityURLForFBID:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSURL </span><span style="color:#3e999f;">*</span><span>entityURL;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>, </span><span style="color:#8959a8;">getter</span><span>=isDataStale) </span><span style="color:#8959a8;">BOOL</span><span> dataStale;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">retain</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSDate </span><span style="color:#3e999f;">*</span><span>lastSyncTime;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">retain</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>fbid;
+</span><span>
+</span><span>@optional
+</span><span>+ (</span><span style="color:#8959a8;">unsigned int</span><span>)</span><span style="color:#4271ae;">collection:</span><span>(FBEntityCollection </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">parse:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg2 </span><span style="color:#4271ae;">request:</span><span>(</span><span style="color:#8959a8;">id </span><span>&lt;FBRequest&gt;)</span><span style="color:#f07219;">arg3 </span><span style="color:#4271ae;">error:</span><span>(</span><span style="color:#8959a8;">id </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">arg4</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id </span><span>&lt;FBRequest&gt;)</span><span style="color:#4271ae;">collectionRequest:</span><span>(FBEntityCollection </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) FBEntityDownloader </span><span style="color:#3e999f;">*</span><span>entityDownloader;
+</span><span>- (</span><span style="color:#c99e00;">NSSet </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#4271ae;">parentEdges</span><span>;
+</span><span>- (</span><span style="color:#c99e00;">NSSet </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#4271ae;">parentCollections</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">entityInitializeWithFBID:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<p>每个 Entity 都有一个 entityURL，或许可以用来同步？ dataStale 应该是用来表示数据是否 dirty，如果是的话，可能需要同步。 还可以请求 Collection。</p>
+<p>FBEntityCollection 跟 FBEntity 类似，不过多了 syncAll / memberClass / allObjects 这些属性/方法。</p>
+<p>再来看看数据请求，首先是 FBRequest，不太明白这个 Class 的具体功能，因为没有 URL，一个没有 URL 的 Request 能做什么？ 然后看到了 FBRequester，这个看起来是一个数据请求类，有 URL, responseHandler, connection 状态, delegate 等。但这只是单个的请求，如何对多个请求进行管理呢，这时看到了 FBNetworker，它有 +sharedNetworker, requestQueue, cancelRequests:, addRequest: 所以就是它了。等等，为什么下面还有一个 FBNetworkerRequest ？看起来像是 FBNetworker 的 Delegate，但不确定。</p>
+<p>为了避免 URI 散落在各处，Facebook 还专门为 NSURL 写了个 Category 来统一管理 URI。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@interface </span><span>NSURL (FBFoundation)
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">friendsNearbyURL</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">codeGeneratorURL</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">tagApprovalURLWithTagId:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">tagApprovalURL</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">pokesURL</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">personExpandedAboutURLWithFBID:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span style="color:#8e908c;">// ...
+</span></code></pre>
+<p>还有一个 URL 生成类，FBURLRequestGenerator，该类保存了 appSecret 和 appVersion，生成的 URL 会自动带上这些属性。</p>
+<p>其实还有很多，实在看不下来了···</p>
+<h3 id="smarter-views">Smarter Views</h3>
+<p>我们都知道 ViewController 自带了一个 view，可以直接在这个 view 上 addSubview，正是由于这个便利性，很多创建 View 的代码也挤在了 VC 里，实在是不雅观。</p>
+<p>更好的方法是替换 VC 的 view 为自定义的 View，然后把这个自定义 View 独立出去。比如在 <code>-loadView</code> 时覆盖 view</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@implementation </span><span>MyProfileViewController
+</span><span>
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">loadView </span><span>{
+</span><span>    </span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">view </span><span style="color:#3e999f;">= </span><span>[MyProfileView </span><span style="color:#4271ae;">new</span><span>];
+</span><span>}
+</span></code></pre>
+<p>可以同时重定义 view 的类型，如 <code>@property (nonatomic) MyProfileView *view</code>，让编译器明白 view 的类型已经变了。</p>
+<p>因为看到了不少 VC 中都有 <code>-loadView</code> 方法，所以推断可能使用了这项技术。</p>
+<h3 id="fbsession">FBSession</h3>
+<p>在 Web 开发领域，Session 是用来保存用户相关的信息的，FBSession 自然也不例外，不过它保存的内容还真是多呢。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@interface </span><span>FBSession : </span><span style="color:#839c00;">NSObject </span><span>&lt;FBInvalidating&gt;
+</span><span>
+</span><span>+ (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">setCurrentSession:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">_globalSessionForDebugging</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">DO_NOT_USE_OR_YOU_WILL_BE_FIREDcurrentSession</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>) FBAPISessionStore </span><span style="color:#3e999f;">*</span><span>apiSessionStore; </span><span style="color:#8e908c;">// @synthesize apiSessionStore=_apiSessionStore;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>) FBSessionDiskStore </span><span style="color:#3e999f;">*</span><span>sessionDiskStore; </span><span style="color:#8e908c;">// @synthesize sessionDiskStore=_sessionDiskStore;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>) FBStore </span><span style="color:#3e999f;">*</span><span>store; </span><span style="color:#8e908c;">// @synthesize store=_store;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>) </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>appSecret; </span><span style="color:#8e908c;">// @synthesize appSecret=_appSecret;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>, </span><span style="color:#8959a8;">getter</span><span>=isValid) </span><span style="color:#8959a8;">BOOL</span><span> valid;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>) </span><span style="color:#8959a8;">BOOL</span><span> hasUser;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>) </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>userFBID;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">retain</span><span>) FBViewerContext </span><span style="color:#3e999f;">*</span><span>viewerContext;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">retain</span><span>) FBUserPreferences </span><span style="color:#3e999f;">*</span><span>userPreferences;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">retain</span><span>) FBPreferences </span><span style="color:#3e999f;">*</span><span>sessionPreferences;
+</span><span>
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">updateAccessToken:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">updateActingViewer:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">clearPreferences</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">invalidate</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">DO_NOT_USE_OR_YOU_WILL_BE_FIREDvalueForKeyRequiresUser:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">withInitializer:</span><span>(CDUnknownBlockType)</span><span style="color:#f07219;">arg2</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">valueForKey:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">withInitializer:</span><span>(CDUnknownBlockType)</span><span style="color:#f07219;">arg2</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">valueForKey:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">initWithAppSecret:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">store:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg2 </span><span style="color:#4271ae;">apiSessionStore:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg3</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) FBReactionController </span><span style="color:#3e999f;">*</span><span>reactionController;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) FBLocationPingback </span><span style="color:#3e999f;">*</span><span>locationPingback;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) FBAppSectionManager </span><span style="color:#3e999f;">*</span><span>appSectionManager;
+</span><span style="color:#8959a8;">@property</span><span>(</span><span style="color:#8959a8;">readonly</span><span>, </span><span style="color:#8959a8;">nonatomic</span><span>) FBBookmarkManager </span><span style="color:#3e999f;">*</span><span>bookmarkManager;
+</span><span>
+</span><span style="color:#8e908c;">// and many more...
+</span></code></pre>
+<p>Session 是可以保存到本地的，有一个状态变量用来标识是否有效(valid)，是否已登录(hasUser)，用户的一些设置(这些设置会保存到本地)，可以更新 AccessToken，还带了各种 Controller 和 Manager，所以东西还是挺多的。</p>
+<p>这里有两个特殊方法，使用后会被 Fire···</p>
+<h3 id="services">Services</h3>
+<p>Service 顾名思义，提供某种服务，往往跟界面无关。从目录层级上看，Service 并不在 Module 里面，也就是说这二者是独立的，比如 FBTimelineModule 并不包含 FBTimelineService。</p>
+<p>Service 之间可以有依赖，这里是通过 <code>startAppServiceWithDependencies:</code> 来实现的，不过不清楚 Service 自身如何声明依赖哪些其他的 Services。</p>
+<h3 id="style">Style</h3>
+<p>App 的 Style 是一个容易被忽视的地方，开发往往看着设计图就开始写了，这样很容易造成样式不统一，且将来调整起来也不方便。</p>
+<p>Facebook 是通过 Category 来自定义样式的，举个简单的例子：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@interface </span><span>UIButton (FBMediaKit)
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">fb_buttonTypeSystemWithTitle:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">fb_buttonWithNormalImage:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">highlightedImage:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg2 </span><span style="color:#4271ae;">selectedImage:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg3</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">fb_buttonWithTemplateImage:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">fb_buttonWithStyle:</span><span>(</span><span style="color:#8959a8;">int</span><span>)</span><span style="color:#f07219;">arg1 </span><span style="color:#4271ae;">title:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">arg2</span><span>;
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span style="color:#8959a8;">@interface </span><span>UIButton (FBUIKit)
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">fb_moreOptionsNavBarButton</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">fb_backArrowButtonWithText</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">fb_backArrowButtonWithRightPadding:</span><span>(</span><span style="color:#8959a8;">float</span><span>)</span><span style="color:#f07219;">arg1</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">fb_backArrowButton</span><span>;
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span style="color:#8959a8;">@interface </span><span>UIButton (MNLoginFormAppearanceHelpers)
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">phoneFormHeaderButton</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">singleSignOnButton</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">skipButton</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">formFieldButtonInvertedColors</span><span>;
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<p>这样也不用关心 fontColor，margin，backgroundColor 等，直接拿来用即可。</p>
+<h3 id="qi-ta">其他</h3>
+<p>从目录结构上来看，Facebook 有 FBUIKit, FBFoundation, FBAppKit, Module。其中 FBUIKit 和 FBFoundation 是业务无关的，可以用在其他 App 上，FBAppKit 和 Module 是业务相关的。</p>
+<p>Module 自带资源，可以看成是一个 mini app。</p>
+<p>使用了 EGODatabase, SDWebImage, SSZipArchive, CocoaLumberjack 这几个开源类库（可能还有更多）。</p>
+<p>时间和能力有限，只能挖掘出这些信息，希望能带来些帮助。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

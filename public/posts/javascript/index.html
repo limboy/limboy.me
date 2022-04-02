@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+javascript大杂烩
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/javascript/">
+
+<meta name="twitter:title" content="javascript大杂烩">
+<meta property="og:title" content="javascript大杂烩">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;javascript&#x2F;">javascript大杂烩</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-03-04</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>花了点时间学习了下 js 基础，跟大家分享一下，有不到之处，欢迎指出 :)</p>
+<h3 id="guan-yu-dui-xiang">关于对象</h3>
+<h4 id="dui-xiang-de-chuang-jian">对象的创建</h4>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">var </span><span style="color:#c82728;">newObj </span><span style="color:#3e999f;">= new </span><span>Object();
+</span><span style="color:#8e908c;">// var newObj = {};
+</span><span style="color:#c82728;">newObj</span><span>[</span><span style="color:#839c00;">&#39;someValue&#39;</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;val&#39;</span><span>;
+</span></code></pre>
+<h4 id="yi-qie-jie-dui-xiang">一切皆对象</h4>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span>[</span><span style="color:#f07219;">1</span><span>,</span><span style="color:#f07219;">2</span><span>] </span><span style="color:#3e999f;">instanceof </span><span>Object </span><span style="color:#8e908c;">// true
+</span><span>{</span><span style="color:#f07219;">1</span><span>:</span><span style="color:#f07219;">2</span><span>, </span><span style="color:#f07219;">3</span><span>:</span><span style="color:#f07219;">4</span><span>} </span><span style="color:#3e999f;">instanceof </span><span>Object </span><span style="color:#8e908c;">//true
+</span></code></pre>
+<p>但也有些特殊的对象，如 3, 'str', true 等等，但如果用 instanceof 测试的话，会发现</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#839c00;">&#39;foo&#39; </span><span style="color:#3e999f;">instanceof </span><span>Object; </span><span style="color:#8e908c;">// false
+</span><span style="color:#f07219;">3 </span><span style="color:#3e999f;">instanceof </span><span>Object; </span><span style="color:#8e908c;">// false
+</span><span style="color:#f07219;">true </span><span style="color:#3e999f;">instanceof </span><span>Object; </span><span style="color:#8e908c;">// false
+</span></code></pre>
+<p>但它们真的也是对象</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#839c00;">&#39;foo&#39;</span><span>.constructor </span><span style="color:#3e999f;">== </span><span style="color:#c99e00;">String </span><span style="color:#8e908c;">// true
+</span><span style="color:#c82728;">true</span><span>.constructor </span><span style="color:#3e999f;">== </span><span style="color:#c99e00;">Boolean </span><span style="color:#8e908c;">// true
+</span><span>3.constructor </span><span style="color:#3e999f;">== </span><span style="color:#c99e00;">Number </span><span style="color:#8e908c;">// true
+</span></code></pre>
+<p>还有一个理由</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#c99e00;">Number</span><span>.prototype.</span><span style="color:#4271ae;">times </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">func</span><span>) {
+</span><span>  </span><span style="color:#8959a8;">for </span><span>(</span><span style="color:#8959a8;">var </span><span style="color:#c82728;">index </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1</span><span>; </span><span style="color:#c82728;">index </span><span style="color:#3e999f;">&lt;= </span><span style="color:#c82728;">this</span><span>; </span><span style="color:#c82728;">index</span><span style="color:#3e999f;">++</span><span>) {
+</span><span>    </span><span style="color:#4271ae;">func</span><span>(</span><span style="color:#c82728;">index</span><span>);
+</span><span>  }
+</span><span>};
+</span><span>(</span><span style="color:#f07219;">5</span><span>)</span><span style="color:#4271ae;">.times</span><span>(</span><span style="color:#c82728;">print</span><span>);
+</span><span style="color:#8e908c;">// 5 .times(print); //also works
+</span><span style="color:#8e908c;">// 加上括号是为了避免出现解析错误(js引擎会以为是小数点)
+</span></code></pre>
+<p>就连函数也是一个对象</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">var </span><span style="color:#4271ae;">fn </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">function </span><span>() {};
+</span><span style="color:#c82728;">fn</span><span>.</span><span style="color:#c82728;">foo </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;hello world&#39;</span><span>;
+</span><span style="color:#c82728;">fn</span><span>.</span><span style="color:#4271ae;">bar </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">function </span><span>() {
+</span><span>  </span><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">foo</span><span>);
+</span><span>};
+</span></code></pre>
+<h4 id="dui-xiang-de-chu-shi-hua">对象的初始化</h4>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">function </span><span style="color:#4271ae;">User</span><span>(</span><span style="color:#f07219;">first</span><span>, </span><span style="color:#f07219;">last</span><span>) {
+</span><span>  </span><span style="color:#c82728;">this</span><span>.name </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">first </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39; &#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">last</span><span>;
+</span><span>}
+</span><span style="color:#8959a8;">var </span><span style="color:#c82728;">user </span><span style="color:#3e999f;">= new </span><span>User(</span><span style="color:#839c00;">&#39;John&#39;</span><span>, </span><span style="color:#839c00;">&#39;Resig&#39;</span><span>);
+</span><span style="color:#8e908c;">// var user = User(&#39;John&#39;, &#39;Resig&#39;);
+</span></code></pre>
+<p>一个 function，可以看成是一个 Class，也可以看成是一个正常的函数，这就麻烦了，因为无论加不加上 new 这个关键字，function 都能正常运行，虽然结果会不一样。</p>
+<p>如果看成 Class，使用 new 关键字初始化，那么 function 里的 this 指向当前的 function。如果不使用 new 关键字，则 function 里的 this 默认指向 Window</p>
+<p>有两种解决方法，一个是将 Class function 的首字母大写，如 User，这样就能清楚地知道哪些 function 是 Class。但这样还是避免不了写程序时粗心，忘了加 new 关键字。</p>
+<p>另一种方法就是不是用 new 关键字，在 function 里自动判断，保证返回的一定是当前对象</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">function </span><span style="color:#4271ae;">User</span><span>(</span><span style="color:#f07219;">first</span><span>, </span><span style="color:#f07219;">last</span><span>) {
+</span><span>  </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">this </span><span style="color:#3e999f;">instanceof </span><span>User) {
+</span><span>    </span><span style="color:#c82728;">this</span><span>.name </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">first </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39; &#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">last</span><span>;
+</span><span>  } </span><span style="color:#8959a8;">else return </span><span style="color:#3e999f;">new </span><span>User(</span><span style="color:#c82728;">first</span><span>, </span><span style="color:#c82728;">last</span><span>);
+</span><span>}
+</span></code></pre>
+<p>更通用的方法是创建一个 makeClass 方法</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8e908c;">// makeClass - By John Resig (MIT Licensed)
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">makeClass</span><span>() {
+</span><span>  </span><span style="color:#8959a8;">return function </span><span>(</span><span style="color:#f07219;">args</span><span>) {
+</span><span>    </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">this </span><span style="color:#3e999f;">instanceof </span><span>arguments.callee) {
+</span><span>      </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#3e999f;">typeof </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">init </span><span style="color:#3e999f;">== </span><span style="color:#839c00;">&#39;function&#39;</span><span>)
+</span><span>        </span><span style="color:#c82728;">this</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">init</span><span style="color:#4271ae;">.apply</span><span>(</span><span style="color:#c82728;">this</span><span>, </span><span style="color:#c82728;">args</span><span>.callee </span><span style="color:#3e999f;">? </span><span style="color:#c82728;">args </span><span style="color:#3e999f;">: </span><span style="color:#c82728;">arguments</span><span>);
+</span><span>    } </span><span style="color:#8959a8;">else return </span><span style="color:#3e999f;">new </span><span>arguments.callee(</span><span style="color:#c82728;">arguments</span><span>);
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>因为函数名未知，所以使用了 arguments.callee 来实现。</p>
+<p>makeClass 的使用</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">var </span><span style="color:#c82728;">User </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">makeClass</span><span>();
+</span><span style="color:#c99e00;">User</span><span>.prototype.</span><span style="color:#4271ae;">init </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">first</span><span>, </span><span style="color:#f07219;">last</span><span>) {
+</span><span>  </span><span style="color:#c82728;">this</span><span>.name </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">first </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39; &#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">last</span><span>;
+</span><span>};
+</span><span style="color:#8959a8;">var </span><span style="color:#c82728;">user </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">User</span><span>(</span><span style="color:#839c00;">&#39;John&#39;</span><span>, </span><span style="color:#839c00;">&#39;Resig&#39;</span><span>);
+</span><span style="color:#c82728;">user</span><span>.name;
+</span><span style="color:#8e908c;">// =&gt; &quot;John Resig&quot;
+</span></code></pre>
+<h4 id="dui-xiang-de-ji-cheng">对象的继承</h4>
+<p>每个 function 都有一个特殊的变量&quot;prototype&quot;，当实例化对象时，这个变量上的各个属性也会被附加到对象上</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">function </span><span style="color:#4271ae;">Car</span><span>(</span><span style="color:#f07219;">model</span><span>, </span><span style="color:#f07219;">year</span><span>, </span><span style="color:#f07219;">miles</span><span>) {
+</span><span>  </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">model </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">model</span><span>;
+</span><span>  </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">year </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">year</span><span>;
+</span><span>  </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">miles </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">miles</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#c99e00;">Car</span><span>.prototype </span><span style="color:#3e999f;">= </span><span>{
+</span><span>  </span><span style="color:#4271ae;">info</span><span>: </span><span style="color:#8959a8;">function </span><span>() {
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">model </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">year </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">miles</span><span>;
+</span><span>  },
+</span><span>};
+</span><span>
+</span><span style="color:#8959a8;">var </span><span style="color:#c82728;">car </span><span style="color:#3e999f;">= new </span><span>Car(</span><span style="color:#839c00;">&#39;Benz&#39;</span><span>, </span><span style="color:#f07219;">3</span><span>, </span><span style="color:#f07219;">1500</span><span>);
+</span><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#c82728;">car</span><span style="color:#4271ae;">.info</span><span>());
+</span></code></pre>
+<p>如果不使用 new 关键字，prototype 就失效了</p>
+<p>prototype 属性也有一个特殊的属性&quot;constructor&quot;，通过它我们就能实现继承了</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#c99e00;">Object</span><span>.prototype.</span><span style="color:#c82728;">inObj </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">A</span><span>() {
+</span><span>  </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">inA </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">2</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#c99e00;">A</span><span>.prototype.</span><span style="color:#c82728;">inAProto </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">3</span><span>;
+</span><span>
+</span><span style="color:#c99e00;">B</span><span>.prototype </span><span style="color:#3e999f;">= new </span><span>A(); </span><span style="color:#8e908c;">// Hook up A into B&#39;s prototype chain
+</span><span style="color:#c99e00;">B</span><span>.prototype.constructor </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">B</span><span>;
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">B</span><span>() {
+</span><span>  </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">inB </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">4</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#c99e00;">B</span><span>.prototype.</span><span style="color:#c82728;">inBProto </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">5</span><span>;
+</span><span>
+</span><span style="color:#c82728;">x </span><span style="color:#3e999f;">= new </span><span>B();
+</span></code></pre>
+<h3 id="bi-bao-yu-mo-kuai-hua">闭包与模块化</h3>
+<p>闭包是一种现象，通常是因为一个 function 返回了一个内部的 function，如</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">function </span><span style="color:#4271ae;">f1</span><span>() {
+</span><span>  </span><span style="color:#c82728;">n </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">2011</span><span>;
+</span><span>  </span><span style="color:#8959a8;">return function </span><span style="color:#4271ae;">f2</span><span>() {
+</span><span>    </span><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#c82728;">n</span><span>); </span><span style="color:#8e908c;">// 2011
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>可以看到内部 function f2 成功地得到了 f1 的 local 变量，又因为 n 被 f2 使用，所以变量 n 就常驻内存了
+从这个角度上说，如果把 f1 看成一个 class，n 就变成了私有变量，而 f2 成为了公共方法，所以就有了模块化的概念</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">var </span><span style="color:#c82728;">myNamespace </span><span style="color:#3e999f;">= </span><span>(</span><span style="color:#8959a8;">function </span><span>() {
+</span><span>  </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">myPrivateVar </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span>  </span><span style="color:#8959a8;">var </span><span style="color:#4271ae;">myPrivateMethod </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">someText</span><span>) {
+</span><span>    </span><span style="color:#c99e00;">console</span><span style="color:#4271ae;">.log</span><span>(</span><span style="color:#c82728;">someText</span><span>);
+</span><span>  };
+</span><span>
+</span><span>  </span><span style="color:#8959a8;">return </span><span>{
+</span><span>    myPublicVar: </span><span style="color:#839c00;">&#39;foo&#39;</span><span>,
+</span><span>    </span><span style="color:#4271ae;">myPublicFunction</span><span>: </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">bar</span><span>) {
+</span><span>      </span><span style="color:#c82728;">myPrivateVar</span><span style="color:#3e999f;">++</span><span>;
+</span><span>      </span><span style="color:#4271ae;">myPrivateMethod</span><span>(</span><span style="color:#c82728;">bar</span><span>);
+</span><span>    },
+</span><span>  };
+</span><span>})();
+</span></code></pre>
+<h3 id="qi-ta">其他</h3>
+<h4 id="bi-mian-ming-ming-wu-ran-de-fang-fa">避免命名污染的方法</h4>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8e908c;">// self executing
+</span><span style="color:#8e908c;">// if you want some var global accessable, put &quot;window.&quot; ahead
+</span><span>(</span><span style="color:#8959a8;">function </span><span>() {
+</span><span>  </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">myVar </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">2</span><span>;
+</span><span>  </span><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#c82728;">myVar</span><span>);
+</span><span>  window.</span><span style="color:#c82728;">globalVar </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">3</span><span>;
+</span><span>})();
+</span></code></pre>
+<h4 id="qiang-da-de-prototype">强大的 prototype</h4>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#c99e00;">Array</span><span>.prototype.</span><span style="color:#4271ae;">contains </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">value</span><span>) {
+</span><span>  </span><span style="color:#8959a8;">for </span><span>(</span><span style="color:#8959a8;">var </span><span style="color:#c82728;">i </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>; </span><span style="color:#c82728;">i </span><span style="color:#3e999f;">&lt; </span><span style="color:#c82728;">this</span><span>.length; </span><span style="color:#c82728;">i</span><span style="color:#3e999f;">++</span><span>) {
+</span><span>    </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">this</span><span>[</span><span style="color:#c82728;">i</span><span>] </span><span style="color:#3e999f;">== </span><span style="color:#c82728;">value</span><span>) </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">true</span><span>;
+</span><span>  }
+</span><span>  </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">false</span><span>;
+</span><span>};
+</span><span>
+</span><span style="color:#8959a8;">var </span><span style="color:#c82728;">stringArray </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#839c00;">&#39;foo&#39;</span><span>, </span><span style="color:#839c00;">&#39;bar&#39;</span><span>, </span><span style="color:#839c00;">&#39;foobar&#39;</span><span>];
+</span><span style="color:#c82728;">stringArray</span><span style="color:#4271ae;">.contains</span><span>(</span><span style="color:#839c00;">&#39;foobar&#39;</span><span>);
+</span></code></pre>
+<h4 id="fang-bian-de">方便的&quot;+&quot;</h4>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8e908c;">// Quick hex to dec conversion:
+</span><span style="color:#3e999f;">+</span><span style="color:#839c00;">&#39;0xFF&#39;</span><span>; </span><span style="color:#8e908c;">// -&gt; 255
+</span><span>
+</span><span style="color:#8e908c;">// Get a timestamp for now, the equivalent of `new Date().getTime()`:
+</span><span style="color:#3e999f;">+new </span><span>Date();
+</span><span>
+</span><span style="color:#8e908c;">// Safer parsing than parseFloat()/parseInt()
+</span><span style="color:#4271ae;">parseInt</span><span>(</span><span style="color:#839c00;">&#39;1,000&#39;</span><span>); </span><span style="color:#8e908c;">// -&gt; 1, not 1000
+</span><span style="color:#3e999f;">+</span><span style="color:#839c00;">&#39;1,000&#39;</span><span>; </span><span style="color:#8e908c;">// -&gt; NaN, much better for testing user input
+</span><span style="color:#4271ae;">parseInt</span><span>(</span><span style="color:#839c00;">&#39;010&#39;</span><span>); </span><span style="color:#8e908c;">// -&gt; 8, because of the octal literal prefix
+</span><span style="color:#3e999f;">+</span><span style="color:#839c00;">&#39;010&#39;</span><span>; </span><span style="color:#8e908c;">// -&gt; 10, `Number()` doesn&#39;t parse octal literals
+</span><span>
+</span><span style="color:#8e908c;">// A use case for this would be rare, but still useful in cases
+</span><span style="color:#8e908c;">// for shortening something like if (someVar === null) someVar = 0;
+</span><span style="color:#3e999f;">+</span><span style="color:#f07219;">null</span><span>; </span><span style="color:#8e908c;">// -&gt; 0;
+</span><span>
+</span><span style="color:#8e908c;">// Boolean to integer
+</span><span style="color:#3e999f;">+</span><span style="color:#f07219;">true</span><span>; </span><span style="color:#8e908c;">// -&gt; 1;
+</span><span style="color:#3e999f;">+</span><span style="color:#f07219;">false</span><span>; </span><span style="color:#8e908c;">// -&gt; 0;
+</span><span>
+</span><span style="color:#8e908c;">// Other useful tidbits:
+</span><span style="color:#3e999f;">+</span><span style="color:#839c00;">&#39;1e10&#39;</span><span>; </span><span style="color:#8e908c;">// -&gt; 10000000000
+</span><span style="color:#3e999f;">+</span><span style="color:#839c00;">&#39;1e-4&#39;</span><span>; </span><span style="color:#8e908c;">// -&gt; 0.0001
+</span><span style="color:#3e999f;">+</span><span style="color:#839c00;">&#39;-12&#39;</span><span>; </span><span style="color:#8e908c;">// -&gt; -12
+</span></code></pre>
+<p>注意：如果是字符串与数字相加的话，结果还是字符串，如&quot;hello&quot; + 3，结果为&quot;hello3&quot;</p>
+<h4 id="tong-guo-lai-huo-qu-she-zhi-object-de-shu-xing">通过[]来获取/设置 Object 的属性</h4>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#c82728;">a </span><span style="color:#3e999f;">= </span><span>{};
+</span><span style="color:#c82728;">a</span><span>[</span><span style="color:#839c00;">&#39;class&#39;</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;hello&#39;</span><span>; </span><span style="color:#8e908c;">// access reversed property
+</span><span style="color:#c82728;">a</span><span>[</span><span style="color:#839c00;">&#39;have space&#39;</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;world&#39;</span><span>; </span><span style="color:#8e908c;">// has space
+</span><span style="color:#c82728;">a</span><span>[</span><span style="color:#839c00;">&#39;.class .subclass&#39;</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;value&#39;</span><span>; </span><span style="color:#8e908c;">// can have .
+</span></code></pre>
+<h4 id="string-de-split-he-replace-ke-yi-bao-han-zheng-ze">String 的 split 和 replace 可以包含正则</h4>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#839c00;">&#39;hello world   with  spaces&#39;</span><span style="color:#4271ae;">.split</span><span>(</span><span style="color:#c82728;">/</span><span>\s</span><span style="color:#3e999f;">+</span><span style="color:#c82728;">/</span><span style="color:#8959a8;">g</span><span>);
+</span><span style="color:#8e908c;">//returns an array: [&quot;hello&quot;, &quot;world&quot;, &quot;with&quot;, &quot;spaces&quot;]
+</span><span>
+</span><span style="color:#8959a8;">var </span><span style="color:#c82728;">i </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1</span><span>;
+</span><span style="color:#839c00;">&#39;foo bar baz &#39;</span><span style="color:#4271ae;">.replace</span><span>(</span><span style="color:#c82728;">/</span><span>\s</span><span style="color:#3e999f;">+</span><span style="color:#c82728;">/</span><span style="color:#8959a8;">g</span><span>, </span><span style="color:#8959a8;">function </span><span>() {
+</span><span>  </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">i</span><span style="color:#3e999f;">++</span><span>;
+</span><span>});
+</span><span style="color:#8e908c;">//returns &quot;foo1bar2baz3&quot;
+</span></code></pre>
+<h4 id="han-shu-ding-yi-shi-yu-han-shu-biao-da-shi">函数定义式与函数表达式</h4>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#3e999f;">typeof </span><span style="color:#c82728;">eve</span><span>); </span><span style="color:#8e908c;">//结果:function
+</span><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#3e999f;">typeof </span><span style="color:#c82728;">walle</span><span>); </span><span style="color:#8e908c;">//结果:undefined
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">eve</span><span>() {
+</span><span>  </span><span style="color:#8e908c;">//函数定义式
+</span><span>  </span><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#839c00;">&#39;I am Laruence&#39;</span><span>);
+</span><span>}
+</span><span style="color:#8959a8;">var </span><span style="color:#4271ae;">walle </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">function </span><span>() {
+</span><span>  </span><span style="color:#8e908c;">//函数表达式
+</span><span>};
+</span><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#3e999f;">typeof </span><span style="color:#c82728;">walle</span><span>); </span><span style="color:#8e908c;">//结果:function
+</span></code></pre>
+<p>对于函数定义式，会将函数定义提前，而对于函数表达式，只有在执行过程中才会计算</p>
+<h4 id="zuo-yong-yu">作用域</h4>
+<p>对于下面的 demo</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">var </span><span style="color:#c82728;">name </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;laruence&#39;</span><span>;
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">echo</span><span>() {
+</span><span>  </span><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#c82728;">name</span><span>);
+</span><span>  </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">name </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;eve&#39;</span><span>;
+</span><span>  </span><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#c82728;">name</span><span>);
+</span><span>  </span><span style="color:#4271ae;">alert</span><span>(</span><span style="color:#c82728;">age</span><span>);
+</span><span>}
+</span><span style="color:#4271ae;">echo</span><span>();
+</span></code></pre>
+<p>输出结果为</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#f07219;">undefined</span><span>;
+</span><span style="color:#c82728;">eve</span><span>[</span><span style="color:#c99e00;">ReferenceError</span><span>];
+</span></code></pre>
+<p>原因是 js 在执行函数之前，会有一个预编译的过程，这个过程中会把局部变量提取出来，放到 scope chain 中，value 都为 undefined(不包括传递过来的参数)，所以在执行 echo 函数时，name 的值在设置为&quot;eve&quot;前，为 undefined</p>
+<p>参考：</p>
+<ul>
+<li><a href="http://ejohn.org/blog/simple-class-instantiation/">simple class instantiation/</a></li>
+<li><a href="http://stackoverflow.com/q/61088/94962">hidden features of javascript</a></li>
+<li><a href="http://mckoss.com/jscript/object.htm">Object Oriented Programming in JavaScript</a></li>
+<li><a href="http://yuiblog.com/blog/2007/06/12/module-pattern/">module pattern</a></li>
+<li><a href="http://www.laruence.com/2009/05/28/863.html">javascript 的作用域原理</a></li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/javascript/">javascript</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

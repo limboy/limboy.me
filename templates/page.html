@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ page.title }} -
+{{ page.title }}
 {% endblock title %}
 
 {% block head %}
@@ -52,11 +52,37 @@
     {% endif %}
   </ul>
 
-
-  <script src="https://giscus.app/client.js" data-repo="limboy/limboy.me" data-repo-id="R_kgDOGqD9cw"
-    data-category="General" data-category-id="DIC_kwDOGqD9c84CAoVe" data-mapping="pathname" data-reactions-enabled="1"
+  {% if page.extra and page.extra.giscus and page.extra.giscus == 'telescope' %}
+  <script src="https://giscus.app/client.js" data-repo="limboy/{{config.extra.giscus.telescope.repo}}"
+    data-repo-id="{{config.extra.giscus.telescope.repo_id}}" data-category="{{config.extra.giscus.telescope.category}}"
+    data-category-id="{{config.extra.giscus.telescope.category_id}}" data-mapping="title" data-reactions-enabled="1"
     data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
     </script>
+  {% else %}
+  <script src="https://giscus.app/client.js" data-repo="limboy/{{config.extra.giscus.limboy.repo}}"
+    data-repo-id="{{config.extra.giscus.limboy.repo_id}}" data-category="{{config.extra.giscus.limboy.category}}"
+    data-category-id="{{config.extra.giscus.limboy.category_id}}" data-mapping="pathname" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  {% endif %}
+
+  {% if page.extra and page.extra.math %}
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [["$", "$"]],
+      },
+      displayMath: [
+        ["$$", "$$"],
+        ["\[\[", "\]\]"],
+      ],
+      svg: {
+        fontCache: "global",
+      },
+    };
+  </script>
+  {% endif %}
 
 </div>
 {% endblock content %}

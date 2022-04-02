@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+iframe无刷新跨域上传文件并获取返回值
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/crossdomain-upload/">
+
+<meta name="twitter:title" content="iframe无刷新跨域上传文件并获取返回值">
+<meta property="og:title" content="iframe无刷新跨域上传文件并获取返回值">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;crossdomain-upload&#x2F;">iframe无刷新跨域上传文件并获取返回值</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-05-06</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>通常我们会有一个统一的上传接口，这个接口会被其他的服务调用。如果出现不同域，还需要无刷新上传文件，并且获取返回值，这就有点麻烦了。比如，新浪微博启用了新域名www.weibo.com，但接口还是使用原来的域：picupload.t.sina.com.cn。</p>
+<p>研究了一下新浪微博的处理方法，这里大概演示一下。</p>
+<p>首先是一个正常的上传页面 upload.html</p>
+<pre data-lang="html" style="background-color:#f9f9f9;color:#111111;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#8e908c;">// 这个函数将来会被iframe用到
+</span><span>  </span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">getIframeVal</span><span>(</span><span style="color:#f07219;">val</span><span>) {
+</span><span>    </span><span style="color:#c82728;">alert</span><span style="color:#4271ae;">(</span><span>val</span><span style="color:#4271ae;">)</span><span>;
+</span><span>  }
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>
+</span><span style="color:#8e908c;">&lt;!-- 我把upload.com指向了127.0.0.1 --&gt;
+</span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">form
+</span><span style="color:#c82728;">  method=</span><span style="color:#839c00;">&quot;post&quot;
+</span><span style="color:#c82728;">  target=</span><span style="color:#839c00;">&quot;if&quot;
+</span><span style="color:#c82728;">  enctype=</span><span style="color:#839c00;">&quot;multipart/form-data&quot;
+</span><span style="color:#c82728;">  action=</span><span style="color:#839c00;">&quot;http://upload.com/playground/js/deal.php?cb=http://localhost/playground/js/deal_cd.html&quot;
+</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">input type=</span><span style="color:#839c00;">&quot;file&quot; </span><span style="color:#c82728;">name=</span><span style="color:#839c00;">&quot;file&quot; </span><span style="color:#5d9be5;">/&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">input type=</span><span style="color:#839c00;">&quot;SUBMIT&quot; </span><span style="color:#c82728;">value=</span><span style="color:#839c00;">&quot;upload&quot; </span><span style="color:#5d9be5;">/&gt;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">form</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">iframe id</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;if&quot; </span><span style="color:#c82728;">name</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;if&quot; </span><span style="color:#c82728;">src</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;about:blank&quot; </span><span style="color:#c82728;">frameborder</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;0&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">iframe</span><span style="color:#5d9be5;">&gt;
+</span></code></pre>
+<p>这里有一个关键点是 form 的 target 要指向 iframe，同时把 iframe 隐藏起来，这样上传的处理结果就会显示在该 iframe 里。action 里的 cb(callback)参数表示处理完成后要跳转的 url，因为我们的目标是 iframe，所以只会把跳转的页面输出到 iframe，而不会让当前页面跳转。</p>
+<p>还有一点，callback url 要和当前页面同域。跨域的 iframe 无法调用父页面的内容。</p>
+<p>再来看看 deal.php，也就是 form 的 action</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">// deal upload file
+</span><span style="color:#8e908c;">// and get file id, you can pass other params either
+</span><span style="color:#4271ae;">header(</span><span style="color:#839c00;">&#39;location:&#39;</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$_GET</span><span style="color:#4271ae;">[</span><span style="color:#839c00;">&#39;cb&#39;</span><span style="color:#4271ae;">]</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;?file_id=123&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span></code></pre>
+<p>这里可以处理文件，然后入库。操作完成后，把文件的 id 及其他信息都放在 url 里，最后跳转到这个 url。</p>
+<p>最后来看看 deal_cd.html，也就是刚刚 deal.php 跳转到的 url，这个文件的内容会填充到页面的 iframe 里。</p>
+<pre data-lang="html" style="background-color:#f9f9f9;color:#111111;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script type=</span><span style="color:#839c00;">&quot;text/javascript&quot;</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#8959a8;">var </span><span>rs </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">window</span><span style="color:#4271ae;">.location.search.</span><span style="color:#c82728;">split</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;?&#39;</span><span style="color:#4271ae;">)</span><span>.</span><span style="color:#c82728;">slice</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">)</span><span>;
+</span><span>  </span><span style="color:#c99e00;">window</span><span style="color:#4271ae;">.parent.</span><span style="color:#c82728;">getIframeVal</span><span style="color:#4271ae;">(</span><span>rs</span><span style="color:#4271ae;">.toString().</span><span style="color:#c82728;">split</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;=&#39;</span><span style="color:#4271ae;">).</span><span style="color:#c82728;">slice</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">))</span><span>;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span></code></pre>
+<p>这里调用了父窗口的 getIframeVal 方法，这样父页面就获得了文件的 id。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/web/">web</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

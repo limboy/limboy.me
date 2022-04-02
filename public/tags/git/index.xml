@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Limboy - git</title>
+        <link>https://limboy.me</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>zh</language>
+        <atom:link href="https://limboy.me/tags/git/index.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Fri, 25 Feb 2011 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>git多人协作开发流程(以blog为例)</title>
+            <pubDate>Fri, 25 Feb 2011 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/git-workflow-with-blog-demo/</link>
+            <guid>https://limboy.me/posts/git-workflow-with-blog-demo/</guid>
+            <description>&lt;p&gt;时间仓促，能力有限，错误难免(代码没有经过实际验证，所以可能会有问题)，欢迎指正 :)&lt;&#x2F;p&gt;
+&lt;p&gt;这个开发流程就是基于&lt;a href=&quot;http:&#x2F;&#x2F;nvie.com&#x2F;posts&#x2F;a-successful-git-branching-model&#x2F;&quot;&gt;a successful git model&lt;&#x2F;a&gt;这篇文章而来的，如果对英文不感冒的话，我这有&lt;a href=&quot;http:&#x2F;&#x2F;blog.leezhong.com&#x2F;translate&#x2F;2010&#x2F;10&#x2F;30&#x2F;a-successful-git-branch.html&quot;&gt;翻译版&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;项目背景：&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;张三 &#x2F; 李四 &#x2F; 王五 打算共同协作，开发一套博客系统
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;strong&gt;项目分工：&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;张三 &#x2F; 李四 负责文章系统
+&lt;&#x2F;span&gt;&lt;span&gt;王五负责评论系统
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;jian-li-fu-wu-duan-cang-ku&quot;&gt;建立服务端仓库&lt;&#x2F;h3&gt;
+&lt;p&gt;git 虽然是分布式版本管理工具，但为了方便管理，我们需要建立一个中心仓库，先在服务端建立两条分支&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;master
+&lt;&#x2F;span&gt;&lt;span&gt;develop
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;master 保存稳定版(production ready)，开发人员平时的代码都提交到 develop 分支上&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;kai-fa-zhe-de-git-fen-zhi&quot;&gt;开发者的 Git 分支&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;zhang-san-de-git-fen-zhi&quot;&gt;张三的 Git 分支&lt;&#x2F;h4&gt;
+&lt;p&gt;因为张三和李四同时开发文章系统，所以就有了下面的分支&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 张三的Git分支
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;article&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; (local&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;lisi&#x2F;article&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; (via git remote add lisi http:&#x2F;&#x2F;lisi-server&#x2F;lisi.git&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;origin&#x2F;master&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; (via git remote add origin http:&#x2F;&#x2F;remote-server&#x2F;blog.git&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;origin&#x2F;develop
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;li-si-de-git-fen-zhi&quot;&gt;李四的 Git 分支&lt;&#x2F;h4&gt;
+&lt;p&gt;跟张三类似，不过 article server 变成了张三的&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 李四的Git分支
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;article&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; (local&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;zhangsan&#x2F;article&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; (via git remote add zhangsan http:&#x2F;&#x2F;zhangsan-server&#x2F;zhangsan.git&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;origin&#x2F;master&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; (via git remote add origin http:&#x2F;&#x2F;remote-server&#x2F;blog.git&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;origin&#x2F;develop
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;wang-wu-de-git-fen-zhi&quot;&gt;王五的 Git 分支&lt;&#x2F;h4&gt;
+&lt;p&gt;因为只有王五一个人开发评论系统，所以只要一条远程分支就行了&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 王五的Git分支
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;comment&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; (local&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;origin&#x2F;master&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; (via git remote add origin http:&#x2F;&#x2F;remote-server&#x2F;blog.git&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;origin&#x2F;develop
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;kai-fa-guo-cheng&quot;&gt;开发过程&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;zhang-san-he-li-si&quot;&gt;张三和李四&lt;&#x2F;h4&gt;
+&lt;p&gt;假设张三负责文章的管理，及前端显示。李四负责文章的分类和标签系统。&lt;&#x2F;p&gt;
+&lt;p&gt;张三开发完一部分后(n 次本地 commit)，提交到本地的 git server(也就是李四添加的 http:&#x2F;&#x2F;zhangsan-server&#x2F;zhangsan.git)。&lt;&#x2F;p&gt;
+&lt;p&gt;李四开发完一部分后，因为要与张三开发的部分合并，所以需要执行一下 rebase 或 merge&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 当前在article分支中
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; rebase zhangsan&#x2F;article
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 提交到本地的git server (也就是张三添加的http:&#x2F;&#x2F;lisi-server&#x2F;lisi.git)。
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push local&#x2F;article master
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这时张三又开发完了一部分，他也会走跟李四一样的流程，rebase &amp;amp; push (如果有冲突，解决之)。&lt;&#x2F;p&gt;
+&lt;p&gt;假设由张三统一负责将每日的开发进度提交到 remote develop 分支上，张三在执行了上面所说的流程后，提交到服务端的 develop 分支。但这时很可能王五已经把他写的代码提交了，所以要先执行一下 rebase&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; rebase origin&#x2F;develop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push origin develop
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这样张三和李四的代码就都提交到了服务端的 develop 分支上。王五那边的流程也一样，只是少了本地同步的过程。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;kai-fa-wan-bi-jin-ru-ce-shi-jie-duan&quot;&gt;开发完毕，进入测试阶段&lt;&#x2F;h3&gt;
+&lt;p&gt;经过几天的开发，各个功能都已基本完成，下面就要进入测试阶段。具体做法是在服务端新添加一个分支，命名为 release，所以这时服务端就有 3 个分支了&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;develop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;release
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;三位同学都在本地新建一个 branch，对应服务端的 release 分支&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; checkout&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -b&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; release origin&#x2F;release
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;分别进行测试，如果发现问题，则执行 pull &amp;amp; push&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 当前在release分支下
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; pull origin release
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push origin develop
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;经过几天的测试后，发现没什么问题了，就可以发布稳定版了，假设为 0.1&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; checkout master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; rebase origin&#x2F;release
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; tag 0.1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push origin master&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; --tags
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;同时别忘了把 release 分支上的代码与 develop 分支合并，保证 develop 分支上不会有遗留的 bug。(没有找到如何直接 merge 两个服务端 branch 的方法)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; checkout develop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; rebase origin&#x2F;release
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push origin develop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 删除服务端的release分支
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push origin :release
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;接下来就可以继续在 develop 分支上进行开发了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;tian-jia-xin-te-xing&quot;&gt;添加新特性&lt;&#x2F;h3&gt;
+&lt;p&gt;博客系统需要添加 archives 功能，这个功能的开发就交给了新来的赵六。此时，在服务端新开一个分支，命名为 feature，这时服务端的分支就变成了这样&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;develop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;feature&#x2F;archive
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;赵六也在本地建立一个 archive 分支，每天提交到服务端的 feature&#x2F;archive，赵六的 Git 分支是这样的(不相关的服务端 Git 已省去)&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;archive
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;origin&#x2F;feature&#x2F;archive
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;等到这个 feature 开发完了，与服务端的 develop 分支执行一下 rebase，然后再提交到服务端的 develop，这样博客的 archive 功能就有了&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; checkout archive
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; rebase origin&#x2F;feature&#x2F;archive
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push origin feature&#x2F;archive
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 如果要删除服务端的feature&#x2F;archive分支的话
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push origin :feature&#x2F;archive
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;接下来的流程跟上面的一样：开发完毕后，新建 release 分支，在那上面进行 bug 修复，修复完毕后，merge 到服务端的 master 和 develop&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;jin-ji-xiu-fu-lou-dong&quot;&gt;紧急修复漏洞&lt;&#x2F;h3&gt;
+&lt;p&gt;博客出现了一个 xss 漏洞，需要尽快修复，这时新建一个 hotfix 分支(现在本地建，然后提交到服务端)，然后对漏洞进行修复，修复完后，提交到服务端的 master 和 develop&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; checkout master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; pull origin master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; checkout&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -b&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; hotfix
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 漏洞修复...
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 修复完后
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push origin hotfix
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; checkout master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; rebase hotfix
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push origin master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;git&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; push origin develop
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</description>
+        </item>
+        
+        
+        <item>
+            <title>(译)Git开发管理之道</title>
+            <pubDate>Sat, 30 Oct 2010 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/a-successful-git-branch/</link>
+            <guid>https://limboy.me/posts/a-successful-git-branch/</guid>
+            <description>&lt;p&gt;Git 的强大是众所周知的，本文要分享的是关于&amp;quot;使用 Git 的分支和合并功能来进行版本管理的开发模型&amp;quot;。以下是译文，&lt;a href=&quot;http:&#x2F;&#x2F;nvie.com&#x2F;posts&#x2F;a-successful-git-branching-model&#x2F;&quot;&gt;原文地址&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;这篇文章我想介绍一下一年前就提到过的我所有项目(工作&#x2F;私有)都在使用的开发模式，经过事实验证，确实非常可行。很早就想写了，一直没腾出时间。我不会涉及项目的细节，只是谈谈分支的使用策略和发布管理。&lt;&#x2F;p&gt;
+&lt;img src=&quot;http:&#x2F;&#x2F;nvie.com&#x2F;img&#x2F;git-model@2x.png&quot; &#x2F;&gt;
+&lt;p&gt;上图是使用 Git 这个版本控制工具来管理所有源码的。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;wei-shi-yao-shi-yong-git&quot;&gt;为什么使用 Git&lt;&#x2F;h3&gt;
+&lt;p&gt;如果要看详细的 Git 与集中式源码管理工具的优势与劣势，可以参见&lt;a href=&quot;http:&#x2F;&#x2F;git.or.cz&#x2F;gitwiki&#x2F;GitSvnComparsion&quot;&gt;这篇文章&lt;&#x2F;a&gt;，那里有很多口水仗。作为一个开发人员，所有的源码管理工具中，我最喜欢 Git。Git 从根本上改变了开发人员对分支和合并的使用，传统的 CVS&#x2F;SVN，分支和合并都是高级话题，而且使用起来稍显麻烦，隔一段时间才会用一次。但是有了 Git，这些操作就成了家常便饭。&lt;&#x2F;p&gt;
+&lt;p&gt;由于使用简单，方便重复操作，分支和合并不再是让人望而生畏的操作，版本管理工具应该尽可能地对分支&#x2F;合并提供最好的支持。&lt;&#x2F;p&gt;
+&lt;p&gt;工具谈得差不多了，回到开发上。我待会要讲到的模型其实是一些每个开发人员都应该遵守的步骤，如果想管理好软件的开发流程的话。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;fen-bu-shi-dan-ji-zhong-hua&quot;&gt;分布式但集中化&lt;&#x2F;h3&gt;
+&lt;p&gt;我们要使用的仓库是一个&amp;quot;中心库&amp;quot;，当然这个中心库只是被认为是这样(因为 Git 是分布式的，从技术层面上来说是没有中心库的)，我们将把这个仓库叫做&amp;quot;origin&amp;quot;，因为 Git 用户都熟悉这个名字。&lt;&#x2F;p&gt;
+&lt;img src=&quot;http:&#x2F;&#x2F;nvie.com&#x2F;img&#x2F;centr-decentr@2x.png&quot; &#x2F;&gt;
+&lt;p&gt;每个开发者 pull 和 push 到 origin，但除了中心化的 push-pull 关系外，每个开发者还可以从其他开发者那 pull changes。比如说，对于一个比较大的新特性，在把代码提交到 origin 之前，很可能会安排 2 个或多个开发者。上图中有几个小团队：Alice 和 Bob，Alice 和 David，Clair 和 David。&lt;&#x2F;p&gt;
+&lt;p&gt;从技术角度来说，其实就是 Alice 定义了一个叫 Bob 的 Git remote，指向到 Bob 的仓库。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;main-fen-zhi&quot;&gt;main 分支&lt;&#x2F;h3&gt;
+&lt;p&gt;中心仓库有两个分支：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;master&lt;&#x2F;li&gt;
+&lt;li&gt;develop&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;origin 上的 master 分支，Git 用户应该很熟悉，跟 master 并行的有一个 develop 分支&lt;&#x2F;p&gt;
+&lt;img src=&quot;http:&#x2F;&#x2F;nvie.com&#x2F;img&#x2F;main-branches@2x.png&quot; &#x2F;&gt;
+&lt;p&gt;我们把 origin&#x2F;master 作为主要分支，源码的 HEAD 总是表示 production-ready(可随时部署)状态。而 origin&#x2F;develop 上的代码是为下一次的代码发布准备的。每日构建也是基于此分支。&lt;&#x2F;p&gt;
+&lt;p&gt;当 develop 分支达到了一个稳定状态并准备发布时，所有的改变都要合并到 master 分支，并标上版本号。如何实现的下面细说。&lt;&#x2F;p&gt;
+&lt;p&gt;这样每次与 master 合并都会有新的部署发布。这点可以自动化，如使用 Git hook 脚本来实现自动部署代码到线上。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhi-chi-supporting-fen-zhi&quot;&gt;支持(supporting)分支&lt;&#x2F;h3&gt;
+&lt;p&gt;我们的开发模型使用了一些支持分支放在 master 和 develop 分支的旁边，方便开发小组之间的并行开发。不像 main 分支，这些分支是有时间限制的，因为他们最终都会被移除。&lt;&#x2F;p&gt;
+&lt;p&gt;我们会使用到的不同的分支&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Feature branches&lt;&#x2F;li&gt;
+&lt;li&gt;Release branches&lt;&#x2F;li&gt;
+&lt;li&gt;Hotfix branches&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;每个分支都有各自的作用，并且有严格的规定，如：只能从哪个分支上去新开分支，只能合并到那个分支。这个待会细说。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;feature-branches&quot;&gt;Feature branches&lt;&#x2F;h3&gt;
+&lt;img src=&quot;http:&#x2F;&#x2F;nvie.com&#x2F;img&#x2F;fb@2x.png&quot; &#x2F;&gt;
+&lt;p&gt;继承分支: develop
+合并分支：develop
+命名规范：除了 master,develop,release-&lt;em&gt;,hotfix-&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Feature branches 是用来开发新特性的(短期，远期都可以)。当开始开发新特性时，很可能不知道这个特性会出现在哪个目标版本。一旦开发完成就可以合并到 develop，当然如果开发失败，就可以抛弃。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;chuang-jian-yi-ge-feature-branch&quot;&gt;创建一个 Feature branch&lt;&#x2F;h3&gt;
+&lt;p&gt;当要创建一个新特性时，从 develop 分支上再进行分支&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git checkout&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -b&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; myfeature develop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Switched&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; to a new branch &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;myfeature&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;新特性完成时，可以合并到 develop&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git checkout develop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Switched&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; to branch &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;develop&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git merge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; --no-ff&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; myfeature
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Updating&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; ea1b82a..05e9557
+&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Summary&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; of changes&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git branch&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; myfeature
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Deleted&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; branch myfeature (was 05e9557&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git push origin develop
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  --no-ff (译者注：no fast foward)标签，使得每一次的合并都创建一个新的 commit 记录。即使这个 commit 只是 fast-foward，这样可以避免丢失信息
+&lt;&#x2F;aside&gt;&lt;img src=&quot;http:&#x2F;&#x2F;nvie.com&#x2F;img&#x2F;merge-without-ff@2x.png&quot; &#x2F;&gt;
+&lt;p&gt;不幸的是，我没有找到让--no-ff 成为 commit 默认参数的方法(译者注：修改.consolerc?)，但确实应该提供一个方法。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;release-branch&quot;&gt;Release branch&lt;&#x2F;h3&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;继承分支: develop
+&lt;&#x2F;span&gt;&lt;span&gt;合并分支：develop 和 master
+&lt;&#x2F;span&gt;&lt;span&gt;命名规范：release-\*
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Release branch 是为新的 production release 准备的(译者注：相当于 RC 版)，可以有一些小的 bug，并为发布准备一些元数据(版本号，构建日期等等)。把所有的这些工作都放到 Release branch，develop branch 就能更清晰地知道下一个版本要开发哪些特性。&lt;&#x2F;p&gt;
+&lt;p&gt;从 develop 分支合并到 release 分支的关键因素是:develop 分支达到了 release 分支所要求的状态。至少所有针对该 release 的特性要被合并。至于那些将来会有的特性可以先放一放。然后就是为接下来即将要发布的版本分配一个版本号。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;chuang-jian-yi-ge-release-branch&quot;&gt;创建一个 Release branch&lt;&#x2F;h3&gt;
+&lt;p&gt;Release branch 是通过 develop 分支而创建。举个例子，假如 1.1.5 是当前的 production release，然后会有一个比较大的版本发布。develop 的状态已经可以发布版本了，经过商榷后，决定发布为 1.2 版本(而不是 1.1.6 或 2.0)，所以我们创建一个 release 分支，并给这个分支一个新的版本号&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git checkout&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -b&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; release-1.2 develop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Switched&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; to a new branch &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;release-1.2&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; .&#x2F;bump-version.sh 1.2
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Files&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; modified successfully, version bumped to 1.2.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git commit&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -a -m &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;Bumped version number to 1.2&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;[release-1.2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; 74d9424] Bumped version number to 1.2
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; files changed, 1 insertions(+&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; 1 deletions(-&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这个新分支可能会存在一定的时间，直到可以被合并到 production branch。这段时间内，bug 修补可以在这个分支上进行(而不是 develop 分支)。添加新特性(尤其比较大的)是不允许的。最后还是要被合并到 develop，然后继续在 develop 分支上开发，直到下一个版本。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;wan-cheng-yi-ge-release-branch&quot;&gt;完成一个 release branch&lt;&#x2F;h3&gt;
+&lt;p&gt;当 release branch 已经准备就绪，需要做几件事。首先，release 分支被合并到 master 分支上(每一个提交到 master 上的 commit 都是一个新版本，切记)。然后 master 上的 commit 都要添加 tag，方便将来查看和回滚。最后 release 上所做的修改必须合并到 develop 分支上，保证 bug 已被修补。&lt;&#x2F;p&gt;
+&lt;p&gt;前两个步骤：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git checkout master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Switched&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; to branch &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;master&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git merge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; --no-ff&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; release-1.2
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Merge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; made by recursive.
+&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Summary&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; of changes&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git tag&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; 1.2
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;为了把 release 上的改变保存到 develop，我们需要合并到 develop&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git checkout develop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Switched&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; to branch &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;develop&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git merge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; --no-ff&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; release-1.2
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Merge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; made by recursive.
+&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Summary&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; of changes&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这个步骤可能会导致冲突，如果这样的话，解决冲突，然后再提交。&lt;&#x2F;p&gt;
+&lt;p&gt;现在一切都完成了，可以把 release branch 干掉了。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git branch&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; release-1.2
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Deleted&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; branch release-1.2 (was ff452fe&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;hotfix-branch&quot;&gt;Hotfix branch&lt;&#x2F;h3&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;继承分支: master
+&lt;&#x2F;span&gt;&lt;span&gt;合并分支：develop 和 master
+&lt;&#x2F;span&gt;&lt;span&gt;命名规范：hotfix-\*
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Hotfix branch 和 Release branch 有几分相似，都是为了新的 production release 而准备的。比如运行过程中发现了 bug，就必须快速解决，这时就可以创建一个 Hotfix branch，解决完后合并到 master 分支上。好处是开发人员可以继续工作，有专人来负责搞定这个 bug。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;chuang-jian-hotfix-branch&quot;&gt;创建 Hotfix branch&lt;&#x2F;h3&gt;
+&lt;img src=&quot;http:&#x2F;&#x2F;nvie.com&#x2F;img&#x2F;hotfix-branches@2x.png&quot; &#x2F;&gt;
+&lt;p&gt;Hotfix 是从 master 分支上创建的。假如当前运行版本是 1.2，然后发现有 bug，但是 develop 还在开发中，不太稳定，这时就可以新开一个 Hotfix branch，然后开始解决问题。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git checkout&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -b&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; hotfix-1.2.1 master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Switched&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; to a new branch &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;hotfix-1.2.1&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; .&#x2F;bump-version.sh 1.2.1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Files&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; modified successfully, version bumped to 1.2.1.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git commit&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -a -m &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;Bumped version number to 1.2.1&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;[hotfix-1.2.1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; 41e61bb] Bumped version number to 1.2.1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; files changed, 1 insertions(+&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; 1 deletions(-&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;解决问题，一次或几次 commit&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git commit&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -m &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;Fixed severe production problem&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;[hotfix-1.2.1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; abbe5d6] Fixed severe production problem
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; files changed, 32 insertions(+&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; 17 deletions(-&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;wan-cheng-hotfix-branch&quot;&gt;完成 Hotfix branch&lt;&#x2F;h3&gt;
+&lt;p&gt;当结束时，bugfix 要被合并到 master，同时也要合并到 develop，保证下个版本发布时该 bug 已被修复。这跟 release branch 完成时一样。&lt;&#x2F;p&gt;
+&lt;p&gt;首先更新 master 和 tag release&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git checkout master
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Switched&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; to branch &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;master&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git merge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; --no-ff&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; hotfix-1.2.1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Merge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; made by recursive.
+&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Summary&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; of changes&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git tag&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -a&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; 1.2.1
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;接下来与 develop 合并&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git checkout develop
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Switched&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; to branch &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;develop&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git merge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; --no-ff&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; hotfix-1.2.1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Merge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; made by recursive.
+&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Summary&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; of changes&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;有一个例外，就是当一个 release branch 存在时，bugfix 要被合并到 release 而不是 develop，因为 release 最终会被合并到 develop。&lt;&#x2F;p&gt;
+&lt;p&gt;最后移除 branch&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; git branch&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -d&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; hotfix-1.2.1
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Deleted&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; branch hotfix-1.2.1 (was abbe5d6&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;zong-jie&quot;&gt;总结&lt;&#x2F;h3&gt;
+&lt;p&gt;这个开发模型其实没有什么新颖的，一开始提到的&amp;quot;大图&amp;quot;确实在我们的项目起到了非常大的作用。这是很优雅的一个模型，很容易实现，也容易在团队成员之间达成一致。&lt;&#x2F;p&gt;
+&lt;p&gt;PS:需要这个模型大图的，可以去&lt;a href=&quot;http:&#x2F;&#x2F;nvie.com&#x2F;posts&#x2F;a-successful-git-branching-model&#x2F;&quot;&gt;原文地址&lt;&#x2F;a&gt;下载&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+说说php的异步请求
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/php-async/">
+
+<meta name="twitter:title" content="说说php的异步请求">
+<meta property="og:title" content="说说php的异步请求">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;php-async&#x2F;">说说php的异步请求</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-12-05</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>很多情况下我们需要让 php 在后台执行某个程序，同时又不影响页面的输出，以下是我总结的几种实现方式</p>
+<h3 id="exec">exec</h3>
+<p>这是最简单的方式</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#4271ae;">exec(sprintf(</span><span style="color:#839c00;">&quot;%s &gt; %s 2&gt;&amp;1 &amp; echo $! &gt; %s&quot;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$cmd</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$outputfile</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$pidfile</span><span style="color:#4271ae;">))</span><span>;
+</span></code></pre>
+<p>调用$cmd命令，将输出重定向到$outputfile，不显示错误信息，同时将进程 id 输出到$pidfile。</p>
+<p>这样也方便监控，比如判断该进程是否还在运行</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">isRunning</span><span>(</span><span style="color:#f07219;">$pid</span><span>){
+</span><span>    </span><span style="color:#8959a8;">try</span><span>{
+</span><span>        </span><span style="color:#c82728;">$result </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">shell_exec(sprintf(</span><span style="color:#839c00;">&quot;ps %d&quot;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$pid</span><span style="color:#4271ae;">))</span><span>;
+</span><span>        </span><span style="color:#8959a8;">if</span><span>( </span><span style="color:#4271ae;">count(preg_split(</span><span style="color:#839c00;">&quot;/</span><span style="color:#f07219;">\n</span><span style="color:#839c00;">/&quot;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$result</span><span style="color:#4271ae;">)) </span><span style="color:#3e999f;">&gt; </span><span style="color:#f07219;">2</span><span>){
+</span><span>            </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">true</span><span>;
+</span><span>        }
+</span><span>    }</span><span style="color:#8959a8;">catch</span><span>(</span><span style="color:#c99e00;">Exception </span><span style="color:#c82728;">$e</span><span>){}
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">false</span><span>;
+</span><span>}
+</span></code></pre>
+<p>注意：如果直接调用 exec 来运行某个命令，或者在该命令后面加个&quot;&amp;&quot;，php 还是会等待该命令运行完成再执行下面的操作。</p>
+<h3 id="proc-open-proc-close">proc_open/proc_close</h3>
+<p>这个方法很有意思，先用 proc_open 运行一段后台程序，然后用 proc_close 来关闭 proc_open，结果程序就在后台运行了，同时 php 也会继续执行下去</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#4271ae;">proc_close(proc_open (</span><span style="color:#839c00;">&quot;ping www.baidu.com -c 10 &gt; /path/to/output &amp;&quot;</span><span style="color:#4271ae;">, array(), </span><span style="color:#c82728;">$foo</span><span style="color:#4271ae;">))</span><span>;
+</span></code></pre>
+<h3 id="pcntl-fork">pcntl_fork</h3>
+<p>使用 php 的多线程来达到目的，原理就是复制一个子线程，同时杀死父线程(不支持 windows)。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">$pid </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">pcntl_fork()</span><span>)
+</span><span>    </span><span style="color:#8959a8;">die</span><span>();     </span><span style="color:#8e908c;">// Parent
+</span><span>
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">shutdown</span><span>() {
+</span><span>    </span><span style="color:#4271ae;">posix_kill(posix_getpid(), </span><span>SIGHUP</span><span style="color:#4271ae;">)</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">if</span><span>(</span><span style="color:#4271ae;">ob_get_level()</span><span>) </span><span style="color:#4271ae;">ob_end_clean()</span><span>; </span><span style="color:#8e908c;">// Discard the output buffer and close
+</span><span>
+</span><span style="color:#4271ae;">fclose(</span><span style="color:#f07219;">STDIN</span><span style="color:#4271ae;">)</span><span>;  </span><span style="color:#8e908c;">// Close all of the standard
+</span><span style="color:#4271ae;">fclose(</span><span style="color:#f07219;">STDOUT</span><span style="color:#4271ae;">)</span><span>; </span><span style="color:#8e908c;">// file descriptors as we
+</span><span style="color:#4271ae;">fclose(</span><span style="color:#f07219;">STDERR</span><span style="color:#4271ae;">)</span><span>; </span><span style="color:#8e908c;">// are running as a daemon.
+</span><span>
+</span><span style="color:#4271ae;">register_shutdown_function(</span><span style="color:#839c00;">&#39;shutdown&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#4271ae;">posix_setsid() </span><span style="color:#3e999f;">&lt; </span><span style="color:#f07219;">0</span><span>)
+</span><span>    </span><span style="color:#8959a8;">die</span><span>();      </span><span style="color:#8e908c;">// &lt;- This is an error
+</span><span>
+</span><span style="color:#8e908c;">// Do your stuff here
+</span><span style="color:#4271ae;">exec(</span><span style="color:#839c00;">&#39;/bash/command &gt; /path/to/output&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span></code></pre>
+<h3 id="header">header</h3>
+<p>使用这个方法的前提是使用 http 协议，同时目标文件可控，最好在一个域下。因为必须要建立 http 连接才行，所以稍微有点费时。原理是通过 header 输出'Connection:close'头，中断 http 连接，同时后面的代码继续执行。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">while</span><span>(</span><span style="color:#4271ae;">ob_get_level()</span><span>) </span><span style="color:#4271ae;">ob_end_clean()</span><span>;
+</span><span style="color:#4271ae;">header(</span><span style="color:#839c00;">&#39;Connection: close&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#4271ae;">ignore_user_abort()</span><span>;
+</span><span style="color:#4271ae;">ob_start()</span><span>;
+</span><span style="color:#4271ae;">echo</span><span>(</span><span style="color:#839c00;">&#39;Connection Closed&#39;</span><span>);
+</span><span style="color:#c82728;">$size </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">ob_get_length()</span><span>;
+</span><span style="color:#4271ae;">header(</span><span style="color:#839c00;">&quot;Content-Length: </span><span style="color:#c82728;">$size</span><span style="color:#839c00;">&quot;</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#4271ae;">ob_end_flush()</span><span>;
+</span><span style="color:#4271ae;">flush()</span><span>;
+</span></code></pre>
+<h3 id="shi-yong-shu-ju-ku-zuo-zhong-zhuan">使用数据库作中转</h3>
+<p>把要执行的命令和参数先存到缓存或数据库，接下来的事就不用 php 操心了。</p>
+<p>如果还有其他的方法，欢迎交流 :)</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/php/">php</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

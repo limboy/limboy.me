@@ -5,5 +5,19 @@
 
 {% block content %}
 {% set section = get_section(path="posts/_index.md") %}
-{{ macros::page_list(pages=section.pages) }}
+{% for year, posts in section.pages | group_by(attribute="year") %}
+<h1 class="text-3xl mt-6 -mb-2 text-gray-400 border-b border-solid border-gray-300 pb-1">{{ year }}</h1>
+
+<ul class="flex flex-col gap-2 my-6">
+  {% for post in posts %}
+  <li><a class="flex justify-between items-center px-4 py-1 -mx-4 hover:bg-gray-100 hover:rounded-md"
+      href="{{ post.permalink }}">
+      <h3 class="overflow-hidden text-ellipsis whitespace-nowrap">{{ post.title }}</h3>
+      <time class="text-sm"
+        style="text-align: right; flex-basis: 115px; font-family: var(--code-font-family);">{{post.date}}</time>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+{% endfor %}
 {% endblock %}

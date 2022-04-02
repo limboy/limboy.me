@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+iOS 统计打点那些事
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/ios-analytics/">
+
+<meta name="twitter:title" content="iOS 统计打点那些事">
+<meta property="og:title" content="iOS 统计打点那些事">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;ios-analytics&#x2F;">iOS 统计打点那些事</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2015-09-09</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>一个环节，App 的运行状态、改版后的效果、用户的各种行为等都需要打点，市面上也有不少可供选择的第三方库。 假设产品有这么个需求：当用户在详情页点击购买按钮时，记录一下事件。我们实现起来大概会是这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// DetailViewController.m
+</span><span>
+</span><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)onBuyButtonTapped</span><span style="color:#3e999f;">:</span><span>(UIButton </span><span style="color:#3e999f;">*</span><span>)button
+</span><span>{
+</span><span>    </span><span style="color:#8e908c;">// do some stuff, maybe send a request to server
+</span><span>    [XXXAnalytics </span><span style="color:#4271ae;">event:</span><span>kSomeEventYouDefined];
+</span><span>}
+</span></code></pre>
+<p>这个需求就这样轻松搞定了，但细细想想还是有不少问题的：</p>
+<ol>
+<li>页面上会有其他的 Button，可能每个 Button 都要放上这么一段代码。</li>
+<li>这些统计其实跟具体的业务无关，没必要跟业务代码混杂在一起，不优雅。</li>
+<li>当改版或者重构时，有可能忘了把相应的打点代码迁移过去。</li>
+</ol>
+<p>所以需要一种更好的方式来做这件事，这就是使用 AOP(<a href="http://en.wikipedia.org/wiki/Aspect-oriented_programming">Aspect-Oriented-Programming</a>)，翻译过来就是「面向切面编程」</p>
+<blockquote>
+<p>通过预编译方式和运行期动态代理实现在不修改源代码的情况下给程序动态统一添加功能的一种技术。</p>
+</blockquote>
+<p>简单来说，就是可以动态的在函数调用的前后插一段代码。iOS 可以使用 Pete Steinberger 开发的 <a href="https://github.com/steipete/Aspects">Aspects</a> 这个库，大致原理是在 runtime 层，通过 swizzle method 来实现的。</p>
+<p>来看一个小 Demo</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[UIViewController </span><span style="color:#4271ae;">aspect_hookSelector:</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(viewWillAppear:) withOptions:AspectPositionAfter usingBlock:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;AspectInfo&gt; aspectInfo, </span><span style="color:#8959a8;">BOOL</span><span style="color:#4271ae;"> animated) {
+</span><span style="color:#4271ae;">    NSLog(</span><span style="color:#839c00;">@&quot;View Controller </span><span>%@</span><span style="color:#839c00;"> will appear animated: </span><span>%tu</span><span style="color:#839c00;">&quot;</span><span style="color:#4271ae;">, aspectInfo.</span><span style="color:#c82728;">instance</span><span style="color:#4271ae;">, animated);
+</span><span style="color:#4271ae;">} error:</span><span style="color:#f07219;">NULL</span><span>];
+</span></code></pre>
+<p>这样在 <code>UIViewController</code> 的 <code>viewWillAppear:</code> 被调用后，还会再调一下我们定义的 Block，这段日志就会被输出。而打点正好符合这种场景：正事干完之后，额外干一些跟业务无关的事情。</p>
+<p>上面的例子，我们通过 AOP 来做的话，大概就是这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// DetailViewController.m
+</span><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)onBuyButtonTapped</span><span style="color:#3e999f;">:</span><span>(UIButton </span><span style="color:#3e999f;">*</span><span>)button
+</span><span>{
+</span><span>    </span><span style="color:#8e908c;">// do some stuff, maybe send a request to server
+</span><span>    </span><span style="color:#8e908c;">// no need to call [XXXAnalytics event:]
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// AppDelegate.m
+</span><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)setupAnalytics
+</span><span>{
+</span><span>    [DetailViewController </span><span style="color:#4271ae;">aspect_hookSelector:</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(onBuyButtonTapped:) withOptions:AspectPositionAfter usingBlock:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;AspectInfo&gt; aspectInfo, </span><span style="color:#8959a8;">BOOL</span><span style="color:#4271ae;"> animated) {
+</span><span style="color:#4271ae;">        [XXXAnalytics event:</span><span>kSomeEventYouDefined</span><span style="color:#4271ae;">];
+</span><span style="color:#4271ae;">    } error:</span><span style="color:#f07219;">NULL</span><span>];
+</span><span>}
+</span></code></pre>
+<p>这样统计代码就从业务代码中剥离出来了。但是又产生了一个新问题，多个 Button Event，岂不是要写很多行这样的代码，「重复」这样的事情，作为一个程序员怎么能忍，简单，造一个方法</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)trackEventWithClass</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#8959a8;">Class</span><span>)klass selector</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#8959a8;">SEL</span><span>)selector event</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)event
+</span><span>{
+</span><span>    [klass </span><span style="color:#4271ae;">aspect_hookSelector:</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(selector) withOptions:AspectPositionAfter usingBlock:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;AspectInfo&gt; aspectInfo, </span><span style="color:#8959a8;">BOOL</span><span style="color:#4271ae;"> animated) {
+</span><span style="color:#4271ae;">        [XXXAnalytics event:event];
+</span><span style="color:#4271ae;">    } error:</span><span style="color:#f07219;">NULL</span><span>];
+</span><span>}
+</span></code></pre>
+<p>使用起来就像这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)setupAnalytics
+</span><span>{
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">trackEventWithClass:DetailViewController selector:@</span><span style="color:#c82728;">seletor</span><span style="color:#4271ae;">(onBuyButtonTapped</span><span style="color:#3e999f;">:</span><span style="color:#4271ae;">) event:</span><span>kSomeEventYouDefined];
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">trackEventWithClass:ListViewController selector:@</span><span style="color:#c82728;">seletor</span><span style="color:#4271ae;">(followButtonTapped</span><span style="color:#3e999f;">:</span><span style="color:#4271ae;">) event:</span><span>kAnotherEventYouDefined];
+</span><span>    </span><span style="color:#8e908c;">// ...
+</span><span>}
+</span></code></pre>
+<p>看起来又干净了些。这时，产品经理又提了个需求：当这个按钮点击时，如果已经登录了，发送 EventA，如果没有登录则发送 EventB，也就是说，不再只是 <code>[XXXAnalytics event:]</code> 这么简单了，还需要加上额外的逻辑，这也难不倒我们，加上一个 <code>block</code> 即可。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)trackEventWithClass</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#8959a8;">Class</span><span>)klass
+</span><span>                   selector</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#8959a8;">SEL</span><span>)selector
+</span><span>               eventHandler</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#8959a8;">void </span><span>(</span><span style="color:#3e999f;">^</span><span>)(</span><span style="color:#8959a8;">id</span><span>&lt;AspectInfo&gt; aspectInfo))eventHandler
+</span><span>{
+</span><span>    [klass </span><span style="color:#4271ae;">aspect_hookSelector:</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(selector) withOptions:AspectPositionAfter usingBlock:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;AspectInfo&gt; aspectInfo, </span><span style="color:#8959a8;">BOOL</span><span style="color:#4271ae;"> animated) {
+</span><span style="color:#4271ae;">        </span><span style="color:#8959a8;">if </span><span style="color:#4271ae;">(eventHandler) {
+</span><span style="color:#4271ae;">            </span><span style="color:#c82728;">eventHandler</span><span style="color:#4271ae;">(aspectInfo);
+</span><span style="color:#4271ae;">        }
+</span><span style="color:#4271ae;">    } error:</span><span style="color:#f07219;">NULL</span><span>];
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// 使用
+</span><span>[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">trackEventWithClass:DetailViewController selector:@</span><span style="color:#c82728;">seletor</span><span style="color:#4271ae;">(onBuyButtonTapped</span><span style="color:#3e999f;">:</span><span style="color:#4271ae;">) eventHandler:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;AspectInfo&gt; aspectInfo){
+</span><span style="color:#4271ae;">    user.</span><span style="color:#c82728;">loggedIn </span><span style="color:#3e999f;">? </span><span style="color:#4271ae;">[XXXAnalytics event:EventA] </span><span style="color:#3e999f;">: </span><span style="color:#4271ae;">[XXXAnalytics event:EventB];
+</span><span style="color:#4271ae;">}</span><span>];
+</span></code></pre>
+<p>好了，现在只要不是太复杂的打点逻辑(那些需要方法上下文变量的)我们都能应付了，接下来就该等产品来验收了。产品搬了个凳子坐在身边，然后点一下 Button，看一下 Console，被几轮蹂躏后，产品也慢慢地接受了这种验收方式。后来某一天，忽然发现某一项或某几项数据有异常，然后找到开发，瞄了一眼：哦，这个方法被重构了。或者新加的方法忘了加统计了。只能等到下个版本再加上了，如果只是一般的统计数据倒还好，跟钱相关的就麻烦了。</p>
+<p>那么有没有一种直观的验证方式呢？当然，程序员是万能的呀。一个理想的状况是，产品打开 App 后，开启某个开关就能看到所有会发送 Event 的按钮，就像这样</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;ios-analytics&#x2F;analytics_highlight.jpg"
+    srcset="&#x2F;posts&#x2F;ios-analytics&#x2F;analytics_highlight.jpg 320w,&#x2F;posts&#x2F;ios-analytics&#x2F;analytics_highlight.jpg 320w"
+    sizes="(max-width: 320px) 100vw, 320px" width="320" /></p>
+<p>其中数字代表了 <code>EventID</code>。如何实现呢？还记得注册事件时，我们有传入 <code>class</code> 和 <code>selector</code> 么，一般我们都会有一个 <code>BaseViewController</code>，那么就可以在 <code>BaseViewController</code> 的 <code>viewDidAppear:</code> 里做点文章了。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// BaseViewController.m
+</span><span>
+</span><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)viewDidAppear</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)animated
+</span><span>{
+</span><span>    [</span><span style="color:#c82728;">super </span><span style="color:#4271ae;">viewDidAppear:animated</span><span>];
+</span><span>    </span><span style="color:#8e908c;">// 获取已经注册过的 classes
+</span><span>    </span><span style="color:#c99e00;">NSDictionary </span><span style="color:#3e999f;">*</span><span>registeredClasses </span><span style="color:#3e999f;">= </span><span>[OurAnalytics </span><span style="color:#4271ae;">sharedInstance</span><span>].</span><span style="color:#c82728;">registeredClasses</span><span>;
+</span><span>
+</span><span>    [registeredClasses </span><span style="color:#4271ae;">enumerateKeysAndObjectsUsingBlock:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">className, </span><span style="color:#c99e00;">NSArray </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">selectors, </span><span style="color:#8959a8;">BOOL </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">stop) {
+</span><span style="color:#4271ae;">        </span><span style="color:#8959a8;">if </span><span style="color:#4271ae;">([</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">isKindOfClass:NSClassFromString(className)]) {
+</span><span style="color:#4271ae;">            </span><span style="color:#8e908c;">// 如何根据 selector 找到它的宿主？
+</span><span style="color:#4271ae;">        }
+</span><span style="color:#4271ae;">    }</span><span>];
+</span><span>}
+</span></code></pre>
+<p>所以现在问题就剩下，如何根据 <code>selector</code> 找到对应的 Button，这里要注意，有些 Button 可能要等网络请求完成才会出现，比如 <code>TableViewCell</code> 里的 Button。</p>
+<p>没有想到太方便的方法，简单粗暴点就是设置个 Timer 每隔一段时间扫一下 subviews，如果是 button 或 包含 tapGesture 的，就拿它们的 action 对比一下，如果 match 就可以高亮那个 button / view 了。</p>
+<p>EventID 也一样，之前在注册时也会传一个 EventID 过来，这里直接显示出来即可。对于那些传 <code>eventHandler</code> 的就不行了。</p>
+<p>所以理论上是可行的，性能上会稍微有点损耗，尤其是当 subViews 的结构比较复杂时，不过只是内部用来做验证，所以这也不是什么问题。</p>
+<p>看起来效果已经不错了，有没有可能让这套体系再灵活一些？比如可以从后端制定打点规则？客户端只是读取一个配置文件，就像这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)setupAnalytics
+</span><span>{
+</span><span>    </span><span style="color:#8e908c;">// analyticsRules 是从配置文件中读取出来的
+</span><span>    [analyticsRules </span><span style="color:#4271ae;">enumerateObjectsUsingBlock:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">NSDictionary </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">rules, </span><span style="color:#c99e00;">NSUInteger</span><span style="color:#4271ae;"> idx, </span><span style="color:#8959a8;">BOOL </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">stop) {
+</span><span style="color:#4271ae;">        </span><span style="color:#8959a8;">Class</span><span style="color:#4271ae;"> klass </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">NSClassFromString(rules[</span><span style="color:#839c00;">@&quot;class&quot;</span><span style="color:#4271ae;">]);
+</span><span style="color:#4271ae;">        </span><span style="color:#8959a8;">SEL</span><span style="color:#4271ae;"> selector </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">NSSelectorFromString(rules[</span><span style="color:#839c00;">@&quot;selector&quot;</span><span style="color:#4271ae;">]);
+</span><span style="color:#4271ae;">        </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">eventID </span><span style="color:#3e999f;">=</span><span style="color:#4271ae;"> rules[</span><span style="color:#839c00;">@&quot;eventID&quot;</span><span style="color:#4271ae;">];
+</span><span style="color:#4271ae;">        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">trackEventWithClass:klass seletor:seletor event: eventID];
+</span><span style="color:#4271ae;">    }</span><span>];
+</span><span>}
+</span></code></pre>
+<p>那如果在后台的时候填错了 Class 或 Selector 怎么办？还好有 <code>objc_getClassList</code> 和 <code>class_copyMethodList</code> 这两个运行时方法，有了它们就可以在 App 启动时扫一遍已注册的类（过滤掉 UI / NS 开头的），然后将它们的 seletor 也一并保存下来发送给服务端，当然这种操作只需在适当的时机做一下就可以了，比如集成打包时。</p>
+<p>现在，这套体系就比较完整了。当然这只是我的一些构想，并没有在实践中尝试过，所以肯定会踩到各种各样的坑，不过至少看起来是个可行的方案。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

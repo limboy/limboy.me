@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+「无侵入页面加载完成检测」的一些思路
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/page-open-detect/">
+
+<meta name="twitter:title" content="「无侵入页面加载完成检测」的一些思路">
+<meta property="og:title" content="「无侵入页面加载完成检测」的一些思路">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;page-open-detect&#x2F;">「无侵入页面加载完成检测」的一些思路</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2016-12-08</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <h3 id="qian-yan">前言</h3>
+<p>在诸多的性能指标里，「页面加载完成耗时」是非常重要的一项，尤其是重点页面，如详情页，1 秒内打开和 3 秒内打开差别是很大的，直接影响 GMV。</p>
+<p>再来说一下「页面加载完成」的定义，不是页面 layout 完成，不是请求完成，而是图片和文字都已被渲染完成。比较常见的做法是在页面的 <code>ViewDidAppear</code> 和请求完成且数据被转换成 Model 之后分别打点，前者表示页面出现的时间，后者表示数据获取的时间，基本可以体现出页面加载时间。但也有一些问题比如：</p>
+<ol>
+<li>业务经常调整，所以埋点也需要调整，这个过程中很容易出现错埋、漏埋的问题。</li>
+<li>有些页面会有多个请求，只有这些请求全部完成后，页面才能渲染，这时数据请求埋点就会有点麻烦。</li>
+<li>这几个时间点跟用户真正看到的时间还是会有差别，不够准确。</li>
+</ol>
+<p>所以一种无侵入的检测机制就很重要了。正好在<a href="https://gold.xitu.io">掘金</a>上看到了<a href="https://gold.xitu.io/post/58440e98128fe1006c4c951d">用图像识别来自动确认网页加载成功</a>，受此启发，觉得此路有戏。</p>
+<h3 id="shi-xian-fang-an">实现方案</h3>
+<p>当 push／present 一个页面时，隔一段时间去截屏并分析当前页面的空白（纯色）部分占比，如果超过某个阈值，就认为页面未加载完成。这里会有几个注意点：</p>
+<ol>
+<li>需要主动去截屏检测，而不能加载完成后告知。这其中的差别在于无法得知具体哪个时间加载完成了。</li>
+<li>有些页面被故意设计成有较多留白，这时就不容易判断了。</li>
+<li>「未加载完成」不同的页面会有不同的表现。</li>
+<li>当用户滑动时，有可能之前的页面已经加载了</li>
+</ol>
+<h3 id="chun-se-zhan-bi">纯色占比</h3>
+<p>最简单的方案就是把图片上的每个像素点都取出来，放到一个字典里，之后如果有相同色值的像素，那么 <code>count++</code>。问题也很明显，一个屏幕几十万个点，这一轮都还没分析完，用户已经打开第二个页面了。</p>
+<p>再回到想要达到的目标：纯色部分占比。那么将图片压缩到更小的 size 不就行了么。老套路，铺张画布，把图片浇上去。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">+ </span><span>(UIImage </span><span style="color:#3e999f;">*</span><span>)imageWithImage</span><span style="color:#3e999f;">:</span><span>(UIImage </span><span style="color:#3e999f;">*</span><span>)image scaledToSize</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#c99e00;">CGSize</span><span>)newSize {
+</span><span>    </span><span style="color:#c82728;">UIGraphicsBeginImageContextWithOptions</span><span style="color:#4271ae;">(newSize, </span><span style="color:#f07219;">NO</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">1.0</span><span style="color:#4271ae;">)</span><span>;
+</span><span>    [image </span><span style="color:#4271ae;">drawInRect:</span><span style="color:#c82728;">CGRectMake</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">0</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">0</span><span style="color:#4271ae;">, newSize.</span><span style="color:#c82728;">width</span><span style="color:#4271ae;">, newSize.</span><span style="color:#c82728;">height</span><span style="color:#4271ae;">)</span><span>];
+</span><span>    UIImage </span><span style="color:#3e999f;">*</span><span>newImage </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">UIGraphicsGetImageFromCurrentImageContext</span><span style="color:#4271ae;">()</span><span>;
+</span><span>    </span><span style="color:#c82728;">UIGraphicsEndImageContext</span><span style="color:#4271ae;">()</span><span>;
+</span><span>    </span><span style="color:#8959a8;">return</span><span> newImage;
+</span><span>}
+</span></code></pre>
+<p>接下来就是真正的计算了，过程也比较简单：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// 把 UIImage 转换成 CGImage Data
+</span><span>CGDataProviderRef provider </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">CGImageGetDataProvider</span><span style="color:#4271ae;">(image.</span><span style="color:#c82728;">CGImage</span><span style="color:#4271ae;">)</span><span>;
+</span><span>CFDataRef pixelData </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">CGDataProviderCopyData</span><span style="color:#4271ae;">(provider)</span><span>;
+</span><span style="color:#8959a8;">const </span><span style="color:#c99e00;">UInt8</span><span style="color:#3e999f;">*</span><span> data </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">CFDataGetBytePtr</span><span style="color:#4271ae;">(pixelData)</span><span>;
+</span><span style="color:#8959a8;">long</span><span> dataLength </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">CFDataGetLength</span><span style="color:#4271ae;">(pixelData)</span><span>;
+</span><span style="color:#8959a8;">int</span><span> numberOfColorComponents </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">4</span><span>; </span><span style="color:#8e908c;">// R,G,B, and A
+</span><span>
+</span><span style="color:#8e908c;">// 用来装 color ，key 为 R-G-B 字符串，value 为出现次数
+</span><span style="color:#c99e00;">NSMutableDictionary </span><span style="color:#3e999f;">*</span><span>colors </span><span style="color:#3e999f;">= </span><span>[[</span><span style="color:#c99e00;">NSMutableDictionary </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>
+</span><span style="color:#8959a8;">int</span><span> colorCount </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">for </span><span>(</span><span style="color:#8959a8;">int</span><span> i </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>; i </span><span style="color:#3e999f;">&lt; </span><span>(dataLength); i </span><span style="color:#3e999f;">+=</span><span> numberOfColorComponents) {
+</span><span>	</span><span style="color:#8959a8;">if </span><span>(data[i</span><span style="color:#3e999f;">+</span><span style="color:#f07219;">3</span><span>] </span><span style="color:#3e999f;">!= </span><span style="color:#f07219;">0</span><span>) {
+</span><span>		colorCount</span><span style="color:#3e999f;">++</span><span>;
+</span><span>		</span><span style="color:#c99e00;">UInt8</span><span> red </span><span style="color:#3e999f;">=</span><span> data[i];
+</span><span>		</span><span style="color:#c99e00;">UInt8</span><span> green </span><span style="color:#3e999f;">=</span><span> data[i</span><span style="color:#3e999f;">+</span><span style="color:#f07219;">1</span><span>];
+</span><span>		</span><span style="color:#c99e00;">UInt8</span><span> blue </span><span style="color:#3e999f;">=</span><span> data[i</span><span style="color:#3e999f;">+</span><span style="color:#f07219;">2</span><span>];
+</span><span>
+</span><span>		</span><span style="color:#8e908c;">// 以 R-G-B 为 key
+</span><span>		</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>result </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#c99e00;">NSString </span><span style="color:#4271ae;">stringWithFormat:</span><span style="color:#839c00;">@&quot;</span><span>%d</span><span style="color:#839c00;">-</span><span>%d</span><span style="color:#839c00;">-</span><span>%d</span><span style="color:#839c00;">&quot;</span><span style="color:#4271ae;">, red, green, blue</span><span>];
+</span><span>		</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#3e999f;">!</span><span>colors[result]) {
+</span><span>			colors[result] </span><span style="color:#3e999f;">=</span><span> @</span><span style="color:#f07219;">1</span><span>;
+</span><span>		} </span><span style="color:#8959a8;">else </span><span>{
+</span><span>			colors[result] </span><span style="color:#3e999f;">=</span><span> @([colors[result] integerValue] </span><span style="color:#3e999f;">+ </span><span style="color:#f07219;">1</span><span>);
+</span><span>		}
+</span><span>	}
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// 按出现次数排序
+</span><span style="color:#c99e00;">NSArray </span><span style="color:#3e999f;">*</span><span>sortedColorCount </span><span style="color:#3e999f;">= </span><span>[colors.</span><span style="color:#c82728;">allValues</span><span> sortedArrayUsingComparator</span><span style="color:#3e999f;">:^</span><span style="color:#c99e00;">NSComparisonResult</span><span>(</span><span style="color:#8959a8;">id </span><span> _Nonnull obj1, </span><span style="color:#8959a8;">id </span><span> _Nonnull obj2) {
+</span><span>	</span><span style="color:#8959a8;">return </span><span>[obj1 </span><span style="color:#4271ae;">intValue</span><span>] </span><span style="color:#3e999f;">&lt; </span><span>[obj2 </span><span style="color:#4271ae;">intValue</span><span>] </span><span style="color:#3e999f;">? </span><span style="color:#f07219;">NSOrderedDescending </span><span style="color:#3e999f;">: </span><span style="color:#f07219;">NSOrderedAscending</span><span>;
+</span><span>}];
+</span><span>
+</span><span style="color:#c99e00;">NSMutableArray </span><span style="color:#3e999f;">*</span><span>percent </span><span style="color:#3e999f;">= </span><span>[[</span><span style="color:#c99e00;">NSMutableArray </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>
+</span><span style="color:#8e908c;">// 计算占比，并从高到低排序，取前 10 个
+</span><span>[sortedColorCount </span><span style="color:#4271ae;">enumerateObjectsUsingBlock:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">NSNumber </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">count, </span><span style="color:#c99e00;">NSUInteger</span><span style="color:#4271ae;"> idx, </span><span style="color:#8959a8;">BOOL </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;"> _Nonnull stop) {
+</span><span style="color:#4271ae;">	</span><span style="color:#8959a8;">if </span><span style="color:#4271ae;">(idx </span><span style="color:#3e999f;">&gt;= </span><span style="color:#f07219;">10</span><span style="color:#4271ae;">) {
+</span><span style="color:#4271ae;">		</span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">stop </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">YES</span><span style="color:#4271ae;">;
+</span><span style="color:#4271ae;">	}
+</span><span style="color:#4271ae;">	[percent addObject:@([count intValue] </span><span style="color:#3e999f;">/ </span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">float</span><span style="color:#4271ae;">)(colorCount))];
+</span><span style="color:#4271ae;">}</span><span>];
+</span><span>
+</span><span style="color:#8959a8;">return </span><span>[percent </span><span style="color:#4271ae;">copy</span><span>];
+</span></code></pre>
+<p>先把 <code>UIImage</code> 转换成 <code>CFDataRef</code>，再遍历获取 <code>Color</code>，对相同的的 <code>Color</code> 进行累加，最后排一下序即可。</p>
+<p>返回的数据类似这样：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>(
+</span><span>	</span><span style="color:#f07219;">0.4586517</span><span>,
+</span><span>	</span><span style="color:#f07219;">0.06202247</span><span>,
+</span><span>	</span><span style="color:#f07219;">0.02921348</span><span>,
+</span><span>	</span><span style="color:#3e999f;">...
+</span><span>)
+</span></code></pre>
+<p>这样就能拿到了颜色的占比。</p>
+<h3 id="shi-zhan">实战</h3>
+<p>假设设定纯色区域超过 30% 认为没有完全加载，来找几个 Demo 测试下：</p>
+<p><img src="http://s16.mogucdn.com/p1/161208/idid_ifqtcztfhbqwendcmmzdambqgyyde_600x1036.png" alt="" /></p>
+<p>结果符合「未加载完毕」定义</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>(
+</span><span>    </span><span style="color:#839c00;">&quot;0.4139326&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;0.06808989&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;0.05438202&quot;</span><span>,
+</span><span>    </span><span style="color:#3e999f;">...
+</span><span>)
+</span></code></pre>
+<p>再换一个</p>
+<p><img src="http://s16.mogucdn.com/p1/161208/idid_ifrgizrwme2wgndcmmzdambqmeyde_600x1036.png" alt="" /></p>
+<p>虽然没有加载完，但结果少于 30%</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>(
+</span><span>    </span><span style="color:#839c00;">&quot;0.2788764&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;0.06808989&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;0.04853933&quot;</span><span>,
+</span><span>    </span><span style="color:#3e999f;">...
+</span><span>)
+</span></code></pre>
+<p>如果把值设得小一些，那么有可能「误杀」，比如这个界面</p>
+<p><img src="http://s17.mogucdn.com/p1/161208/idid_ifrdimlemfrggndcmmzdambqmeyde_600x1067.png" alt="" /></p>
+<p>结果</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>(
+</span><span>    </span><span style="color:#839c00;">&quot;0.4530337&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;0.06561798&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;0.02921348&quot;</span><span>,
+</span><span>    </span><span style="color:#3e999f;">...
+</span><span>)
+</span></code></pre>
+<p>这个界面已经加载完成了，但由于空白面积较多，因此纯色的占比也较多，如果按照之前的公式就会误伤，如何解决这个问题，之后再讨论。</p>
+<p>接下来看另一个未加载完毕的页面：</p>
+<p><img src="http://s16.mogucdn.com/p1/161208/idid_ie4tszldguytanlcmmzdambqgqyde_750x1278.png" alt="" /></p>
+<p>这个页面的结果是这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>(
+</span><span>    </span><span style="color:#839c00;">&quot;0.3433708&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;0.1941573&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;0.1822472&quot;</span><span>,
+</span><span>    </span><span style="color:#3e999f;">...
+</span><span>)
+</span></code></pre>
+<p>如果中间部分加载出来（也就是面积最大的那一块），那么就变成了</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>    </span><span style="color:#839c00;">&quot;0.1941573&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;0.1822472&quot;</span><span>,
+</span></code></pre>
+<p>这也属于页面未加载完成，但又是一个新的规则了。</p>
+<h3 id="xiao-jie">小结</h3>
+<p>再来回顾一下「截图分析纯色占比」带来的问题：</p>
+<ol>
+<li>隔 N 秒去截图时，用户可能滑到第 2 屏了，这时第 1 屏加载完了，但 2 屏还没有加载完，不应该属于「页面加载未完成」范畴。</li>
+<li>不同页面的纯色特性不一样，有的比较分散，有的正常状态下也会有比较多的纯色，这样就容易误判。</li>
+</ol>
+<p>对于场景 1 还没有想到特别好的处理方式，一种办法是通过判断 runloop 的 mode 是否等于 <code>UITrackingRunLoopMode</code> 来判断是否有滑动，不太优雅，但可能行得通。</p>
+<p>对于场景 2 可以把数据发送到服务端，让服务端去计算某个页面的纯色分布情况，比如大部分都是 &lt; 10%，有少部分在 20% 以上，那么就可以判定为未加载完成，不过成本还是有点高。</p>
+<p>所以这个方案虽然可以做到无侵入，但在结果判定上还是存在些缺陷，期待有更成熟的方案。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

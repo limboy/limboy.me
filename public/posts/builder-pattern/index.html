@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+Builder Pattern 在 Objective-C 中的使用
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/builder-pattern/">
+
+<meta name="twitter:title" content="Builder Pattern 在 Objective-C 中的使用">
+<meta property="og:title" content="Builder Pattern 在 Objective-C 中的使用">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;builder-pattern&#x2F;">Builder Pattern 在 Objective-C 中的使用</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2015-02-07</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>在说 Builder Pattern 之前，我们先来看看一个场景。假设我们要预定一个 iPhone 6，要 64G 的，金色的，用代码表述大概是这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// PFX 是一个前缀，因为直接写 iPhone6 不符合类名大写的习惯，写成 IPhone6 更是怪异 ╮(╯▽╰)╭
+</span><span>PFXiPhone6 </span><span style="color:#3e999f;">*</span><span>iphone </span><span style="color:#3e999f;">= </span><span>[[PFXiPhone6 </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>iphone.</span><span style="color:#c82728;">storage </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">64</span><span>;
+</span><span>iphone.</span><span style="color:#c82728;">color </span><span style="color:#3e999f;">= </span><span>[UIColor </span><span style="color:#4271ae;">goldenColor</span><span>];
+</span></code></pre>
+<p>也可以是另一种方式</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>PFXiPhone6 </span><span style="color:#3e999f;">*</span><span>iPhone </span><span style="color:#3e999f;">= </span><span>[[PFXiPhone6 </span><span style="color:#4271ae;">alloc</span><span>] initWithStorage</span><span style="color:#3e999f;">:</span><span style="color:#f07219;">64</span><span> color</span><span style="color:#3e999f;">:</span><span>[UIColor </span><span style="color:#4271ae;">goldenColor</span><span>]];
+</span></code></pre>
+<p>第一种方式可扩展性好些，但无法约束必须设置某些 property。第二种方式修正了这个问题，但扩展性也差了。</p>
+<p>假如又有了新需求，要让客户可以选择发售区域，比如港行，国行，美版等等。对于第一种，自然可以新增一个属性，但使用者很可能完全不知道新增了这么个属性。对于第二种，则只能再新建一个初始化方式，如 <code>-[initWithStorage:color:place]</code>。那如果又有新的需求，比如选择是否刻字，以及刻哪些字呢？或者可以选择外壳的种类等等。这两种方式都不能很好地处理需求的变更。</p>
+<p>现在我们来说说 Builder Pattern，这个模式可以在各种语言里被很方便地实现，比如 javascript</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#3e999f;">new </span><span>PFXiPhone6Builder()
+</span><span>  </span><span style="color:#4271ae;">.setStorage</span><span>(</span><span style="color:#f07219;">64</span><span>)
+</span><span>  </span><span style="color:#4271ae;">.setColor</span><span>(</span><span style="color:#839c00;">&#39;golden&#39;</span><span>)
+</span><span>  </span><span style="color:#4271ae;">.setPlace</span><span>(</span><span style="color:#839c00;">&#39;HK&#39;</span><span>)
+</span><span>  </span><span style="color:#4271ae;">.build</span><span>();
+</span></code></pre>
+<p>当有新的属性时，再加一个 <code>setProperty</code> 即可。如果漏写了某个属性，可以在 <code>build</code> 里检查。</p>
+<p>在 Objective-C 里，这样的链式写法不是很流行（<a href="https://github.com/Masonry/Masonry">Masonry</a>里这种写法用的比较多），所以，在 OC 里写起来大概会是这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>PFXiPhone6Builder </span><span style="color:#3e999f;">*</span><span>builder </span><span style="color:#3e999f;">= </span><span>[[PFXiPhone6Builder </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>builder.</span><span style="color:#c82728;">storage </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">64</span><span>;
+</span><span>builder.</span><span style="color:#c82728;">color </span><span style="color:#3e999f;">= </span><span>[UIColor </span><span style="color:#4271ae;">goldenColor</span><span>];
+</span><span>builder.</span><span style="color:#c82728;">place </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">@&quot;HK&quot;</span><span>;
+</span><span>PFXiPhone6 </span><span style="color:#3e999f;">*</span><span>iphone </span><span style="color:#3e999f;">= </span><span>[builder </span><span style="color:#4271ae;">build</span><span>];
+</span></code></pre>
+<p>如果少了什么属性，在 <code>build</code> 时检查下即可。这样既解决了不方便扩展的问题，当有新的属性时也可以知道。</p>
+<p>不过看起来还是不够优雅，这个 builder 只是一个临时工具，用完了就扔掉了，既然这样，那有没有可能写法上符合 OC 的传统，又让这个 builder 「临时出现」一下？且看下面这段代码</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>PFXiPhone6 </span><span style="color:#3e999f;">*</span><span>iPhone6 </span><span style="color:#3e999f;">= </span><span>[PFXiPhone6 </span><span style="color:#4271ae;">createWithBuilder:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(PFXiPhone6Builder </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">builder){
+</span><span style="color:#4271ae;">	builder.</span><span style="color:#c82728;">storage </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">64</span><span style="color:#4271ae;">;
+</span><span style="color:#4271ae;">	builder.</span><span style="color:#c82728;">color </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">[UIColor goldenColor];
+</span><span style="color:#4271ae;">	builder.</span><span style="color:#c82728;">place </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">@&quot;HK&quot;</span><span style="color:#4271ae;">;
+</span><span style="color:#4271ae;">}</span><span>];
+</span></code></pre>
+<p>是不是看起来舒服多了。builder 只是在 block 范围内起作用，不会影响当前 context 的变量。这个 <code>+[createWithBuilder:]</code> 的代码如下</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">+ </span><span>(instancetype)createWithBuilder</span><span style="color:#3e999f;">:</span><span>(BuilderBlock)block {
+</span><span>	NSParameterAssert(block);
+</span><span>	PFXiPhone6Builder </span><span style="color:#3e999f;">*</span><span>builder </span><span style="color:#3e999f;">= </span><span>[[PFXiPhone6Builder </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>	</span><span style="color:#c82728;">block</span><span style="color:#4271ae;">(builder)</span><span>;
+</span><span>	</span><span style="color:#8959a8;">return </span><span>[builder </span><span style="color:#4271ae;">build</span><span>];
+</span><span>}
+</span></code></pre>
+<p>这里 <code>build</code> 方法，也有两种实现，第一种</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// PFXiPhone6Builder
+</span><span style="color:#3e999f;">- </span><span>(PFXiPhone6 </span><span style="color:#3e999f;">*</span><span>)build
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">return </span><span>[[PFXiPhone6 </span><span style="color:#4271ae;">alloc</span><span>] initwithBuilder</span><span style="color:#3e999f;">:</span><span style="color:#c82728;">self</span><span>];
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// PFXiPhone6
+</span><span style="color:#3e999f;">- </span><span>(instancetype)initwithBuilder</span><span style="color:#3e999f;">:</span><span>(PFXiPhone6Builder </span><span style="color:#3e999f;">*</span><span>)builder
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">self </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#c82728;">super </span><span style="color:#4271ae;">init</span><span>]) {
+</span><span>		_storage </span><span style="color:#3e999f;">=</span><span> builder.</span><span style="color:#c82728;">storage</span><span>;
+</span><span>		_color </span><span style="color:#3e999f;">=</span><span> builder.</span><span style="color:#c82728;">color</span><span>;
+</span><span>		_place </span><span style="color:#3e999f;">=</span><span> builder.</span><span style="color:#c82728;">place</span><span>;
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>另外一种是把两个过程合并为一个过程</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// PFXiPhone6Builder
+</span><span style="color:#3e999f;">- </span><span>(PFXiPhone6 </span><span style="color:#3e999f;">*</span><span>)build
+</span><span>{
+</span><span>	</span><span style="color:#8e908c;">// 可以在这里对 property 做检查
+</span><span>	NSAssert(</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">place</span><span>, </span><span style="color:#839c00;">@&quot;发行区别忘了填哦&quot;</span><span>);
+</span><span>
+</span><span>	PFXiPhone6 </span><span style="color:#3e999f;">*</span><span>iphone6 </span><span style="color:#3e999f;">= </span><span>[[PFXiPhone6 </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>	iPhone6.</span><span style="color:#c82728;">storage </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">storage</span><span>;
+</span><span>	iPhone6.</span><span style="color:#c82728;">color </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">color</span><span>;
+</span><span>	iPhone6.</span><span style="color:#c82728;">place </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">place</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">return</span><span> iPhone6;
+</span><span>}
+</span></code></pre>
+<p>这两种方式的区别在于对参数的处理，前一个是在目标 Class 中处理，后一种是在 Builder 中处理。</p>
+<p>在 Facebook 的 <a href="https://github.com/facebook/pop">pop</a> 中也有类似的使用，如</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>POPAnimatableProperty </span><span style="color:#3e999f;">*</span><span>animatableProperty </span><span style="color:#3e999f;">= </span><span>[POPAnimatableProperty </span><span style="color:#4271ae;">propertyWithName:</span><span style="color:#839c00;">@&quot;property&quot; </span><span style="color:#4271ae;">initializer:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(POPMutableAnimatableProperty </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">prop) {
+</span><span style="color:#4271ae;">    prop.</span><span style="color:#c82728;">writeBlock </span><span style="color:#3e999f;">= ^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id </span><span style="color:#4271ae;">obj, </span><span style="color:#8959a8;">const </span><span style="color:#c99e00;">CGFloat</span><span style="color:#4271ae;"> values[]) {
+</span><span style="color:#4271ae;">    };
+</span><span style="color:#4271ae;">    prop.</span><span style="color:#c82728;">readBlock </span><span style="color:#3e999f;">= ^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id </span><span style="color:#4271ae;">obj, </span><span style="color:#c99e00;">CGFloat</span><span style="color:#4271ae;"> values[]) {
+</span><span style="color:#4271ae;">    };
+</span><span style="color:#4271ae;">}</span><span>];
+</span></code></pre>
+<p>这里的 <code>initializer</code> 其实就是 <code>builder</code></p>
+<p>我在写蘑菇街的基础框架时，也有用到过几处，觉得还是蛮方便的，尤其对使用者来说。比如这个可以横向或纵向滚动的包含可点击 Items 的 collectionView。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">collectionView </span><span style="color:#3e999f;">= </span><span>[MGJFlowCollectionView </span><span style="color:#4271ae;">collectionViewWithBuilder:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(MGJFlowCollectionViewBuilder </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">builder) {
+</span><span style="color:#4271ae;">	builder.</span><span style="color:#c82728;">scrollDirection </span><span style="color:#3e999f;">=</span><span style="color:#4271ae;"> UICollectionViewScrollDirectionHorizontal;
+</span><span style="color:#4271ae;">	builder.</span><span style="color:#c82728;">minimumInteritemSpacing </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">10</span><span style="color:#4271ae;">;
+</span><span style="color:#4271ae;">	builder.</span><span style="color:#c82728;">minimumLineSpacing </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">10</span><span style="color:#4271ae;">;
+</span><span style="color:#4271ae;">	builder.</span><span style="color:#c82728;">sectionInset </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">UIEdgeInsetsMake</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">10</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">10</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">10</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">10</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">	</span><span style="color:#c99e00;">CGSize</span><span style="color:#4271ae;"> itemSize </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">CGSizeMake</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">81</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">100</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">	builder.</span><span style="color:#c82728;">itemSize </span><span style="color:#3e999f;">=</span><span style="color:#4271ae;"> itemSize;
+</span><span style="color:#4271ae;">	builder.</span><span style="color:#c82728;">dataSource </span><span style="color:#3e999f;">=</span><span style="color:#4271ae;"> @[@</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">,@</span><span style="color:#f07219;">2</span><span style="color:#4271ae;">,@</span><span style="color:#f07219;">3</span><span style="color:#4271ae;">,@</span><span style="color:#f07219;">4</span><span style="color:#4271ae;">,@</span><span style="color:#f07219;">5</span><span style="color:#4271ae;">,@</span><span style="color:#f07219;">6</span><span style="color:#4271ae;">, @</span><span style="color:#f07219;">7</span><span style="color:#4271ae;">,@</span><span style="color:#f07219;">8</span><span style="color:#4271ae;">, @</span><span style="color:#f07219;">9</span><span style="color:#4271ae;">, @</span><span style="color:#f07219;">10</span><span style="color:#4271ae;">];
+</span><span style="color:#4271ae;">	builder.</span><span style="color:#c82728;">cellBuilder </span><span style="color:#3e999f;">= ^</span><span style="color:#4271ae;">UIView </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">NSNumber </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">number){
+</span><span style="color:#4271ae;">		UIView </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">view </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">[[UIView alloc] initWithFrame</span><span style="color:#3e999f;">:</span><span style="color:#c82728;">CGRectMake</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">0</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">0</span><span style="color:#4271ae;">, itemSize.</span><span style="color:#c82728;">width</span><span style="color:#4271ae;">, itemSize.</span><span style="color:#c82728;">height</span><span style="color:#4271ae;">)];
+</span><span style="color:#4271ae;">		view.</span><span style="color:#c82728;">backgroundColor </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">[UIColor mgj_random];
+</span><span style="color:#4271ae;">		</span><span style="color:#8959a8;">return</span><span style="color:#4271ae;"> view;
+</span><span style="color:#4271ae;">	};
+</span><span style="color:#4271ae;">}</span><span>];
+</span></code></pre>
+<p>这样就能通过简单的配置来生成一个水平的或垂直的 collectionView 了。</p>
+<p>使用 Builder Pattern 还有一个好处，就是可以将零散的配置统一起来。比如要创建一个 CollectionView，我们需要设置 layout，还要设置 layout 的一些属性，还要设置 DataSource / Delegate 等，现在可以在一个地方统一设置，可读性上也会好一些。</p>
+<p>所以如果遇到需要多个参数，甚至某个参数自己还包含了各种参数时，可以考虑下 Builder Pattern。</p>
+<p>参考：<a href="http://www.annema.me/the-builder-pattern-in-objective-c">http://www.annema.me/the-builder-pattern-in-objective-c</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

@@ -2,12 +2,12 @@
   "redirects": [
     {
       "source": "/:year/:month/:day/:post",
-      "destination": "https://2010-2021.limboy.me/:year/:month/:day/:post",
+      "destination": "https://limboy.me/posts/:post",
       "permanent": true
     },
     {
       "source": "/:year/:month/:day/:post/",
-      "destination": "https://2010-2021.limboy.me/:year/:month/:day/:post/",
+      "destination": "https://limboy.me/posts/:post/",
       "permanent": true
     }
   ]

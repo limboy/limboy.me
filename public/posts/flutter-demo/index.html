@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+一个 Demo 入门 Flutter
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/flutter-demo/">
+
+<meta name="twitter:title" content="一个 Demo 入门 Flutter">
+<meta property="og:title" content="一个 Demo 入门 Flutter">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;flutter-demo&#x2F;">一个 Demo 入门 Flutter</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2018-12-07</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>Flutter 是 Google 研发的一套移动端开发框架，也是 Google 正在研发的下一代操作系统 Fuchsia 的 App 开发框架（Web 和 Desktop 也都在进行积极的尝试），前几天刚发布了 1.0 正式版。关于 Flutter 的原理和介绍可以参考美团的<a href="https://tech.meituan.com/waimai_flutter_practice.html">这篇文章</a>。</p>
+<p>本文希望通过一个 Demo 来更深入地了解 Flutter 的布局、状态管理等细节。这个 Demo 可以获取豆瓣的 Top 250 电影，以自定义列表形式呈现，可以收藏/取消收藏，可以点击查看详情页。</p>
+<p>源码: <a href="https://github.com/lzyy/flutter-demo-topmovies">https://github.com/lzyy/flutter-demo-topmovies</a></p>
+<p><a href="https://video.twimg.com/ext_tw_video/1070286725656662017/pu/vid/360x640/uoeUgoq2-EigTzi7.mp4?tag=6">这里</a>可以查看最终的效果。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-demo.png"
+    srcset="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-demo.png 482w,&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-demo.png 482w"
+    sizes="(max-width: 482px) 100vw, 482px" width="482" /></p><h3 id="mu-lu-hua-fen">目录划分</h3>
+<p>接到这个需求后首先要考虑的是目录结构应该怎么划分，这也是架构的一部分，我是这么分的:</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>blocs/
+</span><span>widgets/
+</span><span>models/
+</span><span>pages/
+</span><span>routes/
+</span><span>services/
+</span><span>main.dart
+</span><span>env.dart
+</span></code></pre>
+<h4 id="bloc">BLoC</h4>
+<p><code>BLoC</code> 是 Business Logic of Components 的缩写，也就是负责所有业务逻辑的，跟 <code>ViewModel</code> 的职能挺像的。是一个纯洁的 Dart 类，跟 UI 完全解耦，更加详细的说明可以参见<a href="https://juejin.im/post/5bb6f344f265da0aa664d68a">这篇文章</a></p>
+<h4 id="widgets">Widgets</h4>
+<p>这个目录下面放的是所有的 Widget，Widget 位于 Flutter Framework 的最上层，用来描述 UI 元素的 Layout / Animation 等，或者非 UI 元素(如 DataProvider)，最终这些 Widget 会被组装起来形成 Page。</p>
+<h4 id="models">Models</h4>
+<p>服务端的 JSON 过来后，需要转换成对应的 Model 方便使用，Model 不需要包含业务逻辑，但可以有一些简单的 Model 相关的操作，比如 CRUD。</p>
+<h4 id="pages">Pages</h4>
+<p>通常一个 App 会有多个页面组成，这些页面就可以放到这个目录下。</p>
+<h4 id="routes">Routes</h4>
+<p>虽然 Flutter 也支持直接 push 一个 Widget，但这样不方便页面管理，对于像「外部的 URL 可以直接跳转到某个页面」这样的功能处理起来也会麻烦些。因此，需要有一个地方可以对 URL 进行注册。</p>
+<h4 id="services">Services</h4>
+<p>这个是放 Remote API 相关的，理论上来说，加一层 Repository 抽象会更加合适，出于方便，就去掉了这一层。</p>
+<h4 id="main-dart">main.dart</h4>
+<p>入口文件，用来初始化 App</p>
+<h4 id="env-dart">env.dart</h4>
+<p>用来设置一些环境变量，类似于 Config。</p>
+<p>设置好了目录后，接下来进行任务分解，首先要完成的就是布局，进行布局之前需要有数据源，方便模拟，最好跟正式接口一致，那就先来完成这一项工作。</p>
+<h3 id="she-zhi-shu-ju-jie-kou">设置数据接口</h3>
+<p>我们希望从模拟环境到真实环境只需改一个配置即可，为了达到这个目的，我们先把协议定好，到时只要换一个实现就行。这里会用到两个接口</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">import </span><span style="color:#839c00;">&#39;package:topmovies/models/movie.dart&#39;</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">abstract class </span><span style="color:#c99e00;">API</span><span> {
+</span><span>  </span><span style="color:#c99e00;">Future</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">MovieEnvelope</span><span style="color:#3e999f;">&gt; </span><span style="color:#4271ae;">getMovieList</span><span>(</span><span style="color:#c99e00;">int</span><span> start);
+</span><span>  </span><span style="color:#c99e00;">Future</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">Movie</span><span style="color:#3e999f;">&gt; </span><span style="color:#4271ae;">getMovie</span><span>(</span><span style="color:#c99e00;">String</span><span> movieID);
+</span><span>}
+</span></code></pre>
+<p>然后新建一个 Mock API 类来实现这个接口</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">class </span><span style="color:#c99e00;">MockAPI </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">API</span><span> {
+</span><span>  </span><span style="color:#8959a8;">@override
+</span><span>  </span><span style="color:#c99e00;">Future</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">Movie</span><span style="color:#3e999f;">&gt; </span><span style="color:#4271ae;">getMovie</span><span>(</span><span style="color:#c99e00;">String</span><span> movieID) {
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">createMockMovieWithTitle</span><span>(</span><span style="color:#839c00;">&#39;我是电影 $</span><span style="color:#f07219;">movieID</span><span style="color:#839c00;">&#39;</span><span>);
+</span><span>  }
+</span><span>
+</span><span>  </span><span style="color:#8959a8;">@override
+</span><span>  </span><span style="color:#c99e00;">Future</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">MovieEnvelope</span><span style="color:#3e999f;">&gt; </span><span style="color:#4271ae;">getMovieList</span><span>(</span><span style="color:#c99e00;">int</span><span> start) {
+</span><span>    </span><span style="color:#8e908c;">// 现在还用不着
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">null</span><span>;
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>然后在 <code>env.dart</code> 里新建一个 Env 类</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">import </span><span style="color:#839c00;">&#39;services/api.dart&#39;</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Env</span><span> {
+</span><span>  </span><span style="color:#8959a8;">static </span><span style="color:#c99e00;">API</span><span> apiClient;
+</span><span>}
+</span></code></pre>
+<p>其实就是提供一个全局的 apiClient 注入接口，App 初始化时，设置好 apiClient，使用时不需要关心是哪个 apiClient 实例，这样也方便单元测试。</p>
+<p>经过这两步后，数据接口就准备好了，接下来需要设置 BLoC。</p>
+<h3 id="she-zhi-shou-ye-de-bloc">设置首页的 BLoC</h3>
+<p>BLoC 其实就是 ViewModel，有了 API 实现之后，接下来就要让 Widget 可以用上这些数据，这就是 BLoC 做的事。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-bloc.png"
+    srcset="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-bloc.png 280.5w,&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-bloc.png 280.5w"
+    sizes="(max-width: 280.5px) 100vw, 280.5px" width="280.5" /></p>
+<p>Widget 告诉 BLoC 发生了什么，BLoC 告诉 Widget 哪些数据更新了。</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">class </span><span style="color:#c99e00;">MoviesBloc </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BlocBase</span><span> {
+</span><span>  </span><span style="color:#8959a8;">final </span><span style="color:#c99e00;">BehaviorSubject</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">MovieEnvelope</span><span style="color:#3e999f;">&gt;</span><span> _movieEnvelope </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">BehaviorSubject</span><span>();
+</span><span>  </span><span style="color:#8959a8;">var</span><span> _currentStart </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span>
+</span><span>  </span><span style="color:#c99e00;">Observable</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">MovieEnvelope</span><span style="color:#3e999f;">&gt; </span><span style="color:#8959a8;">get </span><span style="color:#4271ae;">movieEnvelope</span><span> =&gt; _movieEnvelope.stream;
+</span><span>
+</span><span>  </span><span style="color:#c99e00;">MoviesBloc</span><span>() {
+</span><span>    </span><span style="color:#4271ae;">_getMovies</span><span>();
+</span><span>  }
+</span><span>
+</span><span>  </span><span style="color:#4271ae;">_getMovies</span><span>() {
+</span><span>    </span><span style="color:#c99e00;">Env</span><span>.apiClient.</span><span style="color:#4271ae;">getMovieList</span><span>(_currentStart).</span><span style="color:#4271ae;">then</span><span>((movieEnvelope) {
+</span><span>      </span><span style="color:#8959a8;">var</span><span> newMovieEnvelope </span><span style="color:#3e999f;">=</span><span> movieEnvelope;
+</span><span>      </span><span style="color:#8959a8;">if</span><span> (_movieEnvelope.value </span><span style="color:#3e999f;">!= </span><span style="color:#f07219;">null</span><span>) {
+</span><span>        newMovieEnvelope.movies </span><span style="color:#3e999f;">=</span><span> _movieEnvelope.value.movies
+</span><span>          ..</span><span style="color:#4271ae;">addAll</span><span>(movieEnvelope.movies);
+</span><span>      }
+</span><span>      _movieEnvelope.</span><span style="color:#4271ae;">add</span><span>(newMovieEnvelope);
+</span><span>      _currentStart </span><span style="color:#3e999f;">=</span><span> movieEnvelope.movies.length;
+</span><span>    });
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>对于 Widget 来说，只要 listen <code>bloc.movieEnvelope</code> 就能第一时间拿到最新的 movie 数据，然后把它们展示出来即可。</p>
+<h3 id="streambuilder">StreamBuilder</h3>
+<p>如果直接用 <code>setState</code> 的话，使用姿势是在 state 的 <code>initState</code> 时 listen <code>bloc.movieEnvelope</code>，当收到新的内容时，setState，这样系统就会 rebuild widget，然后用上最新的数据。Flutter 很贴心地提供了便捷的类 <code>StreamBuilder</code>，只要告诉它 <code>stream</code>，那么当这个 stream 有新数据时，<code>itemBuilder</code> 就会自动 rebuild。</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Movies </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">StatefulWidget</span><span> {
+</span><span>  </span><span style="color:#8959a8;">@override
+</span><span>  </span><span style="color:#c99e00;">State</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">StatefulWidget</span><span style="color:#3e999f;">&gt; </span><span style="color:#4271ae;">createState</span><span>() {
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">_MoviesState</span><span>();
+</span><span>  }
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">_MoviesState </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">State</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">Movies</span><span style="color:#3e999f;">&gt;</span><span> {
+</span><span>  </span><span style="color:#8959a8;">@override
+</span><span>  </span><span style="color:#c99e00;">Widget </span><span style="color:#4271ae;">build</span><span>(</span><span style="color:#c99e00;">BuildContext</span><span> context) {
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">final</span><span> bloc </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">BlocProvider</span><span>.</span><span style="color:#4271ae;">of</span><span>&lt;</span><span style="color:#c99e00;">MoviesBloc</span><span style="color:#3e999f;">&gt;</span><span>(context);
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">StreamBuilder</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">MovieEnvelope</span><span style="color:#3e999f;">&gt;</span><span>(
+</span><span>        stream</span><span style="color:#3e999f;">:</span><span> bloc.movieEnvelope,
+</span><span>        builder</span><span style="color:#3e999f;">:</span><span> (context, snapshot) {
+</span><span>        </span><span style="color:#8e908c;">// snapshot.data 就是最新的内容
+</span><span>        </span><span style="color:#8e908c;">// 返回一个新的 widget 即可
+</span><span>        })
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>注意到这里有一个 <code>BlocProvider</code>，这是何物？它其实也是个 Widget（是的，Flutter 的 Widget 并不局限于 UI）。</p>
+<p>为什么通过<code>of</code>方法能拿到这个 bloc？因为在构建 Tree 时，<code>BlocProvider</code> 套在了当前视图的上层(只要从当前节点向上追溯能找到就行)，就像这样：</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">class </span><span style="color:#c99e00;">MyApp </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">StatelessWidget</span><span> {
+</span><span>  </span><span style="color:#8959a8;">@override
+</span><span>  </span><span style="color:#c99e00;">Widget </span><span style="color:#4271ae;">build</span><span>(</span><span style="color:#c99e00;">BuildContext</span><span> context) {
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">BlocProvider</span><span>(
+</span><span>        bloc</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">MoviesBloc</span><span>(),
+</span><span>        child</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">MaterialApp</span><span>(
+</span><span>          title</span><span style="color:#3e999f;">: </span><span style="color:#839c00;">&#39;Douban Movie Top 250&#39;</span><span>,
+</span><span>          home</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">Home</span><span>(),
+</span><span>        ));
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>而这个 <code>of</code> 方法也很简单：</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">static </span><span style="color:#c99e00;">T </span><span style="color:#4271ae;">of</span><span>&lt;</span><span style="color:#c99e00;">T </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BlocBase</span><span style="color:#3e999f;">&gt;</span><span>(</span><span style="color:#c99e00;">BuildContext</span><span> context) {
+</span><span>  </span><span style="color:#8959a8;">final</span><span> type </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">_typeOf</span><span>&lt;</span><span style="color:#c99e00;">BlocProvider</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">T</span><span style="color:#3e999f;">&gt;&gt;</span><span>();
+</span><span>  </span><span style="color:#8e908c;">// 这句话的意思就是从当前 context 向上找，找到第一个该类型的实例为止，找不到就返回 null
+</span><span>  </span><span style="color:#c99e00;">BlocProvider</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">T</span><span style="color:#3e999f;">&gt;</span><span> provider </span><span style="color:#3e999f;">=</span><span> context.</span><span style="color:#4271ae;">ancestorWidgetOfExactType</span><span>(type);
+</span><span>  </span><span style="color:#8959a8;">return</span><span> provider.bloc;
+</span><span>}
+</span></code></pre>
+<p>BLoC 差不多有了之后，接下来就可以进入布局阶段了。</p>
+<h3 id="shou-ye-bu-ju">首页布局</h3>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-home-layout.png"
+    srcset="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-home-layout.png 127.5w,&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-home-layout.png 127.5w"
+    sizes="(max-width: 127.5px) 100vw, 127.5px" width="127.5" /></p>
+<p>Flutter 提供了两种列表布局方式: <code>ListView</code> 和 <code>GridView</code>，如果页面里除了列表还有其他元素（比如顶部的 SlideView 等），就需要用到 <code>CustomScrollView</code> 或者 <code>NestedScrollView</code>，首页除了列表没有其他元素，同时一行可能包含多个视图，因此我们选择 <a href="https://docs.flutter.io/flutter/widgets/GridView-class.html">GridView</a>。</p>
+<p>GridView 的构建可以使用 <code>GridView.builder</code>, 它需要提供几个关键信息:</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#c99e00;">GridView</span><span>.</span><span style="color:#4271ae;">builder</span><span>(
+</span><span>  gridDelegate</span><span style="color:#3e999f;">: </span><span style="color:#8e908c;">// 提供最终的布局信息，x,y,width.height
+</span><span>  itemCount</span><span style="color:#3e999f;">: </span><span style="color:#8e908c;">// 一共有多少元素
+</span><span>  itemBuilder</span><span style="color:#3e999f;">:</span><span> (context, index) {} </span><span style="color:#8e908c;">// 每个 item 具体长啥样
+</span><span>);
+</span></code></pre>
+<p>如果是固定的每行几列或固定宽度，且每个 item 的呈现形式几乎一样，可以直接使用自带的 <code>SliverGridDelegateWithFixedCrossAxisCount</code> 或 <code>SliverGridDelegateWithMaxCrossAxisExtent</code>，我们这个 case 中，每一行的列表不都是一样的，因此不能直接拿来用，这就需要进入到高级模式了，自己实现 <code>gridDelegate</code>。 <code>SliverGridDelegate</code> 的核心方法是 <code>SliverGridLayout getLayout(SliverConstraints constraints);</code> 也就是返回一个 <code>SliverGridLayout</code>，系统拿到这个 layout 之后，就知道该怎么布局了。</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">abstract class </span><span style="color:#c99e00;">SliverGridLayout</span><span> {
+</span><span>  </span><span style="color:#8e908c;">/// 针对某个 scroll 的偏移量，最小的 index 是多少
+</span><span>  </span><span style="color:#c99e00;">int </span><span style="color:#4271ae;">getMinChildIndexForScrollOffset</span><span>(</span><span style="color:#c99e00;">double</span><span> scrollOffset);
+</span><span>
+</span><span>  </span><span style="color:#8e908c;">/// 针对某个 scroll 的偏移量，最大的 index 是多少
+</span><span>  </span><span style="color:#c99e00;">int </span><span style="color:#4271ae;">getMaxChildIndexForScrollOffset</span><span>(</span><span style="color:#c99e00;">double</span><span> scrollOffset);
+</span><span>
+</span><span>  </span><span style="color:#8e908c;">/// 给一个 index，告诉我它的 x,y,width,height
+</span><span>  </span><span style="color:#c99e00;">SliverGridGeometry </span><span style="color:#4271ae;">getGeometryForChildIndex</span><span>(</span><span style="color:#c99e00;">int</span><span> index);
+</span><span>
+</span><span>  </span><span style="color:#8e908c;">/// 这些 childcount 一共能产生多大的偏移量
+</span><span>  </span><span style="color:#8e908c;">/// 知道了这个信息后，系统就可以展示滚动条的长短了
+</span><span>  </span><span style="color:#c99e00;">double </span><span style="color:#4271ae;">computeMaxScrollOffset</span><span>(</span><span style="color:#c99e00;">int</span><span> childCount);
+</span><span>}
+</span></code></pre>
+<p>具体实现这里就不贴出来了，感兴趣的可以在源码里看。还是有点小复杂的，尤其是加上 loadmore 的逻辑后，不过知道了系统想要什么，想尽办法满足它就是了。</p>
+<h3 id="zai-ru-geng-duo">载入更多</h3>
+<p>第一次请求的布局是完成了，如何实现载入更多的效果呢？在 iOS 中会通过判断是否拉到了底部来触发加载更多的逻辑，在 Flutter 中我们可以换一种方式来达到效果。</p>
+<p>什么时候需要加载更多？当前视图的 item 都展示完了的时候，而在展示 item 时，builder 会传入一个 <code>index</code>，用来告知当前 item 处于哪个 <code>index</code>，我们可以把这个信息告诉 BLoC。比如第一页一共展示 20 部电影，当 BLoC 收到 index 19 时，就知道这 20 部都已经被展示过了，就可以通过 API 去拿更多的数据，等拿到后，跟原先的数据进行合并，然后作为新的值告诉 widget，widget 的 StreamBuilder 发现有新数据后，自动刷新 widget，这样新的电影就被展示出来了。</p>
+<p>稍微复杂的一点是加载更多时，需要展示一个 indicator，当没有更多数据时，又是另一个样式，这又该如何处理呢？可以思考下。</p>
+<h3 id="real-api-jie-ru">Real API 接入</h3>
+<p>前面这几步都走完后，列表的布局应该没问题了，接下来就要接入真实的数据了。这个接入过程还是挺简单的，新建一个实现了 <code>API</code> 的类，然后在 App 入口处，用它替换掉 MockAPI</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">class </span><span style="color:#c99e00;">RealAPI </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">API</span><span> {
+</span><span>  </span><span style="color:#8959a8;">@override
+</span><span>  </span><span style="color:#c99e00;">Future</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">MovieEnvelope</span><span style="color:#3e999f;">&gt; </span><span style="color:#4271ae;">getMovieList</span><span>(</span><span style="color:#c99e00;">int</span><span> start) </span><span style="color:#8959a8;">async</span><span> {
+</span><span>    </span><span style="color:#8959a8;">var</span><span> client </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">HttpClient</span><span>();
+</span><span>    </span><span style="color:#8959a8;">var</span><span> request </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">await</span><span> client.</span><span style="color:#4271ae;">getUrl</span><span>(</span><span style="color:#c99e00;">Uri</span><span>.</span><span style="color:#4271ae;">parse</span><span>(
+</span><span>        </span><span style="color:#839c00;">&#39;https://api.douban.com/v2/movie/top250?start=$</span><span style="color:#f07219;">start</span><span style="color:#839c00;">&amp;count=40&#39;</span><span>));
+</span><span>    </span><span style="color:#8959a8;">var</span><span> response </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">await</span><span> request.</span><span style="color:#4271ae;">close</span><span>();
+</span><span>    </span><span style="color:#8959a8;">var</span><span> responseBody </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">await</span><span> response.</span><span style="color:#4271ae;">transform</span><span>(utf8.decoder).</span><span style="color:#4271ae;">join</span><span>();
+</span><span>    </span><span style="color:#c99e00;">Map</span><span> data </span><span style="color:#3e999f;">=</span><span> json.</span><span style="color:#4271ae;">decode</span><span>(responseBody);
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">MovieEnvelope</span><span>.</span><span style="color:#4271ae;">fromJSON</span><span>(data);
+</span><span>  }
+</span><span>
+</span><span>  </span><span style="color:#8959a8;">@override
+</span><span>  </span><span style="color:#c99e00;">Future</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">Movie</span><span style="color:#3e999f;">&gt; </span><span style="color:#4271ae;">getMovie</span><span>(</span><span style="color:#c99e00;">String</span><span> movieID) </span><span style="color:#8959a8;">async</span><span> {
+</span><span>    </span><span style="color:#8e908c;">// 暂时还用不到，先忽略
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">null</span><span>;
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>Dart 内置了对异步请求的支持，分为两大块，<code>async + await + Future</code> 和 <code>Stream + async* + yield</code>，前者用来处理单次或少量的异步请求，后者用来实现异步的 <code>iterator</code>，也就是数据可能会源源不断地冒出来。</p>
+<p>在这个例子中，通过 await 来拿异步数据就可以了，拿到之后把它转换为 model(方便起见，错误处理就先忽略)。 然后在入口处设置</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">void </span><span style="color:#4271ae;">main</span><span>() {
+</span><span>  </span><span style="color:#c99e00;">Env</span><span>.apiClient </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">RealAPI</span><span>();
+</span><span>  </span><span style="color:#4271ae;">runApp</span><span>(</span><span style="color:#c99e00;">MyApp</span><span>());
+</span><span>}
+</span></code></pre>
+<h3 id="item-de-nei-rong-zhan-shi">item 的内容展示</h3>
+<p>这块是个细致活，对于 Widget 元素的使用可以参考官方的<a href="https://flutter.io/docs/development/ui/layout">这个教程</a>，需要提一点的是 <code>LayoutBuilder</code> 这个 widget，默认 child widget 是拿不到 parent 的布局信息的，但有时又需要拿它来进行一些计算，这时就可以在外面套一层 <code>LayoutBuilder</code>，它的 <code>builder</code> 属性是一个 function，会传一个 <code>BoxConstraints</code> 进来，通过它就能拿到 parent 的布局信息。</p>
+<h3 id="shou-cang-ying-pian">收藏影片</h3>
+<p>点击影片 title 旁边的 <code>...</code>， 如果是 iOS 平台，则弹出一个 <code>ActionSheet</code>，Android 则弹出 <code>BottomSheet</code>，选择收藏的话，这个 <code>...</code> 会变成红色。</p>
+<p>如果要针对不同平台进行不同的展示，可以使用 <code>Platform.isIOS</code> 来区分(这个类在 <code>dart:io</code> package 下)，关于 <code>ActionSheet</code> 和 <code>BottomSheet</code> 的使用，查看相应的 API 即可。比较麻烦的是 <code>...</code> 的变色处理，倒不是变色麻烦，而是要让这个状态得到保持，不然下次再滑到该 item 时，又会回到原先的颜色。</p>
+<p>大多数的教程里，对这部分的处理都是更新 list 中该 item 对应的 model，然后让更新后的 list 触发 StreamBuilder 重新渲染 widget，我觉得这样实在有点小题大做了。我的做法是给每个 item 配一个对应的 bloc，item 的 model 和状态都保存在这个 bloc 中，在这个例子中，当某个 movie item widget 需要更新状态时，从它对应的 bloc 中拿即可。</p>
+<p>如果这时要新加一个 Feature，当收藏电影时，顶部 AppBar 的右边要有对应的数字显示。在 Google 官方的 <a href="https://www.youtube.com/watch?v=RS36gBEp8OI">Demo</a> 里是直接在 widget 的 <code>onTap</code> callback 里调用另一个 bloc 的方法(<code>CartBloc.addition</code>)，这样其实把业务逻辑也耦合到了 UI 里面（如果 CartBloc 的 addition 逻辑变了，或者在添加到 Cart 的同时，还要更新用户状态等，就需要在这个 callback 里调整这些逻辑），因此更好的方法是自己的 bloc 处理完后向上抛 Notification，外层接收到 Notification 后再去更新其他 Bloc。就好像要进行跨部门沟通时，最好让共同的上级知道这件事，或者由他来协调。</p>
+<p>这里简单说下 Flutter 里的 Notification 机制，它不像 iOS 里的 <code>NotificationCenter</code> 可以全局接收，而是只有在 widget 上层路径中的 <code>NotificationListener</code> 才能收到通知，这样可以避免通知泛滥的情况。而且使用时，必须继承系统的 <code>Notification</code>，这样每一个通知就是一个特定类，阅读代码或排查起来也会很方便。</p>
+<p>至此，首页的电影列表页基本完成了，该进入详情页了，在这之前，还有一件事情要做，那就是 Router 的注册。</p>
+<h3 id="router-zhu-ce">Router 注册</h3>
+<p><code>MaterialApp</code> 自带了 Router 注册，乍一看还挺方便的，不过有一个坑就是不支持通过 URL 传递动态参数，比如 <code>/movie/1024</code>，必须完全匹配才可以。如果真要实现 pattern 匹配就要设置 <code>onGenerateRoute</code> 参数，当通过 Navigator 进行 push 时，这个参数对应的方法就会被触发，可以在这个方法里面进行 URL 的解析。</p>
+<p>我在这里实现了个简单的通过 URL 注册 Widget 的方法，URL 支持 pattern，比如 <code>/movie/{id}</code> 就能匹配 <code>/movie/1024</code>，使用时，通过 URL 来拿 widget，再把这个 widget push 出去即可。</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Router</span><span> {
+</span><span>  </span><span style="color:#8959a8;">static var</span><span> _routerEntry </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">_Router</span><span>(name</span><span style="color:#3e999f;">: </span><span style="color:#839c00;">&#39;&#39;</span><span>);
+</span><span>
+</span><span>  </span><span style="color:#8e908c;">// param should wrap with {}, eg: /movie/{id}
+</span><span>  </span><span style="color:#8959a8;">static </span><span style="color:#4271ae;">register</span><span>(</span><span style="color:#c99e00;">String</span><span> pattern, </span><span style="color:#c99e00;">WidgetBuilder</span><span> widgetBuilder) {
+</span><span>    </span><span style="color:#8959a8;">final</span><span> patternSections </span><span style="color:#3e999f;">=</span><span> pattern.</span><span style="color:#4271ae;">split</span><span>(</span><span style="color:#839c00;">&#39;/&#39;</span><span>);
+</span><span>    </span><span style="color:#8959a8;">var</span><span> routerEntry </span><span style="color:#3e999f;">=</span><span> _routerEntry;
+</span><span>    </span><span style="color:#8959a8;">for</span><span> (</span><span style="color:#c99e00;">int</span><span> i </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>; i </span><span style="color:#3e999f;">&lt;</span><span> patternSections.length; i</span><span style="color:#3e999f;">++</span><span>) {
+</span><span>      </span><span style="color:#8959a8;">final</span><span> _pattern </span><span style="color:#3e999f;">=</span><span> patternSections[i];
+</span><span>      </span><span style="color:#8959a8;">final</span><span> _router </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">_Router</span><span>(name</span><span style="color:#3e999f;">:</span><span> _pattern);
+</span><span>      </span><span style="color:#8959a8;">if</span><span> (i </span><span style="color:#3e999f;">==</span><span> patternSections.length </span><span style="color:#3e999f;">- </span><span style="color:#f07219;">1</span><span>) {
+</span><span>        _router.widgetBuilder </span><span style="color:#3e999f;">=</span><span> widgetBuilder;
+</span><span>      }
+</span><span>      routerEntry.</span><span style="color:#4271ae;">addChild</span><span>(_router);
+</span><span>      routerEntry </span><span style="color:#3e999f;">=</span><span> _router;
+</span><span>    }
+</span><span>  }
+</span><span>
+</span><span>  </span><span style="color:#8959a8;">static </span><span style="color:#c99e00;">Widget </span><span style="color:#4271ae;">getWidget</span><span>(</span><span style="color:#c99e00;">String</span><span> url, </span><span style="color:#c99e00;">BuildContext</span><span> context, {</span><span style="color:#c99e00;">Map</span><span> params}) {
+</span><span>    </span><span style="color:#8959a8;">final</span><span> urlSections </span><span style="color:#3e999f;">=</span><span> url.</span><span style="color:#4271ae;">split</span><span>(</span><span style="color:#839c00;">&#39;/&#39;</span><span>);
+</span><span>    </span><span style="color:#8959a8;">var</span><span> routerEntry </span><span style="color:#3e999f;">=</span><span> _routerEntry;
+</span><span>    </span><span style="color:#c99e00;">Widget</span><span> widget;
+</span><span>    </span><span style="color:#c99e00;">Map</span><span> urlParams </span><span style="color:#3e999f;">=</span><span> {};
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">for</span><span> (</span><span style="color:#c99e00;">int</span><span> i </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>; i </span><span style="color:#3e999f;">&lt;</span><span> urlSections.length; i</span><span style="color:#3e999f;">++</span><span>) {
+</span><span>      </span><span style="color:#8959a8;">final</span><span> _urlSection </span><span style="color:#3e999f;">=</span><span> urlSections[i];
+</span><span>      </span><span style="color:#8959a8;">var</span><span> found </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">false</span><span>;
+</span><span>      </span><span style="color:#8959a8;">for</span><span> (</span><span style="color:#c99e00;">_Router</span><span> _router </span><span style="color:#8959a8;">in</span><span> routerEntry.children) {
+</span><span>        </span><span style="color:#8959a8;">if</span><span> (_router.name </span><span style="color:#3e999f;">==</span><span> _urlSection </span><span style="color:#3e999f;">||</span><span> _router.name.</span><span style="color:#4271ae;">startsWith</span><span>(</span><span style="color:#839c00;">&#39;{&#39;</span><span>)) {
+</span><span>          </span><span style="color:#8959a8;">if</span><span> (_router.name.</span><span style="color:#4271ae;">startsWith</span><span>(</span><span style="color:#839c00;">&#39;{&#39;</span><span>)) {
+</span><span>            </span><span style="color:#8959a8;">final</span><span> param </span><span style="color:#3e999f;">=</span><span> _router.name.</span><span style="color:#4271ae;">substring</span><span>(</span><span style="color:#f07219;">1</span><span>, _router.name.length </span><span style="color:#3e999f;">- </span><span style="color:#f07219;">1</span><span>);
+</span><span>            urlParams[param] </span><span style="color:#3e999f;">=</span><span> _urlSection;
+</span><span>          }
+</span><span>          found </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">true</span><span>;
+</span><span>          routerEntry </span><span style="color:#3e999f;">=</span><span> _router;
+</span><span>          </span><span style="color:#8959a8;">if</span><span> (i </span><span style="color:#3e999f;">==</span><span> urlSections.length </span><span style="color:#3e999f;">- </span><span style="color:#f07219;">1</span><span>) {
+</span><span>            </span><span style="color:#8959a8;">if</span><span> (_router.widgetBuilder </span><span style="color:#3e999f;">!= </span><span style="color:#f07219;">null</span><span>) {
+</span><span>              widget </span><span style="color:#3e999f;">=
+</span><span>                  _router.</span><span style="color:#4271ae;">widgetBuilder</span><span>(context, urlParams, params</span><span style="color:#3e999f;">:</span><span> params);
+</span><span>            }
+</span><span>          }
+</span><span>        }
+</span><span>      }
+</span><span>
+</span><span>      </span><span style="color:#8959a8;">if</span><span> (</span><span style="color:#3e999f;">!</span><span>found) {
+</span><span>        </span><span style="color:#8959a8;">break</span><span>;
+</span><span>      }
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">return</span><span> widget;
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>路由的注册</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Routes</span><span> {
+</span><span>  </span><span style="color:#8959a8;">static </span><span style="color:#c99e00;">String</span><span> root </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;/&#39;</span><span>;
+</span><span>  </span><span style="color:#8959a8;">static </span><span style="color:#c99e00;">String</span><span> detail </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;/movie/{id}&#39;</span><span>;
+</span><span>
+</span><span>  </span><span style="color:#8959a8;">static </span><span style="color:#4271ae;">configureRoutes</span><span>() {
+</span><span>    </span><span style="color:#c99e00;">Router</span><span>.</span><span style="color:#4271ae;">register</span><span>(root, (</span><span style="color:#c99e00;">BuildContext</span><span> context, </span><span style="color:#c99e00;">Map</span><span> urlParams, {</span><span style="color:#c99e00;">Map</span><span> params}) {
+</span><span>      </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">Home</span><span>();
+</span><span>    });
+</span><span>
+</span><span>    </span><span style="color:#c99e00;">Router</span><span>.</span><span style="color:#4271ae;">register</span><span>(detail, (</span><span style="color:#c99e00;">BuildContext</span><span> context, </span><span style="color:#c99e00;">Map</span><span> urlParams,
+</span><span>        {</span><span style="color:#c99e00;">Map</span><span> params}) {
+</span><span>      </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">MoviePage</span><span>(
+</span><span>        movieID</span><span style="color:#3e999f;">:</span><span> urlParams[</span><span style="color:#839c00;">&#39;id&#39;</span><span>],
+</span><span>        movie</span><span style="color:#3e999f;">:
+</span><span>            params </span><span style="color:#3e999f;">!= </span><span style="color:#f07219;">null </span><span style="color:#3e999f;">&amp;&amp;</span><span> params[</span><span style="color:#839c00;">&#39;movie&#39;</span><span>] </span><span style="color:#3e999f;">!= </span><span style="color:#f07219;">null </span><span style="color:#3e999f;">?</span><span> params[</span><span style="color:#839c00;">&#39;movie&#39;</span><span>] </span><span style="color:#3e999f;">: </span><span style="color:#f07219;">null</span><span>,
+</span><span>      );
+</span><span>    });
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<h3 id="xiang-qing-ye-bu-ju-xuan-ze">详情页-布局选择</h3>
+<p>详情页主要分为 4 个部分，顶部的海报图，中间的概要、横向可滚动的影人列表页和 Tab 标签，以及最下面的列表页。有两个方案可以选，<code>NestedScrollView</code> 和 <code>CustomScrollView</code>，前者分为 header 和 body 两部分，可以在里面套 scrollView，最开始选择了这个方案，后来发现 <code>TabbarView</code> 怎么都处理不好，如果把它单独放到 body 里，那么所有剩下的部分就都要放到 header 里，虽然可行，但跑起来会发现，<code>TabbarView</code> 里的 scroll offset 是错的，一部分内容会「钻」进 Tabbar 里，而且底部空了很大一部分。如果把除了海报图，剩下的部分都放到 body 里，也不行，被迫只能选择 <code>CustomScrollView</code>。</p>
+<p><code>CustomScrollView</code> 方案的一个难点是处理 <code>TabbarView</code>，因为不能直接把它放到 <code>slivers</code> 里，于是换了个思路，抛弃 <code>TabbarView</code> 手动实现 tabbar 点击之后，下面的内容切换效果。</p>
+<p>详情页的核心代码大概像这样：</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#c99e00;">Widget </span><span style="color:#4271ae;">build</span><span>(</span><span style="color:#c99e00;">BuildContext</span><span> context) {
+</span><span>  </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">Scaffold</span><span>(
+</span><span>      backgroundColor</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">Color</span><span>(</span><span style="color:#f07219;">0xfff4f4f4</span><span>),
+</span><span>      body</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">BlocProvider</span><span>(
+</span><span>        bloc</span><span style="color:#3e999f;">:</span><span> bloc,
+</span><span>        child</span><span style="color:#3e999f;">:</span><span> (() {
+</span><span>          </span><span style="color:#8959a8;">if</span><span> (movie </span><span style="color:#3e999f;">== </span><span style="color:#f07219;">null</span><span>) {
+</span><span>            </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">Center</span><span>(
+</span><span>              child</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">Text</span><span>(</span><span style="color:#839c00;">&#39;loading&#39;</span><span>),
+</span><span>            );
+</span><span>          } </span><span style="color:#8959a8;">else</span><span> {
+</span><span>            </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">NotificationListener</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">TabSwitchNotification</span><span style="color:#3e999f;">&gt;</span><span>(
+</span><span>              onNotification</span><span style="color:#3e999f;">:</span><span> (notification) {
+</span><span>                </span><span style="color:#4271ae;">setState</span><span>(() {
+</span><span>                  currentTabType </span><span style="color:#3e999f;">=</span><span> notification.tabContentType;
+</span><span>                });
+</span><span>              },
+</span><span>              child</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">DefaultTabController</span><span>(
+</span><span>                  length</span><span style="color:#3e999f;">: </span><span style="color:#f07219;">2</span><span>,
+</span><span>                  child</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">SafeArea</span><span>(
+</span><span>                      top</span><span style="color:#3e999f;">: </span><span style="color:#f07219;">false</span><span>,
+</span><span>                      child</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">CustomScrollView</span><span>(
+</span><span>                        slivers</span><span style="color:#3e999f;">: &lt;</span><span style="color:#c99e00;">Widget</span><span style="color:#3e999f;">&gt;</span><span>[
+</span><span>                          </span><span style="color:#c99e00;">MovieHero</span><span>(),
+</span><span>                          </span><span style="color:#c99e00;">SliverToBoxAdapter</span><span>(
+</span><span>                            child</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">MovieSummary</span><span>(),
+</span><span>                          ),
+</span><span>                          </span><span style="color:#c99e00;">SliverToBoxAdapter</span><span>(
+</span><span>                            child</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">MovieActors</span><span>(),
+</span><span>                          ),
+</span><span>                          </span><span style="color:#c99e00;">SliverPadding</span><span>(
+</span><span>                            padding</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">EdgeInsets</span><span>.</span><span style="color:#4271ae;">all</span><span>(</span><span style="color:#f07219;">7.0</span><span>),
+</span><span>                          ),
+</span><span>                          </span><span style="color:#c99e00;">MovieReviewTabbar</span><span>(),
+</span><span>                          </span><span style="color:#c99e00;">MovieReviewTabbarContent</span><span>(
+</span><span>                            tabContentType</span><span style="color:#3e999f;">:</span><span> currentTabType,
+</span><span>                          ),
+</span><span>                        ],
+</span><span>                      ))),
+</span><span>            );
+</span><span>          }
+</span><span>        }()),
+</span><span>      ));
+</span><span>}
+</span></code></pre>
+<p>对于 tabbar 来说，需要提供一个 controller，要么通过属性设置，要么外面包一层，这里选择了后者，所以可以看到最外面是 <code>DefaultTabController</code>，这样就可以在里面通过 <code>DefaultTabController.of(context)</code> 来拿到这个 controller，进而了解当前选中的 tab，以及控制 tab 的选中情况。</p>
+<p>普通的 Widget 要通过 <code>SliverToBoxAdapter</code> 转换才能被放到 slivers 里面，slivers 其实就是 <code>CustomScrollView</code> 的组成部分。通过上面的代码，我们可以知道这个 scrollview 是由哪几部分组成的，非常清晰。</p>
+<h3 id="xiang-qing-ye-ding-bu-hai-bao-xiao-guo">详情页-顶部海报效果</h3>
+<p>这个效果看上去满复杂的，实现起来很简单，只要使用 <a href="https://docs.flutter.io/flutter/material/SliverAppBar-class.html">SliverAppBar</a> 这个 Widget 即可。<a href="https://medium.com/@diegoveloper/flutter-collapsing-toolbar-sliver-app-bar-14b858e87abe">这里</a> 有比较详细的介绍。</p>
+<h3 id="xiang-qing-ye-ying-pian-jie-shao">详情页-影片介绍</h3>
+<p>这里主要是使用 Text Widget，一个难点是默认内容是截断和收起的，当点击按钮后，展开。如果是在 iOS 里，需要分别计算两者的高度，然后调用 <code>reloadRowsAtIndexPaths</code> 方法，有点麻烦，Flutter 里很简单，widget 自己更新内容即可，不需要考虑高度的计算，也不要显式地调用 reload 方法。</p>
+<h3 id="xiang-qing-ye-ying-ren-lie-biao">详情页-影人列表</h3>
+<p>这是一个横向滑动列表，把 <code>ListView</code> 的 <code>scrollDirection</code> 设置为 <code>horizontal</code> 即可</p>
+<h3 id="xiang-qing-ye-tabbar">详情页-Tabbar</h3>
+<p>Tabbar 需要有一个 controller，我们在外面包了一层 <code>DefaultTabController</code>，这里就不需要操心了。比较坑的一点是，<code>TabBar</code> 这个 Widget 没有提供 <code>onTap</code> 方法，只能通过监听 controller 来获取 tab 的变化，不过这样也好，管理起来更方便。</p>
+<p>PS: 这里的 Tabbar 是需要吸顶的，因此要用 <code>SliverPersistentHeader</code> 包一下。</p>
+<h3 id="xiang-qing-ye-dian-ping-lie-biao">详情页-点评列表</h3>
+<p>点评列表是一个 <code>SliverList</code>，配置起来还算简单，那么点击 tab 切换内容这个该如何实现呢？可以思考下。</p>
+<h3 id="xiao-jie">小结</h3>
+<p>我个人很喜欢 Flutter， 用它来写 GUI 感觉非常自然和舒服。不需要借助 JSX 或 XML，用编程语言就能搞定，方便 Local Reasoning，不需要在 JSX / XML 和 Code 之间来回切换。同时通过 Widget 来配置视图的方式也很方便，GUI 非常适合这种声明式编程。</p>
+<p>刚开始接触 Flutter 时，容易被那一大堆的类搞晕，其实了解了核心理念后，啃透几个 Demo，就会慢慢找到感觉。自己再多写写，踩踩坑，就熟练了。</p>
+<p>至于性能方面，debug 跟 release 模式还是会有些差距，因此如果在 debug 模式下发现不够流畅，可以切换到 release 模式再试下。</p>
+<p>我也是接触 Flutter 不久，如果有不对的地方欢迎指正，如果能给你带来些帮助，备感荣幸。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/flutter/">flutter</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

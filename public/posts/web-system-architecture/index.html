@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+我对web系统架构的一些思考
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/web-system-architecture/">
+
+<meta name="twitter:title" content="我对web系统架构的一些思考">
+<meta property="og:title" content="我对web系统架构的一些思考">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;web-system-architecture&#x2F;">我对web系统架构的一些思考</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-12-15</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>能力/经验有限，不足之处还请指点 :)</p>
+<h3 id="fu-zai-jun-heng">负载均衡</h3>
+<p>这里把多台 nginx 反向代理服务器顶在最前面，可以通过 DNS 简单轮循或绑定虚拟 IP 的方法来实现分流。之所以用 nginx 是因为它的稳定、强大、高性能、低开销、以及对高并发的支持。也可以换成 LVS，从效率上来说肯定会比 nginx 高，因为工作在 OSI 的第四层(传输层)，可以修改目标 IP。甚至可以在第二层(数据链路层)修改 MAC 地址(DR 模式，相当于路由器)，让数据包直接到达目标服务器。不过工作在下层虽然效率提高了，但相应的控制能力也少了，比如无法根据 http url 来进行负载均衡，缓存页面执行结果等等。</p>
+<h3 id="ying-yong-ceng">应用层</h3>
+<p>这一层是 web 服务器，主要任务是从服务层获取需要的数据，然后渲染到模板，返回给前端服务器。可以理解为 Controller-View，没有 Model，因为 Model 被移到了一下层，用来单独提供服务。这么做的原因是方便分布式部署，单元测试，避免单点故障。所以这层是相对较轻松的。</p>
+<h3 id="fu-wu-ceng">服务层</h3>
+<p>这一层的任务是提供模块的接口，供上层调用。如相册模块，需要有创建相册/显示相册图片/删除图片等等功能。至于服务的形式就很灵活了，如 REST/RPC/SOAP 等等。</p>
+<p>这一层的任务就比较艰巨了，要保证接口的稳定性，要处理复杂的逻辑，实现算法，与存储层交互等等。</p>
+<h3 id="cun-chu-ceng">存储层</h3>
+<p>存储层是整个系统的核心，一旦数据丢失，网站就成了空架子了，所以一定要及时备份。</p>
+<h4 id="huan-cun-ceng">缓存层</h4>
+<p>在网站流量不大时，缓存是可选层。随着流量的增大，缓存的重要性也越来越突出，甚至可以把内存当硬盘来用，以保证快速响应。如何提高缓存命中率，设置缓存失效时间等等缓存的处理就变得尤为重要。</p>
+<h4 id="shu-ju-ku-ceng">数据库层</h4>
+<p>这个可以讲的就太多了，多数系统的瓶颈也在这。总体说来会经历主从服务器，垂直分区和水平分区这三个过程。</p>
+<h4 id="fen-bu-shi-cun-chu">分布式存储</h4>
+<p>这里会遇到的问题是文件的同步，如何分配给用户最合适的服务器，磁盘 I/O 等等。</p>
+<h3 id="qi-ta">其他</h3>
+<h4 id="dui-lie-fu-wu-qi">队列服务器</h4>
+<p>这也是大型网站的标配，处理日志/分析用户行为/发送邮件等等都会用到。</p>
+<h4 id="jian-kong-fu-wu-qi">监控服务器</h4>
+<p>这么多的服务器，我们需要知道各个服务器当前的运行状况，如磁盘 I/O，CPU 使用率，内存使用率，负载等等，一旦发现异常可以及时处理。</p>
+<h4 id="ri-zhi-fu-wu-qi">日志服务器</h4>
+<p>排查故障就靠它了，比如有骇客入侵，某个页面访问很慢，出现 500 错误，慢查询等等。</p>
+<h4 id="bei-fen-fu-wu-qi">备份服务器</h4>
+<p>这个重要性不言而喻，比如数据库宕机，某张表损坏，数据库磁盘错误等等。没有了它，辛辛苦苦积攒下来的数据就这么一去不复返了。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/essay/">essay</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

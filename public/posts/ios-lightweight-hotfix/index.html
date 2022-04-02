@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+轻量级低风险 iOS Hotfix 方案
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/ios-lightweight-hotfix/">
+
+<meta name="twitter:title" content="轻量级低风险 iOS Hotfix 方案">
+<meta property="og:title" content="轻量级低风险 iOS Hotfix 方案">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;ios-lightweight-hotfix&#x2F;">轻量级低风险 iOS Hotfix 方案</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2018-03-04</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>我们都知道苹果对 Hotfix 抓得比较严，强大好用的 JSPatch 也成为了过去式。但即使测试地再细致，也难保线上 App 不出问题，小问题还能忍忍，大问题就得重新走发布流程，然后等待审核通过，等待用户升级，周期长且麻烦。如果有一种方式相对比较安全，不需要 JSPatch 那么完善，但也足够应付一般场景，使用起来还比较轻量就好了，这也是本文要探讨的主题。</p>
+<p>要达到这个目的，Native 层只要透出两种能力就基本可以了：</p>
+<ol>
+<li>在任意方法前后注入代码的能力，可能的话最好还能替换掉。</li>
+<li>调用任意类/实例方法的能力。</li>
+</ol>
+<p>第 2 点不难，只要把 <code>[NSObject performSelector:...]</code> 那一套通过 <code>JSContext</code> 暴露出来即可。难的是第 1 点。其实细想一下，这不就是 AOP 么，而 iOS 有一个很方便的 AOP Library: <a href="https://github.com/steipete/Aspects">Aspects</a>，只要把它的几个方法通过 JSContext 暴露给 JS 不就可以了么？</p>
+<p>选择 Aspects 的原因是它已经经过了验证，不光是功能上的，更重要的是可以通过 AppStore 的审核。</p>
+<blockquote>
+<p>This is stable and used in hundreds of apps since it's part of PSPDFKit, an iOS PDF framework that ships with apps like Dropbox or Evernote.</p>
+</blockquote>
+<p>Aspects 使用姿势：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[UIViewController </span><span style="color:#4271ae;">aspect_hookSelector:</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(viewWillAppear:) withOptions:AspectPositionAfter usingBlock:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;AspectInfo&gt; aspectInfo, </span><span style="color:#8959a8;">BOOL</span><span style="color:#4271ae;"> animated) {
+</span><span style="color:#4271ae;">    NSLog(</span><span style="color:#839c00;">@&quot;View Controller </span><span>%@</span><span style="color:#839c00;"> will appear animated: </span><span>%tu</span><span style="color:#839c00;">&quot;</span><span style="color:#4271ae;">, aspectInfo.</span><span style="color:#c82728;">instance</span><span style="color:#4271ae;">, animated);
+</span><span style="color:#4271ae;">} error:</span><span style="color:#f07219;">NULL</span><span>];
+</span></code></pre>
+<p>前插、后插、替换某个方法都可以。使用类的方式很简单，<code>NSClassFromString</code> 即可，Selector 也一样 <code>NSSelectorFromString</code>，这样就能通过外部传入 String，内部动态构造 Class 和 Selector 来达到 Fix 的效果了。</p>
+<p>这种方式的安全性在于：</p>
+<ol>
+<li>不需要中间 JS 文件，准备工作全部在 Native 端完成。</li>
+<li>没有使用 App Store 不友好的类/方法。</li>
+</ol>
+<h3 id="demo">Demo</h3>
+<p>假设线上运行这这样一个 Class，由于疏忽，没有对参数做检查，导致特定情况下会 Crash。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@interface </span><span>MightyCrash: </span><span style="color:#839c00;">NSObject
+</span><span>- (</span><span style="color:#8959a8;">float</span><span>)</span><span style="color:#4271ae;">divideUsingDenominator:</span><span>(</span><span style="color:#c99e00;">NSInteger</span><span>)</span><span style="color:#f07219;">denominator</span><span>;
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span style="color:#8959a8;">@implementation </span><span>MightyCrash
+</span><span style="color:#8e908c;">// 传一个 0 就 gg 了
+</span><span>- (</span><span style="color:#8959a8;">float</span><span>)</span><span style="color:#4271ae;">divideUsingDenominator:</span><span>(</span><span style="color:#c99e00;">NSInteger</span><span>)</span><span style="color:#f07219;">denominator
+</span><span>{
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">1.</span><span style="color:#8959a8;">f</span><span style="color:#3e999f;">/</span><span>denominator;
+</span><span>}
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<p>现在我们要避免 Crash，就可以通过这种方式来修复</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[Felix </span><span style="color:#4271ae;">fixIt</span><span>];
+</span><span>
+</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>fixScriptString </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">@&quot; \
+</span><span style="color:#839c00;">fixInstanceMethodReplace(&#39;MightyCrash&#39;, &#39;divideUsingDenominator:&#39;, function(instance, originInvocation, originArguments){ \
+</span><span style="color:#839c00;">    if (originArguments[0] == 0) { \
+</span><span style="color:#839c00;">        console.log(&#39;zero goes here&#39;); \
+</span><span style="color:#839c00;">    } else { \
+</span><span style="color:#839c00;">        runInvocation(originInvocation); \
+</span><span style="color:#839c00;">    } \
+</span><span style="color:#839c00;">}); \
+</span><span style="color:#839c00;">\
+</span><span style="color:#839c00;">&quot;</span><span>;
+</span><span>
+</span><span>[Felix </span><span style="color:#4271ae;">evalString:fixScriptString</span><span>];
+</span></code></pre>
+<p>运行一下看看</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>MightyCrash </span><span style="color:#3e999f;">*</span><span>mc </span><span style="color:#3e999f;">= </span><span>[[MightyCrash </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span style="color:#8959a8;">float</span><span> result </span><span style="color:#3e999f;">= </span><span>[mc </span><span style="color:#4271ae;">divideUsingDenominator:</span><span style="color:#f07219;">3</span><span>];
+</span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;result: </span><span>%.3f</span><span style="color:#839c00;">&quot;</span><span>, result);
+</span><span>result </span><span style="color:#3e999f;">= </span><span>[mc </span><span style="color:#4271ae;">divideUsingDenominator:</span><span style="color:#f07219;">0</span><span>];
+</span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;won&#39;t crash&quot;</span><span>);
+</span><span>
+</span><span style="color:#8e908c;">// output
+</span><span style="color:#8e908c;">// result: 0.333
+</span><span style="color:#8e908c;">// Javascript log: zero goes here
+</span><span style="color:#8e908c;">// won&#39;t crash
+</span></code></pre>
+<p>It Works, 是不是有那么点意思了。以下是可以正常运行的代码，仅供参考。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">#import </span><span style="color:#839c00;">&lt;Aspects.h&gt;
+</span><span style="color:#8959a8;">#import </span><span style="color:#839c00;">&lt;objc/runtime.h&gt;
+</span><span style="color:#8959a8;">#import </span><span style="color:#839c00;">&lt;JavaScriptCore/JavaScriptCore.h&gt;
+</span><span>
+</span><span style="color:#8959a8;">@interface </span><span>Felix: </span><span style="color:#839c00;">NSObject
+</span><span>+ (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">fixIt</span><span>;
+</span><span>+ (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">evalString:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">javascriptString</span><span>;
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span>
+</span><span style="color:#8959a8;">@implementation </span><span>Felix
+</span><span>+ (Felix </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#4271ae;">sharedInstance
+</span><span>{
+</span><span>    </span><span style="color:#8959a8;">static</span><span> Felix </span><span style="color:#3e999f;">*</span><span>sharedInstance </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">nil</span><span>;
+</span><span>    </span><span style="color:#8959a8;">static</span><span> dispatch_once_t onceToken;
+</span><span>    </span><span style="color:#c82728;">dispatch_once</span><span style="color:#4271ae;">(</span><span style="color:#3e999f;">&amp;</span><span style="color:#4271ae;">onceToken, </span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">{
+</span><span style="color:#4271ae;">        sharedInstance </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">[[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">alloc] init];
+</span><span style="color:#4271ae;">    })</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">return</span><span> sharedInstance;
+</span><span>}
+</span><span>
+</span><span>+ (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">evalString:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">javascriptString
+</span><span>{
+</span><span>    [[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>] evaluateScript</span><span style="color:#3e999f;">:</span><span>javascriptString];
+</span><span>}
+</span><span>
+</span><span>+ (JSContext </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#4271ae;">context
+</span><span>{
+</span><span>    </span><span style="color:#8959a8;">static</span><span> JSContext </span><span style="color:#3e999f;">*</span><span>_context;
+</span><span>    </span><span style="color:#8959a8;">static</span><span> dispatch_once_t onceToken;
+</span><span>    </span><span style="color:#c82728;">dispatch_once</span><span style="color:#4271ae;">(</span><span style="color:#3e999f;">&amp;</span><span style="color:#4271ae;">onceToken, </span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">{
+</span><span style="color:#4271ae;">        _context </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">[[JSContext alloc] init];
+</span><span style="color:#4271ae;">        [_context setExceptionHandler:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(JSContext </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">context, JSValue </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">value) {
+</span><span style="color:#4271ae;">            NSLog(</span><span style="color:#839c00;">@&quot;Oops: </span><span>%@</span><span style="color:#839c00;">&quot;</span><span style="color:#4271ae;">, value);
+</span><span style="color:#4271ae;">        }];
+</span><span style="color:#4271ae;">    })</span><span>;
+</span><span>    </span><span style="color:#8959a8;">return</span><span> _context;
+</span><span>}
+</span><span>
+</span><span>+ (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">_fixWithMethod:</span><span>(</span><span style="color:#8959a8;">BOOL</span><span>)</span><span style="color:#f07219;">isClassMethod </span><span style="color:#4271ae;">aspectionOptions:</span><span>(AspectOptions)</span><span style="color:#f07219;">option </span><span style="color:#4271ae;">instanceName:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">instanceName </span><span style="color:#4271ae;">selectorName:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">selectorName </span><span style="color:#4271ae;">fixImpl:</span><span>(JSValue </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">fixImpl </span><span>{
+</span><span>    </span><span style="color:#8959a8;">Class</span><span> klass </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">NSClassFromString</span><span>(instanceName);
+</span><span>    </span><span style="color:#8959a8;">if </span><span>(isClassMethod) {
+</span><span>        klass </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">object_getClass</span><span style="color:#4271ae;">(klass)</span><span>;
+</span><span>    }
+</span><span>    </span><span style="color:#8959a8;">SEL</span><span> sel </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">NSSelectorFromString</span><span>(selectorName);
+</span><span>    [klass </span><span style="color:#4271ae;">aspect_hookSelector:sel withOptions:option usingBlock:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;AspectInfo&gt; aspectInfo){
+</span><span style="color:#4271ae;">        [fixImpl callWithArguments:@[aspectInfo.</span><span style="color:#c82728;">instance</span><span style="color:#4271ae;">, aspectInfo.</span><span style="color:#c82728;">originalInvocation</span><span style="color:#4271ae;">, aspectInfo.</span><span style="color:#c82728;">arguments</span><span style="color:#4271ae;">]];
+</span><span style="color:#4271ae;">    } error:</span><span style="color:#f07219;">nil</span><span>];
+</span><span>}
+</span><span>
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">_runClassWithClassName:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">className </span><span style="color:#4271ae;">selector:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">selector </span><span style="color:#4271ae;">obj1:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">obj1 </span><span style="color:#4271ae;">obj2:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">obj2 </span><span>{
+</span><span>    </span><span style="color:#8959a8;">Class</span><span> klass </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">NSClassFromString</span><span>(className);
+</span><span style="color:#8959a8;">#pragma</span><span> clang diagnostic push
+</span><span style="color:#8959a8;">#pragma</span><span> clang diagnostic ignored &quot;-Warc-performSelector-leaks&quot;
+</span><span>    </span><span style="color:#8959a8;">return </span><span>[klass </span><span style="color:#4271ae;">performSelector:NSSelectorFromString(selector) withObject:obj1 withObject:obj2</span><span>];
+</span><span style="color:#8959a8;">#pragma</span><span> clang diagnostic pop
+</span><span>}
+</span><span>
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">_runInstanceWithInstance:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">instance </span><span style="color:#4271ae;">selector:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">selector </span><span style="color:#4271ae;">obj1:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">obj1 </span><span style="color:#4271ae;">obj2:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">obj2 </span><span>{
+</span><span style="color:#8959a8;">#pragma</span><span> clang diagnostic push
+</span><span style="color:#8959a8;">#pragma</span><span> clang diagnostic ignored &quot;-Warc-performSelector-leaks&quot;
+</span><span>    </span><span style="color:#8959a8;">return </span><span>[instance </span><span style="color:#4271ae;">performSelector:NSSelectorFromString(selector) withObject:obj1 withObject:obj2</span><span>];
+</span><span style="color:#8959a8;">#pragma</span><span> clang diagnostic pop
+</span><span>}
+</span><span>
+</span><span>+ (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">fixIt
+</span><span>{
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;fixInstanceMethodBefore&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>instanceName, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, JSValue </span><span style="color:#3e999f;">*</span><span>fixImpl) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_fixWithMethod:</span><span style="color:#f07219;">NO </span><span style="color:#4271ae;">aspectionOptions:AspectPositionBefore instanceName:instanceName selectorName:selectorName fixImpl:fixImpl</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;fixInstanceMethodReplace&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>instanceName, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, JSValue </span><span style="color:#3e999f;">*</span><span>fixImpl) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_fixWithMethod:</span><span style="color:#f07219;">NO </span><span style="color:#4271ae;">aspectionOptions:AspectPositionInstead instanceName:instanceName selectorName:selectorName fixImpl:fixImpl</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;fixInstanceMethodAfter&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>instanceName, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, JSValue </span><span style="color:#3e999f;">*</span><span>fixImpl) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_fixWithMethod:</span><span style="color:#f07219;">NO </span><span style="color:#4271ae;">aspectionOptions:AspectPositionAfter instanceName:instanceName selectorName:selectorName fixImpl:fixImpl</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;fixClassMethodBefore&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>instanceName, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, JSValue </span><span style="color:#3e999f;">*</span><span>fixImpl) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_fixWithMethod:</span><span style="color:#f07219;">YES </span><span style="color:#4271ae;">aspectionOptions:AspectPositionBefore instanceName:instanceName selectorName:selectorName fixImpl:fixImpl</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;fixClassMethodReplace&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>instanceName, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, JSValue </span><span style="color:#3e999f;">*</span><span>fixImpl) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_fixWithMethod:</span><span style="color:#f07219;">YES </span><span style="color:#4271ae;">aspectionOptions:AspectPositionInstead instanceName:instanceName selectorName:selectorName fixImpl:fixImpl</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;fixClassMethodAfter&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>instanceName, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, JSValue </span><span style="color:#3e999f;">*</span><span>fixImpl) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_fixWithMethod:</span><span style="color:#f07219;">YES </span><span style="color:#4271ae;">aspectionOptions:AspectPositionAfter instanceName:instanceName selectorName:selectorName fixImpl:fixImpl</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runClassWithNoParamter&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span style="color:#8959a8;">id</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>className, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName) {
+</span><span>        </span><span style="color:#8959a8;">return </span><span>[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runClassWithClassName:className selector:selectorName obj1:</span><span style="color:#f07219;">nil </span><span style="color:#4271ae;">obj2:</span><span style="color:#f07219;">nil</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runClassWith1Paramter&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span style="color:#8959a8;">id</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>className, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, </span><span style="color:#8959a8;">id </span><span>obj1) {
+</span><span>        </span><span style="color:#8959a8;">return </span><span>[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runClassWithClassName:className selector:selectorName obj1:obj1 obj2:</span><span style="color:#f07219;">nil</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runClassWith2Paramters&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span style="color:#8959a8;">id</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>className, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, </span><span style="color:#8959a8;">id </span><span>obj1, </span><span style="color:#8959a8;">id </span><span>obj2) {
+</span><span>        </span><span style="color:#8959a8;">return </span><span>[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runClassWithClassName:className selector:selectorName obj1:obj1 obj2:obj2</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runVoidClassWithNoParamter&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>className, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runClassWithClassName:className selector:selectorName obj1:</span><span style="color:#f07219;">nil </span><span style="color:#4271ae;">obj2:</span><span style="color:#f07219;">nil</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runVoidClassWith1Paramter&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>className, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, </span><span style="color:#8959a8;">id </span><span>obj1) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runClassWithClassName:className selector:selectorName obj1:obj1 obj2:</span><span style="color:#f07219;">nil</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runVoidClassWith2Paramters&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>className, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, </span><span style="color:#8959a8;">id </span><span>obj1, </span><span style="color:#8959a8;">id </span><span>obj2) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runClassWithClassName:className selector:selectorName obj1:obj1 obj2:obj2</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runInstanceWithNoParamter&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span style="color:#8959a8;">id</span><span>(</span><span style="color:#8959a8;">id </span><span>instance, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName) {
+</span><span>        </span><span style="color:#8959a8;">return </span><span>[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runInstanceWithInstance:instance selector:selectorName obj1:</span><span style="color:#f07219;">nil </span><span style="color:#4271ae;">obj2:</span><span style="color:#f07219;">nil</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runInstanceWith1Paramter&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span style="color:#8959a8;">id</span><span>(</span><span style="color:#8959a8;">id </span><span>instance, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, </span><span style="color:#8959a8;">id </span><span>obj1) {
+</span><span>        </span><span style="color:#8959a8;">return </span><span>[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runInstanceWithInstance:instance selector:selectorName obj1:obj1 obj2:</span><span style="color:#f07219;">nil</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runInstanceWith2Paramters&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span style="color:#8959a8;">id</span><span>(</span><span style="color:#8959a8;">id </span><span>instance, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, </span><span style="color:#8959a8;">id </span><span>obj1, </span><span style="color:#8959a8;">id </span><span>obj2) {
+</span><span>        </span><span style="color:#8959a8;">return </span><span>[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runInstanceWithInstance:instance selector:selectorName obj1:obj1 obj2:obj2</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runVoidInstanceWithNoParamter&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#8959a8;">id </span><span>instance, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runInstanceWithInstance:instance selector:selectorName obj1:</span><span style="color:#f07219;">nil </span><span style="color:#4271ae;">obj2:</span><span style="color:#f07219;">nil</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runVoidInstanceWith1Paramter&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#8959a8;">id </span><span>instance, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, </span><span style="color:#8959a8;">id </span><span>obj1) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runInstanceWithInstance:instance selector:selectorName obj1:obj1 obj2:</span><span style="color:#f07219;">nil</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runVoidInstanceWith2Paramters&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#8959a8;">id </span><span>instance, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>selectorName, </span><span style="color:#8959a8;">id </span><span>obj1, </span><span style="color:#8959a8;">id </span><span>obj2) {
+</span><span>        [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">_runInstanceWithInstance:instance selector:selectorName obj1:obj1 obj2:obj2</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;runInvocation&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#c99e00;">NSInvocation </span><span style="color:#3e999f;">*</span><span>invocation) {
+</span><span>        [invocation </span><span style="color:#4271ae;">invoke</span><span>];
+</span><span>    };
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">// helper
+</span><span>    [[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>] evaluateScript</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;var console = {}&quot;</span><span>];
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">context</span><span>][</span><span style="color:#839c00;">@&quot;console&quot;</span><span>][</span><span style="color:#839c00;">@&quot;log&quot;</span><span>] </span><span style="color:#3e999f;">= ^</span><span>(</span><span style="color:#8959a8;">id </span><span>message) {
+</span><span>        </span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;Javascript log: </span><span>%@</span><span style="color:#839c00;">&quot;</span><span>,message);
+</span><span>    };
+</span><span>}
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

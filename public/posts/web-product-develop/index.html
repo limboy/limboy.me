@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+漫谈互联网产品开发
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/web-product-develop/">
+
+<meta name="twitter:title" content="漫谈互联网产品开发">
+<meta property="og:title" content="漫谈互联网产品开发">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;web-product-develop&#x2F;">漫谈互联网产品开发</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-05-08</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>每个公司都有自己的产品开发规范，我自己也大概想了下，比较适合小团队。</p>
+<p>借鉴 Unix 的设计哲学：一个工具只做好一件事，并提供接口。放到产品开发就是：产品可以被划分成多个模块，每个模块都有相应的 API。这样就能做到分工明确和解耦。</p>
+<h3 id="san-ceng-jia-gou">三层架构</h3>
+<h4 id="biao-xian-ceng">表现层</h4>
+<p>web / mobile / app ...</p>
+<h4 id="api-ceng">API 层</h4>
+<p>user / article / comment / ...</p>
+<h4 id="ji-chu-fu-wu-ceng">基础服务层</h4>
+<p>db / queue / memcache / ...</p>
+<p>如果使用 GAE 的话，就不用花心思去构建基础服务层了。这样就只剩下表现层和 API 层。</p>
+<h3 id="fen-gong">分工</h3>
+<p>每个人都要负责产品的一部分，有两种构建方式：水平构建和垂直构建</p>
+<h4 id="chui-zhi-gou-jian">垂直构建</h4>
+<p>假如我负责用户系统，则所有与用户相关的事情都由我来完成，从前端到后端，包括 API，页面展示，互动等等。这样做的话，对开发人员的要求比较高，需要同时对前后台都比较熟悉。但能减少沟通成本，提高开发效率。假如用户系统出现了一个 bug，我就能很快地修复，因为我最熟悉，且所有与用户相关的都由我负责。</p>
+<h4 id="shui-ping-gou-jian">水平构建</h4>
+<p>这也是大部分公司采用的方法，把开发人员分为前端/后端等等。前端的任务就是负责页面的展示和交互，后端开发人员负责 API 的构建，可能还会有专门的 DBA。这样做的好处是可以发挥每个人的特长。但也有不少问题，比如用户系统出现了一个 bug，前端相信自己的程序没有问题，就会把问题推给后端，后端查看了一遍也觉得没问题，可能又会把问题推回去。这样一来二去，不仅浪费时间，影响效率，还会破坏团队的氛围。</p>
+<p>假如又有了一项新任务，是开发一个评论系统，前端可能 1 天就把页面做完了，然后就干别的事去了，结果后端花了 4 天才把 API 搞定。然后前端又要从别的地方把心收回来，阅读 API 文档，再整合，又耽搁了不少时间。这就有点不够敏捷了。</p>
+<h3 id="xiang-mu-guan-li">项目管理</h3>
+<p>我推荐使用 Basecamp+Campfire+github。Basecamp 用来管理项目；Campfire 是团队讨论的地方(已与 Basecamp 集成)，可以开设多个版块；github 用来管理源码。</p>
+<p>一个高效的开发者最不能接受的就是被打断，我好不容易进入了状态，结果被迫去跟你讨论一个不太重要的问题，这简直是谋杀，所以开发项目时最好把 IM 关掉，或者设置成离开状态。</p>
+<p>dropbox 可以作为辅助工具，用来在团队内部共享资料。</p>
+<p>github 的开发流程，可以参考<a href="http://blog.leezhong.com/translate/2010/10/30/a-successful-git-branch.html">此文</a></p>
+<h3 id="tips">Tips</h3>
+<ul>
+<li>frontController 要尽可能的薄，通常只需负责渲染页面</li>
+<li>使用<a href="http://techportal.ibuildings.com/2010/02/22/scaling-web-applications-with-hmvc/">hmvc</a>将各个页面模块组合成一个页面</li>
+<li>可以使用内部 REST 的方式来合并多个 REST 请求</li>
+<li>API 层可以模拟 http 的 403 状态码来减少数据传输</li>
+</ul>
+<p>暂时就想到这些了，实际情况肯定要复杂地多。有哪些地方可以改进，或者根本就不现实，欢迎指出 :)</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/essay/">essay</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

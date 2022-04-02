@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+php 的多进程
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/php-process-control/">
+
+<meta name="twitter:title" content="php 的多进程">
+<meta property="og:title" content="php 的多进程">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;php-process-control&#x2F;">php 的多进程</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-08-27</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>一般有两种方法，一种是使用 PHP 自带的 pcntl_*函数(仅限 linux)，另一种就是使用 popen/proc_open，然后在 php 内部控制进程数量。</p>
+<h3 id="shi-yong-pcntl-han-shu">使用 pcntl_*函数</h3>
+<p>PHP 提供了一系列的 pcntl_*函数，顾名思义就是 process control functions，专门用来管理进程的。最常用的就是 pcntl_fork 和 pcntl_wait。</p>
+<p>pcntl_fork 的作用就是从当前的进程再派生出一个子进程。pcntl_wait 的作用是挂起当前进程，直到一个子进程中止。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">//配合pcntl_signal使用
+</span><span style="color:#8959a8;">declare</span><span>(ticks</span><span style="color:#3e999f;">=</span><span style="color:#f07219;">1</span><span>);
+</span><span style="color:#8e908c;">//最大的子进程数量
+</span><span style="color:#c82728;">$max </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">5</span><span>;
+</span><span style="color:#8e908c;">//当前的子进程数量
+</span><span style="color:#c82728;">$child </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">//当子进程退出时，会触发该函数
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">sig_handler</span><span>(</span><span style="color:#f07219;">$sig</span><span>) {
+</span><span>	</span><span style="color:#8959a8;">global </span><span style="color:#c82728;">$child</span><span>;
+</span><span>	</span><span style="color:#8959a8;">switch</span><span>(</span><span style="color:#c82728;">$sig</span><span>) {
+</span><span>		</span><span style="color:#8959a8;">case </span><span>SIGCHLD:
+</span><span>			</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&#39;SIGCHLD received&#39;</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&quot;</span><span style="color:#f07219;">\n</span><span style="color:#839c00;">&quot;</span><span>;
+</span><span>			</span><span style="color:#c82728;">$child</span><span style="color:#3e999f;">--</span><span>;
+</span><span>	}
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">//注册子进程退出时调用的函数
+</span><span style="color:#4271ae;">pcntl_signal(</span><span>SIGCHLD</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&quot;sig_handler&quot;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">while</span><span>(</span><span style="color:#f07219;">true</span><span>) {
+</span><span>	</span><span style="color:#c82728;">$child</span><span style="color:#3e999f;">++</span><span>;
+</span><span>	</span><span style="color:#8e908c;">/**
+</span><span style="color:#8e908c;">	 * 这个函数会返回两个值，一个为0，表示子进程；一个为正整数表示子进程的id
+</span><span style="color:#8e908c;">	 * 所以if和else里的两段代码都会执行
+</span><span style="color:#8e908c;">	 * if里的代码是父进程执行的
+</span><span style="color:#8e908c;">	 * else里的代码是子进程执行的
+</span><span style="color:#8e908c;">	 */
+</span><span>	</span><span style="color:#c82728;">$pid </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">pcntl_fork()</span><span>;
+</span><span>	</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">$pid</span><span>) {
+</span><span>		</span><span style="color:#8e908c;">//这里是父进程执行的代码
+</span><span>		</span><span style="color:#8e908c;">//如果子进程数超过了最大值，则挂起父进程
+</span><span>		</span><span style="color:#8e908c;">//也就是说while语句不会继续执行
+</span><span>		</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">$child </span><span style="color:#3e999f;">&gt;= </span><span style="color:#c82728;">$max</span><span>) {
+</span><span>			</span><span style="color:#4271ae;">pcntl_wait(</span><span style="color:#c82728;">$status</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		}
+</span><span>	}
+</span><span>	</span><span style="color:#8959a8;">else </span><span>{
+</span><span>		</span><span style="color:#8e908c;">//这里是子进程执行的代码
+</span><span>		</span><span style="color:#8e908c;">//如果要执行其他命令的话，使用pcntl_exec
+</span><span>		</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;starting new child | now we have </span><span style="color:#c82728;">$child</span><span style="color:#839c00;"> child process</span><span style="color:#f07219;">\n</span><span style="color:#839c00;">&quot;</span><span>;
+</span><span>		</span><span style="color:#4271ae;">sleep(rand(</span><span style="color:#f07219;">3</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">5</span><span style="color:#4271ae;">))</span><span>;
+</span><span>		</span><span style="color:#8959a8;">exit</span><span>;
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>上面这段代码就是保证有 5 个子进程一直在干活，如果$child数量大于$max，就等子进程结束后再继续运行。子进程结束后会调用 sig_handler 函数，sig_handler 会将$child 数量减 1，那边 while 继续执行。</p>
+<h3 id="shi-yong-popen-proc-open">使用 popen/proc_open</h3>
+<p>popen 会创建一个管道来连接该进程，然后使用 fread/fgets/stream_get_contents 来读取该进程返回的结果。跟 exec 或 system 之类的函数不同的是，exec 会等待命令执行完成，再运行下面的代码，但 popen 不会。proc_open 又更加强大一些，支持 stdin 和 stdout，路径设置等等。</p>
+<p>因为这些函数只负责创建，没有相应的管理方法，所以只能在 PHP 文件内部自己来实现。
+demo(引用自张宴——<a href="http://blog.s135.com/post/311/">PHP 多进程并发控制的测试用例</a>)</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">run</span><span>(</span><span style="color:#f07219;">$input</span><span>)
+</span><span>{
+</span><span>    </span><span style="color:#8959a8;">global </span><span style="color:#c82728;">$p_number</span><span>;
+</span><span>    </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">$p_number </span><span style="color:#3e999f;">&lt;= </span><span style="color:#f07219;">0</span><span>)
+</span><span>    {
+</span><span>        </span><span style="color:#c82728;">$p_number </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">worker_processes</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$p_number</span><span style="color:#4271ae;">)</span><span>;
+</span><span>    }
+</span><span>    </span><span style="color:#c82728;">$p_number </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$p_number </span><span style="color:#3e999f;">- </span><span style="color:#f07219;">1</span><span>;
+</span><span>    </span><span style="color:#c82728;">$out </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">popen(</span><span style="color:#839c00;">&quot;/bin/sh /opt/zhangyan.sh </span><span style="color:#f07219;">\&quot;</span><span style="color:#839c00;">{</span><span style="color:#c82728;">$input</span><span style="color:#839c00;">}</span><span style="color:#f07219;">\&quot;</span><span style="color:#839c00;"> &amp;&quot;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&quot;r&quot;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>    </span><span style="color:#4271ae;">pclose(</span><span style="color:#c82728;">$out</span><span style="color:#4271ae;">)</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">worker_processes</span><span>(</span><span style="color:#f07219;">$p_number</span><span>)
+</span><span>{
+</span><span>    </span><span style="color:#c82728;">$limit </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">500</span><span>;</span><span style="color:#8e908c;">//允许推到后台的最大进程数
+</span><span>    </span><span style="color:#8959a8;">while </span><span>(</span><span style="color:#c82728;">$p_number </span><span style="color:#3e999f;">&lt;= </span><span style="color:#f07219;">0</span><span>)
+</span><span>    {
+</span><span>        </span><span style="color:#c82728;">$cmd </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">popen(</span><span style="color:#839c00;">&quot;ps -ef | grep </span><span style="color:#f07219;">\&quot;</span><span style="color:#839c00;">/opt/zhangyan.sh</span><span style="color:#f07219;">\&quot;</span><span style="color:#839c00;"> | grep -v grep | wc -l&quot;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&quot;r&quot;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>        </span><span style="color:#c82728;">$line </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">fread(</span><span style="color:#c82728;">$cmd</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">512</span><span style="color:#4271ae;">)</span><span>;
+</span><span>        </span><span style="color:#4271ae;">pclose(</span><span style="color:#c82728;">$cmd</span><span style="color:#4271ae;">)</span><span>;
+</span><span>        </span><span style="color:#c82728;">$p_number </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$limit </span><span style="color:#3e999f;">- </span><span style="color:#c82728;">$line</span><span>;
+</span><span>        </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">$p_number </span><span style="color:#3e999f;">&lt;= </span><span style="color:#f07219;">0</span><span>)
+</span><span>        {
+</span><span>            </span><span style="color:#4271ae;">sleep(</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">)</span><span>;</span><span style="color:#8e908c;">//暂停1秒钟
+</span><span>        }
+</span><span>    }
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">$p_number</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#c82728;">$input </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&quot;http://blog.s135.com&quot;</span><span>; </span><span style="color:#8e908c;">//模拟从队列文件中读取到的数据
+</span><span style="color:#8959a8;">for </span><span>(</span><span style="color:#c82728;">$i </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1</span><span>; </span><span style="color:#c82728;">$i </span><span style="color:#3e999f;">&lt;= </span><span style="color:#f07219;">1000</span><span>; </span><span style="color:#c82728;">$i</span><span style="color:#3e999f;">++</span><span>)
+</span><span>{
+</span><span>    </span><span style="color:#c82728;">run</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$input</span><span style="color:#4271ae;">)</span><span>;
+</span><span>    </span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;Idle process number: &quot; </span><span style="color:#3e999f;">. </span><span style="color:#c82728;">$p_number </span><span style="color:#3e999f;">. </span><span style="color:#839c00;">&quot;</span><span style="color:#f07219;">\n</span><span style="color:#839c00;">&quot;</span><span>;
+</span><span>}
+</span><span style="color:#f07219;">?&gt;
+</span></code></pre>
+<h3 id="cheng-xu-de-luo-ji">程序的逻辑：</h3>
+<ol>
+<li>
+<p>设置/opt/zhangyan.php 最多允许生成 500 个子进程；</p>
+</li>
+<li>
+<p>当/opt/zhangyan.php 读取到一条数据后，将允许生成的子进程数减 1（空闲进程数$p_number=500-1=499），然后将数据交给/opt/zhangyan.sh 去后台处理，不等待/opt/zhangyan.sh 处理结束，继续读取下一条数据；</p>
+</li>
+<li>
+<p>当允许生成的子进程数减至 0 时（空闲进程数$p_number=0），/opt/zhangyan.php 会等待 1 秒钟，然后检查后台还有多少个/opt /zhangyan.sh 子进程尚未处理结束；</p>
+</li>
+<li>
+<p>如果 1 秒钟之后/opt/zhangyan.php 发现后台的/opt /zhangyan.sh 子进程数还是 500（空闲进程数$p_number=0），会继续等待 1 秒钟，如此反复；</p>
+</li>
+<li>
+<p>如果/opt /zhangyan.php 发现后台尚未处理结束的/opt/zhangyan.sh 子进程数减少到 300 个了（空闲进程数$p_number=500-300=200），那么/opt/zhangyan.php 会再往后台推送 200 个/opt/zhangyan.sh 子进程；</p>
+</li>
+</ol>
+<p>总体来说还是使用 pcntl_*系函数更方便一些，逻辑也更清楚。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/php/">php</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

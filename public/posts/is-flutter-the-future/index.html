@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+为什么我觉得 Flutter 短期内不会流行但依然选择学习它
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/is-flutter-the-future/">
+
+<meta name="twitter:title" content="为什么我觉得 Flutter 短期内不会流行但依然选择学习它">
+<meta property="og:title" content="为什么我觉得 Flutter 短期内不会流行但依然选择学习它">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;is-flutter-the-future&#x2F;">为什么我觉得 Flutter 短期内不会流行但依然选择学习它</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2019-01-07</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>Flutter 在去年小火了一把：连续两年在 Google IO 上亮相；1.0 正式版 Release；在闲鱼的大规模使用；各种教程文章的释出等等。我在去年 5 月份那样体验过一阵，觉得还挺不错的，但也没有进一步挖掘，感觉还尚早。我对跨平台框架有种抵触心理，因为它们通常打着提升开发效率的幌子，结果却是降低了效率，除了学习成本外，还有以下几个原因:</p>
+<p>首先要抹平平台之间的差异这就不是一件小事，很容易出现各种吊诡的 bug，然后就要投入不少精力去找原因，还不一定能找到。而如果采用 Native 开发，相关的资料会多一些，出了问题找到解决方案的可能性也会大一些。</p>
+<p>其次 Native 的沉淀会多很多，当你想要实现某个效果时，通常会有一些现成的（虽然不一定成熟）library 可供选择，即使不完全满足需求，也能从代码中找到思路，而跨平台框架的积累一定没有 Native 的多，因此这块也是个较大的劣势。</p>
+<p>最后一定有一些场景是跨平台框架解决不了的，这时就需要求助于 Native。如果是多人，就涉及到了协作效率，如果是单人，那为什么不直接用 Native 开发呢？</p>
+<p>因此当时虽然觉得 Flutter 不错，还是没有入坑。Flutter 除了要面对这三个问题外，它的学习成本还不低，使用 dart 语言开发，这本身就是一道足够高的槛; 使用声明式写法来表达 UI 也不一定能被接受; 那一大坨的 API 也着实让人发怵；再加上还有很多 issues 待解决。因此我认为短期内它不会流行。</p>
+<p>那为什么我依然选择学习它呢，最重要的几个原因是：开发体验超预期；带来的副作用较小；插件机制弥补了局限性；活跃的社区。</p>
+<h3 id="kai-fa-ti-yan">开发体验</h3>
+<h4 id="ide">IDE</h4>
+<p>能够使用 VSCode 作为主力 IDE 这本身就有足够的吸引力，Debug、Widget Inspector、Hot Reload、Automatically get packages 等等一应俱全，就连被诟病的嵌套过深，VSCode 也提供了一些便利：在每个括号后面以注释形式标注（但不是真的注释）</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-nested.jpg"
+    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-nested.jpg 278w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-nested.jpg 278w"
+    sizes="(max-width: 278px) 100vw, 278px" width="278" /></p>
+<p>对某个类的参数不太清楚，光标移上去即可，想看下实现，Cmd+Click。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-hover.jpg"
+    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-hover.jpg 264.5w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-hover.jpg 264.5w"
+    sizes="(max-width: 264.5px) 100vw, 264.5px" width="264.5" /></p>
+<p>想快速看下 Framework 里某个类的实现，Cmd+T</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-cmd-t.jpg"
+    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-cmd-t.jpg 306.5w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-cmd-t.jpg 306.5w"
+    sizes="(max-width: 306.5px) 100vw, 306.5px" width="306.5" /></p>
+<p>还有一些贴心的小功能</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-widget.jpg"
+    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-widget.jpg 112w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-widget.jpg 112w"
+    sizes="(max-width: 112px) 100vw, 112px" width="112" /></p>
+<p>当然也有改进空间，比如特别想要 auto import 功能。如果想要更完善的支持，可以使用 Android Studio，后者还提供了 Widget Tree、Performance Chart 等功能。</p>
+<h4 id="kai-fa-yu-yan">开发语言</h4>
+<p>Dart 这门语言本身并不复杂，看着挺舒服的，没有新发明一些概念，尽量简单（有些地方感觉过于简单了，比如 class 可以同时表示 interface），对异步编程有着很好的支持，自带的标准库基本够用。如果真静下心来看的话，不出三天，语言方面应该不会有太大的障碍了。</p>
+<p>Dart 是一门类型安全的语言，跟多数静态语言一样，也支持类型推导，写起来比较舒服。泛型、匿名函数等常见的语言特性都有，甚至支持 mixins。</p>
+<h4 id="bian-xie-ti-yan">编写体验</h4>
+<p>得益于 Flutter 的设计，大多数情况下 UI 展示通过 Widget 的组合就基本搞定了，Widget 就是 Description 或者 Config，告诉框架这个 Widget 的一些信息，框架拿到后再构建一个真实的 View 出来。</p>
+<p>状态管理和信息流处理也都有很好的支持，基本上可以用 GUI 编程的最佳体验来写。由于 Flutter 是基于最底层的 VSync 信号结合 Skia / Text 等引擎来构建视图，有时会遇到 Native 很方便地支持但 Flutter 不支持或者需要额外开发的场景，比如 TextFiled 的 Context Menu，Native 什么都不用做，这个 menu 就有了，而 Flutter 并没有，需要自己实现。</p>
+<p>举一个点击事件的例子：</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#c99e00;">Container</span><span>(
+</span><span>  child</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">GestureDetector</span><span>(
+</span><span>      onTap</span><span style="color:#3e999f;">:</span><span> () {
+</span><span>        bloc.</span><span style="color:#4271ae;">deleteHabit</span><span>(habit, context);
+</span><span>        </span><span style="color:#c99e00;">Navigator</span><span>.</span><span style="color:#4271ae;">pop</span><span>(context);
+</span><span>      },
+</span><span>      child</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">Text</span><span>(
+</span><span>        </span><span style="color:#839c00;">&#39;delete&#39;</span><span>,
+</span><span>        style</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">TextStyle</span><span>(color</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">Colors</span><span>.red),
+</span><span>      )),
+</span><span>),
+</span></code></pre>
+<p>是不是很直观：给 Text Widget 添加一个手势，当点击时，执行 <code>onTap</code> 里面的逻辑。</p>
+<h3 id="fu-zuo-yong">副作用</h3>
+<p>一般来说，引入了跨平台框架后会带来一些性能上的损失，App 的 Size 也会大一些，可能还会增加 Crash 率。那 Flutter 在这几块的表现如何呢？</p>
+<h4 id="xing-neng-biao-xian">性能表现</h4>
+<p>我自己试过一个有点复杂的 Demo，Release 模式在 iOS 上跑起来很流畅，效果如下，在 Nexus 6P 上也大致如此</p>
+<p><img src="https://camo.githubusercontent.com/be369abc92c87ee76810c33719c35161c02b885d/68747470733a2f2f692e6c6f6c692e6e65742f323031382f31322f30362f356330393432383237653436332e676966" alt="" /></p>
+<p>不过网上有说官方的 Demo 在部分 Android 设备上(系统主要为 4.4)出现了卡顿（iOS 正常），可能在 Android 低端机上表现还不够理想。</p>
+<h4 id="bao-da-xiao">包大小</h4>
+<p>我的一个比较简单的 App，上架了之后，在 Google Play 的大小为 7.8M，在 AppStore 上是 15 M，所以大致是 Android 的比原生大 5 M，iOS 的比原生大 10 M 那样。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-android-size.jpg"
+    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-android-size.jpg 153.5w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-android-size.jpg 153.5w"
+    sizes="(max-width: 153.5px) 100vw, 153.5px" width="153.5" /></p>
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-ios-size.jpg"
+    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-ios-size.jpg 377w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-ios-size.jpg 377w"
+    sizes="(max-width: 377px) 100vw, 377px" width="377" /></p><h4 id="crash">Crash</h4>
+<p>目前还没有这方面的数据，因为量不大，不好下结论。从个人体验来说，遇到的概率比较少，在 Develop 模式下倒是遇到过开机 Crash，Release 模式下还没有遇到过。</p>
+<h3 id="cha-jian-ji-zhi">插件机制</h3>
+<p>Flutter 提供了一套完善的插件机制方便与 Native 端进行数据传送、方法调用、流式处理。大致的实现是定义好两端都认识的基础类型，然后对消息进行编码和解码，再根据不同的消息使用目的（数据传送还是方法调用还是事件订阅）来执行不同的操作，这就给了 Flutter 很大的扩展空间。</p>
+<p>有了这套插件机制，Native 和 Flutter 就可以各司其职。Flutter 负责展示相关的，Native 负责提供需要的数据，以及暴露 Native 的能力供调用。比如 App 需要实现跟服务端实时通信的功能，可以在 Native 端开发好功能，然后通过 EventChannel 把数据同步过去即可。</p>
+<p>在性能这块，我记得看过闲鱼的一份报告，大概是 10K 以下的数据耗时不到 1ms，因此小数据的互传问题不大。</p>
+<p>在 pub.dartlang.org 上，Flutter 相关的插件数量有 2k 多，评分在 90 及以上的差不多有 1k。不多，但也不算少了。</p>
+<h3 id="huo-yue-de-she-qu">活跃的社区</h3>
+<p>Flutter 项目在 Github 上有近 5 万个关注； 在掘金上，Flutter 标签下有 800 多篇文章；闲鱼团队也在主推 Flutter；Reddit 上 FlutterDev 有近 1 万个关注者；StackOverflow 上也有近万个 Flutter 相关的提问。关注社区的活跃度其实就是想知道会不会在短期内挂掉，从目前的状况看，我觉得可能性比较小，而它被另一个同类产品 PK 掉的可能性则更小，因此值得投入时间去了解它。</p>
+<h3 id="xiao-jie">小结</h3>
+<p>目前 Fluter 比较适合 Side Project 或探索性的项目，就我有限的开发经验来讲，还是挺舒服的，毕竟用优雅的姿势同时搞定两端还是有吸引力的，这也是我选择学习 Flutter 的主要原因。而公司的主打 App 引入 Flutter 则需要冒一定的风险，遇到问题不一定能够 hold 住，短时间内也不一定能带来多少效率上的提升，还要对支持体系进行改造，可能也就大厂玩得起吧。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/essay/">essay</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/flutter/">flutter</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

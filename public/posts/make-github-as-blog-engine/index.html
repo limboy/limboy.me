@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+使用github作为博客引擎
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/make-github-as-blog-engine/">
+
+<meta name="twitter:title" content="使用github作为博客引擎">
+<meta property="og:title" content="使用github作为博客引擎">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;make-github-as-blog-engine&#x2F;">使用github作为博客引擎</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-08-25</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>在介绍之前，先普及一下基础知识，大鸟们直接跳过。</p>
+<h3 id="shi-yao-shi-git">什么是 git</h3>
+<p>git 是一个分布式版本控制工具(DVCS)，不需要服务端软件支持(即使在地铁里也可以正常 commit)，Linux 内核开发用的版本控制工具就是它。</p>
+<p>常用的 SVN 属于集中式版本控制工具(CVCS)，需要在服务端开启 SVN 服务，然后客户端 checkout,commit,update。</p>
+<p>更详细的介绍请参考<a href="http://en.wikipedia.org/wiki/Git_(software)">维基百科</a></p>
+<h3 id="shi-yao-shi-github">什么是 github</h3>
+<p>&quot;github&quot;:http://github.com/ 的标语是：&quot;secure source code hosting and collaborative development&quot;。一个基于 git 的类似 google code 的代码仓库，付费版的用户可以创建私有仓库，支持多人开发。很多项目都选择了 github 来保存代码，如&quot;jQuery/reddit/RoR/CakePHP/Redis&quot;等等。</p>
+<h3 id="github-pages">github pages</h3>
+<p>先说说 pages 功能，blog 就是在 pages 的基础上搭建的。如果英文不错的话，可以直接<a href="http://pages.github.com/">浏览此页</a></p>
+<p>创建一个用户的页面很简单，假设你的用户名为 foo</p>
+<ol>
+<li>新建一个仓库(repository)，名称填&quot;foo.github.com&quot;，创建</li>
+<li>在本地新建一个文件夹，假如为 foo,在 foo 里面新建一个 index.html 页面，随便输入点内容</li>
+<li><code>git init</code> 初始化，<code>git add .</code> 把 index.html 加入到仓库中，<code>git commit</code> 提交修改</li>
+<li>添加 github 的分支 <code>git remote add origin git@github.com:foo/foo.github.com.git</code></li>
+<li>提交到 github 分支 <code>git push origin master</code></li>
+</ol>
+<p>过 1 分钟左右，浏览 foo.github.com，就可以看到刚刚创建的 index.html 文件了。</p>
+<p>除了创建用户页面，还可以针对每个项目单独创建项目的主页，这不是本文的重点，有兴趣的可以<a href="http://pages.github.com/">浏览此页</a></p>
+<h3 id="chuang-jian-blog">创建 blog</h3>
+<p>终于扯到正题上了(-,-)，前面已经说过如何创建 html 页面，其实已经可以写博客了，创建一个 index.html 页面，在里面列出写过的文章，点击标题进去后又是一个手动创建的 html 页。就是太麻烦了，一点都不酷，说不定还会被 MM 鄙视。</p>
+<p>github 当然知道这个问题，所以他们创建了<a href="http://github.com/mojombo/jekyll">jekyll 模板引擎</a> 。简单来说，就是你可以用<a href="http://www.textism.com/tools/textile/?sample=2">textile</a> 或者<a href="http://daringfireball.net/projects/markdown/syntax">markdown</a>语法来写博客，提交到 github 后，会自动转换成 html。</p>
+<p><a href="http://wiki.github.com/mojombo/jekyll/sites">这里</a>有很多网站/博客，都是基于 github 的 jekyll 模板开发的，如果觉得哪个不错，可以查看 source。</p>
+<p>先来看看<a href="http://github.com/mojombo/mojombo.github.com">这个仓库</a>，里面有一些特殊的文件/文件夹：</p>
+<h3 id="config-yml">_config.yml</h3>
+<p>存储了一些设置，大部分的设置都可以通过命令行指定，但放到配置文件里更方便些</p>
+<h4 id="layouts">_layouts</h4>
+<p>_layouts 文件夹存放的是模板文件，文章会被渲染到这些模板里，{{ content }}变量指代的是文章内容</p>
+<h4 id="posts">_posts</h4>
+<p>这里就是真正存放博客文章的地方了，文件命名要遵守这种格式:year-month-day-title.markup</p>
+<h4 id="site">_site</h4>
+<p>这个文件夹是程序生成的，如果本地没有安装 jekyll 的话，是不会有这个文件夹的，如果想要先本地预览一下，再提交到 github，最好通过.gitignore 把这个文件夹排除。</p>
+<h4 id="index-html">index.html</h4>
+<p>这个文件也有一个<a href="http://wiki.github.com/mojombo/jekyll/yaml-front-matter">yaml 前缀</a> ，可以指定使用哪个模板，标题等等，所有根文件夹下的.html/.htm/.textile/.markdown 都会被解析。</p>
+<h4 id="other-files-folders">other files/folders</h4>
+<p>上面没有列出的文件/文件夹都会被 jekyll 放到_site 文件夹下，如 css/image/script 等等。</p>
+<h3 id="jekyll-de-an-zhuang">jekyll 的安装</h3>
+<p>参考<a href="http://wiki.github.com/mojombo/jekyll/install">安装页</a> ，如果使用时提示&quot;liquid requires RubyGems version &gt;= 1.3.7&quot;，可以在<a href="http://rubyforge.org/frs/?group_id=126">这里</a> 下载对应的文件，安装即可。</p>
+<p>安装完之后，为了避免路径调用问题，可以在 apache/nginx 里给对应的文件夹(/path/to/_site)绑定一个本地域名，如&quot;lc.foo.github.com&quot;，在终端里输入&quot;jekyll --pygments&quot;，然后就可以用该域名访问本地博客了，如果一切正常，再提交到 github</p>
+<p>PS:如果你之前的博客是基于 wordpress/movable type/typo 4+，可以参考这篇<a href="http://wiki.github.com/mojombo/jekyll/blog-migrations">迁移指南</a></p>
+<h3 id="bang-ding-yu-ming">绑定域名</h3>
+<p>这个就更简单了，新建一个 CNAME 文本文件，在里面输入域名，如&quot;blog.leezhong.com&quot;，然后在域名提供商里，指定该域名的 CNAME 为&quot;foo.github.com&quot;，搞定</p>
+<h3 id="tian-jia-ping-lun-gong-neng">添加评论功能</h3>
+<p>使用<a href="http://disqus.com">disqus</a> ，整个注册和使用流程还是挺清晰易懂的，这里就不多说了。</p>
+<h3 id="can-kao-wen-zhang">参考文章</h3>
+<ul>
+<li>&quot;jekyll wiki&quot;: <a href="http://wiki.github.com/mojombo/jekyll/">http://wiki.github.com/mojombo/jekyll/</a></li>
+<li>&quot;github blog&quot;: <a href="http://github.com/blog/272-github-pages">http://github.com/blog/272-github-pages</a></li>
+<li>&quot;publishing a blog with github and jekyll&quot;: <a href="http://blog.envylabs.com/2009/08/publishing-a-blog-with-github-pages-and-jekyll">http://blog.envylabs.com/2009/08/publishing-a-blog-with-github-pages-and-jekyll/</a></li>
+</ul>
+<h3 id="hou-ji">后记</h3>
+<p>之前一直用的 wordpress，但是太臃肿了，而且有安全隐患，还得有一个 PHP 空间，访问速度也得不到保证。平时 github 用得比较多，正好他们提供&quot;博客&quot;服务，正合我意，初步使用下来，没有什么问题，能在本地用 vim 写 textile 语法的博客是一件多么爽的事情啊，还可以本地预览最终效果，数据也不会轻易丢失。</p>
+<p>最后再次感谢 github 提供了这么好的服务，如果对 github 的创业历程感兴趣，可以参考<a href="http://tom.preston-werner.com/2008/10/18/how-i-turned-down-300k.html">这篇文章</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/essay/">essay</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/github/">github</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

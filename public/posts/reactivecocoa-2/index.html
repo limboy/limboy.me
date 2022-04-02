@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+说说ReactiveCocoa 2
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/reactivecocoa-2/">
+
+<meta name="twitter:title" content="说说ReactiveCocoa 2">
+<meta property="og:title" content="说说ReactiveCocoa 2">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;reactivecocoa-2&#x2F;">说说ReactiveCocoa 2</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2013-12-27</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p><a href="https://github.com/ReactiveCocoa/ReactiveCocoa">ReactiveCocoa</a>是<a href="https://github.com/blog/1107-reactivecocoa-for-a-better-world">Github</a>开源的一款 cocoa FRP 框架，我在<a href="http://blog.leezhong.com/ios/2013/06/19/frp-reactivecocoa.html">之前的文章</a>里有过介绍(当时还是 1.x 版本，2.x 版本有了新的变化，API 也有部分不兼容) 这里再简单地提一下。</p>
+<p>Native app 有很大一部分的时间是在等待事件发生，然后响应事件，比如等待网络请求完成，等待用户的操作，等待某些状态值的改变等等，等这些事件发生后，再做进一步处理。 但是这些等待和响应，并没有一个统一的处理方式。Delegate, Notification, Block, KVO, 常常会不知道该用哪个最合适。有时需要 chain 或者 compose 某几个事件，就需要多个状态变量，而状态变量一多，复杂度也就上来了。为了解决这些问题，Github 的工程师们开发了 ReactiveCocoa。</p>
+<h2 id="ji-ge-chang-jian-de-gai-nian">几个常见的概念</h2>
+<p>在阅读 ReactiveCocoa(以下简称 RAC)的相关文章或代码时，经常会出现一些名词，理解它们对于理解 RAC 有很大的帮助，下面就简要来说说这些常见的概念。</p>
+<h3 id="signal-and-subscriber">Signal and Subscriber</h3>
+<p>这是 RAC 最核心的内容，这里我想用插头和插座来描述，插座是 Signal，插头是 Subscriber。想象某个遥远的星球，他们的电像某种物质一样被集中存储，且很珍贵。插座负责去获取电，插头负责使用电，而且一个插座可以插任意数量的插头。当一个插座(Signal)没有插头(Subscriber)时什么也不干，也就是处于冷(Cold)的状态，只有插了插头时才会去获取，这个时候就处于热(Hot)的状态。</p>
+<p>Signal 获取到数据后，会调用 Subscriber 的 sendNext, sendComplete, sendError 方法来传送数据给 Subscriber，Subscriber 自然也有方法来获取传过来的数据，如：[signal subscribeNext:error:completed]。这样只要没有 sendComplete 和 sendError，新的值就会通过 sendNext 源源不断地传送过来，举个简单的例子：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[</span><span style="color:#c82728;">RACObserve</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">, username)</span><span> subscribeNext</span><span style="color:#3e999f;">: ^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>newName){
+</span><span>	</span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;newName:</span><span>%@</span><span style="color:#839c00;">&quot;</span><span>, newName);
+</span><span>}];
+</span></code></pre>
+<p><code>RACObserve</code>使用了 KVO 来监听 property 的变化，只要 username 被自己或外部改变，block 就会被执行。但不是所有的 property 都可以被<code>RACObserve</code>，该 property 必须支持 KVO，比如 NSURLCache 的 currentDiskUsage 就不能被<code>RACObserve</code>。</p>
+<p>Signal 是很灵活的，它可以被修改(map)，过滤(filter)，叠加(combine)，串联(chain)，这有助于应对更加复杂的情况，比如：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#c82728;">RAC</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">logInButton</span><span style="color:#4271ae;">, enabled) </span><span style="color:#3e999f;">= </span><span>[RACSignal
+</span><span>        combineLatest</span><span style="color:#3e999f;">:</span><span>@[
+</span><span>            </span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">usernameTextField</span><span>.</span><span style="color:#c82728;">rac_textSignal</span><span>,
+</span><span>            </span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">passwordTextField</span><span>.</span><span style="color:#c82728;">rac_textSignal</span><span>,
+</span><span>            </span><span style="color:#c82728;">RACObserve</span><span style="color:#4271ae;">(LoginManager.</span><span style="color:#c82728;">sharedManager</span><span style="color:#4271ae;">, loggingIn)</span><span>,
+</span><span>            </span><span style="color:#c82728;">RACObserve</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">, loggedIn)
+</span><span>        ] reduce</span><span style="color:#3e999f;">:^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>username, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>password, </span><span style="color:#c99e00;">NSNumber </span><span style="color:#3e999f;">*</span><span>loggingIn, </span><span style="color:#c99e00;">NSNumber </span><span style="color:#3e999f;">*</span><span>loggedIn) {
+</span><span>            </span><span style="color:#8959a8;">return</span><span> @(username.</span><span style="color:#c82728;">length </span><span style="color:#3e999f;">&gt; </span><span style="color:#f07219;">0 </span><span style="color:#3e999f;">&amp;&amp;</span><span> password.</span><span style="color:#c82728;">length </span><span style="color:#3e999f;">&gt; </span><span style="color:#f07219;">0 </span><span style="color:#3e999f;">&amp;&amp; !</span><span>loggingIn.</span><span style="color:#c82728;">boolValue </span><span style="color:#3e999f;">&amp;&amp; !</span><span>loggedIn.</span><span style="color:#c82728;">boolValue</span><span>);
+</span><span>        }];
+</span></code></pre>
+<p>这段代码看起来有点复杂，来细细说一下，首先是左边的<code>RAC(...)</code>，它的作用是将<code>self.logInButton.enabled</code>属性与右边的 signal 的 sendNext 值绑定。也就是如果右边的 reduce 的返回值为 NO，那么 enabled 就为 NO。右边的<code>combineLatest</code>是获取这 4 个 signal 的 next 值。其中可以看到<code>self.usernameTextField.rac_textSignal</code>这么个东东，<code>rac_textSignal</code>是 RAC 为 UITextField 添加的 category，只要 usernameTextField 的值有变化，这个值就会被返回(sendNext)。combineLatest 需要每个 signal 至少都有过一次 sendNext。reduce 的作用是根据接收到的值，再返回一个新的值，这里是@(YES)和@(NO)，必须是 object。</p>
+<p>上面这段代码用到了 Signal 的组合，想象一下，如果是传统的方式，写起来还是挺复杂的，而且随着功能的增加，调整起来会更加麻烦。</p>
+<h3 id="leng-xin-hao-cold-he-re-xin-hao-hot">冷信号(Cold)和热信号(Hot)</h3>
+<p>上面提到过这两个概念，冷信号默认什么也不干，比如下面这段代码</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>RACSignal </span><span style="color:#3e999f;">*</span><span>signal </span><span style="color:#3e999f;">= </span><span>[RACSignal </span><span style="color:#4271ae;">createSignal:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;"> RACDisposable </span><span style="color:#3e999f;">* </span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;RACSubscriber&gt; subscriber) {
+</span><span style="color:#4271ae;">	NSLog(</span><span style="color:#839c00;">@&quot;triggered&quot;</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">	[subscriber sendNext:</span><span style="color:#839c00;">@&quot;foobar&quot;</span><span style="color:#4271ae;">];
+</span><span style="color:#4271ae;">    [subscriber sendCompleted];
+</span><span style="color:#4271ae;">    </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">nil</span><span style="color:#4271ae;">;
+</span><span style="color:#4271ae;">}</span><span>];
+</span></code></pre>
+<p>我们创建了一个 Signal，但因为没有被 subscribe，所以什么也不会发生。加了下面这段代码后，signal 就处于 Hot 的状态了，block 里的代码就会被执行。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[signal </span><span style="color:#4271ae;">subscribeCompleted:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">{
+</span><span style="color:#4271ae;">    NSLog(</span><span style="color:#839c00;">@&quot;subscription </span><span>%u</span><span style="color:#839c00;">&quot;</span><span style="color:#4271ae;">, subscriptions);
+</span><span style="color:#4271ae;">}</span><span>];
+</span></code></pre>
+<p>或许你会问，那如果这时又有一个新的 subscriber 了，signal 的 block 还会被执行吗？这就牵扯到了另一个概念：Side Effect</p>
+<h3 id="side-effect">Side Effect</h3>
+<p>还是上面那段代码，如果有多个 subscriber，那么 signal 就会又一次被触发，控制台里会输出两次<code>triggered</code>。这或许是你想要的，或许不是。如果要避免这种情况的发生，可以使用 <code>replay</code> 方法，它的作用是保证 signal 只被触发一次，然后把 sendNext 的 value 存起来，下次再有新的 subscriber 时，直接发送缓存的数据。</p>
+<h2 id="cocoa-categories">Cocoa Categories</h2>
+<p>为了更加方便地使用 RAC，RAC 给 Cocoa 添加了很多 category，与系统集成地越紧密，使用起来自然也就越方便。下面是我认为比较常用的 categories。</p>
+<h3 id="uiview-categories">UIView Categories</h3>
+<p>上面看到的<code>rac_textSignal</code>是加在 UITextField 上的(UITextField+RACSignalSupport.h)，其他常用的 UIView 也都有添加相应的 category，比如 UIAlertView，就不需要再用 Delegate 了。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>UIAlertView </span><span style="color:#3e999f;">*</span><span>alertView </span><span style="color:#3e999f;">= </span><span>[[UIAlertView </span><span style="color:#4271ae;">alloc</span><span>] initWithTitle</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;&quot;</span><span> message</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;Alert&quot;</span><span> delegate</span><span style="color:#3e999f;">:</span><span style="color:#f07219;">nil</span><span> cancelButtonTitle</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;YES&quot;</span><span> otherButtonTitles</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;NO&quot;</span><span>, </span><span style="color:#f07219;">nil</span><span>];
+</span><span>[[alertView </span><span style="color:#4271ae;">rac_buttonClickedSignal</span><span>] subscribeNext</span><span style="color:#3e999f;">:^</span><span>(</span><span style="color:#c99e00;">NSNumber </span><span style="color:#3e999f;">*</span><span>indexNumber) {
+</span><span>	</span><span style="color:#8959a8;">if </span><span>([indexNumber </span><span style="color:#4271ae;">intValue</span><span>] </span><span style="color:#3e999f;">== </span><span style="color:#f07219;">1</span><span>) {
+</span><span>		</span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;you touched NO&quot;</span><span>);
+</span><span>	} </span><span style="color:#8959a8;">else </span><span>{
+</span><span>		</span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;you touched YES&quot;</span><span>);
+</span><span>	}
+</span><span>}];
+</span><span>[alertView </span><span style="color:#4271ae;">show</span><span>];
+</span></code></pre>
+<p>有了这些 Category，大部分的 Delegate 都可以使用 RAC 来做。或许你会想，可不可以 subscribe NSMutableArray.rac_sequence.signal，这样每次有新的 object 或旧的 object 被移除时都能知道，UITableViewController 就可以根据 dataSource 的变化，来 reloadData。但很可惜这样不行，因为 RAC 是基于 KVO 的，而 NSMutableArray 并不会在调用 addObject 或 removeObject 时发送通知，所以不可行。不过可以使用 NSArray 作为 UITableView 的 dataSource，只要 dataSource 有变动就换成新的 Array，这样就可以了。</p>
+<p>说到 UITableView，再说一下 UITableViewCell，RAC 给 UITableViewCell 提供了一个方法：<code>rac_prepareForReuseSignal</code>，它的作用是当 Cell 即将要被重用时，告诉 Cell。想象 Cell 上有多个 button，Cell 在初始化时给每个 button 都<code>addTarget:action:forControlEvents</code>，被重用时需要先移除这些 target，下面这段代码就可以很方便地解决这个问题：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[[[</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">cancelButton
+</span><span>	rac_signalForControlEvents</span><span style="color:#3e999f;">:</span><span>UIControlEventTouchUpInside]
+</span><span>	takeUntil</span><span style="color:#3e999f;">:</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">rac_prepareForReuseSignal</span><span>]
+</span><span>	subscribeNext</span><span style="color:#3e999f;">:^</span><span>(UIButton </span><span style="color:#3e999f;">*</span><span>x) {
+</span><span>	</span><span style="color:#8e908c;">// do other things
+</span><span>}];
+</span></code></pre>
+<p>还有一个很常用的 category 就是<code>UIButton+RACCommandSupport.h</code>，它提供了一个 property：<code>rac_command</code>，就是当 button 被按下时会执行的一个命令，命令被执行完后可以返回一个 signal，有了 signal 就有了灵活性。比如点击投票按钮，先判断一下有没有登录，如果有就发 HTTP 请求，没有就弹出登陆框，可以这么实现。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>voteButton.</span><span style="color:#c82728;">rac_command </span><span style="color:#3e999f;">= </span><span>[[RACCommand </span><span style="color:#4271ae;">alloc</span><span>] initWithEnabled</span><span style="color:#3e999f;">:</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">viewModel</span><span>.</span><span style="color:#c82728;">voteCommand</span><span>.</span><span style="color:#c82728;">enabled</span><span> signalBlock</span><span style="color:#3e999f;">:^</span><span>RACSignal </span><span style="color:#3e999f;">*</span><span>(</span><span style="color:#8959a8;">id </span><span>input) {
+</span><span>	</span><span style="color:#8e908c;">// Assume that we&#39;re logged in at first. We&#39;ll replace this signal later if not.
+</span><span>	RACSignal </span><span style="color:#3e999f;">*</span><span>authSignal </span><span style="color:#3e999f;">= </span><span>[RACSignal </span><span style="color:#4271ae;">empty</span><span>];
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">if </span><span>([[PXRequest </span><span style="color:#4271ae;">apiHelper</span><span>] authMode] </span><span style="color:#3e999f;">==</span><span> PXAPIHelperModeNoAuth) {
+</span><span>		</span><span style="color:#8e908c;">// Not logged in. Replace signal.
+</span><span>		authSignal </span><span style="color:#3e999f;">= </span><span>[[RACSignal </span><span style="color:#4271ae;">createSignal:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">RACDisposable </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;RACSubscriber&gt; subscriber) {
+</span><span style="color:#4271ae;">			@</span><span style="color:#c82728;">strongify</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">
+</span><span style="color:#4271ae;">			FRPLoginViewController </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">viewController </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">[[FRPLoginViewController alloc] initWithNibName</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;FRPLoginViewController&quot;</span><span style="color:#4271ae;"> bundle</span><span style="color:#3e999f;">:</span><span style="color:#f07219;">nil</span><span style="color:#4271ae;">];
+</span><span style="color:#4271ae;">			UINavigationController </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">navigationController </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">[[UINavigationController alloc] initWithRootViewController</span><span style="color:#3e999f;">:</span><span style="color:#4271ae;">viewController];
+</span><span style="color:#4271ae;">
+</span><span style="color:#4271ae;">			[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">presentViewController:navigationController animated:</span><span style="color:#f07219;">YES </span><span style="color:#4271ae;">completion:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">{
+</span><span style="color:#4271ae;">				[subscriber sendCompleted];
+</span><span style="color:#4271ae;">			}];
+</span><span style="color:#4271ae;">
+</span><span style="color:#4271ae;">			</span><span style="color:#8959a8;">return </span><span style="color:#f07219;">nil</span><span style="color:#4271ae;">;
+</span><span style="color:#4271ae;">		}</span><span>]];
+</span><span>	}
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">return </span><span>[authSignal </span><span style="color:#4271ae;">then:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">RACSignal </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">{
+</span><span style="color:#4271ae;">		@</span><span style="color:#c82728;">strongify</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">		</span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">[[</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">viewModel</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">voteCommand</span><span style="color:#4271ae;"> execute</span><span style="color:#3e999f;">:</span><span style="color:#f07219;">nil</span><span style="color:#4271ae;">] ignoreValues];
+</span><span style="color:#4271ae;">	}</span><span>];
+</span><span>}];
+</span><span>[voteButton.</span><span style="color:#c82728;">rac_command</span><span>.</span><span style="color:#c82728;">errors</span><span> subscribeNext</span><span style="color:#3e999f;">:^</span><span>(</span><span style="color:#8959a8;">id </span><span>x) {
+</span><span>	[x </span><span style="color:#4271ae;">subscribeNext:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">NSError </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">error) {
+</span><span style="color:#4271ae;">		[SVProgressHUD showErrorWithStatus:[error localizedDescription]];
+</span><span style="color:#4271ae;">	}</span><span>];
+</span><span>}];
+</span></code></pre>
+<p>这段代码节选自 AshFurrow 的<a href="https://github.com/AshFurrow/FunctionalReactivePixels">FunctionalReactivePixels</a>，有删减。</p>
+<h3 id="data-structure-categories">Data Structure Categories</h3>
+<p>常用的数据结构，如 NSArray, NSDictionary 也都有添加相应的 category，比如<code>NSArray</code>添加了<code>rac_sequence</code>，可以将<code>NSArray</code>转换为<code>RACSequence</code>，顺便说一下<code>RACSequence</code>, <code>RACSequence</code>是一组 immutable 且有序的 values，不过这些 values 是运行时计算的，所以对性能提升有一定的帮助。<code>RACSequence</code>提供了一些方法，如<code>array</code>转换为<code>NSArray</code>，<code>any:</code>检查是否有 Value 符合要求，<code>all:</code>检查是不是所有的 value 都符合要求，这里的符合要求的，block 返回 YES，不符合要求的就返回 NO。</p>
+<h3 id="notificationcenter-category">NotificationCenter Category</h3>
+<p><code>NSNotificationCenter</code>, 默认情况下<code>NSNotificationCenter</code>使用<code>Target-Action</code>方式来处理 Notification，这样就需要另外定义一个方法，这就涉及到编程领域的两大难题之一：起名字。有了 RAC，就有 Signal，有了 Signal 就可以 subscribe，于是<code>NotificationCenter</code>就可以这么来处理，还不用担心移除 observer 的问题。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[[[</span><span style="color:#c99e00;">NSNotificationCenter </span><span style="color:#4271ae;">defaultCenter</span><span>] rac_addObserverForName</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;MyNotification&quot;</span><span> object</span><span style="color:#3e999f;">:</span><span style="color:#f07219;">nil</span><span>] subscribeNext</span><span style="color:#3e999f;">:^</span><span>(</span><span style="color:#f07219;">NSNotification </span><span style="color:#3e999f;">*</span><span>notification) {
+</span><span>	</span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;Notification Received&quot;</span><span>);
+</span><span>}];
+</span></code></pre>
+<h3 id="nsobject-categories">NSObject Categories</h3>
+<p>NSObject 有不少的 Category，我觉得比较有用的有这么几个</p>
+<h4 id="nsobject-racdeallocating-h">NSObject+RACDeallocating.h</h4>
+<p>顾名思义就是在一个 object 的 dealloc 被触发时，执行的一段代码。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#c99e00;">NSArray </span><span style="color:#3e999f;">*</span><span>array </span><span style="color:#3e999f;">=</span><span> @[</span><span style="color:#839c00;">@&quot;foo&quot;</span><span>];
+</span><span>[[array </span><span style="color:#4271ae;">rac_willDeallocSignal</span><span>] subscribeCompleted</span><span style="color:#3e999f;">:^</span><span>{
+</span><span>	</span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;oops, i will be gone&quot;</span><span>);
+</span><span>}];
+</span><span>array </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">nil</span><span>;
+</span></code></pre>
+<h4 id="nsobject-raclifting-h">NSObject+RACLifting.h</h4>
+<p>有时我们希望满足一定条件时，自动触发某个方法，有了这个 category 就可以这么办</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)test
+</span><span>{
+</span><span>    RACSignal </span><span style="color:#3e999f;">*</span><span>signalA </span><span style="color:#3e999f;">= </span><span>[RACSignal </span><span style="color:#4271ae;">createSignal:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">RACDisposable </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;RACSubscriber&gt; subscriber) {
+</span><span style="color:#4271ae;">        </span><span style="color:#8959a8;">double</span><span style="color:#4271ae;"> delayInSeconds </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">2.0</span><span style="color:#4271ae;">;
+</span><span style="color:#4271ae;">        dispatch_time_t popTime </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">dispatch_time</span><span style="color:#4271ae;">(DISPATCH_TIME_NOW, (</span><span style="color:#c99e00;">int64_t</span><span style="color:#4271ae;">)(delayInSeconds </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;"> NSEC_PER_SEC));
+</span><span style="color:#4271ae;">        </span><span style="color:#c82728;">dispatch_after</span><span style="color:#4271ae;">(popTime, </span><span style="color:#c82728;">dispatch_get_main_queue</span><span style="color:#4271ae;">(), </span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">void</span><span style="color:#4271ae;">){
+</span><span style="color:#4271ae;">            [subscriber sendNext:</span><span style="color:#839c00;">@&quot;A&quot;</span><span style="color:#4271ae;">];
+</span><span style="color:#4271ae;">        });
+</span><span style="color:#4271ae;">        </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">nil</span><span style="color:#4271ae;">;
+</span><span style="color:#4271ae;">    }</span><span>];
+</span><span>
+</span><span>    RACSignal </span><span style="color:#3e999f;">*</span><span>signalB </span><span style="color:#3e999f;">= </span><span>[RACSignal </span><span style="color:#4271ae;">createSignal:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">RACDisposable </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">&lt;RACSubscriber&gt; subscriber) {
+</span><span style="color:#4271ae;">        [subscriber sendNext:</span><span style="color:#839c00;">@&quot;B&quot;</span><span style="color:#4271ae;">];
+</span><span style="color:#4271ae;">        [subscriber sendNext:</span><span style="color:#839c00;">@&quot;Another B&quot;</span><span style="color:#4271ae;">];
+</span><span style="color:#4271ae;">        [subscriber sendCompleted];
+</span><span style="color:#4271ae;">        </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">nil</span><span style="color:#4271ae;">;
+</span><span style="color:#4271ae;">    }</span><span>];
+</span><span>
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">rac_liftSelector:</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(doA:withB:) withSignals:signalA, signalB, </span><span style="color:#f07219;">nil</span><span>];
+</span><span>}
+</span><span>
+</span><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)doA</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)A withB</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)B
+</span><span>{
+</span><span>    </span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;A:</span><span>%@</span><span style="color:#839c00;"> and B:</span><span>%@</span><span style="color:#839c00;">&quot;</span><span>, A, B);
+</span><span>}
+</span></code></pre>
+<p>这里的<code>rac_liftSelector:withSignals</code> 就是干这件事的，它的意思是当 signalA 和 signalB 都至少 sendNext 过一次，接下来只要其中任意一个 signal 有了新的内容，<code>doA:withB</code>这个方法就会自动被触发。</p>
+<p>如果你有兴趣，可以想想上面这段代码会输出什么。</p>
+<h4 id="nsobject-racselectorsignal-h">NSObject+RACSelectorSignal.h</h4>
+<p>这个 category 有<code>rac_signalForSelector:</code>和<code>rac_signalForSelector:fromProtocol:</code> 这两个方法。先来看前一个，它的意思是当某个 selector 被调用时，再执行一段指定的代码，相当于 hook。比如点击某个按钮后，记个日志。后者表示该 selector 实现了某个协议，所以可以用它来实现 Delegate。</p>
+<h2 id="mvvm">MVVM</h2>
+<p>RAC 带来的变化还不仅仅是这些，它还带来了架构层面的变化。我们都知道苹果推荐的是 MVC 架构，那 MVVM 又是什么呢？</p>
+<p><img src="https://f.cloud.github.com/assets/432536/867984/291ed380-f760-11e2-9106-d3158320af39.png" alt="" /></p>
+<p>跟 MVC 最大的区别是多了个<code>ViewModel</code>，它直接与 View 绑定，而且对 View 一无所知。拿做菜打比方的话，ViewModel 就是调料，它不关心做的到底是什么菜。这不是跟<code>Model</code>很像吗？是的，它可以扮演 Model 的职责，但其实它是 Model 的中介，这样当 Model 的 API 有变化，或者由本地存储变为远程 API 调用时，ViewModel 的 public API 可以保持不变。</p>
+<p>使用 ViewModel 的好处是，可以让 Controller 更加简单和轻便，而且 ViewModel 相对独立，也更加方便测试和重用。那 Controller 这时又该做哪些事呢？在 MVVM 体系中，Controller 可以被看成 View，所以它的主要工作是处理布局、动画、接收系统事件、展示 UI。</p>
+<p>MVVM 还有一个很重要的概念是 <code>data binding</code>，view 的呈现需要 data，这个 data 就是由 ViewModel 提供的，将 view 的 data 与 ViewModel 的 data 绑定后，将来双方的数据只要一方有变化，另一方就能收到。<a href="https://github.com/ReactiveCocoa/ReactiveViewModel">这里</a>有 Github 开源的一个 ViewModel Base Class。</p>
+<h2 id="qi-ta">其他</h2>
+<p>RAC 在使用时有一些注意事项，可以参考官方的<a href="https://github.com/ReactiveCocoa/ReactiveCocoa/blob/master/Documentation/DesignGuidelines.md">DesignGuildLines</a>，这里简单说一下。</p>
+<p>当一个 signal 被一个 subscriber subscribe 后，这个 subscriber 何时会被移除？答案是当 subscriber 被 sendComplete 或 sendError 时，或者手动调用[disposable dispose]。</p>
+<p>当 subscriber 被 dispose 后，所有该 subscriber 相关的工作都会被停止或取消，如 http 请求，资源也会被释放。</p>
+<p>Signal events 是线性的，不会出现并发的情况，除非显示地指定 Scheduler。所以<code>-subscribeNext:error:completed:</code>里的 block 不需要锁定或者 synchronized 等操作，其他的 events 会依次排队，直到 block 处理完成。</p>
+<p>Errors 有优先权，如果有多个 signals 被同时监听，只要其中一个 signal sendError，那么 error 就会立刻被传送给 subscriber，并导致 signals 终止执行。相当于 Exception。</p>
+<p>生成 Signal 时，最好指定 Name, <code>-setNameWithFormat:</code> 方便调试。</p>
+<p>block 代码中不要阻塞。</p>
+<h2 id="xiao-jie">小结</h2>
+<p>尽管洋洋洒洒写了这么多，也只是对 RAC 有了个大概的了解，如果要更深入地了解 RAC 还是需要多读文档、代码和相关项目。</p>
+<p>RAC 学习起来稍显吃力，且相关的文章目前还不多，中文的就更少了，希望这篇文章能带给你些帮助。</p>
+<p>以下是我觉得还不错的 RAC 相关资源</p>
+<ul>
+<li><a href="https://github.com/AshFurrow/FunctionalReactivePixels">FunctionalReactivePixels</a> 作者同时还出了一本 FRP 相关的书，个人觉得看源码就足够了。</li>
+<li><a href="https://github.com/jspahrsummers/GroceryList">GroceryList</a> RAC 的作者之一 jspahrsummers 的一个项目</li>
+<li><a href="http://codeblog.shape.dk/blog/2013/12/05/reactivecocoa-essentials-understanding-and-using-raccommand/">ReactiveCocoa Essentilas: Understanding and Using RACCommand</a> 介绍了 RACCommand 的使用，同时也涉及了 RAC 相关的一些点。</li>
+<li><a href="http://codeblog.shape.dk/blog/2013/12/02/transparent-oauth-token-refresh-using-reactivecocoa/">Transparent OAuth Token Refresh Using ReactiveCocoa</a> 这篇文章讲了如何使用 RAC 来透明地获取 Access Token，然后继续发送请求。</li>
+<li><a href="http://vimeo.com/78749139">BNR: An Introduction to ReactiveCocoa</a>(视频)</li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/rac/">RAC</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+ReactiveCocoa与Functional Reactive Programming
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/frp-reactivecocoa/">
+
+<meta name="twitter:title" content="ReactiveCocoa与Functional Reactive Programming">
+<meta property="og:title" content="ReactiveCocoa与Functional Reactive Programming">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;">ReactiveCocoa与Functional Reactive Programming</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2013-06-19</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <h2 id="shi-yao-shi-functional-reactive-programming">什么是 Functional Reactive Programming</h2>
+<p>Functional Reactive Programming(以下简称 FRP)是一种响应变化的编程范式。先来看一小段代码</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>a </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">2
+</span><span>b </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">2
+</span><span>c </span><span style="color:#3e999f;">=</span><span> a </span><span style="color:#3e999f;">+</span><span> b </span><span style="color:#8e908c;">// c is 4
+</span><span>
+</span><span>b </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">3
+</span><span style="color:#8e908c;">// now what is the value of c?
+</span></code></pre>
+<p>如果使用 FRP，<code>c</code>的值将会随着<code>b</code>的值改变而改变，所以叫做「响应式编程」。比较直观的例子就是 Excel，当改变某一个单元格的内容时，该单元格相关的计算结果也会随之改变。</p>
+<p>FRP 提供了一种信号机制来实现这样的效果，通过信号来记录值的变化。信号可以被叠加、分割或合并。通过对信号的组合，就不需要去监听某个值或事件。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_demo.png"
+    srcset="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_demo.png 353w,&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_demo.png 353w"
+    sizes="(max-width: 353px) 100vw, 353px" width="353" /></p>
+<p>这在重交互的应用里是非常有用的。以注册为例：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_register_demo.png"
+    srcset="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_register_demo.png 198w,&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_register_demo.png 198w"
+    sizes="(max-width: 198px) 100vw, 198px" width="198" /></p>
+<p>提交按钮的状态要跟输入框的状态绑定，比如必选的输入框没有填完时，提交按钮是灰色的，也就是不可点；如果提交按钮不可点，那么文字变成灰色，不然变成蓝色；如果正在提交，那么输入框的文字颜色变成灰色，且不可点，不然变成默认色且可点；如果注册成功就在状态栏显示成功信息，不然显示错误信息，等等。</p>
+<p>可以看到光是注册页就有这么多的联动，在 javascript 中可以采用事件监听来处理，iOS 中更多的是 delegate 模式，本质上都是事件的分发和响应。这种做法的缺点是不够直观，尤其在逻辑比较复杂的情况下。这也是为什么尽管 nodejs 很高效，但由于 javascript 的 callback style 和异步模式不符合正常的编程习惯，让很多人望而却步。</p>
+<p>使用 FRP 主要有两个好处：直观和灵活。直观的代码容易编写、阅读和维护，灵活的特性便于应对变态的需求。</p>
+<h2 id="reactivecocoa">ReactiveCocoa</h2>
+<p><a href="https://github.com/ReactiveCocoa/ReactiveCocoa">ReactiveCocoa</a>是 github 去年开源的一个项目，是在 iOS 平台上对 FRP 的实现。FRP 的核心是信号，信号在 ReactiveCocoa(以下简称 RAC)中是通过<code>RACSignal</code>来表示的，信号是数据流，可以被绑定和传递。</p>
+<p>可以把信号想象成水龙头，只不过里面不是水，而是玻璃球(value)，直径跟水管的内径一样，这样就能保证玻璃球是依次排列，不会出现并排的情况(数据都是线性处理的，不会出现并发情况)。水龙头的开关默认是关的，除非有了接收方(subscriber)，才会打开。这样只要有新的玻璃球进来，就会自动传送给接收方。可以在水龙头上加一个过滤嘴(filter)，不符合的不让通过，也可以加一个改动装置，把球改变成符合自己的需求(map)。也可以把多个水龙头合并成一个新的水龙头(combineLatest:reduce:)，这样只要其中的一个水龙头有玻璃球出来，这个新合并的水龙头就会得到这个球。</p>
+<p>下面通过一个简单的 demo 来演示这个模型。</p>
+<p>假如对象的某个属性想绑定某个消息，可以使用<code>RAC</code>这个宏，相当于给玻璃球套了一个水龙头。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#c82728;">RAC</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">submitButton</span><span style="color:#4271ae;">, enabled) </span><span style="color:#3e999f;">= </span><span>[RACSignal </span><span style="color:#4271ae;">combineLatest:@[</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">usernameField</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">rac_textSignal</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">passwordField</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">rac_textSignal</span><span style="color:#4271ae;">] reduce:</span><span style="color:#3e999f;">^</span><span style="color:#8959a8;">id</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">userName, </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">password) {
+</span><span style="color:#4271ae;">	</span><span style="color:#8959a8;">return</span><span style="color:#4271ae;"> @(userName.</span><span style="color:#c82728;">length </span><span style="color:#3e999f;">&gt;= </span><span style="color:#f07219;">6 </span><span style="color:#3e999f;">&amp;&amp;</span><span style="color:#4271ae;"> password.</span><span style="color:#c82728;">length </span><span style="color:#3e999f;">&gt;= </span><span style="color:#f07219;">6</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">}</span><span>];
+</span></code></pre>
+<p>这样，如果用户名和密码框的长度都超过 6，提交按钮就 enable 了。反之，如果没符合要求，就会处于非开启状态。</p>
+<p>可以看到<code>usernameField</code>有了一个新的属性<code>rac_textSignal</code>，这是 RAC 在<code>UITextField</code>category 中添加的，直接用即可。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_combine.png"
+    srcset="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_combine.png 203.5w,&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_combine.png 203.5w"
+    sizes="(max-width: 203.5px) 100vw, 203.5px" width="203.5" /></p><h2 id="rac-de-da-tong-yi">RAC 的大统一</h2>
+<p>RAC 统一了对 KVO、UI Event、Network request、Async work 的处理，因为它们本质上都是值的变化(Values over time)。</p>
+<h3 id="kvo">KVO</h3>
+<p>RAC 可以用来监测属性的改变，这点跟 KVO 很像，不过使用了 block，而不是<code>-observeValueForKeyPath:ofObject:change:context:</code></p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[</span><span style="color:#c82728;">RACAble</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">username</span><span style="color:#4271ae;">)</span><span> subscribeNext</span><span style="color:#3e999f;">:^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>newName) {
+</span><span>    </span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;</span><span>%@</span><span style="color:#839c00;">&quot;</span><span>, newName);
+</span><span>}];
+</span></code></pre>
+<p>使用起来是不是比 KVO 舒服多了。比 KVO 更加强大的是信号可以被链起来(chain)</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// 只有当名字以&#39;j&#39;开头，才会被记录
+</span><span>[[</span><span style="color:#c82728;">RACAble</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">username</span><span style="color:#4271ae;">)
+</span><span>   filter</span><span style="color:#3e999f;">:^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>newName) {
+</span><span>       </span><span style="color:#8959a8;">return </span><span>[newName </span><span style="color:#4271ae;">hasPrefix:</span><span style="color:#839c00;">@&quot;j&quot;</span><span>];
+</span><span>   }]
+</span><span>   subscribeNext</span><span style="color:#3e999f;">:^</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>newName) {
+</span><span>       </span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;</span><span>%@</span><span style="color:#839c00;">&quot;</span><span>, newName);
+</span><span>   }];
+</span></code></pre>
+<h3 id="ui-event">UI Event</h3>
+<p>RAC 还为系统 UI 提供了很多 category，来方便消息的创建和传递，比如按钮被点击或文本框有改动等等，上面的例子中<code>self.firstNameField.rac_textSignal</code>，在对应的文本框有改动时，会自动向数据流中添加新的数据，绑定该消息的其他消息就会收到新的数据，如果有 subscriber 的话，会自动触发。</p>
+<h3 id="network-request-async-work">Network Request &amp;&amp; Async work</h3>
+<p>这些可以通过自定义信号，也就是<code>RACSubject</code>(继承自<code>RACSignal</code>，可以理解为自由度更高的 signal)来搞定。比如一个异步网络操作，可以返回一个 subject，然后将这个 subject 绑定到一个 subscriber 或另一个信号。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)doTest
+</span><span>{
+</span><span>    RACSubject </span><span style="color:#3e999f;">*</span><span>subject </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">doRequest</span><span>];
+</span><span>
+</span><span>    [subject </span><span style="color:#4271ae;">subscribeNext:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">value){
+</span><span style="color:#4271ae;">        NSLog(</span><span style="color:#839c00;">@&quot;value:</span><span>%@</span><span style="color:#839c00;">&quot;</span><span style="color:#4271ae;">, value);
+</span><span style="color:#4271ae;">    }</span><span>];
+</span><span>}
+</span><span>
+</span><span style="color:#3e999f;">- </span><span>(RACSubject </span><span style="color:#3e999f;">*</span><span>)doRequest
+</span><span>{
+</span><span>    RACSubject </span><span style="color:#3e999f;">*</span><span>subject </span><span style="color:#3e999f;">= </span><span>[RACSubject </span><span style="color:#4271ae;">subject</span><span>];
+</span><span>	</span><span style="color:#8e908c;">// 模拟2秒后得到请求内容
+</span><span>	</span><span style="color:#8e908c;">// 只触发1次
+</span><span>	</span><span style="color:#8e908c;">// 尽管subscribeNext什么也没做，但如果没有的话map是不会执行的
+</span><span>	</span><span style="color:#8e908c;">// subscribeNext就是定义了一个接收体
+</span><span>    [[[[RACSignal </span><span style="color:#4271ae;">interval:</span><span style="color:#f07219;">2</span><span>] take</span><span style="color:#3e999f;">:</span><span style="color:#f07219;">1</span><span>] map</span><span style="color:#3e999f;">:^</span><span style="color:#8959a8;">id</span><span>(</span><span style="color:#8959a8;">id </span><span>_){
+</span><span>        </span><span style="color:#8e908c;">// the value is from url request
+</span><span>        </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>value </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">@&quot;content fetched from web&quot;</span><span>;
+</span><span>        [subject </span><span style="color:#4271ae;">sendNext:value</span><span>];
+</span><span>        </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">nil</span><span>;
+</span><span>    }] subscribeNext</span><span style="color:#3e999f;">:^</span><span>(</span><span style="color:#8959a8;">id </span><span>_){}];
+</span><span>    </span><span style="color:#8959a8;">return</span><span> subject;
+</span><span>}
+</span></code></pre>
+<h2 id="xiao-jie">小结</h2>
+<p>简单画了下关系图，罗列了些要点</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_ReactiveCocoa_large.png"
+    srcset="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_ReactiveCocoa_large.png 816w,&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_ReactiveCocoa_large.png 816w"
+    sizes="(max-width: 816px) 100vw, 816px" width="816" /></p>
+<p>上面只是大概说了一下 RAC 的使用情景和用法，更多的例子可以到<a href="https://github.com/ReactiveCocoa/ReactiveCocoa">项目主页</a>中查看。</p>
+<h3 id="can-kao">参考</h3>
+<ul>
+<li><a href="http://www.teehanlax.com/blog/getting-started-with-reactivecocoa/">http://www.teehanlax.com/blog/getting-started-with-reactivecocoa/</a></li>
+<li><a href="https://speakerdeck.com/andrewsardone/reactivecocoa-at-mobidevday-2013">https://speakerdeck.com/andrewsardone/reactivecocoa-at-mobidevday-2013</a></li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/rac/">RAC</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+类簇在iOS开发中的应用
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/class-cluster/">
+
+<meta name="twitter:title" content="类簇在iOS开发中的应用">
+<meta property="og:title" content="类簇在iOS开发中的应用">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;class-cluster&#x2F;">类簇在iOS开发中的应用</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2014-01-04</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>类簇(class cluster)是一种设计模式，在 Foundation Framework 中被广泛使用，举个简单的例子</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#c99e00;">NSArray </span><span style="color:#3e999f;">*</span><span>arr </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#c99e00;">NSArray </span><span style="color:#4271ae;">arrayWithObjects:</span><span style="color:#839c00;">@&quot;foo&quot;</span><span style="color:#4271ae;">,</span><span style="color:#839c00;">@&quot;bar&quot;</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">nil</span><span>];
+</span><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#839c00;">@&quot;arr class:</span><span>%@</span><span style="color:#839c00;">&quot;</span><span>, [arr </span><span style="color:#4271ae;">class</span><span>]);
+</span><span style="color:#8e908c;">// output: __NSArrayI
+</span></code></pre>
+<p>显然<code>__NSArrayI</code>是一个私有类，来看看这个类的头文件</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@interface </span><span>__NSArrayI : </span><span style="color:#839c00;">NSArray </span><span>{
+</span><span>    </span><span style="color:#8959a8;">unsigned int</span><span> _used;
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">//...
+</span></code></pre>
+<p>可以看出<code>__NSArrayI</code>继承了<code>NSArray</code>。为什么要这么设计呢？拿 NSNumber 来举个例子，我们都知道 NSNumber 可以存储多种类型的数字，如 Int/Float/Double 等等，一种方式是把 NSNumber 作为基类，然后分别去实现各自的子类，像这样：</p>
+<p><img src="https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Art/cluster1.gif" alt="" /></p>
+<p>初看起来也没什么问题，但如果子类很多，像这样：</p>
+<p><img src="https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Art/cluster2.gif" alt="" /></p>
+<p>这对使用者来说显然不够方便，得记住这么多类。如果使用类簇，问题就变得简单了，把 Number 作为抽象基类，子类各自实现存取方式，然后在基类中定义多个初始化方式，像这样：</p>
+<p><img src="https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/Art/cluster3.gif" alt="" /></p>
+<p>现在只需要记住一个类就可以了。<code>NSNumber</code>的初始化伪代码大概像这样：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">id</span><span>)initWithBool
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">return </span><span>[[__NSCFBoolean </span><span style="color:#4271ae;">alloc</span><span>]init];
+</span><span>}
+</span><span>
+</span><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">id</span><span>)initWithLong
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">return </span><span>[[__NSCFNumber </span><span style="color:#4271ae;">alloc</span><span>]init];
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">//...
+</span></code></pre>
+<h3 id="zai-ios-xiang-mu-zhong-de-ying-yong">在 iOS 项目中的应用</h3>
+<p>在开发 app 时经常会遇到表现和行为完全一样，但数据源不一样的情况。以花瓣 app 为例，同样是瀑布流，可能来自我喜欢的图片、某个画板下的图片、某个用户的图片等等。如果为每一种表现方式都新建一个 Controller，并且使用这个 Controller 来初始化，那么就会遇到最开始提到的问题：子类太多，使用不便。这正好可以通过类簇来很方便地搞定。比如这样：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@implementation </span><span>HBWaterfallViewController
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">initWithLiked
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">return </span><span>[[HBLikedViewController </span><span style="color:#4271ae;">alloc</span><span>]init];
+</span><span>}
+</span><span>
+</span><span>- (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">initWithBoardID:</span><span>(</span><span style="color:#c99e00;">NSInteger</span><span>)</span><span style="color:#f07219;">boardID
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">return </span><span>[[HBBoardViewController </span><span style="color:#4271ae;">alloc</span><span>]initWithBoardID</span><span style="color:#3e999f;">:</span><span>boardID];
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">#pragma mark </span><span>- 通用的方法
+</span><span>
+</span><span>- (PSUICollectionViewCell </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#4271ae;">collectionView:</span><span>(PSUICollectionView </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">collectionView
+</span><span>                    </span><span style="color:#4271ae;">cellForItemAtIndexPath:</span><span>(</span><span style="color:#c99e00;">NSIndexPath </span><span style="color:#3e999f;">*</span><span>)</span><span style="color:#f07219;">indexPath
+</span><span>{
+</span><span>	</span><span style="color:#8e908c;">// ...
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// ...
+</span><span>
+</span><span style="color:#8959a8;">#pragma mark </span><span>- 每个子类需要实现的方法
+</span><span>
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">fetchMoreData
+</span><span>{
+</span><span>    NSAssert(</span><span style="color:#f07219;">NO</span><span>, </span><span style="color:#839c00;">@&quot;子类需要实现此方法&quot;</span><span>);
+</span><span>}
+</span></code></pre>
+<p>使用起来类似这样<code>[[HBWaterfallViewController alloc]initWithBoardID:9527]</code> 或 <code>[[HBWaterfallViewController alloc]initWithLiked]</code>。如果有新的 DataSource，新加一个初始化方法即可，对于使用者来说，打开头文件，看下 init 开头的方法就行了。</p>
+<p>再举个例子，现在很多应用需要同时兼顾 iOS6 和 iOS7，在表现上需要为不同的系统加载不同的图片资源，最简单粗暴的方法就是各种 if/else 判断，像这样：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">if </span><span>([[UIDevice </span><span style="color:#4271ae;">currentDevice</span><span>]systemMajorVersion] </span><span style="color:#3e999f;">&lt; </span><span style="color:#f07219;">7</span><span>)
+</span><span>{
+</span><span>    </span><span style="color:#8e908c;">/* iOS 6 and previous versions */
+</span><span>}
+</span><span style="color:#8959a8;">else
+</span><span>{
+</span><span>    </span><span style="color:#8e908c;">/* iOS 7 and above */
+</span><span>}
+</span></code></pre>
+<p>不够优雅，可以使用类簇的思想来去掉 if/else 判断，把跟视图具体元素无关的代码放在基类，跟系统版本相关的代码拆成两个子类，然后在各自的类中加载相应的资源。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">/* TestView.h */
+</span><span style="color:#8959a8;">@interface </span><span>TestView: </span><span style="color:#839c00;">UIView
+</span><span>
+</span><span style="color:#8e908c;">/* Common method */
+</span><span>- ( </span><span style="color:#8959a8;">void </span><span>)</span><span style="color:#4271ae;">test</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span style="color:#8e908c;">/* TestView.m */
+</span><span style="color:#8959a8;">@implementation </span><span>TestView
+</span><span>
+</span><span>+ (</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#4271ae;">alloc
+</span><span>{
+</span><span>    </span><span style="color:#8959a8;">if </span><span>([</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">class</span><span>]</span><span style="color:#3e999f;">== </span><span>[TestView </span><span style="color:#4271ae;">class</span><span>])
+</span><span>    {
+</span><span>        </span><span style="color:#8959a8;">if </span><span>([[UIDevice </span><span style="color:#4271ae;">currentDevice</span><span>] systemMajorVersion] </span><span style="color:#3e999f;">&lt; </span><span style="color:#f07219;">7</span><span>)
+</span><span>        {
+</span><span>            </span><span style="color:#8959a8;">return </span><span>[TestViewIOS6 </span><span style="color:#4271ae;">alloc</span><span>];
+</span><span>        }
+</span><span>        </span><span style="color:#8959a8;">else
+</span><span>        {
+</span><span>            </span><span style="color:#8959a8;">return </span><span>[TestViewIOS7 </span><span style="color:#4271ae;">alloc</span><span>];
+</span><span>        }
+</span><span>    }
+</span><span>    </span><span style="color:#8959a8;">else
+</span><span>    {
+</span><span>        </span><span style="color:#8959a8;">return </span><span>[</span><span style="color:#c82728;">super </span><span style="color:#4271ae;">alloc</span><span>];
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span>- ( </span><span style="color:#8959a8;">void </span><span>)</span><span style="color:#4271ae;">test
+</span><span>{}
+</span><span>
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<p>这里<code>alloc</code>时并没有返回<code>TestView</code>类，而是根据系统版本返回<code>TestViewIOS6</code> 或 <code>TestViewIOS7</code>。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">/* TestViewIOS6.m */
+</span><span style="color:#8959a8;">@implementation </span><span>TestViewIOS6: </span><span style="color:#839c00;">TestView
+</span><span>
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">drawRect: </span><span>(</span><span style="color:#c99e00;">CGRect</span><span>)</span><span style="color:#f07219;">rect
+</span><span>{
+</span><span>    </span><span style="color:#8e908c;">/* Custom iOS6 drawing code */
+</span><span>}
+</span><span>
+</span><span>
+</span><span style="color:#8e908c;">/* TestViewIOS7.m */
+</span><span>@implementation TestViewIOS7
+</span><span>
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">drawRect: </span><span>(</span><span style="color:#c99e00;">CGRect</span><span>)</span><span style="color:#f07219;">rect
+</span><span>{
+</span><span>    </span><span style="color:#8e908c;">/* Custom iOS7 drawing code */
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<h3 id="xiao-jie">小结</h3>
+<p>类簇的本质其实是<a href="http://zh.wikipedia.org/wiki/%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82">抽象工厂</a>，类簇也可以有多个基类，如<code>NSArray</code>, <code>NSMutableArray</code>, 后者就是继承的前者。它对一些「大同小异」的问题，往往会有不错的效果。</p>
+<h3 id="can-kao">参考</h3>
+<ul>
+<li><a href="https://developer.apple.com/library/mac/documentation/general/conceptual/devpedia-cocoacore/ClassCluster.html">Cocoa Core Competencies</a></li>
+<li><a href="http://www.noxeos.com/2013/06/18/strategies-support-ios7-ui/">Strategies to support iOS7 UI</a></li>
+<li><a href="https://developer.apple.com/library/ios/documentation/general/conceptual/CocoaEncyclopedia/ClassClusters/ClassClusters.html">Class Cluster Concepts in Objective-C</a></li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

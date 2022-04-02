@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+发布一款PHP模块系统——Witty
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/witty/">
+
+<meta name="twitter:title" content="发布一款PHP模块系统——Witty">
+<meta property="og:title" content="发布一款PHP模块系统——Witty">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;witty&#x2F;">发布一款PHP模块系统——Witty</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-01-17</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>关于<a href="http://witty.leezhong.com">Witty</a>，有太多想说的了。</p>
+<p>先来说说名字。本来一直想往 KISS 上靠，但是 KISSPHP 已经有了，Kissy 也被淘宝前端团队用了，绞尽脑汁也想不出优雅的跟 KISS 相关的名字，于是先作罢。后来在看书时，无意中看到了&quot;Witty&quot;，看着，念着都很舒服，意思也挺靠谱(风趣的；巧妙的；机智的)，就决定用她了。</p>
+<p>再来说说开发 Witty 的初衷。这个是受 python 启发，python 可以把自己开发的类库上传到<a href="http://pypi.python.org/pypi">pypi</a>，这样就可以通过 easy_install 或 pip 安装了，甚是方便。而且这些库都可以独立使用(即使有依赖关系，easy_install/pip 也会自动处理)。本来这件事应该是 pear 来做的，但 pear 的开发规范太复杂，安装也比较麻烦，略显重量级。很多框架其实自带了很多好用的类库，但一般都需要依赖框架本身。Zend Framework 可以把类库单独拿出来，但也有不少问题，比如配置不统一、没有统一的初始化方法、每个模块没有放到单独的文件夹里、没有命令行安装功能等等。于是创建 Witty 的想法就这么诞生了。</p>
+<p>Witty 官网架在 GAE 上，这也是我第一次使用 GAE，python+gae 的组合开发一些小项目真是太方便了。</p>
+<h3 id="shi-yao-shi-witty">什么是 Witty</h3>
+<p>Witty 想做的事很简单：方便模块开发，方便上传，方便安装，方便使用。</p>
+<p>Witty 提供了一些简单的模块开发标准，程序员可以按照这些标准写自己的模块，然后上传到网站，这样其他用户就可以通过简单的命令下载，使用该模块了。</p>
+<h3 id="witty-de-an-zhuang-he-shi-yong">Witty 的安装和使用</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span># install
+</span><span>wget http://witty.leezhong.com/static/witty
+</span><span>chmod +x witty
+</span><span>./witty install
+</span><span>
+</span><span># install module
+</span><span>./witty install http
+</span><span>
+</span><span># usage
+</span><span>require_once &#39;/path/to/witty.php&#39;;
+</span><span>Witty::init();
+</span><span>
+</span><span>$http = Witty::instance(&#39;Http&#39;);
+</span><span>$http-&gt;execute(&#39;http://www.douban.com&#39;);
+</span></code></pre>
+<p>Witty 类提供了两个初始化方法 instance 和 factory，所以模块不需要自己实现单例和工厂。</p>
+<p>如果模块有一些配置参数，可以在 instance 或 factory 时传入，如</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#c82728;">$config </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array</span><span>(
+</span><span>	</span><span style="color:#839c00;">&#39;redirect&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">false</span><span>,
+</span><span>);
+</span><span style="color:#c82728;">$http </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">Witty</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">instance</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;Http&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$config</span><span style="color:#4271ae;">)</span><span>;
+</span></code></pre>
+<p>只要 Http 类继承了 Config 类就行了。</p>
+<p>也可以指定文件夹，让 Witty 自己去找 config 文件，然后传入参数。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">require_once </span><span style="color:#839c00;">&#39;/path/to/witty.php&#39;</span><span>;
+</span><span style="color:#c99e00;">Witty</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">init</span><span style="color:#4271ae;">()</span><span>;
+</span><span style="color:#c99e00;">Witty</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">set_config_dir</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;/path/to/config&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">// /path/to/config/http.PHP
+</span><span style="color:#8e908c;">// &lt;?php
+</span><span style="color:#8e908c;">//
+</span><span style="color:#8e908c;">// return array(
+</span><span style="color:#8e908c;">// 	&#39;Http&#39; =&gt; array( //Http为类名
+</span><span style="color:#8e908c;">// 		&#39;redirect&#39; =&gt; false,
+</span><span style="color:#8e908c;">// 	),
+</span><span style="color:#8e908c;">// );
+</span><span>
+</span><span style="color:#8e908c;">// 虽然没有传参数，但因为设置了config文件夹，Witty会先找到config/http.php
+</span><span style="color:#8e908c;">// 然后找到Http key，传入该key对应的value
+</span><span style="color:#c82728;">$http </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">Witty</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">instance</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;Http&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span></code></pre>
+<p>更多详情，请浏览<a href="http://witty.leezhong.com/doc">Witty 官网</a></p>
+<p>PS: E 文水平有限，欢迎指出有语病的语句，如果太多的话，可以 Email(healdream#gmail.com)我。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/project/">project</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+iOS项目的目录结构和开发流程
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/build-ios-application/">
+
+<meta name="twitter:title" content="iOS项目的目录结构和开发流程">
+<meta property="og:title" content="iOS项目的目录结构和开发流程">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;build-ios-application&#x2F;">iOS项目的目录结构和开发流程</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2013-09-23</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>网上相关的资源不多，开源的且质量还不错的 iOS 项目也是少之又少，最近正好跟同事合作了一个 iOS 项目，来说说自己的一些想法。</p>
+<h2 id="mu-lu-jie-gou">目录结构</h2>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>AppDelegate
+</span><span>Models
+</span><span>Macro
+</span><span>General
+</span><span>Helpers
+</span><span>Vendors
+</span><span>Sections
+</span><span>Resources
+</span></code></pre>
+<p>一个合理的目录结构首先应该是清晰的，让人一眼看上去就能大概了解目录的职责，且容易应对新的变化。</p>
+<h3 id="appdelegate">AppDelegate</h3>
+<p>这个目录下放的是 AppDelegate.h(.m)文件，是整个应用的入口文件，所以单独拿出来。</p>
+<h3 id="models">Models</h3>
+<p>这个目录下放一些与数据相关的 Model 文件，里面大概是这样：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>Models
+</span><span>	|- BaseModel.h
+</span><span>	|- BaseModel.m
+</span><span>	|- CollectionModel.h
+</span><span>	|- CollectionModel.m
+</span><span>	...
+</span></code></pre>
+<h3 id="macro">Macro</h3>
+<p>这个目录下放了整个应用会用到的宏定义，里面大概是这样：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>Macro
+</span><span>	|- AppMacro.h
+</span><span>	|- NotificationMacro.h
+</span><span>	|- VendorMacro.h
+</span><span>	|- UtilsMacro.h
+</span><span>	...
+</span></code></pre>
+<h4 id="appmacro-h-li-fang-app-xiang-guan-de-hong-ding-yi-ru">AppMacro.h 里放 app 相关的宏定义，如:</h4>
+<pre data-lang="c" style="background-color:#f9f9f9;color:#111111;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#8e908c;">// 表情相关
+</span><span style="color:#8959a8;">#define </span><span>EMOTION_CACHE_PATH @</span><span style="color:#839c00;">&quot;cachedemotions&quot;
+</span><span style="color:#8959a8;">#define </span><span>EMOTION_RECENT_USED @</span><span style="color:#839c00;">&quot;recentusedemotions&quot;
+</span><span style="color:#8959a8;">#define </span><span>EMOTION_CATEGORIES @</span><span style="color:#839c00;">&quot;categoryemotions&quot;
+</span><span style="color:#8959a8;">#define </span><span>EMOTION_TOPICS @</span><span style="color:#839c00;">&quot;emotiontopics&quot;
+</span><span>
+</span><span style="color:#8e908c;">// 收藏相关
+</span><span style="color:#8959a8;">#define </span><span>COLLECT_CACHE_PATH @</span><span style="color:#839c00;">&quot;collected&quot;
+</span><span>
+</span><span style="color:#8e908c;">// 配图相关
+</span><span style="color:#8959a8;">#define </span><span>WATERFALL_ITEM_HEIGHT_MAX </span><span style="color:#f07219;">300
+</span><span style="color:#8959a8;">#define </span><span>WATERFALL_ITEM_WIDTH </span><span style="color:#f07219;">146
+</span></code></pre>
+<h4 id="notificationmacro-h-li-fang-de-shi-tong-zhi-xiang-guan-de-hong-ding-yi">NotificationMacro.h 里放的是通知相关的宏定义。</h4>
+<h4 id="utilsmacro-h-li-fang-de-shi-yi-xie-fang-bian-shi-yong-de-hong-ding-yi-ru">UtilsMacro.h 里放的是一些方便使用的宏定义，如：</h4>
+<pre data-lang="c" style="background-color:#f9f9f9;color:#111111;" class="language-c "><code class="language-c" data-lang="c"><span style="color:#8959a8;">#define </span><span style="color:#4271ae;">UIColorFromRGB</span><span>(</span><span style="color:#f07219;">r</span><span>,</span><span style="color:#f07219;">g</span><span>,</span><span style="color:#f07219;">b</span><span>) [UIColor \
+</span><span>colorWithRed</span><span style="color:#3e999f;">:</span><span>r</span><span style="color:#3e999f;">/</span><span style="color:#f07219;">255.0</span><span> \
+</span><span>green</span><span style="color:#3e999f;">:</span><span>g</span><span style="color:#3e999f;">/</span><span style="color:#f07219;">255.0</span><span> \
+</span><span>blue</span><span style="color:#3e999f;">:</span><span>b</span><span style="color:#3e999f;">/</span><span style="color:#f07219;">255.0</span><span> alpha</span><span style="color:#3e999f;">:</span><span style="color:#f07219;">1</span><span>]
+</span><span>
+</span><span style="color:#8959a8;">#define </span><span style="color:#4271ae;">NSStringFromInt</span><span>(</span><span style="color:#f07219;">intValue</span><span>) [NSString stringWithFormat</span><span style="color:#3e999f;">:</span><span>@</span><span style="color:#839c00;">&quot;</span><span>%d</span><span style="color:#839c00;">&quot;</span><span>,intValue]
+</span><span>{{</span><span style="color:#3e999f;">&lt; /</span><span> highlight </span><span style="color:#3e999f;">&gt;</span><span>}}
+</span><span>
+</span><span>#### VendorMacro.</span><span style="color:#c82728;">h</span><span> 里放一些第三方常量，如：
+</span><span>
+</span><span>{{</span><span style="color:#3e999f;">&lt;</span><span> highlight objc </span><span style="color:#3e999f;">&gt;</span><span>}}
+</span><span style="color:#8959a8;">#define </span><span>UMENG_KEY @</span><span style="color:#839c00;">&quot;xxxxx&quot;
+</span><span style="color:#8959a8;">#define </span><span>UMENG_CHANNEL_ID @</span><span style="color:#839c00;">&quot;xxx&quot;
+</span></code></pre>
+<p>如果有新的类型的宏定义，可以再新建一个相关的 Macro.h。</p>
+<h3 id="general">General</h3>
+<p>这个目录放会被重用的 Views/Classes 和 Categories。里面大概是这样：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>General
+</span><span>	|- Views
+</span><span>		|- TPKScollView
+</span><span>		|- TPKPullToRefresh
+</span><span>		...
+</span><span>	|- Classes
+</span><span>		|- TPKBaseViewController
+</span><span>		|- TPKHorizontalView
+</span><span>		...
+</span><span>	| - Categories
+</span><span>		|- UIViewController+Sizzle
+</span><span>		|- UIImageView+Downloader
+</span><span>		...
+</span></code></pre>
+<p>这里的<code>TPK</code>是项目的首字母缩写。</p>
+<h3 id="helpers">Helpers</h3>
+<p>这个目录放一些助手类，文件名与功能挂钩。里面大概是这样：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>Helpers
+</span><span>	|- TPKShareHelper
+</span><span>	|- TPDBHelper
+</span><span>	|- TPKEmotionHelper
+</span><span>	...
+</span></code></pre>
+<p>助手类的主要作用是帮助 Controller 瘦身，也可以提供一定程度的复用。</p>
+<h3 id="vendors">Vendors</h3>
+<p>这个目录放第三方的类库/SDK，如 UMeng、WeiboSDK、WeixinSDK 等等。</p>
+<h3 id="sections">Sections</h3>
+<p>这个目录下面的文件对应的是 app 的具体单元，如导航、瀑布流等等。里面大概是这样：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>Sections
+</span><span>	|- Menu
+</span><span>	|- Setting
+</span><span>	|- Collection
+</span><span>	...
+</span></code></pre>
+<h3 id="resources">Resources</h3>
+<p>这个目录下放的是 app 会用到的一些资源，主要是图片。</p>
+<h2 id="cocoapods">Cocoapods</h2>
+<p>业务无关的类库可以通过 Cocoapods 来方便地管理，如<code>SDWebImage</code>, <code>Reachability</code>等等。还有一些是多个应用都会用到的基础模块，比如 HBAPI、HBSNS 、HBFoundation（HB 为公司名首字母）等等，可以建一个私有的 git repo，然后加到 podfile 中，这样如果 HBAPI 有更新，只需要<code>pod update</code>一下就行了。</p>
+<p>顺便说一下<code>HBFoundation</code>，这个 git 仓库中可以放一些自己写的所有应用基本上都会用到的小模块。如很多 app 都会有隔一段时间跳出一个求好评的 alertView，就可以写一个<code>HBRating</code>类，这样需要使用该功能的 app 只需加上一句：<code>[HBRating checkIfShouldPopupWithAppID:(NSInteger)appID]</code>就行了。又比如 app 都有接受 push notification 的需求，可以写一个<code>HBAPNS</code>类，等等。</p>
+<h2 id="kai-fa-liu-cheng">开发流程</h2>
+<p>在拿到设计图后，就可以针对设计图抽离出可复用的 Classes/Views/Helpers，考虑一下某个效果的具体实现，使用合适的设计模式来避免大量的 if/else 嵌套，等等。不要一下子就钻到 Sections 中去实现页面效果和功能，初看起来可能会快一点，但只要有点复杂度的项目，这种做法到后来只会吃尽苦头，代码会变的越来越难维护。所以前期一定要做好充足的准备工作。</p>
+<p>经验有限，如果你有更好的想法，欢迎交流：）</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

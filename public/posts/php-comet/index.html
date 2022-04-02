@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+php实现实时通信
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/php-comet/">
+
+<meta name="twitter:title" content="php实现实时通信">
+<meta property="og:title" content="php实现实时通信">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;php-comet&#x2F;">php实现实时通信</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-03-21</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>如果英文 ok 的话，可以直接看<a href="http://gonzalo123.wordpress.com/2011/03/14/real-time-notifications-with-php/">这篇文章</a></p>
+<p>实现实时通信一般有两种方式:
+socket 或 comet。socket 是比较好的解决方案，问题在于不是所有的浏览器都兼容，服务器端实现起来也稍微有点麻烦。相比之下，comet(基于 HTTP 长连接的&quot;服务器推&quot;)实现起来更加方便，而且兼容所有的浏览器。所以这次就来说说 comet 的 php 实现。</p>
+<p>comet 也有好几种实现方式，如 iframe, http long request，二者的区别可以参考<a href="http://www.ibm.com/developerworks/cn/web/wa-lo-comet/">这篇文章</a>。本文主要探讨 http long request 实现实时通信。</p>
+<p>先说说 http 长链接是怎么回事，通俗点讲就是服务器不是一收到请求就直接吐数据，而是在那憋啊憋，一直憋到憋不住了，才告诉你执行结果。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span>
+</span><span style="color:#c82728;">$count </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">10</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">for</span><span>(</span><span style="color:#c82728;">$i</span><span style="color:#3e999f;">=</span><span style="color:#f07219;">0</span><span>; </span><span style="color:#c82728;">$i</span><span style="color:#3e999f;">&lt;</span><span style="color:#c82728;">$count</span><span>; </span><span style="color:#c82728;">$i</span><span style="color:#3e999f;">++</span><span>)
+</span><span>{
+</span><span>	</span><span style="color:#8e908c;">// do something ...
+</span><span>	</span><span style="color:#4271ae;">sleep(</span><span style="color:#f07219;">2</span><span style="color:#4271ae;">)</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&#39;憋死我了&#39;</span><span>;
+</span></code></pre>
+<p>至于憋多长时间，就看具体应用了，如果憋太久的话，服务器资源的占用也会是个问题。</p>
+<p>现在我们就要通过这种方法来实现实时通信(其实是准实时)，先说一下原理：</p>
+<ol>
+<li>客户端发起一个 ajax 长链接查询，然后服务端就开始执行代码，主要是检查某个文件是否被更新，如果没有，睡一会(sleep)，醒来接着检查</li>
+<li>如果客户端又发起了一个查询链接(正常请求)，服务端收到后，处理请求，处理完毕后更新某个特定文件的 modify time</li>
+<li>这时第一次 ajax 查询的后台代码还在执行，发现某个文件被更新，说明来了新请求，输出对应的结果</li>
+<li>第一次 ajax 查询的 callback 被触发，更新页面，然后再发起一个新的 ajax 长链接</li>
+</ol>
+<h3 id="shi-zhan">实战</h3>
+<h4 id="ke-hu-duan">客户端</h4>
+<pre data-lang="html" style="background-color:#f9f9f9;color:#111111;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">html</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">meta http-equiv</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;Content-Type&quot; </span><span style="color:#c82728;">content</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;text/html; charset=utf-8&quot; </span><span style="color:#5d9be5;">/&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">title</span><span style="color:#5d9be5;">&gt;</span><span>Comet Test</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">title</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">body</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">p</span><span style="color:#5d9be5;">&gt;&lt;</span><span style="color:#c82728;">a class=</span><span style="color:#839c00;">&quot;customAlert&quot; </span><span style="color:#c82728;">href=</span><span style="color:#839c00;">&quot;#&quot;</span><span style="color:#5d9be5;">&gt;</span><span>publish customAlert</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">a</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">p</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">p</span><span style="color:#5d9be5;">&gt;&lt;</span><span style="color:#c82728;">a class=</span><span style="color:#839c00;">&quot;customAlert2&quot; </span><span style="color:#c82728;">href=</span><span style="color:#839c00;">&quot;#&quot;</span><span style="color:#5d9be5;">&gt;</span><span>publish customAlert2</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">a</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">p</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script
+</span><span style="color:#c82728;">      src=</span><span style="color:#839c00;">&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js&quot;
+</span><span style="color:#c82728;">      type=</span><span style="color:#839c00;">&quot;text/javascript&quot;
+</span><span style="color:#c82728;">    </span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script src=</span><span style="color:#839c00;">&quot;NovComet.js&quot; </span><span style="color:#c82728;">type=</span><span style="color:#839c00;">&quot;text/javascript&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script type=</span><span style="color:#839c00;">&quot;text/javascript&quot;</span><span style="color:#5d9be5;">&gt;
+</span><span>      </span><span style="color:#c99e00;">NovComet</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">subscribe</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;customAlert&#39;</span><span style="color:#4271ae;">, </span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">(</span><span style="color:#f07219;">data</span><span style="color:#4271ae;">) {
+</span><span style="color:#4271ae;">        </span><span style="color:#c99e00;">console</span><span style="color:#4271ae;">.log(</span><span style="color:#839c00;">&#39;customAlert&#39;</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">        </span><span style="color:#8e908c;">//console.log(data);
+</span><span style="color:#4271ae;">      })</span><span>.</span><span style="color:#c82728;">subscribe</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;customAlert2&#39;</span><span style="color:#4271ae;">, </span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">(</span><span style="color:#f07219;">data</span><span style="color:#4271ae;">) {
+</span><span style="color:#4271ae;">        </span><span style="color:#c99e00;">console</span><span style="color:#4271ae;">.log(</span><span style="color:#839c00;">&#39;customAlert2&#39;</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">        </span><span style="color:#8e908c;">//console.log(data);
+</span><span style="color:#4271ae;">      })</span><span>;
+</span><span>
+</span><span>      </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">document</span><span style="color:#4271ae;">)</span><span>.</span><span style="color:#c82728;">ready</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">() {
+</span><span style="color:#4271ae;">        </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;a.customAlert&#39;</span><span style="color:#4271ae;">).</span><span style="color:#c82728;">click</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">(</span><span style="color:#f07219;">event</span><span style="color:#4271ae;">) {
+</span><span style="color:#4271ae;">          </span><span style="color:#c99e00;">NovComet</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">publish</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;customAlert&#39;</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">        });
+</span><span style="color:#4271ae;">
+</span><span style="color:#4271ae;">        </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;a.customAlert2&#39;</span><span style="color:#4271ae;">).</span><span style="color:#c82728;">click</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">(</span><span style="color:#f07219;">event</span><span style="color:#4271ae;">) {
+</span><span style="color:#4271ae;">          </span><span style="color:#c99e00;">NovComet</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">publish</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;customAlert2&#39;</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">        });
+</span><span style="color:#4271ae;">        </span><span style="color:#c99e00;">NovComet</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">run</span><span style="color:#4271ae;">();
+</span><span style="color:#4271ae;">      })</span><span>;
+</span><span>    </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">body</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">html</span><span style="color:#5d9be5;">&gt;
+</span></code></pre>
+<p>这段代码说的是，有个 NovComet 的 Object，注册了 customAlert 和 customAlert2 事件，当页面载入完成时，对两个按钮又加了监听事件，当点击时 NovComet 会发布 customAlert 或 customAlert2 事件，然后 NovComet 执行了 run 方法。</p>
+<h4 id="novcomet">NovComet</h4>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8e908c;">//NovComet.js
+</span><span style="color:#c82728;">NovComet </span><span style="color:#3e999f;">= </span><span>{
+</span><span>  sleepTime: </span><span style="color:#f07219;">1000</span><span>,
+</span><span>  _subscribed: {},
+</span><span>  _timeout: </span><span style="color:#f07219;">undefined</span><span>,
+</span><span>  _baseurl: </span><span style="color:#839c00;">&#39;comet.php&#39;</span><span>,
+</span><span>  _args: </span><span style="color:#839c00;">&#39;&#39;</span><span>,
+</span><span>  _urlParam: </span><span style="color:#839c00;">&#39;subscribed&#39;</span><span>,
+</span><span>
+</span><span>  </span><span style="color:#4271ae;">subscribe</span><span>: </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">id</span><span>, </span><span style="color:#f07219;">callback</span><span>) {
+</span><span>    </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_subscribed</span><span>[</span><span style="color:#c82728;">id</span><span>] </span><span style="color:#3e999f;">= </span><span>{
+</span><span>      cbk: </span><span style="color:#c82728;">callback</span><span>,
+</span><span>      timestamp: </span><span style="color:#c82728;">NovComet</span><span style="color:#4271ae;">._getCurrentTimestamp</span><span>(),
+</span><span>    };
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">NovComet</span><span>;
+</span><span>  },
+</span><span>
+</span><span>  </span><span style="color:#4271ae;">_refresh</span><span>: </span><span style="color:#8959a8;">function </span><span>() {
+</span><span>    </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_timeout </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">setTimeout</span><span>(</span><span style="color:#8959a8;">function </span><span>() {
+</span><span>      </span><span style="color:#c82728;">NovComet</span><span style="color:#4271ae;">.run</span><span>();
+</span><span>    }, </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">sleepTime</span><span>);
+</span><span>  },
+</span><span>
+</span><span>  </span><span style="color:#4271ae;">init</span><span>: </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">baseurl</span><span>) {
+</span><span>    </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">baseurl </span><span style="color:#3e999f;">!= </span><span style="color:#f07219;">undefined</span><span>) {
+</span><span>      </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_baseurl </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">baseurl</span><span>;
+</span><span>    }
+</span><span>  },
+</span><span>
+</span><span>  </span><span style="color:#4271ae;">_getCurrentTimestamp</span><span>: </span><span style="color:#8959a8;">function </span><span>() {
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#f07219;">Math</span><span style="color:#4271ae;">.round</span><span>(</span><span style="color:#3e999f;">new </span><span>Date()</span><span style="color:#4271ae;">.getTime</span><span>() </span><span style="color:#3e999f;">/ </span><span style="color:#f07219;">1000</span><span>);
+</span><span>  },
+</span><span>
+</span><span>  </span><span style="color:#4271ae;">run</span><span>: </span><span style="color:#8959a8;">function </span><span>() {
+</span><span>    </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">cometCheckUrl </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_baseurl </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;?&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_args</span><span>;
+</span><span>    </span><span style="color:#8959a8;">for </span><span>(</span><span style="color:#8959a8;">var </span><span style="color:#c82728;">id </span><span style="color:#3e999f;">in </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_subscribed</span><span>) {
+</span><span>      </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">currentTimestamp </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_subscribed</span><span>[</span><span style="color:#c82728;">id</span><span>][</span><span style="color:#839c00;">&#39;timestamp&#39;</span><span>];
+</span><span>
+</span><span>      </span><span style="color:#c82728;">cometCheckUrl </span><span style="color:#3e999f;">+=
+</span><span>        </span><span style="color:#839c00;">&#39;&amp;&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_urlParam </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;[&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">id </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;]=&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">currentTimestamp</span><span>;
+</span><span>    }
+</span><span>    </span><span style="color:#c82728;">cometCheckUrl </span><span style="color:#3e999f;">+= </span><span style="color:#839c00;">&#39;&amp;&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">NovComet</span><span style="color:#4271ae;">._getCurrentTimestamp</span><span>();
+</span><span>    </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">.getJSON</span><span>(</span><span style="color:#c82728;">cometCheckUrl</span><span>, </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">data</span><span>) {
+</span><span>      </span><span style="color:#8959a8;">switch </span><span>(</span><span style="color:#c82728;">data</span><span>.</span><span style="color:#c82728;">s</span><span>) {
+</span><span>        </span><span style="color:#8959a8;">case </span><span style="color:#f07219;">0</span><span>: </span><span style="color:#8e908c;">// sin cambios
+</span><span>          </span><span style="color:#c82728;">NovComet</span><span style="color:#4271ae;">._refresh</span><span>();
+</span><span>          </span><span style="color:#8959a8;">break</span><span>;
+</span><span>        </span><span style="color:#8959a8;">case </span><span style="color:#f07219;">1</span><span>: </span><span style="color:#8e908c;">// trigger
+</span><span>          </span><span style="color:#8959a8;">for </span><span>(</span><span style="color:#8959a8;">var </span><span style="color:#c82728;">id </span><span style="color:#3e999f;">in </span><span style="color:#c82728;">data</span><span>[</span><span style="color:#839c00;">&#39;k&#39;</span><span>]) {
+</span><span>            </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_subscribed</span><span>[</span><span style="color:#c82728;">id</span><span>][</span><span style="color:#839c00;">&#39;timestamp&#39;</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">data</span><span>[</span><span style="color:#839c00;">&#39;k&#39;</span><span>][</span><span style="color:#c82728;">id</span><span>];
+</span><span>            </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_subscribed</span><span>[</span><span style="color:#c82728;">id</span><span>]</span><span style="color:#4271ae;">.cbk</span><span>(</span><span style="color:#c82728;">data</span><span>.</span><span style="color:#c82728;">k</span><span>);
+</span><span>          }
+</span><span>          </span><span style="color:#c82728;">NovComet</span><span style="color:#4271ae;">._refresh</span><span>();
+</span><span>          </span><span style="color:#8959a8;">break</span><span>;
+</span><span>      }
+</span><span>    });
+</span><span>  },
+</span><span>
+</span><span>  </span><span style="color:#4271ae;">publish</span><span>: </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">id</span><span>) {
+</span><span>    </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">cometPublishUrl </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_baseurl </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;?&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">NovComet</span><span>.</span><span style="color:#c82728;">_args</span><span>;
+</span><span>    </span><span style="color:#c82728;">cometPublishUrl </span><span style="color:#3e999f;">+= </span><span style="color:#839c00;">&#39;&amp;publish=&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">id</span><span>;
+</span><span>    </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">.getJSON</span><span>(</span><span style="color:#c82728;">cometPublishUrl</span><span>);
+</span><span>  },
+</span><span>};
+</span></code></pre>
+<p>NovComet 的 run 方法首先把之前注册的几个事件串成一个 url，并且很狡猾地使用了&quot;[]&quot;，类似:
+?subscribed[customAlert]=1300016814&amp;subscribed[customAlert2]=1300016814&amp;1300016825，这样 php 收到后，就会得到$_GET[subscribed]数组，最后那个时间戳是为了避免请求被缓存。如果收到后台传过来的数据 data 的 s 值为 0，说明什么也没发生，隔 1 秒后继续执行；如果 data.s 的值为 1，说明 NovComet 的 publish 事件被触发，则调用对应的 callback。</p>
+<p>publish 方法执行后，会构造一个类似: ?publish=customAlert 这样一个 url 发送到后台。后台检测到 pubish 参数，则获取该参数的值，并更新对应文件的 mtime。</p>
+<h4 id="fu-wu-duan">服务端</h4>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">// comet.php
+</span><span style="color:#8959a8;">include</span><span>(</span><span style="color:#839c00;">&#39;NovComet.php&#39;</span><span>);
+</span><span>
+</span><span style="color:#c82728;">$comet </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">new </span><span style="color:#c99e00;">NovComet</span><span>();
+</span><span style="color:#c82728;">$publish </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">filter_input(</span><span style="color:#f07219;">INPUT_GET</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;publish&#39;</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">FILTER_SANITIZE_STRING</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">$publish </span><span style="color:#3e999f;">!= </span><span style="color:#839c00;">&#39;&#39;</span><span>) {
+</span><span>    </span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$comet</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">publish</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$publish</span><span style="color:#4271ae;">)</span><span>;
+</span><span>} </span><span style="color:#8959a8;">else </span><span>{
+</span><span>    </span><span style="color:#8959a8;">foreach </span><span>(</span><span style="color:#4271ae;">filter_var_array(</span><span style="color:#c82728;">$_GET</span><span style="color:#4271ae;">[</span><span style="color:#839c00;">&#39;subscribed&#39;</span><span style="color:#4271ae;">], </span><span style="color:#f07219;">FILTER_SANITIZE_NUMBER_INT</span><span style="color:#4271ae;">) </span><span style="color:#3e999f;">as </span><span style="color:#c82728;">$key </span><span style="color:#3e999f;">=&gt; </span><span style="color:#c82728;">$value</span><span>) {
+</span><span>        </span><span style="color:#c82728;">$comet</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">setVar</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$key</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$value</span><span style="color:#4271ae;">)</span><span>;
+</span><span>    }
+</span><span>    </span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$comet</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">run</span><span style="color:#4271ae;">()</span><span>;
+</span><span>}
+</span></code></pre>
+<p>如果收到 publish 参数，直接输出，否则执行 run 方法，至于 run 是怎么回事，且看下码。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">// NovComet.php
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">NovComet </span><span>{
+</span><span>    </span><span style="color:#8959a8;">const </span><span>COMET_OK </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span>    </span><span style="color:#8959a8;">const </span><span>COMET_CHANGED </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">1</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">private </span><span style="color:#c82728;">$_tries</span><span>;
+</span><span>    </span><span style="color:#8959a8;">private </span><span style="color:#c82728;">$_var</span><span>;
+</span><span>    </span><span style="color:#8959a8;">private </span><span style="color:#c82728;">$_sleep</span><span>;
+</span><span>    </span><span style="color:#8959a8;">private </span><span style="color:#c82728;">$_ids </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array</span><span>();
+</span><span>    </span><span style="color:#8959a8;">private </span><span style="color:#c82728;">$_callback </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">null</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">public function  </span><span style="color:#4271ae;">__construct</span><span>(</span><span style="color:#f07219;">$tries </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">20</span><span>, </span><span style="color:#f07219;">$sleep </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">2</span><span>)
+</span><span>    {
+</span><span>        </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_tries </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$tries</span><span>;
+</span><span>        </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_sleep </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$sleep</span><span>;
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">setVar</span><span>(</span><span style="color:#f07219;">$key</span><span>, </span><span style="color:#f07219;">$value</span><span>)
+</span><span>    {
+</span><span>        </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_vars</span><span>[</span><span style="color:#c82728;">$key</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$value</span><span>;
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">setTries</span><span>(</span><span style="color:#f07219;">$tries</span><span>)
+</span><span>    {
+</span><span>        </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_tries </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$tries</span><span>;
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">setSleepTime</span><span>(</span><span style="color:#f07219;">$sleep</span><span>)
+</span><span>    {
+</span><span>        </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_sleep </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$sleep</span><span>;
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">setCallbackCheck</span><span>(</span><span style="color:#f07219;">$callback</span><span>)
+</span><span>    {
+</span><span>        </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_callback </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$callback</span><span>;
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">const </span><span>DEFAULT_COMET_PATH </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&quot;/dev/shm/%s.comet&quot;</span><span>;
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">run</span><span>() {
+</span><span>        </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#4271ae;">is_null(</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">_callback</span><span style="color:#4271ae;">)</span><span>) {
+</span><span>            </span><span style="color:#c82728;">$defaultCometPAth </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">self</span><span>::DEFAULT_COMET_PATH;
+</span><span>            </span><span style="color:#c82728;">$callback </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">function</span><span>(</span><span style="color:#f07219;">$id</span><span>) </span><span style="color:#8959a8;">use </span><span>(</span><span style="color:#f07219;">$defaultCometPAth</span><span>) {
+</span><span>                </span><span style="color:#c82728;">$cometFile </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">sprintf(</span><span style="color:#c82728;">$defaultCometPAth</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$id</span><span style="color:#4271ae;">)</span><span>;
+</span><span>                </span><span style="color:#8959a8;">return </span><span>(</span><span style="color:#4271ae;">is_file(</span><span style="color:#c82728;">$cometFile</span><span style="color:#4271ae;">)</span><span>) ? </span><span style="color:#4271ae;">filemtime(</span><span style="color:#c82728;">$cometFile</span><span style="color:#4271ae;">)</span><span> : </span><span style="color:#f07219;">0</span><span>;
+</span><span>            };
+</span><span>        } </span><span style="color:#8959a8;">else </span><span>{
+</span><span>            </span><span style="color:#c82728;">$callback </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_callback</span><span>;
+</span><span>        }
+</span><span>
+</span><span>        </span><span style="color:#8959a8;">for </span><span>(</span><span style="color:#c82728;">$i </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>; </span><span style="color:#c82728;">$i </span><span style="color:#3e999f;">&lt; </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_tries</span><span>; </span><span style="color:#c82728;">$i</span><span style="color:#3e999f;">++</span><span>) {
+</span><span>            </span><span style="color:#8959a8;">foreach </span><span>(</span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_vars </span><span style="color:#3e999f;">as </span><span style="color:#c82728;">$id </span><span style="color:#3e999f;">=&gt; </span><span style="color:#c82728;">$timestamp</span><span>) {
+</span><span>                </span><span style="color:#8959a8;">if </span><span>((</span><span style="color:#8959a8;">integer</span><span>) </span><span style="color:#c82728;">$timestamp </span><span style="color:#3e999f;">== </span><span style="color:#f07219;">0</span><span>) {
+</span><span>                    </span><span style="color:#c82728;">$timestamp </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">time()</span><span>;
+</span><span>                }
+</span><span>                </span><span style="color:#c82728;">$fileTimestamp </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">$</span><span style="color:#c82728;">callback</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$id</span><span style="color:#4271ae;">)</span><span>;
+</span><span>                </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">$fileTimestamp </span><span style="color:#3e999f;">&gt; </span><span style="color:#c82728;">$timestamp</span><span>) {
+</span><span>                    </span><span style="color:#c82728;">$out</span><span>[</span><span style="color:#c82728;">$id</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$fileTimestamp</span><span>;
+</span><span>                }
+</span><span>                </span><span style="color:#4271ae;">clearstatcache()</span><span>;
+</span><span>            }
+</span><span>            </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#4271ae;">count(</span><span style="color:#c82728;">$out</span><span style="color:#4271ae;">) </span><span style="color:#3e999f;">&gt; </span><span style="color:#f07219;">0</span><span>) {
+</span><span>                </span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">json_encode(array(</span><span style="color:#839c00;">&#39;s&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">::</span><span>COMET_CHANGED</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;k&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#c82728;">$out</span><span style="color:#4271ae;">))</span><span>;
+</span><span>            }
+</span><span>            </span><span style="color:#4271ae;">sleep(</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">_sleep</span><span style="color:#4271ae;">)</span><span>;
+</span><span>        }
+</span><span>        </span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">json_encode(array(</span><span style="color:#839c00;">&#39;s&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">::</span><span>COMET_OK</span><span style="color:#4271ae;">))</span><span>;
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">publish</span><span>(</span><span style="color:#f07219;">$id</span><span>)
+</span><span>    {
+</span><span>        </span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">json_encode(touch(sprintf(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">::</span><span>DEFAULT_COMET_PATH</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$id</span><span style="color:#4271ae;">)))</span><span>;
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<p>可以看到 publish 时，创建了一个以$id命名的文件。run时，如果发现该$id 文件存在，且时间戳大于之前保存的该$id对应的时间戳(通过setVar设置的)，说明$id 事件被触发，处理完后把$id放到$out 数组中，然后判断一下$out 数组是否为空，如果不为空，则输出一段 json。</p>
+<p>如果一段时间内都没有触发事件(for 循环执行完毕)，也输出一段 json，告诉前端执行完了，但是没有任何新情况。</p>
+<h4 id="shuo-ming">说明</h4>
+<ul>
+<li>可以在客户端监听/发布多个事件</li>
+<li>监听事件时，可以传一个 callback，这样收到数据时就会出发该 callback</li>
+<li>当监听事件时，会传一个时间戳</li>
+<li>当事件被 publish 时，会向后台发一个请求，并传递一个新的时间戳</li>
+<li>服务端不会一直执行，如果指定时间内，没有任何请求被触发，则结束运行</li>
+<li>客户端会重复上述过程(setTimeout &amp; NovComet.run())</li>
+</ul>
+<p>最后来一张图说明一下</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;php-comet&#x2F;comet-firebug.png"
+    srcset="&#x2F;posts&#x2F;php-comet&#x2F;comet-firebug.png 320w,&#x2F;posts&#x2F;php-comet&#x2F;comet-firebug.png 320w"
+    sizes="(max-width: 320px) 100vw, 320px" width="320" /></p>
+<ol>
+<li>运行一段时间后，没有收到任何 publish 事件，服务端结束执行</li>
+<li>服务端返回一段 json</li>
+<li>客户端触发了一个事件，服务端收到事件，返回一段新的 json</li>
+<li>callback 被触发</li>
+<li>客户端进入下一次的 ajax 长链接查询</li>
+</ol>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/php/">php</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

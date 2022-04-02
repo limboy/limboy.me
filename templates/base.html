@@ -4,7 +4,7 @@
 <head>
   <meta content="width=device-width,initial-scale=1" name="viewport" />
   <meta charset="UTF-8">
-  <title>{% block title %}{% endblock title %}{{ config.title }}</title>
+  <title>{% block title %}{{ config.title }}{% endblock title %}</title>
   <link rel="stylesheet" href="/assets/main.css?{{ get_file_hash(path='static/assets/main.css', sha_type=256) }}" />
   <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
   {% block head %}{% endblock head %}
@@ -27,23 +27,18 @@
   </nav>
 
   <div class="flex flex-col">
-    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 7.5rem);">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
       <div class="inner mb-2">
         {% block content %} {% endblock content %}
       </div>
     </div>
     {% block footer %}
-    <footer class="flex border-t border-gray-300 text-gray-500 items-center justify-center h-12 text-sm mt-6">
-      <div class="flex inner justify-between">
-        <ul class="flex gap-2 sm:gap-4">
-          <li> <a class="footer-link" href="https://2010-2021.limboy.me" target="_blank"> Past Articles </a> </li>
-        </ul>
-
-        <p class="opacity-20">👻</p>
-
-        <ul class="flex gap-2 sm:gap-4">
-          <li> <a class="footer-link" href="{{ get_url(path='index.xml', trailing_slash=false) }}">RSS</a> </li>
-        </ul>
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="{{ get_url(path='index.xml', trailing_slash=false) }}">RSS</a>
       </div>
     </footer>
     {% endblock footer %}
@@ -54,9 +49,9 @@
 
   <script>
     // 都是为了 iOS...
-    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 7.5rem)`
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
     window.addEventListener('resize', () => {
-      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 7.5rem)`
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
     })
   </script>
 </body>

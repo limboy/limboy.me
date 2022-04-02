@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+(译)KVO的内部实现
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/internal-implementation-of-kvo/">
+
+<meta name="twitter:title" content="(译)KVO的内部实现">
+<meta property="og:title" content="(译)KVO的内部实现">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;internal-implementation-of-kvo&#x2F;">(译)KVO的内部实现</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2013-08-15</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>09 年的<a href="http://www.mikeash.com/pyblog/friday-qa-2009-01-23.html">一篇文章</a>，比较深入地阐述了 KVO 的内部实现。</p>
+<p>KVO 是实现 Cocoa Bindings 的基础，它提供了一种方法，当某个属性改变时，相应的 objects 会被通知到。在其他语言中，这种观察者模式通常需要单独实现，而在 Objective-C 中，通常无须增加额外代码即可使用。</p>
+<p>###概览
+这是怎么实现的呢？其实这都是通过 Objective-C 强大的运行时(runtime)实现的。当你第一次观察某个 object 时，runtime 会创建一个新的继承原先 class 的 subclass。在这个新的 class 中，它重写了所有被观察的 key，然后将 object 的<code>isa</code>指针指向新创建的 class（这个指针告诉 Objective-C 运行时某个 object 到底是哪种类型的 object）。所以 object 神奇地变成了新的子类的实例。</p>
+<p>这些被重写的方法实现了如何通知观察者们。当改变一个 key 时，会触发<code>setKey</code>方法，但这个方法被重写了，并且在内部添加了发送通知机制。（当然也可以不走 setXXX 方法，比如直接修改 iVar，但不推荐这么做）。</p>
+<p>有意思的是：苹果不希望这个机制暴露在外部。除了 setters，这个动态生成的子类同时也重写了<code>-class</code>方法，依旧返回原先的 class！如果不仔细看的话，被 KVO 过的 object 看起来和原先的 object 没什么两样。</p>
+<p>###深入探究
+下面来看看这些是如何实现的。我写了个程序来演示隐藏在 KVO 背后的机制。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// gcc -o kvoexplorer -framework Foundation kvoexplorer.m
+</span><span>
+</span><span style="color:#8959a8;">#import </span><span style="color:#839c00;">&lt;Foundation/Foundation.h&gt;
+</span><span style="color:#8959a8;">#import </span><span style="color:#839c00;">&lt;objc/runtime.h&gt;
+</span><span>
+</span><span style="color:#8959a8;">@interface </span><span>TestClass : </span><span style="color:#839c00;">NSObject
+</span><span>{
+</span><span style="color:#8959a8;">int</span><span> x;
+</span><span style="color:#8959a8;">int</span><span> y;
+</span><span style="color:#8959a8;">int</span><span> z;
+</span><span>}
+</span><span style="color:#8959a8;">@property int</span><span> x;
+</span><span style="color:#8959a8;">@property int</span><span> y;
+</span><span style="color:#8959a8;">@property int</span><span> z;
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span style="color:#8959a8;">@implementation </span><span>TestClass
+</span><span style="color:#8959a8;">@synthesize</span><span> x, y, z;
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span style="color:#8959a8;">static </span><span style="color:#c99e00;">NSArray </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">ClassMethodNames</span><span>(</span><span style="color:#8959a8;">Class </span><span style="color:#f07219;">c</span><span>)
+</span><span>{
+</span><span style="color:#c99e00;">NSMutableArray </span><span style="color:#3e999f;">*</span><span>array </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#c99e00;">NSMutableArray </span><span style="color:#4271ae;">array</span><span>];
+</span><span style="color:#8959a8;">unsigned int</span><span> methodCount </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span>Method \</span><span style="color:#3e999f;">*</span><span>methodList </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">class_copyMethodList</span><span style="color:#4271ae;">(c, </span><span style="color:#3e999f;">&amp;</span><span style="color:#4271ae;">methodCount)</span><span>;
+</span><span style="color:#8959a8;">unsigned int</span><span> i;
+</span><span style="color:#8959a8;">for</span><span>(i </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>; i </span><span style="color:#3e999f;">&lt;</span><span> methodCount; i</span><span style="color:#3e999f;">++</span><span>)
+</span><span>[array </span><span style="color:#4271ae;">addObject: NSStringFromSelector(</span><span style="color:#c82728;">method_getName</span><span style="color:#4271ae;">(methodList[i]))</span><span>];
+</span><span style="color:#4271ae;">free(methodList)</span><span>;
+</span><span style="color:#8959a8;">return</span><span> array;
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">static void </span><span style="color:#4271ae;">PrintDescription</span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span style="color:#f07219;">name</span><span>, </span><span style="color:#8959a8;">id </span><span style="color:#f07219;">obj</span><span>)
+</span><span>{
+</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>str </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#c99e00;">NSString </span><span style="color:#4271ae;">stringWithFormat:
+</span><span style="color:#839c00;">@&quot;</span><span>%@</span><span style="color:#839c00;">: </span><span>%@</span><span style="color:#f07219;">\n\t</span><span style="color:#839c00;">NSObject class </span><span>%s</span><span style="color:#f07219;">\n\t</span><span style="color:#839c00;">libobjc class </span><span>%s</span><span style="color:#f07219;">\n\t</span><span style="color:#839c00;">implements methods &lt;</span><span>%@</span><span style="color:#839c00;">&gt;&quot;</span><span style="color:#4271ae;">,
+</span><span style="color:#4271ae;">name,
+</span><span style="color:#4271ae;">obj,
+</span><span style="color:#c82728;">class_getName</span><span style="color:#4271ae;">([obj class]),
+</span><span style="color:#c82728;">class_getName</span><span style="color:#4271ae;">(obj-&gt;isa),
+</span><span style="color:#4271ae;">[</span><span style="color:#c82728;">ClassMethodNames</span><span style="color:#4271ae;">(obj-&gt;isa) componentsJoinedByString</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;, &quot;</span><span style="color:#4271ae;">]</span><span>];
+</span><span style="color:#4271ae;">printf(</span><span style="color:#839c00;">&quot;</span><span>%s</span><span style="color:#f07219;">\n</span><span style="color:#839c00;">&quot;</span><span style="color:#4271ae;">, [str UTF8String])</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">int </span><span style="color:#4271ae;">main</span><span>(</span><span style="color:#8959a8;">int </span><span style="color:#f07219;">argc</span><span>, </span><span style="color:#8959a8;">char</span><span> \</span><span style="color:#3e999f;">**</span><span style="color:#f07219;">argv</span><span>)
+</span><span>{
+</span><span>[</span><span style="color:#c99e00;">NSAutoreleasePool </span><span style="color:#4271ae;">new</span><span>];
+</span><span>TestClass </span><span style="color:#3e999f;">*</span><span>x </span><span style="color:#3e999f;">= </span><span>[[TestClass </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>TestClass </span><span style="color:#3e999f;">*</span><span>y </span><span style="color:#3e999f;">= </span><span>[[TestClass </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>TestClass </span><span style="color:#3e999f;">*</span><span>xy </span><span style="color:#3e999f;">= </span><span>[[TestClass </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>TestClass \</span><span style="color:#3e999f;">*</span><span>control </span><span style="color:#3e999f;">= </span><span>[[TestClass </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>[x </span><span style="color:#4271ae;">addObserver:x forKeyPath:</span><span style="color:#839c00;">@&quot;x&quot; </span><span style="color:#4271ae;">options:</span><span style="color:#f07219;">0 </span><span style="color:#4271ae;">context:</span><span style="color:#f07219;">NULL</span><span>];
+</span><span>[xy </span><span style="color:#4271ae;">addObserver:xy forKeyPath:</span><span style="color:#839c00;">@&quot;x&quot; </span><span style="color:#4271ae;">options:</span><span style="color:#f07219;">0 </span><span style="color:#4271ae;">context:</span><span style="color:#f07219;">NULL</span><span>];
+</span><span>[y </span><span style="color:#4271ae;">addObserver:y forKeyPath:</span><span style="color:#839c00;">@&quot;y&quot; </span><span style="color:#4271ae;">options:</span><span style="color:#f07219;">0 </span><span style="color:#4271ae;">context:</span><span style="color:#f07219;">NULL</span><span>];
+</span><span>[xy </span><span style="color:#4271ae;">addObserver:xy forKeyPath:</span><span style="color:#839c00;">@&quot;y&quot; </span><span style="color:#4271ae;">options:</span><span style="color:#f07219;">0 </span><span style="color:#4271ae;">context:</span><span style="color:#f07219;">NULL</span><span>];
+</span><span style="color:#c82728;">PrintDescription</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">@&quot;control&quot;</span><span style="color:#4271ae;">, control)</span><span>;
+</span><span style="color:#c82728;">PrintDescription</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">@&quot;x&quot;</span><span style="color:#4271ae;">, x)</span><span>;
+</span><span style="color:#c82728;">PrintDescription</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">@&quot;y&quot;</span><span style="color:#4271ae;">, y)</span><span>;
+</span><span style="color:#c82728;">PrintDescription</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">@&quot;xy&quot;</span><span style="color:#4271ae;">, xy)</span><span>;
+</span><span style="color:#4271ae;">printf(</span><span style="color:#839c00;">&quot;Using NSObject methods, normal setX: is </span><span>%p</span><span style="color:#839c00;">, overridden setX: is </span><span>%p</span><span style="color:#f07219;">\n</span><span style="color:#839c00;">&quot;</span><span style="color:#4271ae;">,
+</span><span style="color:#4271ae;">[control methodForSelector:</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(setX:)],
+</span><span style="color:#4271ae;">[x methodForSelector:</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(setX:)])</span><span>;
+</span><span style="color:#4271ae;">printf(</span><span style="color:#839c00;">&quot;Using libobjc functions, normal setX: is </span><span>%p</span><span style="color:#839c00;">, overridden setX: is </span><span>%p</span><span style="color:#f07219;">\n</span><span style="color:#839c00;">&quot;</span><span style="color:#4271ae;">,
+</span><span style="color:#c82728;">method_getImplementation</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">class_getInstanceMethod</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">object_getClass</span><span style="color:#4271ae;">(control),
+</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(setX:))),
+</span><span style="color:#c82728;">method_getImplementation</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">class_getInstanceMethod</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">object_getClass</span><span style="color:#4271ae;">(x),
+</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(setX:))))</span><span>;
+</span><span style="color:#8959a8;">return </span><span style="color:#f07219;">0</span><span>;
+</span><span>}
+</span></code></pre>
+<p>我们从头到尾细细看来。</p>
+<p>首先定义了一个<code>TestClass</code>的类，它有 3 个属性。</p>
+<p>然后定义了一些方便调试的方法。<code>ClassMethodNames</code>使用 Objective-C 运行时方法来遍历一个 class，得到方法列表。注意，这些方法不包括父类的方法。<code>PrintDescription</code>打印 object 的所有信息，包括 class 信息（包括<code>-class</code>和通过运行时得到的 class），以及这个 class 实现的方法。</p>
+<p>然后创建了 4 个<code>TestClass</code>实例，每一个都使用了不同的观察方式。<code>x</code>实例有一个观察者观察<code>x</code>key，<code>y</code>, <code>xy</code>也类似。为了做比较，<code>z</code>key 没有观察者。最后<code>control</code>实例没有任何观察者。</p>
+<p>然后打印出 4 个 objects 的 description。</p>
+<p>之后继续打印被重写的 setter 内存地址，以及未被重写的 setter 的内存地址做比较。这里做了两次，是因为<code>-methodForSelector:</code>没能得到重写的方法。KVO 试图掩盖它实际上创建了一个新的 subclass 这个事实！但是使用运行时的方法就原形毕露了。</p>
+<p>###运行代码
+看看这段代码的输出</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>control</span><span style="color:#3e999f;">: &lt;</span><span>TestClass</span><span style="color:#3e999f;">: </span><span style="color:#f07219;">0x104b20</span><span style="color:#3e999f;">&gt;
+</span><span style="color:#c99e00;">NSObject</span><span> class TestClass
+</span><span>libobjc class </span><span style="color:#4271ae;">TestClass
+</span><span>implements methods </span><span style="color:#3e999f;">&lt;</span><span>setX</span><span style="color:#3e999f;">:</span><span>, x, setY</span><span style="color:#3e999f;">:</span><span>, y, setZ</span><span style="color:#3e999f;">:</span><span>, z</span><span style="color:#3e999f;">&gt;
+</span><span>x</span><span style="color:#3e999f;">: &lt;</span><span>TestClass</span><span style="color:#3e999f;">: </span><span style="color:#f07219;">0x103280</span><span style="color:#3e999f;">&gt;
+</span><span style="color:#c99e00;">NSObject</span><span> class TestClass
+</span><span>libobjc class NSKVONotifying_TestClass
+</span><span>implements methods </span><span style="color:#3e999f;">&lt;</span><span>setY</span><span style="color:#3e999f;">:</span><span>, setX</span><span style="color:#3e999f;">:</span><span>, class, dealloc, \_isKVOA</span><span style="color:#3e999f;">&gt;
+</span><span>y</span><span style="color:#3e999f;">: &lt;</span><span>TestClass</span><span style="color:#3e999f;">: </span><span style="color:#f07219;">0x104b00</span><span style="color:#3e999f;">&gt;
+</span><span style="color:#c99e00;">NSObject</span><span> class TestClass
+</span><span>libobjc class NSKVONotifying_TestClass
+</span><span>implements methods </span><span style="color:#3e999f;">&lt;</span><span>setY</span><span style="color:#3e999f;">:</span><span>, setX</span><span style="color:#3e999f;">:</span><span>, class, dealloc, \_isKVOA</span><span style="color:#3e999f;">&gt;
+</span><span>xy</span><span style="color:#3e999f;">: &lt;</span><span>TestClass</span><span style="color:#3e999f;">: </span><span style="color:#f07219;">0x104b10</span><span style="color:#3e999f;">&gt;
+</span><span style="color:#c99e00;">NSObject</span><span> class TestClass
+</span><span>libobjc class NSKVONotifying_TestClass
+</span><span>implements methods </span><span style="color:#3e999f;">&lt;</span><span>setY</span><span style="color:#3e999f;">:</span><span>, setX</span><span style="color:#3e999f;">:</span><span>, class, dealloc, \_isKVOA</span><span style="color:#3e999f;">&gt;
+</span><span>Using </span><span style="color:#c99e00;">NSObject</span><span> methods, normal setX</span><span style="color:#3e999f;">:</span><span> is </span><span style="color:#f07219;">0x195e</span><span>, overridden setX</span><span style="color:#3e999f;">:</span><span> is </span><span style="color:#f07219;">0x195e
+</span><span>Using libobjc functions, normal setX</span><span style="color:#3e999f;">:</span><span> is </span><span style="color:#f07219;">0x195e</span><span>, overridden setX</span><span style="color:#3e999f;">:</span><span> is </span><span style="color:#f07219;">0x96a1a550
+</span></code></pre>
+<p>首先，它输出了<code>control</code>object，没有任何问题，它的 class 是<code>TestClass</code>，并且实现了 6 个 set/get 方法。</p>
+<p>然后是 3 个被观察的 objects。注意<code>-class</code>仍然显示的是<code>TestClass</code>，使用<code>object_getClass</code>显示了这个 object 的真面目：它是<code>NSKVONotifying_TestClass</code>的一个实例。这个<code>NSKVONotifying_TestClass</code>就是动态生成的 subclass！</p>
+<p>注意，它是如何实现这两个被观察的 setters 的。你会发现，它很聪明，没有重写<code>-setZ:</code>，虽然它也是个 setter，因为它没有被观察。同时注意到，3 个实例对应的是同一个 class，也就是说两个 setters 都被重写了，尽管其中的两个实例只观察了一个属性。这会带来一点效率上的问题，因为即使没有被观察的 property 也会走被重写的 setter，但苹果显然觉得这比分开生成动态的 subclass 更好，我也觉得这是个正确的选择。</p>
+<p>你会看到 3 个其他的方法。有之前提到过的被重写的<code>-class</code>方法，假装自己还是原来的 class。还有<code>-dealloc</code>方法处理一些收尾工作。还有一个<code>_isKVOA</code>方法，看起来像是一个私有方法。</p>
+<p>接下来，我们输出<code>-setX:</code>的实现。使用<code>-methodForSelector:</code>返回的是相同的值。因为<code>-setX:</code>已经在子类被重写了，这也就意味着<code>methodForSelector:</code>在内部实现中使用了<code>-class</code>，于是得到了错误的结果。</p>
+<p>最后我们通过运行时得到了不同的输出结果。</p>
+<p>作为一个优秀的探索者，我们进入 debugger 来看看这第二个方法的实现到底是怎样的：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>(gdb) </span><span style="color:#c82728;">print </span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">IMP</span><span style="color:#4271ae;">)</span><span style="color:#f07219;">0x96a1a550
+</span><span>$</span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">= </span><span>(</span><span style="color:#8959a8;">IMP</span><span>) </span><span style="color:#f07219;">0x96a1a550 </span><span style="color:#3e999f;">&lt;</span><span>\_NSSetIntValueAndNotify</span><span style="color:#3e999f;">&gt;
+</span></code></pre>
+<p>看起来是一个内部方法，对<code>Foundation</code>使用<code>nm -a</code>得到一个完整的私有方法列表：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#f07219;">0013</span><span style="font-style:italic;color:#c82829;">df80</span><span> t __NSSetBoolValueAndNotify
+</span><span style="color:#f07219;">000</span><span style="font-style:italic;color:#c82829;">a0480</span><span> t __NSSetCharValueAndNotify
+</span><span style="color:#f07219;">0013e120</span><span> t __NSSetDoubleValueAndNotify
+</span><span style="color:#f07219;">0013e1</span><span style="font-style:italic;color:#c82829;">f0</span><span> t __NSSetFloatValueAndNotify
+</span><span style="color:#f07219;">000e3550</span><span> t __NSSetIntValueAndNotify
+</span><span style="color:#f07219;">0013e390</span><span> t __NSSetLongLongValueAndNotify
+</span><span style="color:#f07219;">0013e2</span><span style="font-style:italic;color:#c82829;">c0</span><span> t __NSSetLongValueAndNotify
+</span><span style="color:#f07219;">000</span><span style="font-style:italic;color:#c82829;">89df0</span><span> t __NSSetObjectValueAndNotify
+</span><span style="color:#f07219;">0013e6</span><span style="font-style:italic;color:#c82829;">f0</span><span> t __NSSetPointValueAndNotify
+</span><span style="color:#f07219;">0013e7</span><span style="font-style:italic;color:#c82829;">d0</span><span> t __NSSetRangeValueAndNotify
+</span><span style="color:#f07219;">0013e8</span><span style="font-style:italic;color:#c82829;">b0</span><span> t __NSSetRectValueAndNotify
+</span><span style="color:#f07219;">0013e550</span><span> t __NSSetShortValueAndNotify
+</span><span style="color:#f07219;">000</span><span style="font-style:italic;color:#c82829;">8ab20</span><span> t __NSSetSizeValueAndNotify
+</span><span style="color:#f07219;">0013e050</span><span> t __NSSetUnsignedCharValueAndNotify
+</span><span style="color:#f07219;">000</span><span style="font-style:italic;color:#c82829;">9fcd0</span><span> t __NSSetUnsignedIntValueAndNotify
+</span><span style="color:#f07219;">0013e470</span><span> t __NSSetUnsignedLongLongValueAndNotify
+</span><span style="color:#f07219;">000</span><span style="font-style:italic;color:#c82829;">9fc00</span><span> t __NSSetUnsignedLongValueAndNotify
+</span><span style="color:#f07219;">0013e620</span><span> t __NSSetUnsignedShortValueAndNotify
+</span></code></pre>
+<p>这个列表也能发现一些有趣的东西。比如苹果为每一种 primitive type 都写了对应的实现。Objective-C 的 object 会用到的其实只有<code>__NSSetObjectValueAndNotify</code>，但需要一整套来对应剩下的，而且看起来也没有实现完全，比如<code>long dobule</code>或<code>_Bool</code>都没有。甚至没有为通用指针类型(generic pointer type)提供方法。所以，不在这个方法列表里的属性其实是不支持 KVO 的。</p>
+<p>KVO 是一个很强大的工具，有时候过于强大了，尤其是有了自动触发通知机制。现在你知道它内部是怎么实现的了，这些知识或许能帮助你更好地使用它，或在它出错时更方便调试。</p>
+<p>如果你打算使用 KVO，或许可以看一下我的另一篇文章<a href="http://www.mikeash.com/?page=pyblog/key-value-observing-done-right.html">Key-Value Observing Done Right</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/translation/">translation</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

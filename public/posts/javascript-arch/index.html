@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+大型应用的javascript架构
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/javascript-arch/">
+
+<meta name="twitter:title" content="大型应用的javascript架构">
+<meta property="og:title" content="大型应用的javascript架构">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;javascript-arch&#x2F;">大型应用的javascript架构</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-11-29</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>目前很多网站基本没有明确的前端架构，大多是服务端渲染视图页，输出到浏览器，再配合一些 js，来进行交互。如果只是实现一些简单的效果，没有较复杂的逻辑，那么这种处理是合理的，尤其是有了 jQuery 之类的利器，js 代码写起来甚至有种随心所欲的感觉。</p>
+<p>但一旦网站要改版，或者随着网站的发展，逻辑变得越来越复杂，或者为了更好的用户体验，js 要承担更多的任务，这时如果维持现状不变，那 js 就会变得越来越臃肿，越来越难维护。</p>
+<p>解决之道就是采用模块化编程，将页面分成多个模块，模块之间互相独立，通过发布/订阅方式来进行模块间交互，从而使模块与模块解耦，也就是说移除一个模块不会对当前页面造成影响。</p>
+<p>配合模板的话，可以让前端和后端程序员更高效地配合。前端只负责数据的显示与页面的交互，开发时，可以拟造数据，而不需要服务端程序。后端程序员也可以专注于提供更易用，稳定的接口，而不需要关心数据的展示。</p>
+<p>yahoo 的<a href="http://developer.yahoo.com/yui/theater/video.php?v=zakas-architecture">这个视频</a>详细地阐述了前端模块化编程，大致摘录如下：</p>
+<h3 id="js-jia-gou-de-4-ge-zu-cheng-bu-fen">js 架构的 4 个组成部分</h3>
+<ul>
+<li>模块(Modules)</li>
+<li>沙箱(Sandbox)</li>
+<li>应用(App Core)</li>
+<li>类库(Base Lib)</li>
+</ul>
+<h3 id="mo-kuai-yi-qie-jie-mo-kuai">模块(一切皆模块)</h3>
+<p>模块就像孩子一样，他们需要遵守一些规则才能保证不会到处惹麻烦</p>
+<p>模块必须在沙箱里，无论条件多么苛刻</p>
+<p>模块不知道页面到底是怎样的，他们只知道沙箱</p>
+<p>模块之间要解耦</p>
+<h3 id="mo-kuai-de-gui-ze">模块的规则</h3>
+<ul>
+<li>管好自己
+** 只能调用自己的或沙箱的方法
+** 不要访问不属于自己的 DOM 节点
+** 不要访问非内置全局变量</li>
+<li>先申请，再使用
+** 你需要的任何东西，要向沙箱提出申请</li>
+<li>不要把玩具放得到处都是
+** 不要创建全局变量</li>
+<li>不要和陌生人说话
+** 不要直接引用其他模块</li>
+</ul>
+<h3 id="an-quan-sha-xiang">安全沙箱</h3>
+<p>沙箱要保证接口的一致性，模块调用时一定要有</p>
+<p>模块只知道沙箱，其他的架构对模块而言是不存在的</p>
+<p>沙箱就像一个安保员，知道哪些是模块可以调用的</p>
+<h3 id="sha-xiang-de-zhi-ze">沙箱的职责</h3>
+<ul>
+<li>一致性
+** 接口一定要可靠</li>
+<li>安全性
+** 检测哪一部分是模块可以访问的</li>
+<li>交互
+** 将模块的请求发送到系统</li>
+</ul>
+<p>多花些时间来设计沙箱接口，可以添加新方法，但不能移除，也不能修改已有方法</p>
+<h3 id="ying-yong-he-xin">应用核心</h3>
+<p>应用核心负责模块间的交互</p>
+<p>应用核心通知一个模块何时该初始化，何时该注销</p>
+<p>应用核心处理错误</p>
+<h3 id="ying-yong-he-xin-de-ren-wu">应用核心的任务</h3>
+<ul>
+<li>管理模块的生存周期
+** 通知一个模块何时该初始化，何时该注销</li>
+<li>内部模块间的交互
+** 让模块尽可能解耦</li>
+<li>错误处理
+** 检测，报告错误</li>
+<li>可扩展
+** 任何可扩展的东西都不会过时</li>
+</ul>
+<h3 id="ji-ben-lei-ku">基本类库</h3>
+<p>理想状态下，只有应用核心知道使用了哪个类库</p>
+<h3 id="ji-ben-lei-ku-de-ren-wu">基本类库的任务</h3>
+<ul>
+<li>浏览器兼容性</li>
+<li>常用的工具
+** 解析/序列化 XML，JSON 等等
+** 对象操作
+** DOM 操作
+** Ajax 操作</li>
+<li>提供底层的可扩展性</li>
+</ul>
+<h3 id="shi-jian">实践</h3>
+<p>我没有全部按照上面说的来实现，而是借鉴了部分<a href="http://dothanhlam.files.wordpress.com/2009/02/puremvc-conceptual-diagram.jpg">pureMVC 的思想</a>，这样似乎更简单些。</p>
+<p>概述</p>
+<ul>
+<li>一个模块对应页面的某一部分</li>
+<li>模块提供了所有 Mediator 可以调用的方法</li>
+<li>一个 Mediator 管理一个特定的模块</li>
+<li>模块只被 Mediator 调用，模块甚至不知道 Mediator 的存在</li>
+<li>Mediator 之间通过发布/订阅的方式进行交互</li>
+</ul>
+<p><a href="http://demo.leezhong.com/js-arch/">demo</a></p>
+<h3 id="mo-kuai-ji-lei-zhe-li-shi-yong-liao-john-resig-de-simple-javascript-inheritance">模块基类(这里使用了 John Resig 的<a href="http://ejohn.org/blog/simple-javascript-inheritance/">simple javascript inheritance</a>)</h3>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">var </span><span style="color:#c82728;">Module </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">Class</span><span style="color:#4271ae;">.extend</span><span>({
+</span><span>  </span><span style="color:#4271ae;">init</span><span>: </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">obj</span><span>) {
+</span><span>    </span><span style="color:#c82728;">this</span><span>.name </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">obj</span><span>.name;
+</span><span>    </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">tpl </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">obj</span><span>.</span><span style="color:#c82728;">tpl </span><span style="color:#3e999f;">? </span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">obj</span><span>.</span><span style="color:#c82728;">tpl</span><span>)</span><span style="color:#4271ae;">.text</span><span>() </span><span style="color:#3e999f;">: </span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#839c00;">&#39;#&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">obj</span><span>.name </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;-tpl&#39;</span><span>)</span><span style="color:#4271ae;">.text</span><span>();
+</span><span>    </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">$el </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">obj</span><span>.</span><span style="color:#c82728;">el </span><span style="color:#3e999f;">? </span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">obj</span><span>.</span><span style="color:#c82728;">el</span><span>) </span><span style="color:#3e999f;">: </span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#839c00;">&#39;#&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">obj</span><span>.name);
+</span><span>    </span><span style="color:#c82728;">this</span><span>.data </span><span style="color:#3e999f;">= </span><span>{};
+</span><span>  },
+</span><span>  </span><span style="color:#4271ae;">getTplData</span><span>: </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">data</span><span>) {
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">this</span><span>.data.</span><span style="color:#c82728;">tplData</span><span>;
+</span><span>  },
+</span><span>  </span><span style="color:#4271ae;">renderTpl</span><span>: </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">data</span><span>) {
+</span><span>    </span><span style="color:#c82728;">this</span><span>.data.</span><span style="color:#c82728;">tplData </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">data</span><span>;
+</span><span>    </span><span style="color:#8e908c;">//使用了Mustache模板引擎
+</span><span>    </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">html </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">Mustache</span><span style="color:#4271ae;">.to_html</span><span>(</span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">tpl</span><span>, </span><span style="color:#c82728;">data</span><span>);
+</span><span>    </span><span style="color:#c82728;">this</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">$el</span><span style="color:#4271ae;">.html</span><span>(</span><span style="color:#c82728;">html</span><span>);
+</span><span>  },
+</span><span>});
+</span></code></pre>
+<h3 id="lie-biao-mo-kuai">列表模块</h3>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">var </span><span style="color:#c82728;">List </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">Module</span><span style="color:#4271ae;">.extend</span><span>({
+</span><span>  </span><span style="color:#8e908c;">// Module 提供方法供Mediator调用
+</span><span>  </span><span style="color:#4271ae;">hl</span><span>: </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">$item</span><span>, </span><span style="color:#f07219;">lock</span><span>) {
+</span><span>    </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">$lis </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">this</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">$el</span><span style="color:#4271ae;">.find</span><span>(</span><span style="color:#839c00;">&#39;li&#39;</span><span>);
+</span><span>    </span><span style="color:#c82728;">$lis</span><span style="color:#4271ae;">.each</span><span>(</span><span style="color:#8959a8;">function </span><span>() {
+</span><span>      </span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">this</span><span>)</span><span style="color:#4271ae;">.removeClass</span><span>(</span><span style="color:#839c00;">&#39;hl&#39;</span><span>);
+</span><span>      </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">lock</span><span>) {
+</span><span>        </span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">this</span><span>)</span><span style="color:#4271ae;">.data</span><span>(</span><span style="color:#839c00;">&#39;locked&#39;</span><span>, </span><span style="color:#f07219;">false</span><span>);
+</span><span>      }
+</span><span>      </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#3e999f;">!</span><span style="color:#c82728;">lock </span><span style="color:#3e999f;">&amp;&amp; </span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">this</span><span>)</span><span style="color:#4271ae;">.data</span><span>(</span><span style="color:#839c00;">&#39;locked&#39;</span><span>)) {
+</span><span>        </span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">this</span><span>)</span><span style="color:#4271ae;">.addClass</span><span>(</span><span style="color:#839c00;">&#39;hl&#39;</span><span>);
+</span><span>      }
+</span><span>    });
+</span><span>    </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">lock</span><span>) </span><span style="color:#c82728;">$item</span><span style="color:#4271ae;">.data</span><span>(</span><span style="color:#839c00;">&#39;locked&#39;</span><span>, </span><span style="color:#f07219;">true</span><span>);
+</span><span>    </span><span style="color:#c82728;">$item</span><span style="color:#4271ae;">.addClass</span><span>(</span><span style="color:#839c00;">&#39;hl&#39;</span><span>);
+</span><span>  },
+</span><span>  </span><span style="color:#4271ae;">unhl</span><span>: </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">$item</span><span>) {
+</span><span>    </span><span style="color:#c82728;">$item</span><span style="color:#4271ae;">.removeClass</span><span>(</span><span style="color:#839c00;">&#39;hl&#39;</span><span>);
+</span><span>  },
+</span><span>});
+</span></code></pre>
+<p>前面说了模块就是准备好方法，让 Mediator 调用。</p>
+<h3 id="lie-biao-mediator">列表 Mediator</h3>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">var </span><span style="color:#c82728;">ListMediator </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">Mediator</span><span style="color:#4271ae;">.extend</span><span>({
+</span><span>  </span><span style="color:#4271ae;">init</span><span>: </span><span style="color:#8959a8;">function </span><span>() {
+</span><span>    </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">self </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">this</span><span>;
+</span><span>    </span><span style="color:#8e908c;">// 初始化Module
+</span><span>    </span><span style="color:#c82728;">this</span><span>.</span><span style="color:#c82728;">module </span><span style="color:#3e999f;">= new </span><span>List({
+</span><span>      name: </span><span style="color:#839c00;">&#39;list&#39;</span><span>,
+</span><span>    });
+</span><span>    </span><span style="color:#8e908c;">// 绑定事件
+</span><span>    </span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">module</span><span>.</span><span style="color:#c82728;">$el
+</span><span>      </span><span style="color:#4271ae;">.delegate</span><span>(</span><span style="color:#839c00;">&#39;li&#39;</span><span>, </span><span style="color:#839c00;">&#39;click&#39;</span><span>, </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">e</span><span>) {
+</span><span>        </span><span style="color:#c82728;">e</span><span style="color:#4271ae;">.preventDefault</span><span>();
+</span><span>        </span><span style="color:#8e908c;">// 调用Module方法
+</span><span>        </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">module</span><span style="color:#4271ae;">.hl</span><span>(</span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">this</span><span>), </span><span style="color:#f07219;">true</span><span>);
+</span><span>        </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">index </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">module</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">$el</span><span style="color:#4271ae;">.find</span><span>(</span><span style="color:#839c00;">&#39;li&#39;</span><span>)</span><span style="color:#4271ae;">.index</span><span>(</span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">this</span><span>));
+</span><span>        </span><span style="color:#8e908c;">// 发布消息，所有监听该事件的方法将被触发
+</span><span>        </span><span style="color:#8e908c;">// 参数为object，方便以后添加键值对
+</span><span>        </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">.publish</span><span>(</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">module</span><span>.name </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;:click&#39;</span><span>, {
+</span><span>          content: </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">module</span><span style="color:#4271ae;">.getTplData</span><span>().</span><span style="color:#c82728;">list</span><span>[</span><span style="color:#c82728;">index</span><span>].content,
+</span><span>        });
+</span><span>      })
+</span><span>      </span><span style="color:#4271ae;">.delegate</span><span>(</span><span style="color:#839c00;">&#39;li&#39;</span><span>, </span><span style="color:#839c00;">&#39;mouseover&#39;</span><span>, </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">e</span><span>) {
+</span><span>        </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">module</span><span style="color:#4271ae;">.hl</span><span>(</span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">this</span><span>));
+</span><span>      })
+</span><span>      </span><span style="color:#4271ae;">.delegate</span><span>(</span><span style="color:#839c00;">&#39;li&#39;</span><span>, </span><span style="color:#839c00;">&#39;mouseout&#39;</span><span>, </span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">e</span><span>) {
+</span><span>        </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">module</span><span style="color:#4271ae;">.unhl</span><span>(</span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">this</span><span>));
+</span><span>      });
+</span><span>    </span><span style="color:#8e908c;">// 获取源数据，使用了$.proxy，创建特定的context
+</span><span>    </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">.getJSON</span><span>(
+</span><span>      </span><span style="color:#839c00;">&#39;data.json&#39;</span><span>,
+</span><span>      </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">.proxy</span><span>(</span><span style="color:#8959a8;">function </span><span>(</span><span style="color:#f07219;">data</span><span>) {
+</span><span>        </span><span style="color:#8e908c;">// 调用Module的方法
+</span><span>        </span><span style="color:#c82728;">this</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">module</span><span style="color:#4271ae;">.renderTpl</span><span>(</span><span style="color:#c82728;">data</span><span>);
+</span><span>        </span><span style="color:#8e908c;">// 发布数据已载入消息
+</span><span>        </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">.publish</span><span>(</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">module</span><span>.name </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;:loaded&#39;</span><span>, </span><span style="color:#c82728;">data</span><span>);
+</span><span>      }, </span><span style="color:#c82728;">this</span><span>)
+</span><span>    );
+</span><span>  },
+</span><span>});
+</span></code></pre>
+<p>可以把模块想像成 Model，Mediator 想像成 Controller，这样就实现了高内聚，低耦合。每一个单元(模块+Mediator)都可以单独使用，也可以被移除，而不影响现有架构。</p>
+<p><a href="http://demo.leezhong.com/js-arch/">demo</a></p>
+<p><a href="https://github.com/lzyy/js-arch">source</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/javascript/">javascript</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

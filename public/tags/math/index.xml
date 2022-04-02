@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Limboy - math</title>
+        <link>https://limboy.me</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>zh</language>
+        <atom:link href="https://limboy.me/tags/math/index.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Mon, 01 Nov 2021 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>一个看起来不可能赢的游戏</title>
+            <pubDate>Mon, 01 Nov 2021 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/impossible-win-game/</link>
+            <guid>https://limboy.me/posts/impossible-win-game/</guid>
+            <description>&lt;p&gt;游戏一共涉及三个人，你和一个小伙伴组成一队答题，另一人来出题。题目的内容是这样的：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;有一块方形木板，上面共有 64 个格子（8x8)，旁边有 64 枚硬币&lt;&#x2F;li&gt;
+&lt;li&gt;出题人会将所有硬币都放到格子上，但硬币是正面朝上还是反面朝上，完全看出题人的心情&lt;&#x2F;li&gt;
+&lt;li&gt;全部摆放完后（每个格子上都有一枚硬币），出题人会将其中一枚硬币指定为魔币，当然会指哪个也全看出题人的心情&lt;&#x2F;li&gt;
+&lt;li&gt;整个过程你作为旁观者只能看着。在叫队友进来答题（找出该魔币）之前，可以将这 64 个硬币中的任意一个进行翻转&lt;&#x2F;li&gt;
+&lt;li&gt;队友进来之后，不能与他进行任何通信，他的目标是找到出题人指定的那个魔币（事先可以和队友商量策略）&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;zhen-de-ke-neng-ma&quot;&gt;真的可能吗？&lt;&#x2F;h3&gt;
+&lt;p&gt;信息量太少了，将一枚硬币翻转，只有 1 比特的信息，而且队友进来之后完全不知道哪个被翻转了（就算看到 63 个正面，一个反面，也不知道是不是这个反面被翻转过），更别说要找到出题人指定的魔币。&lt;&#x2F;p&gt;
+&lt;p&gt;这个魔币可以出现在 64 个格子的任意位置，用二进制来表示的话，需要 6 位（$2^6$ = 64），同时硬币的翻转可以带来奇偶的改变，结合这两点能不能找到点思路呢？&lt;&#x2F;p&gt;
+&lt;p&gt;发散一下，10 个老鼠从 1000 瓶水中找毒水是不是跟这个场景有点像？难道把 64 个数字用二进制表示会有什么不同？&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;000000 = 0
+&lt;&#x2F;span&gt;&lt;span&gt;000001 = 1
+&lt;&#x2F;span&gt;&lt;span&gt;000010 = 2
+&lt;&#x2F;span&gt;&lt;span&gt;000011 = 3
+&lt;&#x2F;span&gt;&lt;span&gt;...
+&lt;&#x2F;span&gt;&lt;span&gt;111111 = 63
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;那个魔币一定是这组数中的一个，假设吃了它会死，只要找到 6 只老鼠，emmm···&lt;&#x2F;p&gt;
+&lt;p&gt;那有没有可能棋盘本身就能组成 6 只老鼠呢？假如可以，就让每只老鼠分别代表一个二进制位&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;老鼠 A -&amp;gt; $2^0$&lt;br &#x2F;&gt;
+老鼠 B -&amp;gt; $2^1$&lt;br &#x2F;&gt;
+老鼠 C -&amp;gt; $2^2$&lt;br &#x2F;&gt;
+老鼠 D -&amp;gt; $2^3$&lt;br &#x2F;&gt;
+老鼠 E -&amp;gt; $2^4$&lt;br &#x2F;&gt;
+老鼠 F -&amp;gt; $2^5$&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;然后通过硬币正面朝上数量的奇偶性来表示该位是 1 或 0，这样队友进来时，先按照某种约定的方式找到「老鼠 A」，然后判断它的奇偶性，这样就能知道第一位（最右边）是 0 还是 1，同理找到「老鼠 B」，判断奇偶，确定第二位。最后会形成一个完整的二进制数，比如 &lt;code&gt;001100&lt;&#x2F;code&gt;，也就是 12，那么魔币所在的位置就是 12。&lt;&#x2F;p&gt;
+&lt;p&gt;因为翻转硬币就能改变奇偶性，如果能通过翻转硬币达到随意控制某一&#x2F;几位变成 0 或 1，就能把二进制调整为魔币对应的数字，按照该策略，计算出二进制数后，就能知道魔币所在位置。&lt;&#x2F;p&gt;
+&lt;p&gt;接下来的问题是，如何让棋盘本身形成 6 个比特位？&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-0.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-0.png 1246w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-0.png 1246w&quot;
+    sizes=&quot;(max-width: 1246px) 100vw, 1246px&quot; width=&quot;1246&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;ji-xu-si-suo&quot;&gt;继续思索&lt;&#x2F;h3&gt;
+&lt;p&gt;假如你跟队友约定，左边四列代表第 1 位，右边四列代表第 2 位，上边四行代表第 3 位，下边四行代表第 4 位，中间四列代表第 5 位，中间四行代表第 6 位，也就是每 1 位都有特定的区域，然后数该区域里硬币为正面的个数，如果为奇数则表示该位为 1，偶数则为 0。而你可以通过翻转硬币来将这个二进制数变为魔币所在位置的二进制数，是不是就妥了？&lt;&#x2F;p&gt;
+&lt;p&gt;那应该怎么分呢，如果按照上面的分法，该如何达到翻转某个硬币来调整各个组的奇偶性呢？&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;hua-fen-zu-de-ce-lue&quot;&gt;划分组的策略&lt;&#x2F;h3&gt;
+&lt;p&gt;假设出题人摆放完硬币后，按照上面的分组查找，得出的二进制数为：&lt;code&gt;001100&lt;&#x2F;code&gt;，出题人指定魔币的位置为 42，也就是 &lt;code&gt;101010&lt;&#x2F;code&gt;，这个数的 $2^0$，$2^2$，$2^5$ 与得出的二进制不同，因此这 3 组需要翻转，其他组不动。&lt;&#x2F;p&gt;
+&lt;p&gt;理想状态自然是每个组之间没有重叠，然后将各自组的其中一枚硬币翻转，但这样最多需要翻转 6 次（原始二进制数和目标二进制数各位都不相同）。所以一定会有交叉，那如何交叉才能使得所有可能的翻转组合都被覆盖到呢？如果用 1 表示翻转，那么二进制表示的 64 个数字，不就是所有可能的翻转组合么？&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-2.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-2.png 706w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-2.png 706w&quot;
+    sizes=&quot;(max-width: 706px) 100vw, 706px&quot; width=&quot;706&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;比如 3，也就是 &lt;code&gt;000011&lt;&#x2F;code&gt; 表示翻转 $2^0$ 和 $2^1$ 所在的组，原先为奇数个正面的硬币，就变成偶数个，反之亦然，其他 4 个组维持原状。&lt;&#x2F;p&gt;
+&lt;p&gt;好像有思路了。对于 $2^0$ 这一组，包含的数为末尾为 1 的二进制数，$2^1$ 这一组，则包含倒数第二位为 1 的二进制数，以此类推（下图可点击放大）：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-3.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-3.png 2230w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-3.png 2230w&quot;
+    sizes=&quot;(max-width: 2230px) 100vw, 2230px&quot; width=&quot;2230&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;这样 6 个组就划分完了，假设经过计算后发现要调整 $2^5$, $2^3$, $2^1$ 这 3 个组硬币的奇偶性，也就是 &lt;code&gt;101010&lt;&#x2F;code&gt;，对应十进制就是 42，那么将 42 号硬币翻一面就行了。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-4.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-4.png 2230w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-4.png 2230w&quot;
+    sizes=&quot;(max-width: 2230px) 100vw, 2230px&quot; width=&quot;2230&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;是不是只影响了 $2^5$, $2^3$, $2^1$ 这 3 个组，$2^0$, $2^2$, $2^4$ 这 3 组安然无恙。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shi-zhan&quot;&gt;实战&lt;&#x2F;h3&gt;
+&lt;p&gt;假设出题人最后的硬币摆放如下（白色为正面，灰色为反面，），指定魔币序号为 39。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-5.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-5.png 1246w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-5.png 1246w&quot;
+    sizes=&quot;(max-width: 1246px) 100vw, 1246px&quot; width=&quot;1246&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;按照上面的分组规则，看看每个组包含的硬币正反面情况&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-6.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-6.png 2230w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-6.png 2230w&quot;
+    sizes=&quot;(max-width: 2230px) 100vw, 2230px&quot; width=&quot;2230&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;分别为：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;$2^0$ 正面数量为 23，奇数，该位为 1&lt;br &#x2F;&gt;
+$2^1$ 正面数量为 20，偶数，该位为 0&lt;br &#x2F;&gt;
+$2^2$ 正面数量为 22，偶数，该位为 0&lt;br &#x2F;&gt;
+$2^3$ 正面数量为 22，偶数，该位为 0&lt;br &#x2F;&gt;
+$2^4$ 正面数量为 19，奇数，该位为 1&lt;br &#x2F;&gt;
+$2^5$ 正面数量为 22，偶数，该位为 0&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;这个二进制数就是：&lt;code&gt;010001&lt;&#x2F;code&gt;。目标数是 &lt;code&gt;39&lt;&#x2F;code&gt;，对应的二进制表示为：&lt;code&gt;100111&lt;&#x2F;code&gt;，需要调整的是 $2^5$, $2^4$, $2^2$, $2^1$ 这 4 个组。&lt;code&gt;110110&lt;&#x2F;code&gt; 这个数变成 10 进制就是 &lt;code&gt;54&lt;&#x2F;code&gt;，也就是将序号为 &lt;code&gt;54&lt;&#x2F;code&gt; 的硬币翻转一下。&lt;&#x2F;p&gt;
+&lt;p&gt;答题人进来后，按照约定的分组规则，分别计算各个组的奇偶数：&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;$2^0$ 正面数量为 23，奇数（不变），该位为 1&lt;br &#x2F;&gt;
+$2^1$ 正面数量为 21，奇数，该位为 1&lt;br &#x2F;&gt;
+$2^2$ 正面数量为 23，奇数，该位为 1&lt;br &#x2F;&gt;
+$2^3$ 正面数量为 22，偶数（不变），该位为 0&lt;br &#x2F;&gt;
+$2^4$ 正面数量为 20，偶数，该位为 0&lt;br &#x2F;&gt;
+$2^5$ 正面数量为 23，奇数，该位为 1&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;最终得到的二进制位 &lt;code&gt;100111&lt;&#x2F;code&gt;，也就是十进制的 &lt;code&gt;39&lt;&#x2F;code&gt;，魔币的位置找到了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;fa-san&quot;&gt;发散&lt;&#x2F;h3&gt;
+&lt;p&gt;二进制操作中，让一部分保持不变，另一部分翻转，这个行为不就是异或(不变的部分为 0，变化的部分为 1)么，比如想让 &lt;code&gt;100111&lt;&#x2F;code&gt; 的最后一位变成 0，那么只要与 &lt;code&gt;000001&lt;&#x2F;code&gt; 执行异或操作就行了。异或还有一个性质是与同样的数再次异或可以得到原先的数，利用这个特性，也可以将异或用在一些加密场景。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;can-kao&quot;&gt;参考&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;datagenetics.com&#x2F;blog&#x2F;december12014&#x2F;index.html&quot;&gt;Impossible Escape?&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;hr &#x2F;&gt;
+&lt;p&gt;根据 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Phuker&quot;&gt;Phuker&lt;&#x2F;a&gt; 提供的 3B1B &lt;a href=&quot;https:&#x2F;&#x2F;www.bilibili.com&#x2F;video&#x2F;BV1UD4y1U7or&quot;&gt;视频链接&lt;&#x2F;a&gt;，再进行一些延展。视频里提到如果不是 64 个硬币，而是 3 个硬币，就没有必胜的策略了。这就很有意思了，3 个硬币中找一个不是比从 64 中找一个简单么？还真不是。&lt;&#x2F;p&gt;
+&lt;p&gt;视频中把「找硬币」映射为「顶点着色」问题，翻转硬币就是从某个顶点到相邻顶点（n 个硬币表示 n 维空间），3 个硬币（对应 3 位二进制）翻转任意一个，也就是从一个正方体（每个顶点是一个 3 维坐标，具体可以参见视频）8 个顶点的任意一点到相邻点。因为不知道这三个硬币会被如何摆放，也就是 8 个顶点都有可能（3 位二进制一共有 8 种摆放形式），需要从任意一个顶点出发，应用某种规则，让相邻的 3 个点对应 3 种状态，而这是无法做到的：把 3 种状态标记为红点、绿点、蓝点，每个顶点对应一种颜色，如果要满足需求，则在每个顶点看来，相邻的点一定有红色的点（其他点也一样，红色只是其中一种），也就是 8 个点，又因为 1 个点周围有 3 个点，所以每个点都被数了 3 次，这样的话红色的点就有 &lt;code&gt;8&#x2F;3&lt;&#x2F;code&gt; 个，自然无法实现。要能被整除，也就是 $2^n$&#x2F;n 为正整数，则 n 本身必须是 2 的次方，如 2，4，8，16... 才可以，题目中的 64 是 2 的 8 次方，因此可以实现。&lt;&#x2F;p&gt;
+&lt;p&gt;视频中还提到了「海明码」，原理上跟这道题的解法很像，也是根据二进制的位数来切分区域，不同的是每个区域有一位（第一位）是校验位，可以是奇校验（该区域的 1 的个数为奇数，可以通过校验位来确保）或偶校验。如果其中某一位出错（比如 0 -&amp;gt; 1），那么不仅可以知道有错（只要是一位出错，奇偶性一定发生改变），还能知道第几位错了（就像这道题中找到那个魔币）。具体原理可以看 3B1B 的&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=X8jsijhllIA&quot;&gt;这个视频&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+        
+        <item>
+            <title>python的简单MapReduce实现：计算π</title>
+            <pubDate>Sat, 10 Sep 2011 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/python-mapreduce-pi/</link>
+            <guid>https://limboy.me/posts/python-mapreduce-pi/</guid>
+            <description>&lt;p&gt;MapReduce 是 Google 提出的一个软件架构，一般用于大规模数据集的并行运算。核心概念就是&amp;quot;Map（映射）&amp;quot;和&amp;quot;Reduce（化简）&amp;quot;。&lt;&#x2F;p&gt;
+&lt;p&gt;简单说来就是把一个任务分割成多个独立的子任务，子任务的分发由 map 实现，子任务计算结果的合并由 reduce 实现。&lt;&#x2F;p&gt;
+&lt;p&gt;mapreduce 的应用场景多是那种互不依赖，上下文无关的任务。所以类似 Fibonacci 数列这种对输入有依赖的就不适合使用 mapreduce。&lt;&#x2F;p&gt;
+&lt;p&gt;回到正题，要计算圆周率，我们先构建这么个模型&lt;&#x2F;p&gt;
+&lt;img src=&quot;http:&#x2F;&#x2F;code.google.com&#x2F;edu&#x2F;parallel&#x2F;img&#x2F;inscribe.png&quot; &#x2F;&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 外面的正方形面积
+&lt;&#x2F;span&gt;&lt;span&gt;As &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;(2r)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(2r) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;or&lt;&#x2F;span&gt;&lt;span&gt; 4r&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 里面的圆的面积
+&lt;&#x2F;span&gt;&lt;span&gt;Ac &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;pi&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;pi &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;Ac &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span&gt;(r&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r)
+&lt;&#x2F;span&gt;&lt;span&gt;As &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; 4r&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r
+&lt;&#x2F;span&gt;&lt;span&gt;r&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;As &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;4
+&lt;&#x2F;span&gt;&lt;span&gt;pi &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;4 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;Ac &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span&gt;As
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;也就是说只要算出圆的面积与正方形面积的比，就可以求出圆周率。&lt;&#x2F;p&gt;
+&lt;p&gt;可以通过以下步骤计算 Ac &#x2F; As：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;随机在正方形里生成许多点&lt;&#x2F;li&gt;
+&lt;li&gt;计算点在圆内与在正方形内的比例&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;测试的随机点越多，结果越精确&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;#coding=utf-8
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;random
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;multiprocessing
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span&gt;multiprocessing &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;Process
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MapReduce&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;object&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;__init__&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;map_func&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;reduce_func&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;workers_num&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;None&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.map_func &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;map_func
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.reduce_func &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;reduce_func
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.workers_num &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;workers_num
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;not &lt;&#x2F;span&gt;&lt;span&gt;workers_num:
+&lt;&#x2F;span&gt;&lt;span&gt;            workers_num &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;multiprocessing.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;cpu_count&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.pool &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;multiprocessing.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Pool&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(workers_num)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;__call__&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;inputs&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;        map_result &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.pool.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;map&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.map_func, inputs)
+&lt;&#x2F;span&gt;&lt;span&gt;        reduce_result &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;reduce_func&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(map_result)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span&gt;reduce_result
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;calculator&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;args&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;multiprocessing.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;current_process&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span&gt;.name,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39; processing&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;    points, circle_round &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;args[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt;    points_in_circle &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;range(points)&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;	    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 这里其实只取了1&#x2F;4圆
+&lt;&#x2F;span&gt;&lt;span&gt;        x &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;random.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;random&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;circle_round
+&lt;&#x2F;span&gt;&lt;span&gt;        y &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;random.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;random&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;circle_round
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(x&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span&gt;y&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt; &lt;&#x2F;span&gt;&lt;span&gt;circle_round&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;            points_in_circle &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span&gt;points_in_circle
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;count_circle_points&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;points_list&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;sum(points_list)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;__name__ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;__main__&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 半径
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;CIRCLE_ROUND &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 总点数
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;POINTS &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10000000
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 总进程数
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;WORKERS_NUM &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    map_reduce &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;MapReduce&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(calculator, count_circle_points, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;WORKERS_NUM&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    inputs &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;[(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;POINTS&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;WORKERS_NUM&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;CIRCLE_ROUND&lt;&#x2F;span&gt;&lt;span&gt;)] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;WORKERS_NUM
+&lt;&#x2F;span&gt;&lt;span&gt;    all_points_in_circle &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;map_reduce&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(inputs)
+&lt;&#x2F;span&gt;&lt;span&gt;    ac_as &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;float&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(all_points_in_circle)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;POINTS
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;pi approach to:&lt;&#x2F;span&gt;&lt;span&gt;%7f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;ac_as)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这是比较简单的单机 mapreduce，用多进程就可以实现。如果是多机运算的话，就麻烦多了，类似这张图：&lt;&#x2F;p&gt;
+&lt;img src=&quot;http:&#x2F;&#x2F;code.google.com&#x2F;edu&#x2F;parallel&#x2F;img&#x2F;mrfigure.png&quot; width=&#x27;700px&#x27;&#x2F;&gt;
+&lt;p&gt;参考链接[2]有对这张图的解释&lt;&#x2F;p&gt;
+&lt;p&gt;参考：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;[1] &lt;a href=&quot;http:&#x2F;&#x2F;blog.doughellmann.com&#x2F;2009&#x2F;04&#x2F;implementing-mapreduce-with.html&quot;&gt;http:&#x2F;&#x2F;blog.doughellmann.com&#x2F;2009&#x2F;04&#x2F;implementing-mapreduce-with.html&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;[2] &lt;a href=&quot;http:&#x2F;&#x2F;code.google.com&#x2F;edu&#x2F;parallel&#x2F;mapreduce-tutorial.html&quot;&gt;http:&#x2F;&#x2F;code.google.com&#x2F;edu&#x2F;parallel&#x2F;mapreduce-tutorial.html&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

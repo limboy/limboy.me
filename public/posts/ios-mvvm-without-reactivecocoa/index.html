@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+MVVM without ReactiveCocoa
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/ios-mvvm-without-reactivecocoa/">
+
+<meta name="twitter:title" content="MVVM without ReactiveCocoa">
+<meta property="og:title" content="MVVM without ReactiveCocoa">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;ios-mvvm-without-reactivecocoa&#x2F;">MVVM without ReactiveCocoa</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2015-09-27</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>MVVM 是 MVC 模式的一种演进，它主要解决了 ViewController 过于臃肿带来的不易维护和测试的问题。其中 ViewModel 的主要职责是处理业务逻辑并提供 View 所需的数据，这样 VC 就不用关心业务，自然也就瘦了下来。ViewModel 只关心业务数据不关心 View，所以不会与 View 产生耦合，也就更方便进行单元测试。</p>
+<p>View 是一个壳，它所呈现的内容都需要由 ViewModel 来提供，而 View 又不与 ViewModel 直接沟通，这时就需要 ViewController 来做中间的协调者。</p>
+<p>ViewController 持有 View 和 ViewModel，当 VC 初始化时，会让 ViewModel 去取数据，简单来说就是调用 VM 的某个获取数据的方法。</p>
+<p>使用 MVVM 最舒服的姿势是搭配 ReactiveCocoa。不过它的问题在于学习成本和维护成本比较高，在小团队中或许还可以尝试，当开发人员数量较多时就很难推起来了。这也是我们今天要讲的主题：如何不借助 ReactiveCocoa 来实现 MVVM。</p>
+<p>先从数据的获取开始说起吧。在 ReactiveCocoa 里有一个类叫「RACCommand」，它的主要作用是执行某个会改变数据的操作，然后提供获取数据的方法，跟我们想要达到的目的很像，所以可以借鉴这个思路，写一个简单的 Command。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">typedef void</span><span>(</span><span style="color:#3e999f;">^</span><span>MGJCommandCompletionBlock)(</span><span style="color:#8959a8;">id </span><span>error, </span><span style="color:#8959a8;">id </span><span>content);
+</span><span>
+</span><span style="color:#8e908c;">// 1
+</span><span style="color:#8959a8;">typedef void</span><span>(</span><span style="color:#3e999f;">^</span><span>MGJCommandConsumeBlock)(</span><span style="color:#8959a8;">id </span><span>input, MGJCommandCompletionBlock completionHandler);
+</span><span>
+</span><span style="color:#8e908c;">// 2
+</span><span style="color:#8959a8;">typedef void</span><span>(</span><span style="color:#3e999f;">^</span><span>MGJCommandCancelBlock)();
+</span><span>
+</span><span style="color:#8959a8;">@interface </span><span>MGJCommandResult : </span><span style="color:#839c00;">NSObject
+</span><span style="color:#8e908c;">// 3
+</span><span style="color:#8959a8;">@property </span><span>(</span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSError </span><span style="color:#3e999f;">*</span><span>error;
+</span><span style="color:#8e908c;">// 4
+</span><span style="color:#8959a8;">@property </span><span>(</span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#8959a8;">id </span><span>content;
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span style="color:#8959a8;">@interface </span><span>MGJCommand : </span><span style="color:#839c00;">NSObject
+</span><span>
+</span><span style="color:#8e908c;">// 5
+</span><span style="color:#8959a8;">@property </span><span>(</span><span style="color:#8959a8;">nonatomic</span><span>, </span><span style="color:#8959a8;">readonly</span><span>) </span><span style="color:#8959a8;">BOOL</span><span> executing;
+</span><span style="color:#8e908c;">// 6
+</span><span style="color:#8959a8;">@property </span><span>(</span><span style="color:#8959a8;">nonatomic</span><span>, </span><span style="color:#8959a8;">readonly</span><span>) MGJCommandResult </span><span style="color:#3e999f;">*</span><span>result;
+</span><span>
+</span><span>- (instancetype)</span><span style="color:#4271ae;">initWithConsumeHandler:</span><span>(MGJCommandConsumeBlock )</span><span style="color:#f07219;">consumeHandler</span><span>;
+</span><span style="color:#8e908c;">// 7
+</span><span>- (instancetype)</span><span style="color:#4271ae;">initWithConsumeHandler:</span><span>(MGJCommandConsumeBlock )</span><span style="color:#f07219;">consumeHandler </span><span style="color:#4271ae;">cancelHandler:</span><span>(MGJCommandCancelBlock )</span><span style="color:#f07219;">cancelHandler</span><span>;
+</span><span>
+</span><span style="color:#8e908c;">// 8
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">execute:</span><span>(</span><span style="color:#8959a8;">id</span><span>)</span><span style="color:#f07219;">input</span><span>;
+</span><span style="color:#8e908c;">// 9
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">cancel</span><span>;
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<ol>
+<li><code>input</code> 是外部传过来的值，比如 user_id，当拿到数据后，调用下 completionHandler，这样 <code>result</code> 属性就会变化</li>
+<li>有些操作，如 http 请求，需要手动取消</li>
+<li>单独把 <code>error</code> 作为一个属性放出来，是因为很多数据请求操作都可能出错，当出错后，只需改变这个 error 属性即可。</li>
+<li><code>content</code> 存放了这个 Command 的数据处理结果。</li>
+<li>标识了这个 Command 目前的运行状态，比如可以根据这个状态来显示 loading。</li>
+<li>每次 Command 执行完一个任务后，result 都会改变，外部可以 KVO 这个 result，然后就可以实时获取最新的结果了。</li>
+<li>Command 的执行逻辑，如果实现了 <code>cancelHandler</code> 的话，外部调用 <code>cancel</code>，这个 Handler 就会被触发。</li>
+<li>外部可以调用这个方法来触发 Command 的执行，同时可以传一个参数进来。</li>
+<li>外部可以调用这个方法来取消 Command 的执行。</li>
+</ol>
+<p>实现起来也蛮简单的，这里就不多说了。用起来大概是这样：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// SomeViewModel.m
+</span><span>
+</span><span>@</span><span style="color:#c82728;">weakify</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">followCommand </span><span style="color:#3e999f;">= </span><span>[[MGJCommand </span><span style="color:#4271ae;">alloc</span><span>] initWithConsumeHandler</span><span style="color:#3e999f;">:^</span><span>(</span><span style="color:#8959a8;">id </span><span>input, MGJCommandCompletionBlock completionHandler) {
+</span><span>    @</span><span style="color:#c82728;">strongify</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">)</span><span>;
+</span><span>    [FollowRequest </span><span style="color:#4271ae;">getFollowList:(</span><span style="color:#c99e00;">NSDictionary </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">)input success:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">NSArray </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">users) {
+</span><span style="color:#4271ae;">        </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">usersToFollow </span><span style="color:#3e999f;">=</span><span style="color:#4271ae;"> users;
+</span><span style="color:#4271ae;">        </span><span style="color:#c82728;">completionHandler</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">nil</span><span style="color:#4271ae;">, </span><span>kFollowExpertSearchSucceedSignal</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">    } failure:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(StatusEntity </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">error) {
+</span><span style="color:#4271ae;">        </span><span style="color:#c82728;">completionHandler</span><span style="color:#4271ae;">(error, </span><span style="color:#f07219;">nil</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">    }</span><span>];
+</span><span>}];
+</span></code></pre>
+<p>在 ViewController 里的用法大概像这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// SomeViewController.m
+</span><span>
+</span><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)didTapFollowButton</span><span style="color:#3e999f;">:</span><span>(UIButton </span><span style="color:#3e999f;">*</span><span>)button
+</span><span>{
+</span><span>	</span><span style="color:#8e908c;">// 根据 button 找到 userID
+</span><span>	[</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">viewModel</span><span>.</span><span style="color:#c82728;">followCommand</span><span> execute</span><span style="color:#3e999f;">:</span><span>userID];
+</span><span>}
+</span></code></pre>
+<p>就是这样，VC 本身不处理业务逻辑，都交给 ViewModel 去处理，而这些数据请求的结果处理又有不同的处理方式。</p>
+<h3 id="delegate">Delegate</h3>
+<p>当 ViewModel 拿到数据后，可以把结果以 Delegate 的方式通知 VC，就像这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// SomeViewController.m
+</span><span>
+</span><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)didFollowUserWithResult</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#8959a8;">id</span><span>)result
+</span><span>{
+</span><span>	</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">followButton</span><span>.</span><span style="color:#c82728;">enabled </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">YES</span><span>;
+</span><span>	[</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">followButton</span><span> doSomeAnimation];
+</span><span>}
+</span></code></pre>
+<p>这样做的好处是比较符合苹果既有的设计模式，而且也可以通过查看 Delegate 协议来知道 VM 暴露了哪些接口供外部使用。</p>
+<p>不过这种方法少了点灵活性，比如需要联合多个属性的变化来做一些事情时，处理起来就会比较麻烦，这也是 RAC 强大的地方。</p>
+<h3 id="kvo">KVO</h3>
+<p>RAC 是基于 KVO 构建的，所以也可以用 KVO 来让 VC 获取 VM 的变化。</p>
+<p>但我们都知道 KVO 的槽点比较多，比如使用起来不方便，用完还要记得移除等。这里可以使用 Facebook 开源的 <a href="https://github.com/facebook/KVOController">KVOController</a>，它比较好的处理了 KVO 存在的一些问题，同时又能发挥 KVO 带来的便捷性。</p>
+<p>有了它我们就能在一个地方把 VM 的更新处理掉了</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)handleViewModelUpdate
+</span><span>{
+</span><span>	[</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">KVOController</span><span> observe</span><span style="color:#3e999f;">:</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">viewModel</span><span> keyPath</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;followCommand.result&quot;</span><span> options</span><span style="color:#3e999f;">:</span><span style="color:#f07219;">NSKeyValueObservingOptionInitial</span><span style="color:#3e999f;">|</span><span style="color:#f07219;">NSKeyValueObservingOptionNew</span><span> block</span><span style="color:#3e999f;">:^</span><span>(</span><span style="color:#8959a8;">id </span><span>observer, </span><span style="color:#8959a8;">id </span><span>target, </span><span style="color:#c99e00;">NSDictionary </span><span style="color:#3e999f;">*</span><span>change) {
+</span><span>		</span><span style="color:#8959a8;">id </span><span>newValue </span><span style="color:#3e999f;">=</span><span> change[NSKeyValueChangeNewKey];
+</span><span>		</span><span style="color:#8e908c;">// doSomething with the newValue
+</span><span>	}];
+</span><span>
+</span><span>	</span><span style="color:#8e908c;">// 对 VM 其他 keyPath 的处理也都可以放到这里
+</span><span>}
+</span></code></pre>
+<p>如果觉得这样的写法还是太麻烦，可以做一层简单的封装，使用起来就像这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)handleViewModelUpdate
+</span><span>{
+</span><span>	[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">observe:</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">viewModel </span><span style="color:#4271ae;">keyPath:</span><span style="color:#839c00;">@&quot;followCommand.result&quot; </span><span style="color:#4271ae;">block: </span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id </span><span style="color:#4271ae;">newValue){
+</span><span style="color:#4271ae;">		</span><span style="color:#8e908c;">// use newValue to update view
+</span><span style="color:#4271ae;">	}</span><span>];
+</span><span>}
+</span></code></pre>
+<p>是不是会好一点，使用 KVO 比 Delegate 好的一点是不用再额外声明协议和方法，而且支持 block，使用起来也会方便些。</p>
+<p>对于像 <code>error</code> 这样很多操作都会产生同样结果的场景，可以单独拿出来，作为 ViewModel 的一个属性，使用时，直接 KVO 这个属性即可。</p>
+<h3 id="xi-jie-chu-li">细节处理</h3>
+<p>如果不涉及到 TableView 等会出现复用场景的地方，MVVM 使用起来还是比较方便的。如果有了 TableView，又要做一些额外的处理。</p>
+<p>一般来说，VC 可以带一个 VM，那如果出现 Cell 时怎么办，Cell 里又包含了按钮，按钮又需要数据请求又怎么处理？这些都是比较常见的场景，也可以通过 MVVM 来解决。</p>
+<p>我们知道 VM 的职责是为 View 提供数据支持，Cell 也是一个 View，那么为 Cell 配备一个 VM
+不就可以了么。</p>
+<p>这样的话，VC 的 VM 需要包含一个数组，里面的元素是 CellVM，使用起来就像这样</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// SomeViewController.m
+</span><span>
+</span><span style="color:#3e999f;">- </span><span>(UITableViewCell </span><span style="color:#3e999f;">*</span><span>)tableView</span><span style="color:#3e999f;">:</span><span>(UITableView </span><span style="color:#3e999f;">*</span><span>)tableView cellForRowAtIndexPath</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#c99e00;">NSIndexPath </span><span style="color:#3e999f;">*</span><span>)indexPath
+</span><span>{
+</span><span>	UITableViewCell </span><span style="color:#3e999f;">*</span><span>cell </span><span style="color:#3e999f;">= </span><span>[tableView </span><span style="color:#4271ae;">dequeueReusableCellWithIdentifier:</span><span style="color:#839c00;">@&quot;Cell&quot; </span><span style="color:#4271ae;">forIndexPath:indexPath</span><span>];
+</span><span>	cell.</span><span style="color:#c82728;">viewModel </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">viewModel</span><span>.</span><span style="color:#c82728;">cellViewModels</span><span>[indexPath.</span><span style="color:#c82728;">row</span><span>];
+</span><span>
+</span><span>	</span><span style="color:#8e908c;">// cell 可能会用到 cellVM 里的 Command，所以在这里处理 command 的执行结果
+</span><span>	[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">observe:cell keyPath:</span><span style="color:#839c00;">@&quot;likeCommand.result&quot; </span><span style="color:#4271ae;">block: </span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">id </span><span style="color:#4271ae;">newValue){
+</span><span style="color:#4271ae;">		</span><span style="color:#8e908c;">// update cell after like
+</span><span style="color:#4271ae;">	}</span><span>];
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">return</span><span> cell
+</span><span>}
+</span></code></pre>
+<p>当然仅仅如此是不够的，我们需要找个恰当的时机把 KVO 移除，避免多次监听。<code>UITableViewDelegate</code> 里的这个方法就很适合。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// SomeViewController.m
+</span><span>
+</span><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)tableView</span><span style="color:#3e999f;">:</span><span>(UITableView </span><span style="color:#3e999f;">*</span><span>)tableView didEndDisplayingCell</span><span style="color:#3e999f;">:</span><span>(UITableViewCell </span><span style="color:#3e999f;">*</span><span>)cell forRowAtIndexPath</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#c99e00;">NSIndexPath </span><span style="color:#3e999f;">*</span><span>)indexPath
+</span><span>{
+</span><span>	[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">unobserve:cell keyPath:</span><span style="color:#839c00;">@&quot;likeCommand.result&quot;</span><span>];
+</span><span>}
+</span></code></pre>
+<p>不过这里也要讲究一个平衡，如果 Cell 的类型比较多，且涉及 Command 的地方不多，只是做呈现方面的工作，直接使用 Entity 会更方便。</p>
+<h3 id="tips">Tips</h3>
+<ul>
+<li><code>ViewController</code> 尽量不涉及业务逻辑，让 <code>ViewModel</code> 去做这些事情。</li>
+<li><code>ViewController</code> 只是一个中间人，接收 <code>View</code> 的事件、调用 <code>ViewModel</code> 的方法、响应 <code>ViewModel</code> 的变化。</li>
+<li><code>ViewModel</code> 不能包含 View，不然就跟 View 产生了耦合，不方便复用和测试。</li>
+<li><code>ViewModel</code> 之间可以有依赖。</li>
+<li><code>ViewModel</code> 避免过于臃肿，不然维护起来也是个问题。</li>
+</ul>
+<p>MVVM 并不复杂，跟 MVC 也是兼容的，只是多了一个 ViewModel 层，但就是这么一个小改动，就能让代码变得更加容易阅读和维护，不妨试一下吧。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/rac/">RAC</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

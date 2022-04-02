@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+说说Core Foundation
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/core-foundation/">
+
+<meta name="twitter:title" content="说说Core Foundation">
+<meta property="og:title" content="说说Core Foundation">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;core-foundation&#x2F;">说说Core Foundation</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2013-06-07</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>先来说说「Core Foundation」（以下简称 CF）的历史吧。当年乔布斯被自己创办的公司驱逐后，成立了「NeXT Computer」,其实做的还是老本行：卖电脑，但依旧不景气。好在 NeXTSTEP 系统表现还不错，亏损不至于太严重。正好此时苹果的市场份额大跌，急需一个新的操作系统，结果大家都知道了，乔布斯借此收购，重新回到了苹果。</p>
+<p>这里就牵扯到了一个问题，如何让旧有的系统（Mac OS 9）和 NeXTSTEP 合成为一个新系统？这就需要一个更为底层的核心库可以供 Mac Toolbox 和 OPENSTEP 双方调用。CF 就这么诞生了。</p>
+<p>CF 是由 C 语言实现的，而不是 Objective-C，所以如果用到了 CF，就需要手动管理内存，ARC 是无能为力的。当然因为 CF 和 Foundation 之间的友好关系，它们之间的管理权也是可以移交的，这个后面再说。</p>
+<p>CF 提供了基础功能，如 CFString,CFDate,CFNumber 等等，以 CFString 为例，CFString 和 NSString 之间是什么关系？NSString 其实是一个「类簇」，也就是抽象接口，所以 String Objects 并不是 NSString 实例，而是实现了 NSString 方法的私有类的实例，也就是 CFString。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#4271ae;">NSLog</span><span>(</span><span style="color:#4271ae;">NSStringFromClass</span><span>([</span><span style="color:#839c00;">@&quot;Some Class&quot;</span><span> class]));
+</span><span>
+</span><span># output __NSCFConstantString
+</span></code></pre>
+<p>同时 NSStrings 和 CFStrings 之间可以自由转换，也就是「toll free bridging」。比如：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>CFStringRef aCFString </span><span style="color:#3e999f;">= </span><span>(CFStringRef)aNSString;
+</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>aNSString </span><span style="color:#3e999f;">= </span><span>(</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)aCFString;
+</span></code></pre>
+<p>因为编译器无法自动管理 CF 的内存，所以 CF 对象在使用完后，需要手动释放（CFRelease）。如果使用 ARC 来管理内存，苹果提供了 3 种方法来处理：</p>
+<h3 id="bridge">__bridge</h3>
+<p>__bridge 只是在 CF 和 OC 之间传递指针，其他的事啥也没干，所以转换成 CF 时，还是要手动释放内存。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>CFStringRef aCFString </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">CFStringCreateWithCString</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">NULL</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&quot;test&quot;</span><span style="color:#4271ae;">, </span><span>kCFStringEncodingASCII</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>aNSString </span><span style="color:#3e999f;">= </span><span>(__bridge </span><span style="color:#c99e00;">NSString </span><span style="color:#3e999f;">*</span><span>)aCFString;
+</span><span>
+</span><span>(</span><span style="color:#8959a8;">void</span><span>)aNSString;
+</span><span>
+</span><span style="color:#c82728;">CFRelease</span><span style="color:#4271ae;">(aCFString)</span><span>;
+</span></code></pre>
+<h3 id="bridge-retained">__bridge_retained</h3>
+<p><code>__bridge_retained</code> 或者 <code>CFBridgingRetain()</code>，将 Objective-C 对象转换为 Core Foundation 对象，把对象所有权桥接给 Core Foundation 对象，同时剥夺 ARC 的管理权，后续需要开发者使用 CFRelease 或者相关方法手动来释放对象。</p>
+<h3 id="bridge-transfer">__bridge_transfer</h3>
+<p><code>__bridge_transfer</code> 或者 <code>CFBridgingRelease()</code> 将非 Objective-C 对象转换为 Objective-C 对象，同时将对象的管理权交给 ARC，开发者无需手动管理内存。</p>
+<p>最后，因为 CF 是用 C 实现的，且处于下层，所以执行速度上会比 Foundation 稍微快一点，不过也就是一点点，几乎察觉不到。相比 Foundation 带来的 ARC 内存管理和更多的 API，开发上的效率会大幅提升，所以还是尽量多的使用 OC。</p>
+<h3 id="can-kao">参考</h3>
+<ul>
+<li><a href="http://ridiculousfish.com/blog/posts/bridge.html">http://ridiculousfish.com/blog/posts/bridge.html</a></li>
+<li><a href="http://blog.csdn.net/yiyaaixuexi/article/details/8553659">http://blog.csdn.net/yiyaaixuexi/article/details/8553659</a></li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+写了一款REST框架——RESTY
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/resty/">
+
+<meta name="twitter:title" content="写了一款REST框架——RESTY">
+<meta property="og:title" content="写了一款REST框架——RESTY">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;resty&#x2F;">写了一款REST框架——RESTY</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-12-04</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>关于 REST 的介绍可以参考<a href="http://blog.leezhong.com/tech/2010/11/14/rest.html">我之前的文章</a>，总体说来，REST 是 web 发展的趋势，而 PHP 是 web 开发的利器，但我找了一遍，只找到了两个 PHP REST 框架(不包括那些以 MVC 为核心，同时又支持 REST 的框架)，一个是<a href="http://peej.github.com/tonic/">Tonic</a>，架构理念我比较认同，但代码质量实在不敢恭维。还有一个是<a href="http://www.recessframework.org/">Recess</a>，在我看来，它有点复杂化了，把不该 rest 做的事也做了。在这种情况下，我只能自己动手，丰衣足食了。</p>
+<h3 id="resty-jian-jie">RESTY 简介</h3>
+<p>RESTY 的流程很简单，获取 Request 单例，然后执行 exec 方法，该方法里会调用 Route 来解析 URI 获取相应的 Resource，然后实例化 Resource，触发相应的 HTTP 方法，最后返回一个 Response 对象，Response 执行 output 方法就输出了结果。听起来好像一点都不简单，哈哈，还是来大概看一下代码吧</p>
+<p>index.php</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">try </span><span>{
+</span><span>	</span><span style="color:#c99e00;">Request</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">instance</span><span style="color:#4271ae;">()-&gt;</span><span style="color:#c82728;">exec</span><span style="color:#4271ae;">()-&gt;</span><span style="color:#c82728;">output</span><span style="color:#4271ae;">()</span><span>;
+</span><span>} </span><span style="color:#8959a8;">catch</span><span> (</span><span style="color:#c99e00;">Route_Exception </span><span style="color:#c82728;">$e</span><span>) {
+</span><span>	</span><span style="color:#c99e00;">Response</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">instance</span><span style="color:#4271ae;">()
+</span><span>		</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">set_status</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">404</span><span style="color:#4271ae;">)
+</span><span>		</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">set_body</span><span style="color:#4271ae;">(array(
+</span><span style="color:#4271ae;">			</span><span style="color:#839c00;">&#39;error&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;Resource Not Found&#39;</span><span style="color:#4271ae;">,
+</span><span style="color:#4271ae;">			</span><span style="color:#839c00;">&#39;Request&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#c82728;">$_SERVER</span><span style="color:#4271ae;">[</span><span style="color:#839c00;">&#39;REQUEST_URI&#39;</span><span style="color:#4271ae;">],
+</span><span style="color:#4271ae;">		))
+</span><span>		</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">output</span><span style="color:#4271ae;">()
+</span><span>		;
+</span><span>}
+</span></code></pre>
+<p>request.php</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">exec</span><span>()
+</span><span>{
+</span><span>	</span><span style="color:#c82728;">$class_name </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;Resource_&#39;</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">str_replace(</span><span style="color:#839c00;">&#39;/&#39;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;_&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">get_resource</span><span style="color:#4271ae;">())</span><span>;
+</span><span>	</span><span style="color:#c82728;">$class </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">new </span><span style="color:#c99e00;">ReflectionClass</span><span>(</span><span style="color:#c82728;">$class_name</span><span>);
+</span><span>	</span><span style="color:#c82728;">$resource </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$class</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">newInstance</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	</span><span style="color:#c82728;">$class</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">getMethod</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;before&#39;</span><span style="color:#4271ae;">)-&gt;</span><span style="color:#c82728;">invoke</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$resource</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	</span><span style="color:#c82728;">$class</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">getMethod</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">request_method</span><span style="color:#4271ae;">)-&gt;</span><span style="color:#c82728;">invoke</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$resource</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	</span><span style="color:#c82728;">$class</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">getMethod</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;after&#39;</span><span style="color:#4271ae;">)-&gt;</span><span style="color:#c82728;">invoke</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$resource</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#c82728;">$response </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">Response</span><span style="color:#4271ae;">::</span><span style="color:#c82728;">instance</span><span style="color:#4271ae;">()</span><span>;
+</span><span>	</span><span style="color:#c82728;">$response</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">set_body</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$resource</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">get_data</span><span style="color:#4271ae;">())</span><span>;
+</span><span>	</span><span style="color:#8959a8;">return </span><span style="color:#c82728;">$response</span><span>;
+</span><span>}
+</span></code></pre>
+<p>response.php</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">output</span><span>()
+</span><span>{
+</span><span>	</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">_content_encoding</span><span style="color:#4271ae;">()</span><span>;
+</span><span>	</span><span style="color:#4271ae;">header(</span><span style="color:#839c00;">&#39;Content-type:application/json;charset=utf-8&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	</span><span style="color:#4271ae;">header(</span><span style="color:#839c00;">&#39;Status:&#39;</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">_status</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39; &#39;</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">_messages</span><span style="color:#4271ae;">[</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">_status</span><span style="color:#4271ae;">])</span><span>;
+</span><span>	</span><span style="color:#4271ae;">header(</span><span style="color:#839c00;">&#39;Content-Length: &#39;</span><span style="color:#3e999f;">.</span><span style="color:#4271ae;">strlen(</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">_body</span><span style="color:#4271ae;">))</span><span>;
+</span><span>	</span><span style="color:#8959a8;">foreach</span><span>(</span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_header </span><span style="color:#3e999f;">as </span><span style="color:#c82728;">$key </span><span style="color:#3e999f;">=&gt; </span><span style="color:#c82728;">$val</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#4271ae;">header(</span><span style="color:#c82728;">$key</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;:&#39;</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$val</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	}
+</span><span>	</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_body</span><span>;
+</span><span>}
+</span></code></pre>
+<h3 id="resty-te-xing">RESTY 特性</h3>
+<h3 id="qing-liang-ji">轻量级</h3>
+<p>RESTY 包含了核心的 Request/Resource/Response/Route/Config/Validation 功能，没有其他多余的部件，如 Controller/View 等等，很纯粹。一个工具应该把一件事做好，同时提供接口，这也是 RESTY 的哲学。</p>
+<h3 id="shi-yong-fang-bian">使用方便</h3>
+<p>使用时，只需定义好 uri 对应的 Resource，然后编写 Resource 就行了，其他的事 RESTY 会帮你搞定。</p>
+<p>config/resource.php demo</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span>
+</span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">array</span><span>(
+</span><span>	</span><span style="color:#839c00;">&#39;/example/(?&lt;id&gt;[0-9]+)&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;example&#39;</span><span>,
+</span><span>	</span><span style="color:#839c00;">&#39;/example/foo/(?&lt;name&gt;[a-zA-Z_0-9]+)&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;example/foo&#39;</span><span>,
+</span><span>);
+</span></code></pre>
+<p>可以看到 uri 支持正则，没错，原生的 php 正则。resource 部分对应 resource 文件的路径(不包括后缀)</p>
+<p>resource/example.php</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Resource_Example </span><span style="color:#8959a8;">extends </span><span style="color:#839c00;">Resource
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">get</span><span>()
+</span><span>	{
+</span><span>		</span><span style="color:#8e908c;">/* set etag
+</span><span style="color:#8e908c;">		Response::instance()
+</span><span style="color:#8e908c;">			-&gt;if_none_match(md5(&#39;hello&#39;))
+</span><span style="color:#8e908c;">			-&gt;add_etag(md5(&#39;hello&#39;))
+</span><span style="color:#8e908c;">			;
+</span><span style="color:#8e908c;">		//*/
+</span><span>		</span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">validate</span><span style="color:#4271ae;">()</span><span>)
+</span><span>		{
+</span><span>			</span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_data </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">get_data</span><span style="color:#4271ae;">()</span><span>;
+</span><span>		}
+</span><span>		</span><span style="color:#8959a8;">else
+</span><span>		{
+</span><span>			</span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_data </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array</span><span>(</span><span style="color:#839c00;">&#39;error&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">implode(</span><span style="color:#839c00;">&#39;,&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">getErrors</span><span style="color:#4271ae;">())</span><span>, </span><span style="color:#839c00;">&#39;request&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#c82728;">$_SERVER</span><span>[</span><span style="color:#839c00;">&#39;REQUEST_URI&#39;</span><span>]);
+</span><span>		}
+</span><span>	}
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">post</span><span>()
+</span><span>	{
+</span><span>		</span><span style="color:#c82728;">$this</span><span>-&gt;</span><span style="color:#c82728;">_data </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array_merge(</span><span style="color:#c82728;">$this</span><span style="color:#4271ae;">-&gt;</span><span style="color:#c82728;">get_data</span><span style="color:#4271ae;">(), array(</span><span style="color:#839c00;">&#39;type&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;post&#39;</span><span style="color:#4271ae;">))</span><span>;
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>每一个资源对应 4 个 http 方法。RESTY 还很贴心地提供了 Validation 部件(基本上是直接从 Kohana 中 K 过来的)，方便对数据进行校验。</p>
+<h3 id="yi-kuo-zhan">易扩展</h3>
+<p>system/classes 文件夹下的类文件，都可以在 app/classes 文件夹下扩展，而且使用时不用做任何修改。假设你之前已经写了不少 Resource，忽然想到要扩展系统的 Resource 类，正常的做法是定义一个 MY_Resource 之类的类文件来扩展系统的 Resource 类，然后使用时使用 MY_Resource 而不是 Resource。但这样就会有个问题，之前使用的 Resource 类都要做修改了，可谓牵一发而动全身。RESTY 就方便了，同样要扩展 Resource 类，只要在 app/classes 下新建一个 resource.php 文件，然后扩展 Resty_Resource 类即可。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span>
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Resource </span><span style="color:#8959a8;">extends </span><span style="color:#839c00;">Resty_Resource
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">public function </span><span style="color:#4271ae;">foo</span><span>()
+</span><span>	{
+</span><span>		</span><span style="color:#8e908c;">//...
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>这样使用时还是一样的 Resource 类，但却多了 foo 方法。这也是从 Kohana 学到的无缝扩展大法（题外话：Kohana 真是个不错的框架，各位不妨一试）。原理就是在类自动加载时会先去 app/classes 文件夹下去找，如果没找到的话再去 system/classes 下找。</p>
+<h3 id="yan-zheng-gong-neng">验证功能</h3>
+<p>作为一个比较完整的 REST 框架，Validation 还是不能少的，为了不重复制造轮子，直接把 Kohana 的验证类搬了过来，稍作修改。</p>
+<p>配置：config/validation.php</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">array</span><span>(
+</span><span>	</span><span style="color:#839c00;">&#39;example&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>		</span><span style="color:#839c00;">&#39;get&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>			</span><span style="color:#839c00;">&#39;filters&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>				</span><span style="color:#839c00;">&#39;id&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>					</span><span style="color:#839c00;">&#39;trim&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">null</span><span>,
+</span><span>				),
+</span><span>			),
+</span><span>			</span><span style="color:#839c00;">&#39;rules&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>				</span><span style="color:#839c00;">&#39;id&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>					</span><span style="color:#839c00;">&#39;not_empty&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">null</span><span>,
+</span><span>					</span><span style="color:#839c00;">&#39;min_length&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(</span><span style="color:#f07219;">2</span><span>),
+</span><span>					</span><span style="color:#839c00;">&#39;digit&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#f07219;">null</span><span>,
+</span><span>				),
+</span><span>			),
+</span><span>		),
+</span><span>	),
+</span><span>);
+</span></code></pre>
+<p>错误提示：config/message.php</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">array</span><span>(
+</span><span>	</span><span style="color:#839c00;">&#39;example&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>		</span><span style="color:#839c00;">&#39;id&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">array</span><span>(
+</span><span>			</span><span style="color:#839c00;">&#39;digit&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;id必须是数字&#39;</span><span>,
+</span><span>			</span><span style="color:#839c00;">&#39;not_empty&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;id不能为空&#39;</span><span>,
+</span><span>			</span><span style="color:#839c00;">&#39;min_length&#39; </span><span style="color:#3e999f;">=&gt; </span><span style="color:#839c00;">&#39;id长度至少为:value&#39;</span><span>,
+</span><span>		),
+</span><span>	),
+</span><span>);
+</span></code></pre>
+<h3 id="config-gong-neng">Config 功能</h3>
+<p>config 文件如上面所示，就是返回一个数组。使用也很简单:</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span>// 获取config/message.php文件的example key对应的内容
+</span><span>Config::get(&#39;message.example&#39;);
+</span><span>
+</span><span>// 设置config(不会写入到文件，只在一个http request有效)
+</span><span>Config::set(&#39;message.example.id.digit&#39;, &#39;id can be anything&#39;);
+</span></code></pre>
+<h3 id="xia-zai">下载</h3>
+<p><a href="https://github.com/limboy/resty">https://github.com/limboy/resty</a></p>
+<p>欢迎使用，并反馈:)</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/project/">project</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/php/">php</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

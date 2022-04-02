@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+关于代码的注释
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/code-comments/">
+
+<meta name="twitter:title" content="关于代码的注释">
+<meta property="og:title" content="关于代码的注释">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;code-comments&#x2F;">关于代码的注释</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-10-25</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>怎样的注释才是合理的？关于这个问题，首先要回答的问题是：为什么要注释？</p>
+<p>注释通常是为了方便其他程序员阅读源码，让他能够明白这个变量是做什么用的，这段代码是为了完成什么任务等等，不至于三更半夜系统出现了 bug，结果在程序里翻山越岭，跋山涉水，还没有找到出问题的代码，好不容易找到了，又不知道如何修改。</p>
+<p>那是不是注释越多越详细越好呢？也不是。因为程序是会经常变动的，这加个参数，那改个变量是很正常的，稍不注意就会忘了更新注释。而且从程序员的角度来说，也不愿去更新注释，一个是因为懒，另一个是因为知道将来还可能会变，索性等将来再说。以后维护该程序的人，看着注释和程序就会很纠结。</p>
+<p>所以不愿写注释是程序员的天性，行云流水地写完一段代码，这种感觉多爽啊。时时刻刻想着要写注释，就不能全身心地投入到代码的实现上。不过倒是可以等爽完之后，再把注释加上，这就牵扯到一个问题: 应该在哪些地方加注释？</p>
+<p><em>先来看这段代码</em></p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">float</span><span> a, b, c; a</span><span style="color:#3e999f;">=</span><span style="color:#f07219;">9.81</span><span>; b</span><span style="color:#3e999f;">=</span><span style="color:#f07219;">5</span><span>; c</span><span style="color:#3e999f;">= </span><span style="color:#f07219;">.5</span><span style="color:#3e999f;">*</span><span>a</span><span style="color:#3e999f;">*</span><span>(b</span><span style="color:#3e999f;">^</span><span style="color:#f07219;">2</span><span>);
+</span></code></pre>
+<p>代码很简洁，但就是不知道 a,b,c 代表什么，将来如果要维护这样的程序，会抑郁的。</p>
+<p><em>再来看看这段代码</em></p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">const float</span><span> a </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">9.81</span><span>; </span><span style="color:#8e908c;">//gravitational force
+</span><span style="color:#8959a8;">float</span><span> b </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">5</span><span>; </span><span style="color:#8e908c;">//time in seconds
+</span><span style="color:#8959a8;">float</span><span> c </span><span style="color:#3e999f;">= </span><span>(</span><span style="color:#f07219;">1</span><span style="color:#3e999f;">/</span><span style="color:#f07219;">2</span><span>)</span><span style="color:#3e999f;">*</span><span>a</span><span style="color:#3e999f;">*</span><span>(b</span><span style="color:#3e999f;">^</span><span style="color:#f07219;">2</span><span>) </span><span style="color:#8e908c;">//multiply the time and gravity together to get displacement.
+</span></code></pre>
+<p>是不是好一点，至少知道这些变量代表着什么。但如果下面还会用到这些代码，依旧会崩溃。</p>
+<p><em>再改进一下</em></p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">const float</span><span> gravitationalForce </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">9.81</span><span>;
+</span><span style="color:#8959a8;">float</span><span> timeInSeconds </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">5</span><span>;
+</span><span style="color:#8959a8;">float</span><span> displacement </span><span style="color:#3e999f;">= </span><span>(</span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">/ </span><span style="color:#f07219;">2</span><span>) </span><span style="color:#3e999f;">*</span><span> gravitationalForce </span><span style="color:#3e999f;">* </span><span>(timeInSeconds </span><span style="color:#3e999f;">^ </span><span style="color:#f07219;">2</span><span>)
+</span></code></pre>
+<p>这就好多了，每个变量名都是自解释类型，看着名就知道什么意思，阅读起来也不会有障碍。但最后的公式还是有点不知所云。</p>
+<p><em>加上合理的注释</em></p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">/* compute displacement with Newton&#39;s equation x = vₒt + ½at² */
+</span><span style="color:#8959a8;">const float</span><span> gravitationalForce </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">9.81</span><span>;
+</span><span style="color:#8959a8;">float</span><span> timeInSeconds </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">5</span><span>;
+</span><span style="color:#8959a8;">float</span><span> displacement </span><span style="color:#3e999f;">= </span><span>(</span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">/ </span><span style="color:#f07219;">2</span><span>) </span><span style="color:#3e999f;">*</span><span> gravitationalForce </span><span style="color:#3e999f;">* </span><span>(timeInSeconds </span><span style="color:#3e999f;">^ </span><span style="color:#f07219;">2</span><span>)
+</span></code></pre>
+<p><em>当然也可以再从命名上作文章，避免注释，同时又不影响阅读</em></p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">const float</span><span> accelerationDueToGravity </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">9.81</span><span>;
+</span><span style="color:#8959a8;">float</span><span> timeInSeconds </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">5</span><span>;
+</span><span style="color:#8959a8;">float</span><span> displacement </span><span style="color:#3e999f;">=</span><span> NewtonianPhysics.</span><span style="color:#c82728;">CalculateDisplacement</span><span style="color:#4271ae;">(accelerationDueToGravity, timeInSeconds)</span><span>;
+</span></code></pre>
+<p>所以合格的代码应该是自解释的，再加上合理的注释。所谓合理的注释就是在可能会引起混淆或不太好理解的地方加上说明。如果你的程序太依赖注释，那就该重构了。</p>
+<p>PS: 如果你对 comment 文化有兴趣的话，可以看看 stackoverflow 上的<a href="http://stackoverflow.com/q/184618/94962">这篇文章</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

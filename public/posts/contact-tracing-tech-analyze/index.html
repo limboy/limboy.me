@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+Contact Tracing 技术实现解析
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/contact-tracing-tech-analyze/">
+
+<meta name="twitter:title" content="Contact Tracing 技术实现解析">
+<meta property="og:title" content="Contact Tracing 技术实现解析">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;">Contact Tracing 技术实现解析</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2020-04-18</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>为了更好地应对 covid-19，<a href="https://www.apple.com/covid19/contacttracing">Apple</a> 和 <a href="https://www.blog.google/inside-google/company-announcements/apple-and-google-partner-covid-19-contact-tracing-technology/">Google</a> 联合发布了一项技术：「 Privacy-Preserving Contact Tracing」，在保护用户隐私的前提下，追踪联系人。这里的联系人不是通讯录里的联系人，而是真实世界中有过联系的人，更确切地说是在蓝牙范围内的人，路上并肩的行人也属于这个范畴。「追踪」是为了当有人确诊后，可以找到有过近距离接触的人，以便告知该信息。</p>
+<p>Apple 和 Google 给出的技术方案从宏观来看是：把设备信息通过蓝牙传递到其他手机上，当有人确诊后，将 ta 的设备信息上传到云端，再推到其他手机上，通过比对本地保存的其他设备信息和接收到的设备信息是否匹配，来判定手机 owner 是否存在被感染风险。</p>
+<p>为什么选择低功耗蓝牙，一个是主流移动设备基本都配备了该能力，这样就方便跨设备，甚至跨操作系统通信；同时低功耗可以避免给手机带来性能影响；蓝牙属于近场通信，也非常适合 covid-19 的场景。</p>
+<p>其次设备信息这么传递，如何保障隐私不被泄漏呢，我们来看下这个问题</p>
+<h2 id="ru-he-bi-mian-she-bei-xin-xi-chuan-di-dai-lai-de-yin-si-xie-lou-feng-xian">如何避免设备信息传递带来的隐私泄漏风险</h2>
+<p>如果设备信息就是固定的手机的 udid，或者对应的映射，攻击者就可以利用这个指纹做文章（比如查看另一个人的手机，看是否有某台设备的 udid，以确定两个人是否近距离接触过，或者持续监控/跟踪某台设备）。因此这里的 Key 应该是变的，同时又跟设备紧密相关，别人无法仿造和解密。白皮书里涉及到了 3 个 Key：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;74ae60e45645cb3745de5b164fe647178a993e8e.jpg"
+    srcset="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;74ae60e45645cb3745de5b164fe647178a993e8e.jpg 410w,&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;74ae60e45645cb3745de5b164fe647178a993e8e.jpg 410w"
+    sizes="(max-width: 410px) 100vw, 410px" width="410" /></p><h3 id="tracing-key-yi-xia-jian-cheng-tk">Tracing Key （以下简称 TK）</h3>
+<p>一个设备只生成一次，保存在本地，不会被上传。它的目标是足够随机，不会与其他设备产生的 TK 冲突。</p>
+<h3 id="daily-tracing-key-yi-xia-jian-cheng-dtk">Daily Tracing Key（以下简称 DTK）:</h3>
+<p>一天生成一次，一天内不变，从 Tracing Key 派生而来，使用 <a href="https://en.wikipedia.org/wiki/HKDF">HKDF</a> 密钥算法（将较短的密钥生成较长的密钥，同时保证随机性），这个算法使用原始的密钥（Tracing Key）作为输入，使用 <code>DayNumber</code> 作为变量，因为 <code>DayNumber</code> 一天内不变，所以 DTK 一天内也不会变。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;faa9b33a2cbe2d8caca14f5d9fe40488b0290982.png"
+    srcset="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;faa9b33a2cbe2d8caca14f5d9fe40488b0290982.png 416w,&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;faa9b33a2cbe2d8caca14f5d9fe40488b0290982.png 416w"
+    sizes="(max-width: 416px) 100vw, 416px" width="416" /></p>
+<p>这个 Key 的设计目标是隐藏 TK（外部无法根据这个 Key 推测出 TK），同时不会与其他设备的 DTK 冲突。</p>
+<h3 id="rolling-proximity-identifier-yi-xia-jian-cheng-rpi">Rolling Proximity Identifier（以下简称 RPI）</h3>
+<p>一个广播周期内（比如 10 分钟）生成同一个 HMAC（密钥散列消息认证码）</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;5b07e24e0ab6fc016cd36a5926ae1a659ac0fb19.png"
+    srcset="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;5b07e24e0ab6fc016cd36a5926ae1a659ac0fb19.png 562w,&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;5b07e24e0ab6fc016cd36a5926ae1a659ac0fb19.png 562w"
+    sizes="(max-width: 562px) 100vw, 562px" width="562" /></p>
+<p>dkt<sub>i</sub> 表示当天的 Daily Tracing Key，也就是 SHA-256 哈希函数的入参
+TIN<sub>j</sub> 表示 TimeIntervalNumber，也就是当天第 j 轮广播周期，比如 10 分钟为一个周期（换一次 RPI）</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;64fd3c7f5c0e0c9f4f3a6ff28227e8ddbe39113f.png"
+    srcset="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;64fd3c7f5c0e0c9f4f3a6ff28227e8ddbe39113f.png 496w,&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;64fd3c7f5c0e0c9f4f3a6ff28227e8ddbe39113f.png 496w"
+    sizes="(max-width: 496px) 100vw, 496px" width="496" /></p>
+<p>j 的取值区间就是 <code>[0,143]</code></p>
+<p><code>RPI</code> 的设计目标是隐藏 DKT，同时支持 DKT 的验证（当某个人确诊后，可以通过 ta 的 DKT 计算 RPI 来验证）。</p>
+<h3 id="ru-he-fa-song-rpi">如何发送 RPI</h3>
+<p>前面提到的 3 个 Key，只有最后一个 RPI 会发送到其他设备上（TK 永远不会离开设备，DTK 只有确诊后才会提取其中的一个子集作为 Diagnosis Key），RPI 通过蓝牙发送到其他设备（关于低功耗蓝牙协议的说明，可以参考<a href="https://www.cnblogs.com/iini/p/8969828.html">这篇文章</a>）。</p>
+<p>发送（广播）流程如下：
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;c978802c2c011295dea09a857ca31ba24c56d004.jpg"
+    srcset="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;c978802c2c011295dea09a857ca31ba24c56d004.jpg 1104w,&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;c978802c2c011295dea09a857ca31ba24c56d004.jpg 1104w"
+    sizes="(max-width: 1104px) 100vw, 1104px" width="1104" /></p></p>
+<p>这里的通信双方分别是：advertiser（广播数据包）和 scanner（扫描响应包），前者在广播时间间隔内会不断广播数据，这些数据中会包含 RPI，scanner 接收到广播数据后会将 payload 中的 RPI 保存到本地。等切换到下一个时间窗口后，会生成并广播新的 RPI。跨天会以新的 DTK 为基础，生成并广播新的 RPI。</p>
+<p>这个过程使用的是 Beaconing 协议，也就是接收方无需应答广播者的数据包，只要默默地把数据记下来就行。一个设备同时是广播者和扫描者。</p>
+<h4 id="guan-yu-kong-jian-zhan-yong">关于空间占用</h4>
+<p>一个 RPI 的长度是 16 字节，所以空间消耗非常少，即使接收到了 10000 个 RPI，也只会占用 156 K 的空间。但还是要有一个 Rotation 的机制，毕竟时间太长的 RPI 意义已经不大了。</p>
+<p>这里还有一个潜在的风险是攻击者可以伪造大量的 RPI 数据给 Scanner，虽然每个 RPI 只有 16 字节，但仍有潜在的存储风险。所以 Scanner 的 scan 行为持续时间不能过长/过频繁，这同时也能节省电量。</p>
+<h3 id="ru-he-jie-shou-rpi">如何接收 RPI</h3>
+<p>对于 Scanner 来说，流程更加简单，只要存储收到的 RPI 即可。如果云端有推送 Diagnosis Keys（确诊者上传的 DTK），就对它使用 SHA_256 算法（结合 TimeIntervalNumber）， 将结果与本地存储的 RPI 比对，如果 match，就有被感染的风险，系统会推送通知提醒。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;9b0d919706658c6c62ab9b9baab4f7adec60427a.jpg"
+    srcset="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;9b0d919706658c6c62ab9b9baab4f7adec60427a.jpg 1104w,&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;9b0d919706658c6c62ab9b9baab4f7adec60427a.jpg 1104w"
+    sizes="(max-width: 1104px) 100vw, 1104px" width="1104" /></p><h2 id="guan-yu-api">关于 API</h2>
+<p>苹果和 Google 都放出了 API Interface，虽然没有具体的实现，但光是对比两家的 API 接口就能看出点门道，这个环节个人认为 Google 做得更好，苹果很「意外」地没有使用 Swift 来提供 API，OC 那冗长的语法和 Block，给 API 的友好度打了折扣</p>
+<a href="https://covid19-static.cdn-apple.com/applications/covid19/current/static/contact-tracing/pdf/ContactTracing-FrameworkDocumentation.pdf">
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;2b1faeb610533f0fb6da0f92d2f907a272f5ebec.jpg"
+    srcset="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;2b1faeb610533f0fb6da0f92d2f907a272f5ebec.jpg 354.5w,&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;2b1faeb610533f0fb6da0f92d2f907a272f5ebec.jpg 354.5w"
+    sizes="(max-width: 354.5px) 100vw, 354.5px" width="354.5" /></p>
+</a>
+<p>相比之下 Google 的 API 看着就舒服多了</p>
+<a href="https://blog.google/documents/55/Android_Contact_Tracing_API.pdf">
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;9dfa8c4a3c89e00c20b346c8fe6e06bfd02547d8.jpg"
+    srcset="&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;9dfa8c4a3c89e00c20b346c8fe6e06bfd02547d8.jpg 309.5w,&#x2F;posts&#x2F;contact-tracing-tech-analyze&#x2F;9dfa8c4a3c89e00c20b346c8fe6e06bfd02547d8.jpg 309.5w"
+    sizes="(max-width: 309.5px) 100vw, 309.5px" width="309.5" /></p>
+</a>
+<h2 id="xiao-jie">小结</h2>
+<p>这个设计非常巧妙，不仅保护了用户隐私，也减少了服务端的压力，对于服务端只需存储和下发 Diagnosis Keys，不需要计算 Key 与 Key，Key 与设备之间的关联。设备也不会有很大的存储和计算压力。从扩展性来看，将来如果有类似的近距离传播流行病，可以复用这套技术。但 Android 设备因为众所周知的原因在国内推行这套基建会比较困难。</p>
+<h3 id="fa-san-yi-xia">发散一下</h3>
+<p>这个设计中，主要用到了蓝牙和加密哈希算法，苹果在 iOS 13 中的 Find My 也是基于蓝牙和加密协议来实现的，使得手机即使处于离线状态（不要关机就行），依然可以被定位。原理是要拥有至少两台苹果设备（共享私钥），然后每台设备都以一定间隔发送不断变化的公钥，当被周边的苹果设备获取到后，该设备（就像一个跳板）会用这个公钥来加密当前的地理位置信息，上传到苹果服务器，另一台设备就可以用私钥来解开这个加密信息，得到地理位置。这个过程中上传地理位置的设备信息不会暴露（因为压根就没有上传），别人无法解密这个信息，因为基于蓝牙传输，也不需要依赖网络，不得不说也是非常精巧的设计。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/covid-19/">covid-19</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

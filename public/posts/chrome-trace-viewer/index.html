@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+强大的可视化利器 Chrome Trace Viewer 使用详解
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/chrome-trace-viewer/">
+
+<meta name="twitter:title" content="强大的可视化利器 Chrome Trace Viewer 使用详解">
+<meta property="og:title" content="强大的可视化利器 Chrome Trace Viewer 使用详解">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;">强大的可视化利器 Chrome Trace Viewer 使用详解</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2020-03-21</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b580eea70090ee05b7c8885712df2b271395a8b4.png"
+    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b580eea70090ee05b7c8885712df2b271395a8b4.png 695w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b580eea70090ee05b7c8885712df2b271395a8b4.png 695w"
+    sizes="(max-width: 695px) 100vw, 695px" width="695" /></p>
+<p>最近研究了下 Chrome 自带的 Trace Viewer，发现功能还挺强大的，用来做 Performance Profile，Timeline Tracing 等很方便，但官方的使用文档比较晦涩，资料也比较匮乏和分散，就专门整理了下。</p>
+<blockquote>
+<p>注：Trace Viewer 其实可以脱离 <code>chrome://tracing</code> 在线使用，具体操作后面会讲到</p>
+</blockquote>
+<h2 id="trace-viewer-jie-shao">Trace Viewer 介绍</h2>
+<blockquote>
+<p>Trace-Viewer is the javascript frontend for Chrome <code>about:tracing</code> and Android <code>systrace</code>. providing rich analysis and visualization capabilities for trace files, supporting both the linux kernel trace format and Chrome's base/trace_event.</p>
+</blockquote>
+<p>它是一个强大的可视化展示和分析工具，之前 google 有一个专门的 trace-viewer 项目，现在该项目合并到了 <a href="https://github.com/catapult-project/catapult/blob/master/tracing/README.md">catapult</a> 中, catapult 是 Chromium 工程师开发的一系列性能工具的合集，可以用来收集、展示、分析 Chrome、Website 甚至 Android 的性能。</p>
+<p>catapult 源码里包含了很多 test case，git clone 下来后，运行 <code>$CATAPULT/bin/run_dev_server</code>. 然后在浏览器中打开 <code>http://localhost:8003/tracing_examples/trace_viewer.html</code> 能看到很多 Demo</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b45847555835cc49338b5d58c50fd5f656b4e681.jpg"
+    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b45847555835cc49338b5d58c50fd5f656b4e681.jpg 688.5w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b45847555835cc49338b5d58c50fd5f656b4e681.jpg 688.5w"
+    sizes="(max-width: 688.5px) 100vw, 688.5px" width="688.5" /></p>
+<p>不过 Google 目前正在开发另一套工具 <a href="https://ui.perfetto.dev/#!/">perfetto</a> 打算替换 Trace Viewer，我初步使用了下，感觉不如 Trace Viewer 简洁。</p>
+<h2 id="zai-kai-yuan-xiang-mu-zhong-de-shi-yong">在开源项目中的使用</h2>
+<p>Golang 用它来可视化展示执行过程 https://golang.org/cmd/trace/</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>go test -trace trace.out pkg
+</span><span>go tool trace trace.out
+</span></code></pre>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;49df6cdfe957da75a44c5a074e02d5e7b80dedc1.jpg"
+    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;49df6cdfe957da75a44c5a074e02d5e7b80dedc1.jpg 1049w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;49df6cdfe957da75a44c5a074e02d5e7b80dedc1.jpg 1049w"
+    sizes="(max-width: 1049px) 100vw, 1049px" width="1049" /></p>
+<p>Facebook 的 Buck Build 系统，用它来展示 Build 时发生了什么</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;a3adb318505c4c13881b90eb2b031f8afb977da7.png"
+    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;a3adb318505c4c13881b90eb2b031f8afb977da7.png 450w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;a3adb318505c4c13881b90eb2b031f8afb977da7.png 450w"
+    sizes="(max-width: 450px) 100vw, 450px" width="450" /></p>
+<p>从这两个项目可以看出来 Trace Viewer 对于呈现「某段时间发生了什么」 还是有过人之处。</p>
+<h2 id="trace-viewer-format">Trace Viewer Format</h2>
+<p>Trace Viewer 有一套自己的 <a href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/edit">Trace Event Format</a>，只要文件遵循这个格式，就可以被展示。比如：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;23d3a314c8c47e6ea8bf35f46d0e58ea7c9a62be.png"
+    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;23d3a314c8c47e6ea8bf35f46d0e58ea7c9a62be.png 815w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;23d3a314c8c47e6ea8bf35f46d0e58ea7c9a62be.png 815w"
+    sizes="(max-width: 815px) 100vw, 815px" width="815" /></p>
+<p>对应的 json 文件内容：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>[ {&quot;name&quot;: &quot;出方案&quot;, &quot;ph&quot;: &quot;B&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 0},
+</span><span>  {&quot;name&quot;: &quot;出方案&quot;, &quot;ph&quot;: &quot;E&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 28800000000},
+</span><span>  {&quot;name&quot;: &quot;看电影&quot;, &quot;ph&quot;: &quot;B&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;休闲&quot;, &quot;ts&quot;: 28800000000},
+</span><span>  {&quot;name&quot;: &quot;看电影&quot;, &quot;ph&quot;: &quot;E&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;休闲&quot;, &quot;ts&quot;: 32400000000},
+</span><span>  {&quot;name&quot;: &quot;写代码&quot;, &quot;ph&quot;: &quot;B&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 32400000000},
+</span><span>  {&quot;name&quot;: &quot;写代码&quot;, &quot;ph&quot;: &quot;E&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 36000000000},
+</span><span>  {&quot;name&quot;: &quot;遛狗&quot;, &quot;ph&quot;: &quot;B&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;休闲&quot;, &quot;ts&quot;: 36000000000},
+</span><span>  {&quot;name&quot;: &quot;遛狗&quot;, &quot;ph&quot;: &quot;E&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;休闲&quot;, &quot;ts&quot;: 37800000000}
+</span><span>]
+</span></code></pre>
+<p>每一个 Event 主要由以下几部分组成：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>{
+</span><span>  &quot;name&quot;: &quot;myName&quot;, // 事件名，会展示在 timeline 上
+</span><span>  &quot;cat&quot;: &quot;category,list&quot;, // 事件分类，类似 Tag，但 UI 上不支持选择 Tag
+</span><span>  &quot;ph&quot;: &quot;B&quot;, // phase，后面着重会讲到
+</span><span>  &quot;ts&quot;: 12345, // 事件发生时的时间戳，以微秒表示
+</span><span>  &quot;pid&quot;: 123, // 进程名
+</span><span>  &quot;tid&quot;: 456, // 线程名
+</span><span>  &quot;args&quot;: { // 额外参数，当选中某个 event 后，会在底部的面板展示
+</span><span>    &quot;someArg&quot;: 1,
+</span><span>    &quot;anotherArg&quot;: {
+</span><span>      &quot;value&quot;: &quot;my value&quot;
+</span><span>    }
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>其中最重要的是 <code>ph</code>，最常用的组合是 <code>B</code> 和 <code>E</code>，分别表示 <code>Begin</code> 和 <code>End</code>，有了这两个信息，Trace Viewer 就能在 timeline 上找到起止点，将它绘制出来。也可以简化为 <code>X</code>，然后加上 <code>dur</code> 表示 duration</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>[ {&quot;name&quot;: &quot;出方案&quot;, &quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 0, &quot;dur&quot;: 28800000000},
+</span><span>  {&quot;name&quot;: &quot;看电影&quot;, &quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;休闲&quot;, &quot;ts&quot;: 28800000000, &quot;dur&quot;: 360000000},
+</span><span>  {&quot;name&quot;: &quot;写代码&quot;, &quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 32400000000, &quot;dur&quot;: 360000000},
+</span><span>  {&quot;name&quot;: &quot;遛狗&quot;, &quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;休闲&quot;, &quot;ts&quot;: 36000000000, &quot;dur&quot;: 180000000},
+</span><span>]
+</span></code></pre>
+<p>但颜色看起来有点随机，能不能自定义呢，可以的，这时就要用到 <code>cname</code> 这个参数：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span> {&quot;name&quot;: &quot;出方案&quot;, &quot;cname&quot;: &quot;good&quot;, &quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 0, &quot;dur&quot;: 28800000000},
+</span></code></pre>
+<p>将 <code>cname</code> 设置为 <code>good</code>，视觉上会看到绿色，在<a href="https://github.com/catapult-project/catapult/blob/master/tracing/tracing/base/color_scheme.html">这里</a>有可选的 cname 列表（藏的真够深···）</p>
+<p>左边的 <code>Process Main</code> 能不能也进行个性化定制以显得不那么突兀呢？比如将它改成「时间线」</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;2b199fda93a030e4ceaa09317e67bfd4407a08b1.png"
+    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;2b199fda93a030e4ceaa09317e67bfd4407a08b1.png 739w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;2b199fda93a030e4ceaa09317e67bfd4407a08b1.png 739w"
+    sizes="(max-width: 739px) 100vw, 739px" width="739" /></p>
+<p>这就要使用 MetaData Phase 了</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>{&quot;name&quot;: &quot;process_name&quot;, &quot;ph&quot;: &quot;M&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;args&quot;: {&quot;name&quot;: &quot;时间线&quot;}}
+</span></code></pre>
+<p>它的表示方式是将 <code>ph</code> 设为 <code>M</code>，然后将 <code>name</code> 设为 <a href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/edit#heading=h.xqopa5m0e28f">5 种可选值</a>中的一种，比如 <code>process_name</code> 则表示要对进程名做一些定制。metadata 主要是用来为某一类 event 提供更多的信息，比如自定义名字或重新设置排序优先级。</p>
+<p>有一些事件，它不是执行耗时，但包含了其他事件，比如「我的一天」，它不是一个可被执行的事件，但将一天做的事情包含进来。这些被称为「异步事件」，表现上就像这样：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b918640dca619c8e393599f7096a26043fd70f72.png"
+    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b918640dca619c8e393599f7096a26043fd70f72.png 757w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b918640dca619c8e393599f7096a26043fd70f72.png 757w"
+    sizes="(max-width: 757px) 100vw, 757px" width="757" /></p>
+<p>独占一栏，同时使用了斜体字，如果仔细看，还会发现顶部多了一条黑色的线。异步事件的 <code>ph</code> 为 <code>b</code> 和 <code>e</code> 也是 Begin 和 End，只不过变成了小写，同时还要提供 <code>id</code> 和 <code>cat</code></p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>[
+</span><span>  {&quot;name&quot;: &quot;我的一天&quot;, &quot;ph&quot;: &quot;b&quot;, &quot;cat&quot;: &quot;daily&quot;, &quot;id&quot;: &quot;my-day&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 0},
+</span><span>  {&quot;name&quot;: &quot;我的一天&quot;, &quot;ph&quot;: &quot;e&quot;, &quot;cat&quot;: &quot;daily&quot;, &quot;id&quot;: &quot;my-day&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 37800000000},
+</span><span>]
+</span></code></pre>
+<p>id 用来唯一标识两个异步事件是不是应该被作为同一个来看待（有可能多个异步事件名字都一样），cat 也是必选项，这个不太理解，可能等待的时间太孤独，需要一只猫来陪伴吧。</p>
+<p>一件事可能会被拆分为更小的单元，然后执行过程中也会穿插着其他的事件，针对这样的场景，可以通过 <code>Flow Event</code> 来表示</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;7a54bb4d237b14089e5bc83a2f9329b686c941c8.jpg"
+    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;7a54bb4d237b14089e5bc83a2f9329b686c941c8.jpg 717w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;7a54bb4d237b14089e5bc83a2f9329b686c941c8.jpg 717w"
+    sizes="(max-width: 717px) 100vw, 717px" width="717" /></p>
+<p>注意，在「出方案」和「写代码」之间多了一条线</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>  {&quot;name&quot;: &quot;出方案&quot;, &quot;cname&quot;: &quot;good&quot;,&quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 0, &quot;dur&quot;: 28800000000},
+</span><span>  {&quot;name&quot;: &quot;connect&quot;, &quot;ph&quot;: &quot;s&quot;, &quot;id&quot;: &quot;my-work&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 28800000000},
+</span><span>  {&quot;name&quot;: &quot;connect&quot;, &quot;ph&quot;: &quot;f&quot;, &quot;bp&quot;: &quot;e&quot;, &quot;id&quot;: &quot;my-work&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 32400000000},
+</span><span>  {&quot;name&quot;: &quot;写代码&quot;, &quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 32400000000, &quot;dur&quot;: 3600000000},
+</span></code></pre>
+<p><code>Flow Event</code> ph 的开始和结束分别为 <code>s(start)</code> 和 <code>f(finish)</code>，跟 <code>Async Event</code> 有点像，但有几点不同：</p>
+<ul>
+<li>不需要带上 cat</li>
+<li>同一个 Flow Event，除了 id 相同外，名字也必须相同</li>
+<li>结束时用 <code>&quot;bp&quot;: &quot;e&quot;</code> 来表示</li>
+</ul>
+<p>Flow Event 需要依附在已有的 Event 上，依附的过程其实就是 ts 匹配，相同/最近 ts 的 Event 会自动被匹配到。</p>
+<p>出方案的过程中，可能会有纪念意义的事件需要记录下，比如想到了某个点子，这时可以用 <code>ph: &quot;I&quot;</code> 来表示（Instant）</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>{&quot;name&quot;: &quot;想到一个点子&quot;, &quot;ph&quot;: &quot;I&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 18800000000}
+</span></code></pre>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;9fafe4e26805bce1fde36f7970389735fa66ec5a.jpg"
+    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;9fafe4e26805bce1fde36f7970389735fa66ec5a.jpg 741w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;9fafe4e26805bce1fde36f7970389735fa66ec5a.jpg 741w"
+    sizes="(max-width: 741px) 100vw, 741px" width="741" /></p>
+<p>中间那根红线就是我们刚加的事件，选中之后会在底部出现该事件的详细信息。</p>
+<p>作为一个上进的青年，一天下来之后，需要留一段时间反思今天做的好的和不好的，这可以通过 Snapshot 来体现，就像这样</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;200ba2a883121853011e9e0c22757929ee257a84.png"
+    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;200ba2a883121853011e9e0c22757929ee257a84.png 636w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;200ba2a883121853011e9e0c22757929ee257a84.png 636w"
+    sizes="(max-width: 636px) 100vw, 636px" width="636" /></p>
+<p>右上角那个圆点就是 Snapshot 在 Timeline 上的表现，点击之后可以在底部看到详细内容。</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>{&quot;name&quot;: &quot;反思&quot;, &quot;ph&quot;: &quot;O&quot;, &quot;id&quot;: &quot;Ref&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;其他&quot;, &quot;ts&quot;: 37800000000, &quot;args&quot;: {&quot;snapshot&quot;: &quot;充实的一天呢&quot;}}
+</span></code></pre>
+<p>Snapshot 的 ph 为 <code>O</code> （字母 O），没有什么限制，详细的内容往 <code>args.snapshot</code> 里放就可以了。</p>
+<p>这些差不多就是常用的 ph 了，部分 ph 会有附带的规则，再简单总结下：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>ph B/E // 正常的开始/结束事件，最常见，也可以用 X + dur 来表示
+</span><span>ph M // Metadata 用来对一类 Event 附加更详细的信息，可以带来 UI 上的变化
+</span><span>ph I // 瞬时事件，类似 Mark 一下
+</span><span>ph s/e // 异步事件，表示自定义的一个事件，表现上跟正常事件会有区别
+</span><span>ph s/f // Flow 事件，会出现箭头，要通过 ts 匹配最近的 event，结束要使用 bp: e
+</span><span>ph O // Snapshot，表现上是一个醒目的圆点，可以在 `args.snapshot` 里放任意数据
+</span></code></pre>
+<p>以下是 Demo 对应的 Event 内容，只要能生成这样的 JSON 文件，就可以使用 Trace Viewer 强大的可视化能力。</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>[
+</span><span>  {&quot;name&quot;: &quot;我的一天&quot;, &quot;ph&quot;: &quot;b&quot;, &quot;cat&quot;: &quot;daily&quot;, &quot;id&quot;: &quot;my-day&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 0},
+</span><span>  {&quot;name&quot;: &quot;我的一天1&quot;, &quot;ph&quot;: &quot;e&quot;, &quot;cat&quot;: &quot;daily&quot;, &quot;id&quot;: &quot;my-day&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 37800000000},
+</span><span>
+</span><span>  {&quot;name&quot;: &quot;出方案&quot;, &quot;cname&quot;: &quot;good&quot;,&quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 0, &quot;dur&quot;: 28800000000},
+</span><span>  {&quot;name&quot;: &quot;想到一个点子&quot;, &quot;ph&quot;: &quot;I&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 18800000000},
+</span><span>  {&quot;name&quot;: &quot;connect&quot;, &quot;ph&quot;: &quot;s&quot;, &quot;id&quot;: &quot;my-work&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 28800000000},
+</span><span>  {&quot;name&quot;: &quot;connect&quot;, &quot;ph&quot;: &quot;f&quot;, &quot;bp&quot;: &quot;e&quot;, &quot;id&quot;: &quot;my-work&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 32400000000},
+</span><span>  {&quot;name&quot;: &quot;写代码&quot;, &quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 32400000000, &quot;dur&quot;: 3600000000},
+</span><span>
+</span><span>  {&quot;name&quot;: &quot;反思&quot;, &quot;ph&quot;: &quot;O&quot;, &quot;id&quot;: &quot;Ref&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;其他&quot;, &quot;ts&quot;: 37800000000, &quot;args&quot;: {&quot;snapshot&quot;: &quot;充实的一天呢&quot;}},
+</span><span>
+</span><span>  {&quot;name&quot;: &quot;看电影&quot;, &quot;ph&quot;: &quot;B&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;休闲&quot;, &quot;ts&quot;: 28800000000},
+</span><span>  {&quot;name&quot;: &quot;看电影&quot;, &quot;ph&quot;: &quot;E&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;休闲&quot;, &quot;ts&quot;: 32400000000},
+</span><span>
+</span><span>  {&quot;name&quot;: &quot;遛狗&quot;, &quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;休闲&quot;, &quot;ts&quot;: 36000000000, &quot;dur&quot;: 1880000000},
+</span><span>  {&quot;name&quot;: &quot;process_name&quot;, &quot;ph&quot;: &quot;M&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;args&quot;: {&quot;name&quot;: &quot;时间线&quot;}}
+</span><span>]
+</span></code></pre>
+<h2 id="zai-xian-shi-yong-trace-viewer">在线使用 Trace Viewer</h2>
+<p>通过 <code>chrome://tracing</code> 的方式来使用 Tracer Viewer 还是不太方便，也不利于传播，Google 虽然在 catapult 里提供了 <code>trace2html</code>，但包含的文件很多，使用起来还是有点麻烦，于是参考了 <code>go trace</code> 的源码，把相关文件上传到了 CDN，然后在一个 html 文件里引用，这样只需一个文件即可。</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>&lt;!DOCTYPE html&gt;
+</span><span>&lt;!--
+</span><span>Copyright (c) 2014 The Chromium Authors. All rights reserved.
+</span><span>Use of this source code is governed by a BSD-style license that can be
+</span><span>found in the LICENSE file.
+</span><span>--&gt;
+</span><span>
+</span><span>&lt;head&gt;
+</span><span>  &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot; /&gt;
+</span><span>  &lt;style&gt;
+</span><span>    body {
+</span><span>      font-family: arial, sans-serif;
+</span><span>    }
+</span><span>  &lt;/style&gt;
+</span><span>  &lt;script
+</span><span>    src=&quot;https://sf1-ttcdn-tos.pstatp.com/obj/developer-baas/baas/ttnbrzs5vgcryya2z2/7d1b75402231d1cd_1583755520315.js&quot;&gt;&lt;/script&gt;
+</span><span>  &lt;script&gt;
+</span><span>    &#39;use strict&#39;;
+</span><span>    window.__hideTraceViewerPolyfillWarning = true;
+</span><span>
+</span><span>    function onTraceViewerImportFail() {
+</span><span>      document.addEventListener(&#39;DOMContentLoaded&#39;, function () {
+</span><span>        document.body.textContent =
+</span><span>          &#39;tracing/bin/trace_viewer_full.html is missing. &#39; +
+</span><span>          &#39;Run vulcanize_trace_viewer from $TRACE_VIEWER and reload.&#39;;
+</span><span>      });
+</span><span>    }
+</span><span>  &lt;/script&gt;
+</span><span>  &lt;link rel=&quot;import&quot;
+</span><span>    href=&quot;https://sf1-ttcdn-tos.pstatp.com/obj/developer-baas/baas/ttnbrzs5vgcryya2z2/4b94a178762f4049_1583756222365.html&quot;
+</span><span>    onerror=&quot;onTraceViewerImportFail(event)&quot;&gt;
+</span><span>  &lt;style&gt;
+</span><span>    html,
+</span><span>    body {
+</span><span>      box-sizing: border-box;
+</span><span>      overflow: hidden;
+</span><span>      margin: 0px;
+</span><span>      padding: 0;
+</span><span>      width: 100%;
+</span><span>      height: 100%;
+</span><span>    }
+</span><span>
+</span><span>    #trace-viewer {
+</span><span>      width: 100%;
+</span><span>      height: 100%;
+</span><span>    }
+</span><span>
+</span><span>    #trace-viewer:focus {
+</span><span>      outline: none;
+</span><span>    }
+</span><span>  &lt;/style&gt;
+</span><span>  &lt;script&gt;
+</span><span>    &#39;use strict&#39;;
+</span><span>
+</span><span>    (function () {
+</span><span>      var viewer;
+</span><span>      var url;
+</span><span>      var model;
+</span><span>
+</span><span>      function load() {
+</span><span>        var req = new XMLHttpRequest();
+</span><span>        var isBinary = /[.]gz$/.test(url) || /[.]zip$/.test(url);
+</span><span>        req.overrideMimeType(&#39;text/plain; charset=x-user-defined&#39;);
+</span><span>        req.overrideMimeType(&#39;contentType: &quot;application/x-www-form-urlencoded;charset=utf-8&quot;&#39;);
+</span><span>        console.log(url);
+</span><span>        req.open(&#39;GET&#39;, url, true);
+</span><span>        if (isBinary)
+</span><span>          req.responseType = &#39;arraybuffer&#39;;
+</span><span>
+</span><span>        req.onreadystatechange = function (event) {
+</span><span>          if (req.readyState !== 4)
+</span><span>            return;
+</span><span>
+</span><span>          window.setTimeout(function () {
+</span><span>            if (req.status === 200)
+</span><span>              onResult(isBinary ? req.response : req.responseText);
+</span><span>            else
+</span><span>              onResultFail(req.status);
+</span><span>          }, 0);
+</span><span>        };
+</span><span>        req.send(null);
+</span><span>      }
+</span><span>
+</span><span>      function onResultFail(err) {
+</span><span>        var overlay = new tr.ui.b.Overlay();
+</span><span>        overlay.textContent = err + &#39;: &#39; + url + &#39; could not be loaded&#39;;
+</span><span>        overlay.title = &#39;Failed to fetch data&#39;;
+</span><span>        overlay.visible = true;
+</span><span>      }
+</span><span>
+</span><span>      function onResult(result) {
+</span><span>        model = new tr.Model();
+</span><span>        var i = new tr.importer.Import(model);
+</span><span>        var p = i.importTracesWithProgressDialog([result]);
+</span><span>        p.then(onModelLoaded, onImportFail);
+</span><span>      }
+</span><span>
+</span><span>      function onModelLoaded() {
+</span><span>        viewer.model = model;
+</span><span>        var urlParams = new URLSearchParams(window.location.search);
+</span><span>        var title = urlParams.get(&quot;title&quot;) || &quot;&quot;;
+</span><span>        document.getElementById(&#39;title&#39;).innerHTML = title;
+</span><span>      }
+</span><span>
+</span><span>      function onImportFail(err) {
+</span><span>        var overlay = new tr.ui.b.Overlay();
+</span><span>        overlay.textContent = tr.b.normalizeException(err).message;
+</span><span>        overlay.title = &#39;Import error&#39;;
+</span><span>        overlay.visible = true;
+</span><span>      }
+</span><span>
+</span><span>      document.addEventListener(&#39;WebComponentsReady&#39;, function () {
+</span><span>        var container = document.createElement(&#39;track-view-container&#39;);
+</span><span>        container.id = &#39;track_view_container&#39;;
+</span><span>
+</span><span>        viewer = document.createElement(&#39;tr-ui-timeline-view&#39;);
+</span><span>        viewer.track_view_container = container;
+</span><span>        Polymer.dom(viewer).appendChild(container);
+</span><span>
+</span><span>        viewer.id = &#39;trace-viewer&#39;;
+</span><span>        viewer.globalMode = true;
+</span><span>        Polymer.dom(document.body).appendChild(viewer);
+</span><span>
+</span><span>        var urlParams = new URLSearchParams(window.location.search);
+</span><span>        url = urlParams.get(&quot;tracing_url&quot;);
+</span><span>        load();
+</span><span>      });
+</span><span>    }());
+</span><span>  &lt;/script&gt;
+</span><span>&lt;/head&gt;
+</span><span>&lt;body&gt;
+</span><span>&lt;/body&gt;
+</span><span>&lt;/html&gt;
+</span></code></pre>
+<p>使用方式：<code>http://path/to/this.html?tracing_url=path/to/tracing.json</code></p>
+<h2 id="cai-guo-de-keng">踩过的坑</h2>
+<p>JSON 文件里，如果出现 <code>AStart-BStart-AEnd-BEnd</code> 这样的交叉式多行数据，有可能会导致解析失败。解决方法就是拆解为正常的顺序 <code>AStart-AEnd-BStart-BEnd</code>。</p>
+<p>还有，如果发现某个 Event 的 Start 和 End 明明在那里，但却还是报找不到 End 的话，通常是这个 End 被其他 Start 匹配了（即使名字不一样），所以 root cause 很可能是因为那个 solo Start。</p>
+<h2 id="xiao-jie">小结</h2>
+<p>Trace Viewer 是一款强大的可视化利器，虽然通常被拿来做性能分析，但它的使用场景其实很广，至于能做出什么来，就看你的想象力咯。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

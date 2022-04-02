@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+Design Details - Camu
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/camu/">
+
+<meta name="twitter:title" content="Design Details - Camu">
+<meta property="og:title" content="Design Details - Camu">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;camu&#x2F;">Design Details - Camu</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2014-09-20</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>Camu 是芬兰的<a href="http://sumoing.com/">sumoing</a>团队开发的一款拍照 App，这是一个目前只有 6 个人的团队，但都有着不错的功底，个人也比较喜欢/向往这样的小团队。</p>
+<p>前些日子苹果在 AppStore 的首页推荐了它，足见它肯定有过人之处。使用下来的感受有点像 ToDoList 里的 Clear，手势用得比较多，操作挺方便，页面很干净，有恰当的动画效果，也有自己一些独到的点。简单说来就是「优雅且体贴」。</p>
+<h3 id="kai-chang">开场</h3>
+<p>Camu 的开场跟其他 App 略有不同，常规的开场是几个引导图左右滑动，进入到最后一页时，点击某个按钮进入 App。Camu 的开场跟 Paper 一样是一个视频，这就意味着 App 体积的增加，以及更多的成本。好处就是让用户感受到了诚意，带着愉悦的心情开始了探索之旅。不过这个大大的 logo 还是略显挡害。同时用一句话说明有了这个 App 能做什么“Better Photos and Videos”。</p>
+<video playsinline controls>
+  <source src="&#x2F;posts&#x2F;camu&#x2F;camu-opening.mp4" type="video/mp4" />
+</video>
+<p>正好提一下，很多产品在描述自身时经常会从 feature 入手，能做这个，能做那个，而忘了说有了它之后，用户能得到什么。举个简单的例子就是超级玛丽吃了花之后，能发子弹，应该去着重描述的是「发子弹」这个结果，而不是「花」这个产品本身。</p>
+<p><img src="https://s-media-cache-ec0.pinimg.com/originals/cd/73/ac/cd73ac84c1a711b71fa7d1b701bc6845.jpg" alt="" /></p>
+<h3 id="qing-qiu-fang-wen-xiang-ji-xiang-ce-he-mai-ke-feng">请求访问相机、相册和麦克风</h3>
+<p>越来越多的 App 开始注重这些小细节了，这样让用户有种被尊重的感觉，也为接下来的几个弹出框有了心理准备。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-ask4permision.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-ask4permision.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-ask4permision.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p><h3 id="shi-shi-lu-jing">实时滤镜</h3>
+<p>很多拍照 App 都有这个功能，比如在底下显示一排缩略图，然后给缩略图加上实时滤镜效果，这样做的好处是可以直观地看到各个滤镜的效果，弊端是因为缩略图比较小，所以看得也不是很清楚，需要点击，运用滤镜效果后才能看清，同时还占空间，并且视觉上也容易感觉繁杂。</p>
+<p>Camu 采用了另一种方式来处理：左右滑动。这样操作上的成本很低，页面也显得干净，弊端就是无法快速指定某个滤镜效果，在他们看来可能干净、好用的优先级更高些。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-filter-switch.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-filter-switch.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-filter-switch.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+<p>滤镜强度的控制是通过上下滑动来实现的，左右会有两根白色的条来指示强度，视觉上和体验上都很舒服。这一排的按钮，第一次点击时都会出现提示，说明是做什么的，有的还会有引导动画。</p>
+<video playsinline controls>
+  <source src="&#x2F;posts&#x2F;camu&#x2F;camu-guide.mp4" type="video/mp4" />
+</video><h3 id="duo-chong-pai-she-mo-shi">多种拍摄模式</h3>
+<p>这也是 Camu 的一个特点，可能其他 App 也有类似的功能，但 Camu 在设计上做的简单又明了。</p>
+<p>一共有 4 种模式：方形、长方形、左右各半和上下各半（一开始以为是这样，后来才发现可以旋转）。这里有一个小问题是，如果光看到那个长方形的 icon，很可能不知道它是做什么用的，就不去点它了。</p>
+<video playsinline controls>
+  <source src="&#x2F;posts&#x2F;camu&#x2F;camu-mode.mp4" type="video/mp4" />
+</video>
+<p>这 4 种模式中有一种是可以在正方形的区域内，任意旋转轴线，从而形成两种不同的图拼一起的效果，它其实是做了一个效果来提示可以转动的，但我在使用过程中没有注意到，在看了官网的<a href="https://vimeo.com/98201619">视频</a>后才发现的。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-split.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-split.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-split.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+<p>用类似国际象棋棋盘的黑白格子，来表示没有照片的一边，视觉上确实比纯色好不少。</p>
+<h3 id="zi-dong-pai-zhao-mo-shi">自动拍照模式</h3>
+<p>不知道其他相机类 App 是如何处理这个问题的，Camu 的处理方式是：如果视线内的图像保持静止，那么就拍照，不然就等到静下来。这样就能保证照片不会是模糊的。用在自拍上应该很合适。</p>
+<p>Camu 还有一个特点，能通过图像、icon、动画就表述清楚的事情，决不让文字搀和进来。这样才能让页面保持干净，当然也对设计会有更高的要求。但 Camu 也知道需要把自拍的实现方式告诉用户，然后就出现了这个尴尬的界面。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-oops.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-oops.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-oops.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+<p>点击自拍 icon 后，会出现「1」，再点一下出现「2」，然后是「3」，再点就又回到了「1」。这里的表述其实并不是非常清晰，用户不一定能一下子明白这几个数代表的含义，但稍微想一下就会知道这是拍摄几张的意思。</p>
+<p>数字切换的动画看着很舒服。</p>
+<video playsinline controls>
+  <source src="&#x2F;posts&#x2F;camu&#x2F;camu-auto.mp4" type="video/mp4" />
+</video><h3 id="bian-ji-zhao-pian">编辑照片</h3>
+<p>当按下拍照按钮后，就进入了编辑模式，依旧很简洁</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-edit.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-edit.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-edit.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+<p>这 4 个按钮分别对应「小水印」、「输入文字」、「缩放/旋转」、「模糊」</p>
+<h3 id="shu-ru-wen-zi">输入文字</h3>
+<p>在手机上输入文字是很麻烦的事情，不光是输入，想出合适的语句也是挺有考验的，但图配文才能更好地表达，于是 Camu 做了 Slogan 这个功能。点击对应的 icon 后会在图片上自动输入一段鸡汤文，可以拖动，调整字体，调整布局，这一切操作起来都很方便。</p>
+<p>文字的出现和消失效果也有新意，就像镜头拉伸一样，而且是逐行操作，实现起来应该也不简单，这也让切换 Slogan 这个行为变得有了趣味。</p>
+<video playsinline controls>
+  <source src="&#x2F;posts&#x2F;camu&#x2F;camu-slogan.mp4" type="video/mp4" />
+</video><h3 id="suo-fang-xuan-zhuan">缩放、旋转</h3>
+<p>看到网格线，就知道可以缩放，使用几次之后也会顺便发现可以旋转，这时右边的弧形操作区域的作用是什么呢？我觉得一个是更加明了它是可以旋转的，还有就是当只想进行旋转操作时，可以单手进行。同时操作这个弧形按钮时图片不光会旋转也会发生缩放，相当于同时把这两件事情做了。</p>
+<video playsinline controls>
+  <source src="&#x2F;posts&#x2F;camu&#x2F;camu-rotate.mp4" type="video/mp4" />
+</video><h3 id="fen-xiang">分享</h3>
+<p>Camu 的分享功能藏得比较深，要不是在<a href="https://vimeo.com/98201619">视频</a>里看到，也不会刻意地去使用。</p>
+<p>分享分为两部分，上面那部分为社交平台，下面为联系人，不过由于这二者不是一个 scrollView，导致在滑动联系人的时候，会出现比较生硬的效果。</p>
+<p>右下角的区域在没有选择目标用户时，是灰色的，作为提示用。当选择了用户后，又作为按钮使用，同一个功能块在不同情况下，用作不同的用处，可以算巧妙，也可以算糟糕，不过在这里倒没怎么困扰我。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-share.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-share.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-share.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-share-selected.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-share-selected.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-share-selected.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+<p>比较贴心的是，如果你们之间有过交流，那么会带上对方说的最后一句话。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-share-selected1.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-share-selected1.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-share-selected1.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p><h3 id="xiao-xi-lie-biao">消息列表</h3>
+<p>Camu 可以自建小组，也可以私聊，支持发图片和文字。界面依旧很简洁。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-message.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-message.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-message.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-message-keyboard.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-message-keyboard.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-message-keyboard.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+<p>输入这里还有些问题，比如滑动消息时，键盘不会缩回去，只有点击对话区域才行。对话看到一半，此时点击输入框，升起键盘，不会自动 scroll 到底部，而是需要输入文字后，才会滚到底部。</p>
+<p>然后就是右上角的「More」按钮，不知道是不是在向 Android 致敬。</p>
+<h3 id="tong-zhi">通知</h3>
+<p>刚打开 Camu 时，觉得左边空空的，略有些难受，原来是用来放通知的，这样看着就舒服些了。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;camu&#x2F;camu-notification.png"
+    srcset="&#x2F;posts&#x2F;camu&#x2F;camu-notification.png 160w,&#x2F;posts&#x2F;camu&#x2F;camu-notification.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p><h3 id="xiao-jie">小结</h3>
+<p>总体说来 Camu 还是很有诚意的用心之作，简单美观又好用，也有一些独特的点，而且针对不同尺寸的屏幕做了不同的优化。如果要打分的话，我会给 87 分。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/design/">design</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

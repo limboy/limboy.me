@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Limboy - huaban</title>
+        <link>https://limboy.me</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>zh</language>
+        <atom:link href="https://limboy.me/tags/huaban/index.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sun, 23 Mar 2014 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>开发新版花瓣iPhone客户端</title>
+            <pubDate>Sun, 23 Mar 2014 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/huaban-app-redesign/</link>
+            <guid>https://limboy.me/posts/huaban-app-redesign/</guid>
+            <description>&lt;p&gt;花瓣主客户端已经有些日子没有更新了，这次的新版 iPhone 客户端会带来不少的变动和改进，于是索性重新开个项目，从头开始。虽还没开发完成，但有些东西还是想跟大家分享下。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ru-he-rang-duo-ren-kai-fa-geng-jia-gao-xiao&quot;&gt;如何让多人开发更加高效&lt;&#x2F;h3&gt;
+&lt;p&gt;如果是一个人开发，那怎么折腾都行。不用考虑冲突、不用考虑代码风格的差异、完全按自己的喜好设置目录结构、甚至在接口的设计上也可以自由一些。但参与的人一多这些问题就会暴露出来，如果处理不好，有可能会出现 1+1&amp;lt;2，甚至 1+1&amp;lt;1 的情况。&lt;&#x2F;p&gt;
+&lt;p&gt;正好在前些日子看到了这篇「&lt;a href=&quot;http:&#x2F;&#x2F;dev.hubspot.com&#x2F;blog&#x2F;architecting-a-large-ios-app-with-cocoapods&quot;&gt;使用 CocoaPods 来进行模块化开发&lt;&#x2F;a&gt;」文章，细细品了几遍，发现通过这种方式确实可以弥补多人开发带来的一些问题。简单说来就是把一个大项目按照功能模块划分为多个子项目，然后在一个主项目里，通过 CocoaPods 把这些子项目串起来，就变成了一个完整的 Project。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ji-ben-jia-gou&quot;&gt;基本架构&lt;&#x2F;h3&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-arch.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-arch.png 350w,&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-arch.png 350w&quot;
+    sizes=&quot;(max-width: 350px) 100vw, 350px&quot; width=&quot;350&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;其中最底层是其他项目也会引用的基础类库。&lt;code&gt;HBToolkit&lt;&#x2F;code&gt;包含了一些常用、好用的 Categories，如图片缩放、UIView Layout 等等；&lt;code&gt;HBBussiness&lt;&#x2F;code&gt;是跟业务相关的一些类库，如弹出新版本提示、登录等等；&lt;code&gt;HBAPI&lt;&#x2F;code&gt;是花瓣主站点的 API 接口。这些类库都是私有的 pod 源，可以通过&lt;code&gt;pod install&lt;&#x2F;code&gt;安装。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;AppCommon&lt;&#x2F;code&gt;是一个 xcode project，包含了该项目会用到的一些公共内容，如颜色值、按钮样式、图片、APIKey 等等，同样，也是私有 pod 源。&lt;&#x2F;p&gt;
+&lt;p&gt;再上层就是各个 sub app 了。所谓 sub app，就是功能单一，可独立运行的 app。同样，每个 sub app 会提供相应的 podspec 文件，可以在这个 podspec 里指定最后会用到的 Classes。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapps.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapps.png 160w,&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapps.png 160w&quot;
+    sizes=&quot;(max-width: 160px) 100vw, 160px&quot; width=&quot;160&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;进去之后会是这样&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapp-index.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapp-index.png 320w,&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapp-index.png 320w&quot;
+    sizes=&quot;(max-width: 320px) 100vw, 320px&quot; width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;对于使用者来说，可以通过查看 demo，很快地了解接口的使用。对测试人员，也可以在 App 还没有开发完成的情况下，对各个子模块进行测试。&lt;&#x2F;p&gt;
+&lt;p&gt;各个 sub app 都完成了的话，就可以组装成最终的 App 了，这里用到了一个 URL Route 类：&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;joeldev&#x2F;JLRoutes&quot;&gt;JLRoutes&lt;&#x2F;a&gt;，它的作用是让按钮的点击像网页里的链接一样，只是触发了某个 URL，而没有像 pushViewController 这样的行为。这样如果点击 A 模块的某个按钮，会 push 一个 B 模块的 ViewController，也不需要在 A 模块里 import 模块 B 的 ViewController，而只是&lt;code&gt;[JLRoutes routeURL:parameters]&lt;&#x2F;code&gt;即可，也就实现了解耦。&lt;&#x2F;p&gt;
+&lt;p&gt;每个 sub app 需要注册自己感兴趣的 URL，这样当某个 URL 被触发时，就能捕获到并做适当的处理。如果注册的行为统一放到最终的 App 里去做，会不够灵活，且显得杂乱。所以最好是在类加载的过程中就完成注册。 而 Class 正好有一个&lt;code&gt;+ (void)load&lt;&#x2F;code&gt;方法，会在该 Class 被加入到运行时触发，且只触发一次。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;tips&quot;&gt;Tips&lt;&#x2F;h4&gt;
+&lt;p&gt;每次新建一个 sub project 还蛮麻烦的，比如要新建 podfile，然后执行&lt;code&gt;pod install&lt;&#x2F;code&gt;(真心慢啊)，然后要写&lt;code&gt;XXX.podspec&lt;&#x2F;code&gt;，等等。于是写了一个 template project，并提供了脚本安装，然后每次要新建一个 project 时，只需执行&lt;code&gt;genproj XXX&lt;&#x2F;code&gt;就好了。&lt;&#x2F;p&gt;
+&lt;p&gt;开发过程中，经常会出现依赖的 pod 有更新（比如 Common 又添加了一些图片素材），然后就得再执行一次&lt;code&gt;pod update&lt;&#x2F;code&gt;，于是所有依赖的 pod 都得 update 一下，这个过程有点慢，目前还没想到太好的办法。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;2014-03-25-geng-xin&quot;&gt;2014&#x2F;03&#x2F;25 更新&lt;&#x2F;h4&gt;
+&lt;p&gt;用&lt;code&gt;pod update --verbose&lt;&#x2F;code&gt; 看了下，主要的时间都是花在了获取第三方 pod 的 meta 信息上，所以，使用时加上&lt;code&gt; --no-repo-update&lt;&#x2F;code&gt;就很快了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;reactivecocoa&quot;&gt;ReactiveCocoa&lt;&#x2F;h3&gt;
+&lt;p&gt;这次改版的另一个尝试就是使用 RAC 和 MVVM，还是挺有些挑战的。之前的学习更多的是理论，并没有太多实际的使用，所以也遇到了不少问题。比如何时使用 property，何时使用 signal；多个 Controller 共用一个 VM，但其中一个又有一些独有的 property；潜意识里会使用原有的 cocoa 编程模式；出现问题，调试起来有点麻烦等等。尽管如此，RAC 还是很值得尝试的，就像一匹烈马，很难被驯服，但一旦被驾驭，这种成就感也是无可比拟的。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;qi-ta&quot;&gt;其他&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;使用 levelDB 来做持久化，放弃 CoreData。&lt;&#x2F;li&gt;
+&lt;li&gt;使用&lt;a href=&quot;http:&#x2F;&#x2F;blog.leezhong.com&#x2F;ios&#x2F;2014&#x2F;01&#x2F;04&#x2F;class-cluster.html&quot;&gt;类族(class cluster)&lt;&#x2F;a&gt;来实现结构和功能基本一样，但数据源不同的场景。&lt;&#x2F;li&gt;
+&lt;li&gt;无意中发现&lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;watch?v=OJ94KqmsxiI&quot;&gt;Facebook&lt;&#x2F;a&gt;也用了类似的架构，不过是通过 workspace 来实现的。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

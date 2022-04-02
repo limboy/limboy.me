@@ -30,3 +30,14 @@ highlight_theme = "demain"
 
 [extra]
 # Put all your custom variables here
+  [extra.giscus]
+    [extra.giscus.telescope]
+      repo = 'telescope'
+      repo_id = 'MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg='
+      category = 'General'
+      category_id = 'MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy'
+    [extra.giscus.limboy]
+      repo = 'limboy.me'
+      repo_id = 'R_kgDOGqD9cw'
+      category = 'General'
+      category_id = 'DIC_kwDOGqD9c84CAoVe'

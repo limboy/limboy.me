@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Limboy - biology</title>
+        <link>https://limboy.me</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>zh</language>
+        <atom:link href="https://limboy.me/tags/biology/index.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Mon, 22 Apr 2019 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>癌细胞的成长史</title>
+            <pubDate>Mon, 22 Apr 2019 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/cancer/</link>
+            <guid>https://limboy.me/posts/cancer/</guid>
+            <description>&lt;p&gt;对癌细胞的工作机制有点好奇，于是就研究了下。&lt;&#x2F;p&gt;
+&lt;p&gt;癌细胞是正常细胞基因突变的产物，当然不是每次突变都会产生癌细胞。突变发生的次数其实还挺多的（概率很低，架不住细胞分裂次数很多），但我们的 DNA 上有 30 亿个碱基对，而只有不到 30000 个碱基对组成了基因（就像一个 10G 的硬盘，只放了不到 1M 的内容），只有特定基因发生了变异才有可能产生癌细胞。&lt;&#x2F;p&gt;
+&lt;p&gt;癌细胞可以无限增殖、浸润和转移，对应着癌症的不同阶段。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;wu-xian-zeng-zhi&quot;&gt;无限增殖&lt;&#x2F;h3&gt;
+&lt;p&gt;当基因突变发生在了两种基因上原癌基因和抑癌基因时，就比较危险了。前者发生变异可以无视生长刺激信号，按着自己的节奏来；后者发生变异可以让凋亡信号发送不出来，这样就几乎实现了永生，不过还需要搞定「端粒酶」。体细胞每次分裂，DNA 顶部的端粒（可以想象成一顶帽子）就会被消耗一些，等到消耗完了，就无法进行下一轮分裂了，通常这个过程可以持续 40 - 60 次（海佛烈克极限）。而干细胞则不一样，它们可以不断分裂，分化成身体的不同组织，还可以补充其他死亡、衰老的细胞，如神一般的存在，原因就在于干细胞里的端粒酶被正常表达，它可以对端粒进行修复，而体细胞里的这个开关则是关着的，因此用一截少一截。癌细胞要实现无限增殖就需要把这个开关也打开。&lt;&#x2F;p&gt;
+&lt;p&gt;我们的免疫系统也不是吃干饭的，一旦发现有基因突变的细胞，通常都会处理掉，扼杀在摇篮阶段。不过有时也会有漏网之鱼，毕竟日防夜防，家贼难防。为了生存，癌细胞在分裂的过程中也在不断进化，以此来抵抗、欺骗免疫系统。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;jin-run&quot;&gt;浸润&lt;&#x2F;h3&gt;
+&lt;p&gt;即使已经具备无限增殖的能力，营养跟不上也一样白搭，机智的癌细胞会释放一些促进血管新生的因子来欺骗血液循环系统，慢慢地周边就会长出越来越多细小的血管，这样红血球就可以很方便地把氧气、养分送进去滋养癌细胞了。随着癌细胞的不断分裂，就会开始侵犯周围的其他细胞。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhuan-yi&quot;&gt;转移&lt;&#x2F;h3&gt;
+&lt;p&gt;不甘心只在一个地方待着，癌细胞们也想着拓展疆土（这做事风格跟人类很像啊···），这就需要借助血液循环系统或淋巴系统，不过首先需要冲破当前组织最外层的膜。出来之后如果选血液系统就要接受白细胞的挑战，如果选淋巴系统就要做好在淋巴结里苦战一番的准备。假如成功地来到了目标器官，很可能会不适应，要么立即死亡，要么分裂几次后死亡，存活率极低。如果活了下来，那么这个器官就成了第二基地，也就成功实现了转移。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;yu-nian-ling-de-guan-xi&quot;&gt;与年龄的关系&lt;&#x2F;h3&gt;
+&lt;p&gt;从癌细胞形成到演变成癌症需要很长的时间，大概是 20 - 30 年，而且年龄越大，概率越高。因为细胞分裂的次数越多出错的概率就越大，同时免疫细胞的功能也会越来越差。根据美国在 2010 年的统计，每三个女人和每两个男人中就有一位将在生命的某个阶段罹患癌症。所以对于一个 8 口之家来说，其中一人得癌症的概率还是挺大的。&lt;&#x2F;p&gt;
+&lt;p&gt;不过好在医学在进步，对癌症的认知也在发生变化。美国在 1970 年的诊断后 10 年存活率为 24%，2010 年这个数据上升到 50%，翻了一倍，而且有望在 20 年后提升到 75%。所以癌症，尤其是早期并没有想象中的那么可怕。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ying-dui-ce-lue&quot;&gt;应对策略&lt;&#x2F;h3&gt;
+&lt;p&gt;预防优于筛查优于治疗。&lt;&#x2F;p&gt;
+&lt;p&gt;预防的话，多运动、戒烟酒、多吃蔬菜水果、注意 PM2.5、减肥，这些都是常规项，还有一些比较隐蔽的，比如避免暴晒（紫外线）、不要喝太烫的饮料（65 度以上的热饮被定义为致癌物）、避免感染（混餐制导致的幽门螺旋杆菌感染）、远离包含黄曲霉素喝马兜铃酸的食物和药物。&lt;&#x2F;p&gt;
+&lt;p&gt;治疗的话，如果是前期，其实没什么风险，手术切掉即可，最怕的就是已转移，也就是恶性肿瘤。除了传统的化疗外，还可以靶向治疗（找到癌细胞的靶进行精确打击，不过这个因人而异），免疫疗法（让免疫系统认识癌细胞，进而将它们消灭）等，手段还是挺多的。&lt;&#x2F;p&gt;
+&lt;p&gt;最后推荐两个视频，一个是李治中博士的一席演讲：癌症的真相。里面会有更多的数据，讲得也很亲民。另一个是「工作细胞」，讲的是身体里各个细胞的功能，也会讲到免疫系统的工作原理，通过动漫的形式来表达，非常日系，一点都不枯燥，甚至还有点燃···&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+        
+        <item>
+            <title>我们是如何「看见」的</title>
+            <pubDate>Fri, 12 Apr 2019 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/see/</link>
+            <guid>https://limboy.me/posts/see/</guid>
+            <description>&lt;p&gt;细想一下，我们能看见这个五彩缤纷的世界不是很神奇么？相机高级如 P30 也只能拍出平面的照片，而我们看到的世界是立体的；可见光只是电磁波谱中的一段，怎么就能看见颜色了？让我们来简单了解下其中的奥义。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;jing-zhuang-ti-he-jie-zhuang-ji&quot;&gt;晶状体和睫状肌&lt;&#x2F;h3&gt;
+&lt;p&gt;人眼跟相机有点类似，相机的成像原理是反射在物体上的光通过透镜投射到后面的感光元件上。这里有一个焦距的概念，下面中间那张清楚的图片到透镜的距离就是焦距（真实比例的焦距会短很多），在焦距前后的图像就会模糊（离得越远越模糊）。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;1.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;1.png 300w,&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;1.png 300w&quot;
+    sizes=&quot;(max-width: 300px) 100vw, 300px&quot; width=&quot;300&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;我们的眼睛也是类似的一个系统，其中那块透镜就是「晶状体」。如果它是一块固定的镜片，那么只有眼前特定距离的景物是清晰的，也就是一台定焦相机。为了方便切换近景和远景，就需要晶状体具有一定的调节能力，比如在看远处的景物时，平一点；在看近处景物时，凸一点。&lt;&#x2F;p&gt;
+&lt;p&gt;
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;2.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;2.png 295.5w,&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;2.png 295.5w&quot;
+    sizes=&quot;(max-width: 295.5px) 100vw, 295.5px&quot; width=&quot;295.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;3.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;3.png 184w,&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;3.png 184w&quot;
+    sizes=&quot;(max-width: 184px) 100vw, 184px&quot; width=&quot;184&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;要做到效果，就需要睫状肌来帮忙（图中晶状体两侧，它是睫状体的主要组成部分），想象有两只手在挤压晶状体，它就变得更圆了，就能看清楚近处的事物。但如果一直这么挤压着（比如一直盯着手机），它就可能变得麻木，想让它松开时反而不松了，结果就是看远处景物时会出现模糊，也就是近视。对于假性近视来说，睫状肌还有可能恢复，而真近视就只能戴一个凹透镜或做手术了（手术的原理是把晶状体切薄）。远视正好相反，想让这两只手挤压的时候反而不工作了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;shi-wang-mo&quot;&gt;视网膜&lt;&#x2F;h3&gt;
+&lt;p&gt;视网膜就是相机里的感光元件，它需要把光信号解析成电信号，然后再把这个信号通过视神经传给后面的神经系统，因此就会有两个部分：光感受器细胞层和神经节细胞层（好比电线）。正常来说，光线直接打到光感受器细胞，然后再通过神经节细胞往后传，但是，这里貌似出了个 Bug，人眼的这两层装反了···&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;4.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;4.png 360w,&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;4.png 360w&quot;
+    sizes=&quot;(max-width: 360px) 100vw, 360px&quot; width=&quot;360&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;电线放在了上层，于是光要到达光感细胞层，还需要穿过这一层电线，同时区域 4 变成了盲点，因为这里没有光感细胞。正常来说，右图的设计会更合理，也确实有生物的视网膜是这样的。&lt;&#x2F;p&gt;
+&lt;p&gt;那如何来修复这个八阿哥呢？不知道是谁想出了个办法，找个地方把电线扒开，这样就能让光直接照到下面的光感细胞，这就是「中央凹」。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;5.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;5.jpg 341.5w,&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;5.jpg 341.5w&quot;
+    sizes=&quot;(max-width: 341.5px) 100vw, 341.5px&quot; width=&quot;341.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;上图那块凹下去的区域就是中央凹，在这里下层的光感细胞可以充分地沐浴在光线下，因此成像也最清晰。注意到，个凹下面有很多的视锥细胞，周围有很多的视杆细胞，它们又是做啥用的？&lt;&#x2F;p&gt;
+&lt;p&gt;这两类细胞分别具有不同的超能力，视锥细胞负责捕捉颜色，视杆细胞对光线更敏感（弱光环境下主要靠它了）。我们有三种视锥细胞，蓝锥、绿锥和红椎，分别对蓝光、绿光和红光最敏感（严格说来是让特定波长的电磁波可以对应到特定的颜色，所以世界本无颜色，只有不同频段的电磁波，人眼将其中的一部分「翻译」成了颜色）。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;6.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;6.jpg 404w,&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;6.jpg 404w&quot;
+    sizes=&quot;(max-width: 404px) 100vw, 404px&quot; width=&quot;404&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;所以，这三种光的不同比例就能勾兑出不同的颜色，包括白色（试了下，将叠加模式设为「屏幕」，就能得到白色）。缺乏红椎或绿椎细胞就会出现红-绿色盲，比如缺乏绿椎细胞的对绿色的敏感度比较低，对正常人而言是正常的红色和绿色，在他们看来很容易混淆。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;7.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;7.png 254w,&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;7.png 254w&quot;
+    sizes=&quot;(max-width: 254px) 100vw, 254px&quot; width=&quot;254&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;狗也缺少接受红色的视锥细胞，因此它们能看到的颜色不如我们多，也有一些大神，如皮皮虾，它们有 16 种视锥细胞，甚至能够看到紫外线和红外线，所以，在皮皮虾看来，这个世界一定是极其绚烂的。&lt;&#x2F;p&gt;
+&lt;p&gt;再来说说视杆细胞，它不具有颜色辨识能力，但它对光的敏感性比视锥细胞高了 1000 倍，在夜间或暗环境下，通常只有视杆细胞在起作用（光线好时，则主要靠视锥细胞），这也是为什么暗环境下很难分辨颜色。虽然猫和狗的视锥细胞不如我们，但视杆细胞却比我们多，因此黑暗中，它们的视力要优于我们。&lt;&#x2F;p&gt;
+&lt;p&gt;光感受器获取了这些信息之后，还需要进一步的加工，将信息的不同要素抽取出来，然后才会给到神经节细胞（也就是上面说的电线）。就像我们要描述一个物体时，会说它的颜色是什么，形状是怎样的，是不是在动等等，在传递给视神经之前，视网膜也需要对这些信息进行整理。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;8.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;8.jpg 250w,&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;8.jpg 250w&quot;
+    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;dui-shi-jie-de-jie-shi-zhong-shu-shen-jing-xi-tong&quot;&gt;对世界的解释 — 中枢神经系统&lt;&#x2F;h3&gt;
+&lt;p&gt;是的，是解释。比如下面这张图，怎么看都会觉得左边的更长一点，右边的更宽一点，因为这是大脑的计算结果（虽然跟事实不符···）。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;9.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;9.jpg 571w,&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;9.jpg 571w&quot;
+    sizes=&quot;(max-width: 571px) 100vw, 571px&quot; width=&quot;571&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;我们对周围世界的视觉感知主要依赖从视网膜所提取的信息，以及中枢神经系统对这些信息的解释。外部的光线投射到视网膜上时是平面的，为什么看起来世界是立体的呢？这跟眼睛的分布有关，我们的眼睛在脸的左右，两边的视网膜产生的图像会有细微的差异，中枢神经系统会根据这些差异计算出事物与我们的距离并构建出一个三维世界（也可以用两张有细微差异的图片来「欺骗」大脑，从而看到三维的效果）。所以我们获得到的视觉信息是二维的，但在大脑的运算下又多了一维。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;10.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;10.png 135w,&amp;#x2F;posts&amp;#x2F;see&amp;#x2F;10.png 135w&quot;
+    sizes=&quot;(max-width: 135px) 100vw, 135px&quot; width=&quot;135&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;对于那些眼睛分布在两侧的小动物们（比如兔子），它们看到的世界又是怎样的呢？兔子可以看到几乎 360 度的位置（两边各为 180 度还多），这样的话，中间的交叉区域就比较小了，因此只在鼻子前 30° 左右的上方范围可以产生立体感，其他部位与下方都仅有光影，没什么深度感（另外跟狗狗一样，兔子的视锥细胞中也缺少红椎细胞，所以看到的色彩也较少）。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h3&gt;
+&lt;p&gt;「看见」这个过程还是挺复杂的，在我看来最有意思的，还是其中的「翻译」和「解释」，将特定频率的电磁波翻译成特定颜色，大脑将两张平面的图形解释为立体图形，而且极其高效和准确。所以当世界变得不如意时，不妨调整下看待世界的方式，或许就能和解了。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+        
+        <item>
+            <title>关于脑，你可能想知道的</title>
+            <pubDate>Tue, 09 Apr 2019 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/brain/</link>
+            <guid>https://limboy.me/posts/brain/</guid>
+            <description>&lt;p&gt;脑是极其复杂的，即使到现在我们对它的认识仍然处于非常初级的阶段。哈佛大学的 Jeff Lichtman 教授在开课之前问学生：“如果我们需要了解的大脑的知识是一英里长，那么我们现在处在什么距离上？”学生有的回答半英里，四分之一英里等等答案，但是他会觉得正确的答案是“三英寸”（1 英里 = 63360 英寸）。神经科学家 Moran Cerf 说：如果人类的大脑这么简单，能够让我们理解，那我们将会因为如此简单，而不能理解大脑。不过对大脑的研究持续了这么长时间，加上科技的加成，一些宏观上的功能还是比较有底的。&lt;&#x2F;p&gt;
+&lt;p&gt;正文开始前，先留几个问题，感兴趣的话不妨继续往下看&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;爬行动物有脑，哺乳动物也有脑，人脑跟其他脑相比，最大的特点是什么？（貌似进入了面试的场景···）&lt;&#x2F;li&gt;
+&lt;li&gt;为什么给自己挠痒痒没有效果？&lt;&#x2F;li&gt;
+&lt;li&gt;为什么可以在梦里看见离奇的场景而自己又无能为力？&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;nao-de-zu-cheng&quot;&gt;脑的组成&lt;&#x2F;h2&gt;
+&lt;p&gt;脑在小的时候，相对比较简单，层次也较分明，主要分为前脑、中脑和后脑。前脑又可以分为端脑和间脑。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;1.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;1.png 300w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;1.png 300w&quot;
+    sizes=&quot;(max-width: 300px) 100vw, 300px&quot; width=&quot;300&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;到了发育后期，前脑虽然在结构上没什么变化，但是大脑皮层长大了很多，中脑变化不大，后脑分化成了：小脑、脑桥和延髓（图中的脑干由中脑、脑桥和延髓组成。）。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;2.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;2.jpg 627w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;2.jpg 627w&quot;
+    sizes=&quot;(max-width: 627px) 100vw, 627px&quot; width=&quot;627&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;所以，对脑的结构进行解构的话，大致可以分成这么几个部分：
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;3.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;3.jpg 1175w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;3.jpg 1175w&quot;
+    sizes=&quot;(max-width: 1175px) 100vw, 1175px&quot; width=&quot;1175&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;qian-nao&quot;&gt;前脑&lt;&#x2F;h3&gt;
+&lt;p&gt;前脑包含端脑和间脑，端脑就是那一大坨沟沟回回的褶皱（像一盆被端上去的豆腐···），间脑就是卡在中间的那部分脑。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;duan-nao&quot;&gt;端脑&lt;&#x2F;h4&gt;
+&lt;h5 id=&quot;pian-zhi-ti&quot;&gt;胼胝体&lt;&#x2F;h5&gt;
+&lt;p&gt;我们都知道大脑有左右两部分，这两部分的协同工作全靠胼胝体（出于好奇，查了下「胼胝」是什么东东，其实就是老茧···）。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;4.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;4.jpg 360w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;4.jpg 360w&quot;
+    sizes=&quot;(max-width: 360px) 100vw, 360px&quot; width=&quot;360&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;图上绿色的部分就是胼胝体，它就好像是海底电缆，有了它才能实现左右脑高速互联。&lt;&#x2F;p&gt;
+&lt;h5 id=&quot;da-nao-pi-ceng&quot;&gt;大脑皮层&lt;&#x2F;h5&gt;
+&lt;p&gt;这些沟沟回回就是著名的大脑皮层（新皮层），很多高级功能都在这个皮层里。按功能来分的话，可以分为：运动区、感觉区和联合区。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;5.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;5.jpg 301w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;5.jpg 301w&quot;
+    sizes=&quot;(max-width: 301px) 100vw, 301px&quot; width=&quot;301&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;可以看到联合皮层占了很大一部分，这就是人脑最独特的地方，正是这块区域赋予了人认知的优势。海豚的大脑皮层虽然也很大，也有很多的沟和回，但联合皮层的分布比人脑会少得多，不过光是如此已经让海豚足够聪明了。&lt;&#x2F;p&gt;
+&lt;p&gt;那这些运动区和感觉区是啥意思？简单来说就是输入（感觉）和输出（运动），人体的各个部分可以对应到皮层的特定区域，就像大脑里住了两个小人：感觉小人（左边）和运动小人（右边）。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;6.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;6.jpg 300w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;6.jpg 300w&quot;
+    sizes=&quot;(max-width: 300px) 100vw, 300px&quot; width=&quot;300&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;皮层展开后大概有两张报纸那么大&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;8.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;8.jpg 300w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;8.jpg 300w&quot;
+    sizes=&quot;(max-width: 300px) 100vw, 300px&quot; width=&quot;300&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;根据空间位置，大脑皮层可以被分为几个叶：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;额叶：高级认知功能，比如学习、语言、决策、抽象思维、情绪等，自主运动的控制。&lt;&#x2F;li&gt;
+&lt;li&gt;枕叶：视觉处理&lt;&#x2F;li&gt;
+&lt;li&gt;顶叶：躯体感觉，空间信息处理，视觉信息和体感信息的整合。&lt;&#x2F;li&gt;
+&lt;li&gt;颞叶：听觉，嗅觉，高级视觉功能，分辨左右，长期记忆。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;9.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;9.jpg 237.5w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;9.jpg 237.5w&quot;
+    sizes=&quot;(max-width: 237.5px) 100vw, 237.5px&quot; width=&quot;237.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h5 id=&quot;e-xie&quot;&gt;额叶&lt;&#x2F;h5&gt;
+&lt;p&gt;在人类大脑当中，比起其余脑中的“叶”，这是最大的一部分。前额叶皮层是与许多高级认知功能相关的关键脑区。例如，在抽象规则的认知、工作记忆、注意力调控，以及行为的计划和策略、思维和推理等功能中起着关键性的作用。「飞越疯人院」里，麦克墨菲最后被切除了前额叶，就变得非常温顺和听话，因为失去了高级认知功能。&lt;&#x2F;p&gt;
+&lt;p&gt;PS：「额叶切除手术」的发明者居然获得了 1949 年的医学诺贝尔奖，而前一年的医学奖颁给了发明剧毒有机氯杀虫剂 DDT 的瑞士化学家米勒，这可能是诺奖最瞎的两年···&lt;&#x2F;p&gt;
+&lt;h5 id=&quot;zhen-xie&quot;&gt;枕叶&lt;&#x2F;h5&gt;
+&lt;p&gt;枕叶就是平常睡觉时贴着枕头的那片区域，枕叶跟视觉处理有关。「看见」这个行为需要进行一系列的处理（视觉通路）：光线进入到视网膜后被转化成了电信号，然后沿着视神经快速穿过脑部，到达脑的交换机 — 丘脑，在这之后视觉信息被输送到了脑后的枕叶，再传送给了那里的视觉皮层。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;10.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;10.jpg 200w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;10.jpg 200w&quot;
+    sizes=&quot;(max-width: 200px) 100vw, 200px&quot; width=&quot;200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;视觉皮层将处理信号的工作分成了几个部分，让它们分别计算距离、形状、色彩、尺寸和速度。任何一个部分只要稍微出些差错，就会造成明显的视觉扭曲。更神奇的是，视觉皮层还会根据运算结果，构建出一个对外部世界的解释。比如下面的「卡尼撒三角」：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;11.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;11.png 118w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;11.png 118w&quot;
+    sizes=&quot;(max-width: 118px) 100vw, 118px&quot; width=&quot;118&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;尽管白色的三角形没有画出来，但我们分明看到它就在那儿。人脑会识别并且预测悉熟的模式，以此将思维的率效提到最高。比如前面这句话有几个词是颠倒顺序的，但你可能并没有注意到。&lt;&#x2F;p&gt;
+&lt;p&gt;接下来说说做梦，我们经常会梦到一些离奇的场景，一些不相关的人和事往往会糅合在一起，以富有创意的情节在推进。它的大概流程是这样的：当进入快速眼动睡眠（REM）时，梦境系统开始接管丘脑和视觉皮层，醒着的时候，丘脑的素材来自眼睛，做梦时，它的素材则来自脑干（丘脑只是一部交换机，它不关心素材来自哪里，只是一股脑地将它们传给视觉皮层）。视觉皮层拿到脑干随机产生的这些信号该怎么办？这就到了见证奇迹的时刻，它会尝试从这些信号中理出头绪，将它们串联起来，形成一段完整的故事，而且是边写剧本边演。&lt;&#x2F;p&gt;
+&lt;p&gt;梦虽然奇怪，但为什么置身其中时，却往往感觉不到，只有醒来时才会觉得荒诞，因为执行高级决策的前额叶也休息了（毕竟是耗能大户），就像一个没有大人管的娃···&lt;&#x2F;p&gt;
+&lt;p&gt;除了做梦外，视觉皮层还可以用来做一些其他的事情，比如「心理意向训练」。据说老虎伍兹在重要比赛之前都会开车到比赛场地，在那里练上几轮，回家后就躺在床上练习那些比赛中需要的击球。&lt;&#x2F;p&gt;
+&lt;p&gt;我们通常说的「肌肉记忆」其实并不是肌肉产生了记忆，而是控制特定肌肉的神经系统仿佛有了记忆。所以「想象训练」就是训练这些特定的神经系统，让它们长点记性。有人做了一个实验，要求用手把这些数字从小到大点个遍，越快越好（之所以把数字这么放是为了制造大幅度的复杂动作）：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;12.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;12.png 300w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;12.png 300w&quot;
+    sizes=&quot;(max-width: 300px) 100vw, 300px&quot; width=&quot;300&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;然后把人群分为三组进行练习：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;第一组跟正式测试时一样，用手点数&lt;&#x2F;li&gt;
+&lt;li&gt;第二组看着这些数，在想象中用手从小点到大&lt;&#x2F;li&gt;
+&lt;li&gt;第三组只是用眼睛看，从小看到大&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;三组被试都先执行一次指认任务，然后各自练习，最后再执行一次指认任务，好让研究者评价他们的进步。结果显示，第一组和第二组在练习之后，手臂的动作明显变快了。而对照组（就是只能移动眼睛的那一组）没有任何进步。&lt;&#x2F;p&gt;
+&lt;p&gt;所以之后如果需要做演讲分享或一些特定的练习，不妨试试「心理意向训练」（感兴趣的话，可以搜一下 PETTLEP，可以帮助你更系统地使用这个方法）。&lt;&#x2F;p&gt;
+&lt;h5 id=&quot;ji-di-he&quot;&gt;基底核&lt;&#x2F;h5&gt;
+&lt;p&gt;基底核是大脑深部一系列神经核团组成的功能整体，既然藏得这么深，那一定很重要。目前所知它的主要功能为自主运动的控制、整合调节细致的意识活动和运动反应。同时还参与记忆，情感和奖励学习等高级认知功能。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;13.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;13.jpg 255w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;13.jpg 255w&quot;
+    sizes=&quot;(max-width: 255px) 100vw, 255px&quot; width=&quot;255&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;基底核对「习惯养成」和「瘾」有很大的影响（确切说来是其中的「纹状体」和「伏隔核」的功劳）。上面提到它的一个功能是「自主运动的控制」，也就是无意识行为，意味着它可以命令大脑产生动作。比如上班路上，无论是开车还是走路，都可以很轻松地完成，因为太熟悉了。这么神奇的功能，科学家们自然不会放过，于是他们做了一个实验：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;14.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;14.jpg 283w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;14.jpg 283w&quot;
+    sizes=&quot;(max-width: 283px) 100vw, 283px&quot; width=&quot;283&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;把小老鼠放到迷宫中，在它左侧放了奖赏物，一开始它左顾右盼，到处乱走，但最终还是会发现左侧的奖赏。接下来的几次还是会停顿，但会更快地找到奖赏物，重复次数多了之后，到了十字路口，它会毫不犹豫地左转，变成了习惯。&lt;&#x2F;p&gt;
+&lt;p&gt;这么多次的重复，对大脑产生了什么影响呢？科学家们观察到小老鼠练习得越多，它的纹状体活动就越强烈，其他部分的参与度会大幅下降，就像 Tesla 开启了自动驾驶一样。把这块区域损毁，进而关闭习惯系统，则又回到了最开始的试探模式。&lt;&#x2F;p&gt;
+&lt;p&gt;再来说说瘾，瘾跟伏隔核有关，最常见的就是手机上瘾，webmd（美国互联网医疗健康信息服务平台）上罗列了&lt;a href=&quot;https:&#x2F;&#x2F;www.webmd.com&#x2F;mental-health&#x2F;addiction&#x2F;signs-of-drug-addiction#1&quot;&gt;药物上瘾&lt;&#x2F;a&gt;的表现，摘录其中几条：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;即使对健康不再有帮助依旧持续吃药（You keep taking a drug after it’s no longer needed for a health problem.）。&lt;&#x2F;li&gt;
+&lt;li&gt;需要更多的剂量来达到同样的效果（You need more and more of a substance to get the same effects）。&lt;&#x2F;li&gt;
+&lt;li&gt;当不吃药时会感觉到不适应（You feel strange when the drug wears off）。&lt;&#x2F;li&gt;
+&lt;li&gt;停不下来，即使知道不应该再继续吃下去（You can’t stop yourself from using the drug, even if you want to.）。&lt;&#x2F;li&gt;
+&lt;li&gt;发现很难控制摄入量，比如只想嗑一颗，结果嗑了三颗（You have a hard time giving yourself limits.）。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;把「吃药」换成「使用手机」是不是一样适用？为什么会这样，因为在应用的背后，有很多人在努力工作，尽可能地留住你，让你再次使用。不要指望意志力能帮什么忙，最好的办法就是出现：“就看十分钟”、“就玩一会”的心态时就扼杀住。&lt;&#x2F;p&gt;
+&lt;p&gt;基底核像一个程序员，一个习惯或者无意识行为的养成，就像一个编好的程序，只要输入变量（收集到的环境信息）和返回值（要达到的目的）跟程序匹配就会自动执行，所以基底核里藏着很多套这样的程序。从「节能」角度来说，确实很高效，这样前额叶皮层就能抽出空来干更重要的事，比如刷手机···。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;jian-nao&quot;&gt;间脑&lt;&#x2F;h4&gt;
+&lt;p&gt;说完了端脑，现在来看看间脑，这块夹在脑中间的部分可是很重要的（一般在中间的都很重要···）。它可以分为「丘脑」和「下丘脑」。&lt;&#x2F;p&gt;
+&lt;h5 id=&quot;qiu-nao&quot;&gt;丘脑&lt;&#x2F;h5&gt;
+&lt;p&gt;丘脑是个大的中继站，负责向更高级的脑区传递感觉信号，以及下行发送高级脑区的命令信号，最终引起肌肉动作。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;15.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;15.png 191w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;15.png 191w&quot;
+    sizes=&quot;(max-width: 191px) 100vw, 191px&quot; width=&quot;191&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;之前说「枕叶」时，就提到过丘脑，讲到它会把眼睛带来的电信号带给大脑皮层。除了视觉之外，其他的感觉器官也会把信息给丘脑（除了嗅觉，它走的是边缘系统）。所以它就像脑的中枢，我们对外界的感知，都是丘脑告诉的，如果它的工作机制被完全破解，理论上我们就能接入各种电极来达到最高级的模拟体验，皮层甚至区分不出来这是真实的还是虚幻的。&lt;&#x2F;p&gt;
+&lt;h5 id=&quot;xia-qiu-nao&quot;&gt;下丘脑&lt;&#x2F;h5&gt;
+&lt;p&gt;下丘脑帮助维持很多机体功能的重要状态，比如冷了会不由自主打冷颤，饿了产生饥饿感。还是例如性行为和攻击行为等本能社会行为的关键控制者。为了生存和繁衍，下丘脑可是煞费苦心···&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;xiao-nao&quot;&gt;小脑&lt;&#x2F;h3&gt;
+&lt;p&gt;聊完了前脑，再来聊聊小脑。小脑在感觉感知、协调性，和运动控制中扮演重要角色。它不会主动发起动作，但会接收来自脊髓感觉系统和其他脑区的讯号，影响运动协调、精确度和准确的时机控制。由于小脑的功能是“微调”运动技能，所以小脑的损伤不会带来诸如瘫痪的严重症状，但是会导致精细动作技能、平衡能力、姿势和动作学习方面的症状。&lt;&#x2F;p&gt;
+&lt;p&gt;小脑还有一个很有意思的功能是「从“总和”知觉中扣除“期望的”知觉，从而改变感觉方式」。什么意思呢？我们都知道一个人不能够挠自己痒痒。那为什么别人挠你痒痒，你的感觉就很强烈呢？这时就该请我们的研究人员上场了。他们让受试者把头部放在一台机器中（该机器可以检测成像大脑的活动部位和强度），然后挠他们痒痒。他们发现，与触觉相关的称为感觉皮层的大脑区域活动很强烈，小脑则没有明显的活动。当要求受试者在相同部位挠自己痒痒时，发现小脑有一处活动增强，而感觉皮层活动减弱了。这说明小脑预测「期望的」知觉，并发送编码信号抑制了感觉皮层。就好像要期末考试了，你跟老爸说，平时没好好学习，所以分数极有可能不太理想，这样当拿着最终的考试分数让老爸签字时，会在预期之内。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;nao-gan&quot;&gt;脑干&lt;&#x2F;h3&gt;
+&lt;p&gt;脑干由中脑、脑桥和延髓组成，负责调节复杂的反射活动，包括调节呼吸作用、心跳、血压等，对维持机体生命有重要意义。它就是那个全年无休 007 工作的员工，它要是出了问题，就是大问题了。所以也有人把脑干、小脑和基底核合称为「爬行脑」，也就是最原始的脑（保障生存和繁衍）。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;bian-yuan-xi-tong&quot;&gt;边缘系统&lt;&#x2F;h3&gt;
+&lt;p&gt;边缘系统包含了很多的部位，它的主要部分环绕大脑两半球内侧形成一个闭合的环（这个环也不边缘啊···）。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;16.jpg&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;16.jpg 325w,&amp;#x2F;posts&amp;#x2F;brain&amp;#x2F;16.jpg 325w&quot;
+    sizes=&quot;(max-width: 325px) 100vw, 325px&quot; width=&quot;325&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;既然有这么多组成部分，它的功能应该也不会弱。其中比较重要的是「影响、产生情绪」，还有「参与学习和记忆活动」。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;hai-ma&quot;&gt;海马&lt;&#x2F;h4&gt;
+&lt;p&gt;海马是学习和记忆的通道，损伤海马可使学习能力明显下降，近期记忆丧失，但不影响远期（长期）记忆。&lt;&#x2F;p&gt;
+&lt;p&gt;为海马的研究做出突出贡献的是一位名叫 亨利·莫莱森 的同学。他每天都看同一本书，因为对他来说这就是本新书。之前为了治疗癫痫，被移除了海马，结果出现了记忆问题，主治医生觉得这是一个很好的研究机会，于是就对他进行了长达 50 年的互动，一步步揭开了海马的神秘面纱。他有如下几个表现：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;虽然亨利不能再记得日常生活里的任何事情，却依然可以唤起自己童年时形成的回忆。&lt;&#x2F;li&gt;
+&lt;li&gt;对眼前任何事件的记忆都只能持续几分钟甚至更短的时间，一旦注意力转移，立刻就忘掉先前的那件事。&lt;&#x2F;li&gt;
+&lt;li&gt;瞬时记忆没问题，可以记住停留一阵又消失的数字，只要数字在 7 个之内。&lt;&#x2F;li&gt;
+&lt;li&gt;让他完成需要练习才能习得的偏复杂技能，只要时间足够长，一样可以流畅地完成。&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;所以海马是构建记忆的一个通道，但不会把记忆都存在那里，等到一定时间之后会被转移（大概需要一年甚至更长）。如果记不住东西，学习的效率自然也会大打折扣。&lt;&#x2F;p&gt;
+&lt;p&gt;为什么那些需要练习的偏复杂技能，还是可以习得呢？因为这个过程（非陈述式记忆）更多地发生在基底核中，还记得基底核是一个程序员么？只要练习地够多，它就能写出一套套的程序出来，然后就可以自动运行了。&lt;&#x2F;p&gt;
+&lt;p&gt;记忆就像是在一大片橡胶地上踩出来的一条条路。那些踩得不够深的路，由于橡胶的弹性会慢慢消失，但即使踩得够深，如果没有其他的路跟它连接，从「路」的角度看，它的价值也不是很大。我们通常会有这样的体验，在适度的紧张、压力下，记忆的效果会更好，这就好比让橡胶变软一点，方便踩下去的时候留下印记。&lt;&#x2F;p&gt;
+&lt;p&gt;对记忆来说，还有很重要的一块是提取，而感官就是极好的提取器，就像在一条条路上放置着醒目的路标。比如听到谢霆锋的歌时，就会想起初中的生活，听到周杰伦的歌时会想起高中生活（是不是暴露了什么···）。味觉、触觉也有类似的功能。&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;xing-ren-he&quot;&gt;杏仁核&lt;&#x2F;h4&gt;
+&lt;p&gt;杏仁核是情感处理中枢，在恐惧和攻击行为中扮演角色。它接受两方面信息，一是皮层中处理过的感觉信息，另一个是自主产生的对抗或逃跑反应（如流汗、心跳加速），后者是有下丘脑和脑干介入的。它附着在海马的末端，是产生情绪，识别情绪和调节情绪，控制学习和记忆的脑部组织。&lt;&#x2F;p&gt;
+&lt;p&gt;杏仁核和海马住得这么近，它对学习和记忆有着重要作用也在情理之中。上面说到适度的紧张对记忆会有帮助，这个紧张的发生场所就是杏仁核。那些具有情绪意义的刺激会引起杏仁核电活动的强烈反应，并形成长期的痕迹储存于脑中。比如自己写的 bug，造成了严重的线上事故时，那天的种种场景一定会记得格外清楚。&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h2&gt;
+&lt;p&gt;脑确实极为复杂（虽然不一定高效），对它多一点了解，对于理解和调整自己都会有帮助。当科技以第七王国的身份参与到进化时，尤其需要注重对前额叶的使用，一方面层出不穷的「去思考化」产品会不断勾引你，另一方面越来越聪明能干的机器会挑战你的价值，唯有在科技的河流中逆流而上才能赢得进化游戏。&lt;&#x2F;p&gt;
+&lt;p&gt;本文主要参考了以下书籍：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;进化的大脑&lt;&#x2F;li&gt;
+&lt;li&gt;神经科学·探索脑&lt;&#x2F;li&gt;
+&lt;li&gt;神经的逻辑&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

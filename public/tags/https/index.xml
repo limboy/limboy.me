@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Limboy - https</title>
+        <link>https://limboy.me</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>zh</language>
+        <atom:link href="https://limboy.me/tags/https/index.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sat, 19 Feb 2011 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>图解HTTPS</title>
+            <pubDate>Sat, 19 Feb 2011 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/https-workflow/</link>
+            <guid>https://limboy.me/posts/https-workflow/</guid>
+            <description>&lt;p&gt;我们都知道 HTTPS 能够加密信息，以免敏感信息被第三方获取。所以很多银行网站或电子邮箱等等安全级别较高的服务都会采用 HTTPS 协议。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;https-jian-jie&quot;&gt;HTTPS 简介&lt;&#x2F;h3&gt;
+&lt;p&gt;HTTPS 其实是有两部分组成：HTTP + SSL &#x2F; TLS，也就是在 HTTP 上又加了一层处理加密信息的模块。服务端和客户端的信息传输都会通过 TLS 进行加密，所以传输的数据都是加密后的数据。具体是如何进行加密，解密，验证的，且看下图。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;https-workflow&amp;#x2F;https.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;https-workflow&amp;#x2F;https.png 324w,&amp;#x2F;posts&amp;#x2F;https-workflow&amp;#x2F;https.png 324w&quot;
+    sizes=&quot;(max-width: 324px) 100vw, 324px&quot; width=&quot;324&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;1-ke-hu-duan-fa-qi-https-qing-qiu&quot;&gt;1. 客户端发起 HTTPS 请求&lt;&#x2F;h3&gt;
+&lt;p&gt;这个没什么好说的，就是用户在浏览器里输入一个 https 网址，然后连接到 server 的 443 端口。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;2-fu-wu-duan-de-pei-zhi&quot;&gt;2. 服务端的配置&lt;&#x2F;h3&gt;
+&lt;p&gt;采用 HTTPS 协议的服务器必须要有一套数字证书，可以自己制作，也可以向组织申请。区别就是自己颁发的证书需要客户端验证通过，才可以继续访问，而使用受信任的公司申请的证书则不会弹出提示页面(startssl 就是个不错的选择，有 1 年的免费服务)。这套证书其实就是一对公钥和私钥。如果对公钥和私钥不太理解，可以想象成一把钥匙和一个锁头，只是全世界只有你一个人有这把钥匙，你可以把锁头给别人，别人可以用这个锁把重要的东西锁起来，然后发给你，因为只有你一个人有这把钥匙，所以只有你才能看到被这把锁锁起来的东西。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;3-chuan-song-zheng-shu&quot;&gt;3. 传送证书&lt;&#x2F;h3&gt;
+&lt;p&gt;这个证书其实就是公钥，只是包含了很多信息，如证书的颁发机构，过期时间等等。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;4-ke-hu-duan-jie-xi-zheng-shu&quot;&gt;4. 客户端解析证书&lt;&#x2F;h3&gt;
+&lt;p&gt;这部分工作是有客户端的 TLS 来完成的，首先会验证公钥是否有效，比如颁发机构，过期时间等等，如果发现异常，则会弹出一个警告框，提示证书存在问题。如果证书没有问题，那么就生成一个随即值。然后用证书对该随机值进行加密。就好像上面说的，把随机值用锁头锁起来，这样除非有钥匙，不然看不到被锁住的内容。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;5-chuan-song-jia-mi-xin-xi&quot;&gt;5. 传送加密信息&lt;&#x2F;h3&gt;
+&lt;p&gt;这部分传送的是用证书加密后的随机值，目的就是让服务端得到这个随机值，以后客户端和服务端的通信就可以通过这个随机值来进行加密解密了。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;6-fu-wu-duan-jie-mi-xin-xi&quot;&gt;6. 服务端解密信息&lt;&#x2F;h3&gt;
+&lt;p&gt;服务端用私钥解密后，得到了客户端传过来的随机值(私钥)，然后把内容通过该值进行对称加密。所谓对称加密就是，将信息和私钥通过某种算法混合在一起，这样除非知道私钥，不然无法获取内容，而正好客户端和服务端都知道这个私钥，所以只要加密算法够彪悍，私钥够复杂，数据就够安全。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;7-chuan-shu-jia-mi-hou-de-xin-xi&quot;&gt;7. 传输加密后的信息&lt;&#x2F;h3&gt;
+&lt;p&gt;这部分信息是服务段用私钥加密后的信息，可以在客户端被还原&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;8-ke-hu-duan-jie-mi-xin-xi&quot;&gt;8. 客户端解密信息&lt;&#x2F;h3&gt;
+&lt;p&gt;客户端用之前生成的私钥解密服务段传过来的信息，于是获取了解密后的内容。整个过程第三方即使监听到了数据，也束手无策。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+Advanced NSOperation
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/advanced-nsoperation/">
+
+<meta name="twitter:title" content="Advanced NSOperation">
+<meta property="og:title" content="Advanced NSOperation">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;advanced-nsoperation&#x2F;">Advanced NSOperation</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2015-08-08</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <h3 id="qian-yan">前言</h3>
+<p>这篇文章是对 <a href="https://developer.apple.com/videos/wwdc/2015/?id=226">WWDC 2015 Session 226: Advanced NSOperations</a> 的一个小结，在那个视频中，<a href="https://twitter.com/davedelong">Dave DeLong</a> 分享了 NSOperation 的高级玩法，WWDC App 就是基于这套玩法做的，还是挺开阔思路的。</p>
+<h3 id="nsoperation-he-nsoperationqueue-jian-jie">NSOperation 和 NSOperationQueue 简介</h3>
+<p>我们知道 NSOperation 可以执行一些后台操作，如 HTTP 请求，在 iOS 4.0 之前是基于 NSThread 来实现的，iOS 4.0 带了 GCD，NSOperation 底层也基于 GCD 重写了底层实现。</p>
+<p>所以 NSOperation 是 GCD 的高层封装，同时也带来了一些更加便利的功能，比如取消任务，设置依赖等。在进入高级玩法前，先简单的介绍下 NSOperation 和 NSOperationQueue。</p>
+<h4 id="nsoperationqueue-maxconcurrentoperationcount">NSOperationQueue maxConcurrentOperationCount</h4>
+<p>这个属性表示的是 NSOperationQueue 最多可以同时处理几个任务，假如我们希望它一次只处理一个，也就是线性 Queue，可以设置 <code>maxConcurrentOperationCount = 1</code></p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-1.png"
+    srcset="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-1.png 337w,&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-1.png 337w"
+    sizes="(max-width: 337px) 100vw, 337px" width="337" /></p>
+<p>中间的点表示任务的状态，在上一个任务完成前，下一个任务不会被执行，因为只有一个 worker。</p>
+<p>如果希望一次能处理多个，将这个值设置为大于 1 即可，或者直接使用默认值，系统会自动设置一个合理的最大值。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-2.png"
+    srcset="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-2.png 337w,&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-2.png 337w"
+    sizes="(max-width: 337px) 100vw, 337px" width="337" /></p><h4 id="nsoperation-cancel">NSOperation cancel</h4>
+<p>从上面的图可以看到，正在被执行的任务的状态跟在后面排队的状态是不一样的，有这么几种状态：pending, ready, executing, finished, cancelled。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-3.png"
+    srcset="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-3.png 148.5w,&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-3.png 148.5w"
+    sizes="(max-width: 148.5px) 100vw, 148.5px" width="148.5" /></p>
+<p>之前提到过 NSOperation 一个很重要的特性是可以被取消，但不同状态的取消处理也不一样。比如当 Operation 处于 pending, ready 状态时，系统可以去看一下这个 Operation 是否已经被取消了(判断 self.cancelled)，如果是的话，就不执行任务了。但是当 Operation 处于 executing 状态时，取消的操作就只能自己处理了，比如</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@implementation </span><span>MyOperation: </span><span style="color:#839c00;">NSOperation
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">main
+</span><span>{
+</span><span>    </span><span style="color:#8e908c;">// ...
+</span><span>    </span><span style="color:#8959a8;">while </span><span>(</span><span style="color:#3e999f;">!</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">cancelled</span><span>) {
+</span><span>        </span><span style="color:#8e908c;">// executing
+</span><span>    }
+</span><span>}
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<h4 id="nsoperation-dependency">NSOperation dependency</h4>
+<p>NSOperation 还有一个很重要的特性是可以设置依赖</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-4.png"
+    srcset="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-4.png 150.5w,&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-4.png 150.5w"
+    sizes="(max-width: 150.5px) 100vw, 150.5px" width="150.5" /></p>
+<p>任务 A 需要等待 任务 B 和 任务 C 完成，才能被执行，而任务 B 需要等到 任务 D 完成才能被执行。</p>
+<p>当然前提是这些 Operation 都需要被放到某个 Queue 里，这样它们的状态才会发生改变。</p>
+<h3 id="gao-ji-wan-fa">高级玩法</h3>
+<p>开发 App 的过程中，有一些逻辑是可以共用的，比如登录、网络状况等，最好可以组装起来，就像超能陆战队里的 megabot 一样</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;megabot.jpg"
+    srcset="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;megabot.jpg 240w,&#x2F;posts&#x2F;advanced-nsoperation&#x2F;megabot.jpg 240w"
+    sizes="(max-width: 240px) 100vw, 240px" width="240" /></p>
+<p>基于前面提到的 NSOperation / NSOperationQueue 的一些特点，苹果的工程师们想到了他们的解决方法。</p>
+<h4 id="condition">Condition</h4>
+<p>Condition，也就是条件，它可以被附加到 Operation 上，只有当 Condition 被满足时，Operation 才能被执行。比如只有在有网络的情况下才能进行交易，这时「网络状况」就是附加给「交易」的 Condition。</p>
+<p>一个 Condition 主要包含了 3 个方法：</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8e908c;">// 1
+</span><span style="color:#8959a8;">static var</span><span> isMutuallyExclusive: </span><span style="color:#c99e00;">Bool</span><span> { </span><span style="color:#8959a8;">get</span><span> }
+</span><span style="color:#8e908c;">// 2
+</span><span style="color:#8959a8;">func </span><span>dependencyForOperation(operation: Operation) </span><span style="color:#3e999f;">-&gt;</span><span> NSOperation?
+</span><span>// 3
+</span><span>func evaluateForOperation(operation: Operation, completion: OperationConditionResult -&gt; </span><span style="color:#c99e00;">Void</span><span>)
+</span></code></pre>
+<ol>
+<li>这个属性用来表明这个 Condtion 是否是排他的，如果是的话，同一时间只能出现一个该类型的实例，类型的指定是通过设置 <code>name</code> 来实现的。</li>
+<li>为传入的 operation 返回一个依赖的 operation，比如「喜欢」这个 Operation 需要用户已处于登录状态，那么「登录」这个 Condition 的这个方法就可以返回一个「登录」的 Operation。</li>
+<li>这个方法是查看这个 Condition 的执行结果，比如前面的「登录」Operation 结束后，系统将要执行「喜欢」这个 Operation，然后这个方法就会被触发，如果没有错误发生的话，就执行「喜欢」，如果有错误发生「喜欢」就会自动结束。</li>
+</ol>
+<p>所以总结起来 Condition 主要干了这么三件事</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-condition.png"
+    srcset="&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-condition.png 206w,&#x2F;posts&#x2F;advanced-nsoperation&#x2F;nsoperation-condition.png 206w"
+    sizes="(max-width: 206px) 100vw, 206px" width="206" /></p>
+<p>来看一个简单的 Condition (来自 WWDC Sample)</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">struct</span><span> ReachabilityCondition: OperationCondition {
+</span><span>    </span><span style="color:#8959a8;">static let</span><span> hostKey </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&quot;Host&quot;
+</span><span>    </span><span style="color:#8959a8;">static let</span><span> name </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&quot;Reachability&quot;
+</span><span>    </span><span style="color:#8959a8;">static let</span><span> isMutuallyExclusive </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">false
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">let</span><span> host: NSURL
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">// 1
+</span><span>    </span><span style="color:#8959a8;">init</span><span>(host: NSURL) {
+</span><span>        </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>host </span><span style="color:#3e999f;">=</span><span> host
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">// 2
+</span><span>    </span><span style="color:#8959a8;">func </span><span>dependencyForOperation(operation: Operation) </span><span style="color:#3e999f;">-&gt;</span><span> NSOperation? {
+</span><span>        </span><span style="color:#8959a8;">return </span><span>nil
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">func </span><span>evaluateForOperation(operation: Operation, completion: OperationConditionResult </span><span style="color:#3e999f;">-&gt; </span><span style="color:#c99e00;">Void</span><span>) {
+</span><span>        ReachabilityController</span><span style="color:#3e999f;">.</span><span>requestReachability(host) { reachable </span><span style="color:#8959a8;">in
+</span><span>            </span><span style="color:#8959a8;">if</span><span> reachable {
+</span><span>                </span><span style="color:#8e908c;">// 3
+</span><span>                completion(</span><span style="color:#3e999f;">.</span><span>Satisfied)
+</span><span>            }
+</span><span>            </span><span style="color:#8959a8;">else</span><span> {
+</span><span>                </span><span style="color:#8959a8;">let</span><span> error </span><span style="color:#3e999f;">=</span><span> NSError(code: </span><span style="color:#3e999f;">.</span><span>ConditionFailed, userInfo: [
+</span><span>                    OperationConditionKey: </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span style="color:#8959a8;">dynamicType</span><span style="color:#3e999f;">.</span><span>name,
+</span><span>                    </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span style="color:#8959a8;">dynamicType</span><span style="color:#3e999f;">.</span><span>hostKey: </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>host
+</span><span>                ])
+</span><span>                </span><span style="color:#8e908c;">// 4
+</span><span>                completion(</span><span style="color:#3e999f;">.</span><span>Failed(error))
+</span><span>            }
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<ol>
+<li>Condtion 初始化时可以传参数进来。</li>
+<li>这个 Condition 没有生成一个 <code>dependencyForOperation</code>，因为生成依赖 Operation 的目的是当这个 Operation 运行完后，可以在 evaluateForOperation 时获取之前的运行结果，而这里直接调用 ReachabilityController 的 requestReachability 方法就可以了，所以就免去了这一步。</li>
+<li>当结果符合预期时，调用 <code>completion(.Satisfied)</code></li>
+<li>当出现异常时，调用 <code>completion(.Failed(error))</code></li>
+</ol>
+<h4 id="operation">Operation</h4>
+<p><code>Operation</code> 继承自 <code>NSOperation</code>，同时添加了一些方法，主要可以分为 4 部分</p>
+<ul>
+<li>设置状态变量，同时手动设置 KVO</li>
+<li>执行 conditions 的 <code>evaluateForOperation</code> 方法</li>
+<li>添加 Observer</li>
+<li>添加 Condtion</li>
+</ul>
+<h5 id="she-zhi-zhuang-tai-bian-liang-tong-shi-shou-dong-she-zhi-kvo">设置状态变量，同时手动设置 KVO</h5>
+<p>在系统提供的状态的基础上，又添加了一些新的状态，如 <code>EvaluatingConditions</code>, <code>Pending</code> 等，这些状态的改变都需要触发内置状态的 KVO，如 <code>isExecuting</code>, <code>isFinished</code>, <code>isReady</code> 等。通常的做法会是这样：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">willChangeValueForKey:</span><span style="color:#839c00;">@&quot;isExecuting&quot;</span><span>];
+</span><span>_state </span><span style="color:#3e999f;">=</span><span> Executing;
+</span><span>[</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">didChangeValueForKey:</span><span style="color:#839c00;">@&quot;isExecuting&quot;</span><span>];
+</span></code></pre>
+<p>当只有少量的状态改变时，在前后包一层还可以接受，但如果多了的话，就不美观了，这时可以使用 KVO 的一个方法 <code>+ keyPathsForValuesAffectingValueForKey:</code>，它的意思是，哪些 keyPaths 的改变会导致 <code>Key</code> 发生变化。所以可以定义这几个方法，然后正常设置 <code>state</code> 就可以了。</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">class func </span><span>keyPathsForValuesAffectingIsReady() </span><span style="color:#3e999f;">-&gt;</span><span> Set&lt;NSObject&gt; {
+</span><span>    </span><span style="color:#8959a8;">return</span><span> [</span><span style="color:#839c00;">&quot;state&quot;</span><span>]
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">class func </span><span>keyPathsForValuesAffectingIsExecuting() </span><span style="color:#3e999f;">-&gt;</span><span> Set&lt;NSObject&gt; {
+</span><span>    </span><span style="color:#8959a8;">return</span><span> [</span><span style="color:#839c00;">&quot;state&quot;</span><span>]
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">class func </span><span>keyPathsForValuesAffectingIsFinished() </span><span style="color:#3e999f;">-&gt;</span><span> Set&lt;NSObject&gt; {
+</span><span>    </span><span style="color:#8959a8;">return</span><span> [</span><span style="color:#839c00;">&quot;state&quot;</span><span>]
+</span><span>}
+</span></code></pre>
+<p>当然，这只是完成了一半，系统知道 state 变了后， <code>isReady</code> 会变，然后就会调用 <code>ready</code> 方法，所以这三个方法我们也要一并覆盖掉。</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">override var</span><span> executing: </span><span style="color:#c99e00;">Bool</span><span> {
+</span><span>    </span><span style="color:#8959a8;">return</span><span> state </span><span style="color:#3e999f;">== .</span><span>Executing
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">override var</span><span> finished: </span><span style="color:#c99e00;">Bool</span><span> {
+</span><span>    </span><span style="color:#8959a8;">return</span><span> state </span><span style="color:#3e999f;">== .</span><span>Finished
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">override var</span><span> ready: </span><span style="color:#c99e00;">Bool</span><span> {
+</span><span>    </span><span style="color:#8959a8;">switch</span><span> state {
+</span><span>
+</span><span>        </span><span style="color:#8959a8;">case </span><span style="color:#3e999f;">.</span><span>Pending:
+</span><span>            </span><span style="color:#8e908c;">// 省去不相关的代码
+</span><span>            </span><span style="color:#8959a8;">if super</span><span style="color:#3e999f;">.</span><span>ready {
+</span><span>                </span><span style="color:#8e908c;">// 1
+</span><span>                evaluateConditions()
+</span><span>            }
+</span><span>
+</span><span>            </span><span style="color:#8e908c;">// Until conditions have been evaluated, &quot;isReady&quot; returns false
+</span><span>            </span><span style="color:#8959a8;">return false
+</span><span>
+</span><span>        </span><span style="color:#8959a8;">case </span><span style="color:#3e999f;">.</span><span>Ready:
+</span><span>            </span><span style="color:#8959a8;">return super</span><span style="color:#3e999f;">.</span><span>ready </span><span style="color:#3e999f;">||</span><span> cancelled
+</span><span>
+</span><span>        </span><span style="color:#8959a8;">default</span><span>:
+</span><span>            </span><span style="color:#8959a8;">return false
+</span><span>    }
+</span><span>}
+</span><span>
+</span></code></pre>
+<ol>
+<li>可以看到，当系统在问某个 Operation 是否 ready 时，<code>evaluateConditions</code> 方法会被触发，这里包含了该 Operation 的所有 Conditions 的 <code>evaluateForOperation</code> 的执行结果。</li>
+</ol>
+<h5 id="zhi-xing-conditions-de-evaluateforoperation-fang-fa">执行 conditions 的 <code>evaluateForOperation</code> 方法</h5>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">private func </span><span>evaluateConditions() {
+</span><span>    assert(state </span><span style="color:#3e999f;">== .</span><span>Pending </span><span style="color:#3e999f;">&amp;&amp; !</span><span>cancelled, </span><span style="color:#839c00;">&quot;evaluateConditions() was called out-of-order&quot;</span><span>)
+</span><span>
+</span><span>    state </span><span style="color:#3e999f;">= .</span><span>EvaluatingConditions
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">// 1
+</span><span>    OperationConditionEvaluator</span><span style="color:#3e999f;">.</span><span>evaluate(conditions, operation: </span><span style="color:#8959a8;">self</span><span>) { failures </span><span style="color:#8959a8;">in
+</span><span>        </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>_internalErrors</span><span style="color:#3e999f;">.</span><span>extend(failures)
+</span><span>        </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>state </span><span style="color:#3e999f;">= .</span><span>Ready
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<ol>
+<li>遍历当前 Operation 的 conditions，执行它们的 <code>evaluateForOperation</code> 方法，然后将错误保存在 <code>_internalErrors</code> 里，同时将当前的状态设置为 <code>.Ready</code>。</li>
+</ol>
+<p>或许你会问，如果出现错误，是不是表示条件不满足，如果条件不满足，为什么还要将状态设置为 <code>.Ready</code>？ 这是因为当状态设置为 <code>.Ready</code> 后，就会执行 <code>main</code> 方法，在那里会对 <code>_internalErrors</code> 做统一判断。</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">override final func </span><span>main() {
+</span><span>    assert(state </span><span style="color:#3e999f;">== .</span><span>Ready, </span><span style="color:#839c00;">&quot;This operation must be performed on an operation queue.&quot;</span><span>)
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">if</span><span> _internalErrors</span><span style="color:#3e999f;">.</span><span>isEmpty </span><span style="color:#3e999f;">&amp;&amp; !</span><span>cancelled {
+</span><span>        state </span><span style="color:#3e999f;">= .</span><span>Executing
+</span><span>
+</span><span>        </span><span style="color:#8e908c;">// 1
+</span><span>        </span><span style="color:#8959a8;">for</span><span> observer </span><span style="color:#8959a8;">in</span><span> observers {
+</span><span>            observer</span><span style="color:#3e999f;">.</span><span>operationDidStart(</span><span style="color:#8959a8;">self</span><span>)
+</span><span>        }
+</span><span>
+</span><span>        execute()
+</span><span>    }
+</span><span>    </span><span style="color:#8959a8;">else</span><span> {
+</span><span>        finish()
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<ol>
+<li>这里出现了 observer，当 Operation 处于不同状态时，会调用 observers 的不同方法</li>
+</ol>
+<h5 id="tian-jia-observers">添加 Observers</h5>
+<p>observer 的实现还是比较简单的，首先定义一个 Protocol，所有的 observer 都需要实现这个 Protocol 里的方法，然后 Operation 内置一个数组作为容器，<code>addObserver</code> 时，将 observer 添加到容器，当处于不同状态时，遍历容器里的 observer，调用相应的方法。</p>
+<p>这不免让我们想起了 delegate，跟 delegate 相比，observer 的好处就在于可以指定多个观察者，而 delegate 只能指定一个。</p>
+<h5 id="tian-jia-condtions">添加 Condtions</h5>
+<p>跟 observer 的实现思路基本一致。你或许会问，添加的这些 Conditions 什么时候会被触发呢？没错，就是在将 Operation 添加到 OperationQueue 时。</p>
+<h4 id="operationqueue">OperationQueue</h4>
+<p><code>OperationQueue</code> 也是继承自系统的 <code>NSOperationQueue</code>，同时重写了 <code>addOperation</code> 方法，这个方法主要做了 3 件事</p>
+<ul>
+<li>给 Operation 添加 observer</li>
+<li>处理 Operation 的 dependencies 的 <code>dependencyForOperation</code></li>
+<li>处理 Operation 的 dependencies 的排他性</li>
+</ul>
+<h5 id="gei-operation-tian-jia-observer">给 Operation 添加 observer</h5>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">let</span><span> delegate </span><span style="color:#3e999f;">=</span><span> BlockObserver(
+</span><span>    startHandler: nil,
+</span><span>    produceHandler: { [</span><span style="color:#8959a8;">weak self</span><span>] </span><span style="color:#8959a8;">in
+</span><span>        </span><span style="color:#8e908c;">// 1
+</span><span>        </span><span style="color:#8959a8;">self</span><span>?</span><span style="color:#3e999f;">.</span><span>addOperation($</span><span style="color:#f07219;">1</span><span>)
+</span><span>    },
+</span><span>    finishHandler: { [</span><span style="color:#8959a8;">weak self</span><span>] </span><span style="color:#8959a8;">in
+</span><span>        </span><span style="color:#8959a8;">if let</span><span> q </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">self</span><span> {
+</span><span>            </span><span style="color:#8e908c;">// 2
+</span><span>            q</span><span style="color:#3e999f;">.</span><span>delegate?</span><span style="color:#3e999f;">.</span><span>operationQueue?(q, operationDidFinish: $</span><span style="color:#f07219;">0</span><span>, withErrors: $</span><span style="color:#f07219;">1</span><span>)
+</span><span>        }
+</span><span>    }
+</span><span>)
+</span><span>op</span><span style="color:#3e999f;">.</span><span>addObserver(delegate)
+</span></code></pre>
+<ol>
+<li>我们前面说过，一个 Operation 可以生成一个新的 Operation，这个 Operation 生成后也需要被放到 Queue 里，这个放置的过程就是在这个 delegate 里实现的。</li>
+<li>operationQueue 自己有一个 delegate，当 queue 里的一个 operation 执行完时，会向 delegate 报告。</li>
+</ol>
+<h5 id="chu-li-operation-de-dependencies-de-dependencyforoperation">处理 Operation 的 dependencies 的 dependencyForOperation</h5>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8e908c;">// Extract any dependencies needed by this operation.
+</span><span style="color:#8959a8;">let</span><span> dependencies </span><span style="color:#3e999f;">=</span><span> op</span><span style="color:#3e999f;">.</span><span>conditions</span><span style="color:#3e999f;">.</span><span>flatMap {
+</span><span>    $</span><span style="color:#f07219;">0</span><span style="color:#3e999f;">.</span><span>dependencyForOperation(op)
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">for</span><span> dependency </span><span style="color:#8959a8;">in</span><span> dependencies {
+</span><span>    op</span><span style="color:#3e999f;">.</span><span>addDependency(dependency)
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>addOperation(dependency)
+</span><span>}
+</span></code></pre>
+<p>这个就很简单了，调用 <code>dependencyForOperation</code> 方法，拿到 operation，然后将当前的 op 依赖该 operation，同时将这个 operation 放到 queue 里，所以在 conditions 的 operations 执行完之前，op 是不会执行的。</p>
+<h5 id="chu-li-operation-de-dependencies-de-pai-ta-xing">处理 Operation 的 dependencies 的排他性</h5>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">let</span><span> concurrencyCategories: [</span><span style="color:#c99e00;">String</span><span>] </span><span style="color:#3e999f;">=</span><span> op</span><span style="color:#3e999f;">.</span><span>conditions</span><span style="color:#3e999f;">.</span><span>flatMap { condition </span><span style="color:#8959a8;">in
+</span><span>    </span><span style="color:#8959a8;">if </span><span style="color:#3e999f;">!</span><span>condition</span><span style="color:#3e999f;">.</span><span style="color:#8959a8;">dynamicType</span><span style="color:#3e999f;">.</span><span>isMutuallyExclusive { </span><span style="color:#8959a8;">return </span><span>nil }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#839c00;">&quot;</span><span>\(condition</span><span style="color:#3e999f;">.</span><span style="color:#8959a8;">dynamicType</span><span>)</span><span style="color:#839c00;">&quot;
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">if </span><span style="color:#3e999f;">!</span><span>concurrencyCategories</span><span style="color:#3e999f;">.</span><span>isEmpty {
+</span><span>    </span><span style="color:#8e908c;">// Set up the mutual exclusivity dependencies.
+</span><span>    </span><span style="color:#8959a8;">let</span><span> exclusivityController </span><span style="color:#3e999f;">=</span><span> ExclusivityController</span><span style="color:#3e999f;">.</span><span>sharedExclusivityController
+</span><span>
+</span><span>    exclusivityController</span><span style="color:#3e999f;">.</span><span>addOperation(op, categories: concurrencyCategories)
+</span><span>
+</span><span>    op</span><span style="color:#3e999f;">.</span><span>addObserver(BlockObserver { operation, _ </span><span style="color:#8959a8;">in
+</span><span>        exclusivityController</span><span style="color:#3e999f;">.</span><span>removeOperation(operation, categories: concurrencyCategories)
+</span><span>    })
+</span><span>}
+</span></code></pre>
+<p>在这里可能看不出「排他」的实现，因为是在 <code>exclusivityController</code> 里面实现的，调用了它的 <code>addOperation</code> 方法后，它会去查看这个类型的数组是否为空，如果不为空，就让这个 operation 依赖数组的最后一个。这样在之前的 operation 执行完之前，这个 operation 是不会被执行的。</p>
+<h3 id="shi-yong">使用</h3>
+<p>有了 Operation 和 OperationQueue 之后，就可以开始生产 megabot 了，来看一个「查看原网页」的 Operation，这个 Operation 的作用就是展示传入的 URL。</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">import </span><span style="color:#c99e00;">Foundation
+</span><span style="color:#8959a8;">import </span><span style="color:#c99e00;">SafariServices
+</span><span>
+</span><span style="color:#8e908c;">/// An `Operation` to display an `NSURL` in an app-modal `SFSafariViewController`.
+</span><span style="color:#8959a8;">class</span><span> MoreInformationOperation: Operation {
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">let</span><span> URL: NSURL
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">init</span><span>(URL: NSURL) {
+</span><span>        </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>URL </span><span style="color:#3e999f;">=</span><span> URL
+</span><span>        </span><span style="color:#8959a8;">super</span><span style="color:#3e999f;">.</span><span style="color:#8959a8;">init</span><span>()
+</span><span>        </span><span style="color:#8e908c;">// 1
+</span><span>        addCondition(MutuallyExclusive</span><span style="color:#3e999f;">&lt;</span><span>UIViewController</span><span style="color:#3e999f;">&gt;</span><span>())
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">override func </span><span>execute() {
+</span><span>        dispatch_async(dispatch_get_main_queue()) {
+</span><span>            </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>showSafariViewController()
+</span><span>        }
+</span><span>    }
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">private func </span><span>showSafariViewController() {
+</span><span>        </span><span style="color:#8959a8;">if let</span><span> context </span><span style="color:#3e999f;">=</span><span> UIApplication</span><span style="color:#3e999f;">.</span><span>sharedApplication()</span><span style="color:#3e999f;">.</span><span>keyWindow?</span><span style="color:#3e999f;">.</span><span>rootViewController {
+</span><span>            </span><span style="color:#8959a8;">let</span><span> safari </span><span style="color:#3e999f;">=</span><span> SFSafariViewController(URL: URL, entersReaderIfAvailable: </span><span style="color:#8959a8;">false</span><span>)
+</span><span>            safari</span><span style="color:#3e999f;">.</span><span>delegate </span><span style="color:#3e999f;">= </span><span style="color:#8959a8;">self
+</span><span>            context</span><span style="color:#3e999f;">.</span><span>presentViewController(safari, animated: </span><span style="color:#8959a8;">true</span><span>, completion: nil)
+</span><span>        }
+</span><span>        </span><span style="color:#8959a8;">else</span><span> {
+</span><span>            finish()
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">extension</span><span> MoreInformationOperation: SFSafariViewControllerDelegate {
+</span><span>    </span><span style="color:#8959a8;">func </span><span>safariViewControllerDidFinish(controller: SFSafariViewController) {
+</span><span>        controller</span><span style="color:#3e999f;">.</span><span>dismissViewControllerAnimated(</span><span style="color:#8959a8;">true</span><span>) {
+</span><span>            </span><span style="color:#8e908c;">// 2
+</span><span>            </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>finish()
+</span><span>        }
+</span><span>    }
+</span><span>}
+</span></code></pre>
+<ol>
+<li>因为这是一个 <code>ViewController</code> 相关的 Operation，所以其他同类型的 Operation，需要等我完成后才能被执行。</li>
+<li>当这个 controller 被关闭时，表示这个 Operation 结束，调用一下 <code>finish</code> 方法。</li>
+</ol>
+<p>如果需要的话，可以给这个 Operation 再加一个 <code>ReachabilityCondition</code>，当没有网络时就不打开了。</p>
+<p>再来看看在 VC 层面的使用。</p>
+<pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">override func </span><span>tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">// 1
+</span><span>    </span><span style="color:#8959a8;">let</span><span> operation </span><span style="color:#3e999f;">=</span><span> BlockOperation {
+</span><span>        </span><span style="color:#8959a8;">self</span><span style="color:#3e999f;">.</span><span>performSegueWithIdentifier(</span><span style="color:#839c00;">&quot;showEarthquake&quot;</span><span>, sender: nil)
+</span><span>    }
+</span><span>
+</span><span>    operation</span><span style="color:#3e999f;">.</span><span>addCondition(MutuallyExclusive</span><span style="color:#3e999f;">&lt;</span><span>UIViewController</span><span style="color:#3e999f;">&gt;</span><span>())
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">// 2
+</span><span>    </span><span style="color:#8959a8;">let</span><span> blockObserver </span><span style="color:#3e999f;">=</span><span> BlockObserver { _, errors </span><span style="color:#8959a8;">in
+</span><span>        </span><span style="color:#8e908c;">/*
+</span><span style="color:#8e908c;">            If the operation errored (ex: a condition failed) then the segue
+</span><span style="color:#8e908c;">            isn&#39;t going to happen. We shouldn&#39;t leave the row selected.
+</span><span style="color:#8e908c;">        */
+</span><span>        </span><span style="color:#8959a8;">if </span><span style="color:#3e999f;">!</span><span>errors</span><span style="color:#3e999f;">.</span><span>isEmpty {
+</span><span>            dispatch_async(dispatch_get_main_queue()) {
+</span><span>                tableView</span><span style="color:#3e999f;">.</span><span>deselectRowAtIndexPath(indexPath, animated: </span><span style="color:#8959a8;">true</span><span>)
+</span><span>            }
+</span><span>        }
+</span><span>    }
+</span><span>
+</span><span>    operation</span><span style="color:#3e999f;">.</span><span>addObserver(blockObserver)
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">// 3
+</span><span>    operationQueue</span><span style="color:#3e999f;">.</span><span>addOperation(operation)
+</span><span>}
+</span></code></pre>
+<ol>
+<li>类似 <code>NSBlockOperation</code>， <code>BlockOperation</code> 也可以快速生成一个 Operation。</li>
+<li><code>BlockObserver</code> 也是一个快速生成 observer 的方法，这里描述了当 Operation 完成后的处理。</li>
+<li>调用方需要新建一个 queue，然后把 Operation 放到这个 queue 里。</li>
+</ol>
+<p>相比起正常的调用，还是会多了些步骤。</p>
+<h3 id="xiao-jie">小结</h3>
+<p>基于 Operation 来架构的思想还是蛮新颖的，可以将复杂的任务拆分成粒度更细的 Operation，然后再组装。但实际使用起来也会有不少问题，比如之前提到的写起来会复杂些，调试时看 backtrace 会很累，不确定是否会带来更好的可维护性等等。不过既然苹果都已经把它用到了线上的 App，至少说明是可行的，至于与已有的架构相比会带来怎样的提升，可能需要实际写起来才知道。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

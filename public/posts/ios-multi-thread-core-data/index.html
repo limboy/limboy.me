@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+说说iOS的多线程Core Data
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/ios-multi-thread-core-data/">
+
+<meta name="twitter:title" content="说说iOS的多线程Core Data">
+<meta property="og:title" content="说说iOS的多线程Core Data">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;">说说iOS的多线程Core Data</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2013-06-16</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>Core Data 是 iOS 中很重要的一个部分，可以理解为基于 SQLite(当然也可以是其他的 Storage，如 In-memory，只是 SQLite 比较常见)的一个 ORM 实现，所以有关系数据库的特性，又不用写 SQL。顺便吐一下槽，官方说法是使用 Core Data 能减少 50%-70%的代码量，但相信用过的人应该都心里明白，Core Data 使用起来还是比较麻烦的，这也是为什么有不少的第三方类库来代替/二次包装 Core Data。</p>
+<p>稍微复杂的应用就有可能出现同时处理多份数据的情况，这就需要用到多线程 Core Data。在 iOS 5 之前，官方推荐的是使用「Thread Confinement」，就是每个线程使用独立的 MOC(managed object context)，然后共享一个 PSC(persistent store coordinator)。同时在线程之间传递数据时，要传递 objectID，而不是 object，因为前者是线程安全的，后者不是。</p>
+<p>如果 A 线程里，对 PSC 执行了 CUD(create, update, delete)操作，其他线程如何感知呢？这就需要通过监听事件来实现。比如在线程 A 中监听「NSManagedObjectContextDidSaveNotification」事件，如果线程 B 中执行了 CUD 操作，线程 A 就能感知到，并触发响应的 action，虽然可以通过 noti userinfo 来获取 managed objects，但因为它们是关联到另一个 MOC，所以无法直接操作它们，解决方法就是调用「mergeChangesFromContextDidSaveNotification:」方法。</p>
+<p>用一张图来形容的话，大体就是这样：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data.png"
+    srcset="&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data.png 255w,&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data.png 255w"
+    sizes="(max-width: 255px) 100vw, 255px" width="255" /></p><pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)_setupCoreDataStack
+</span><span>{
+</span><span>     </span><span style="color:#8e908c;">// setup managed object model
+</span><span>     </span><span style="color:#c99e00;">NSURL </span><span style="color:#3e999f;">*</span><span>modelURL </span><span style="color:#3e999f;">= </span><span>[[</span><span style="color:#c99e00;">NSBundle </span><span style="color:#4271ae;">mainBundle</span><span>] URLForResource</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;Database&quot;</span><span> withExtension</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;momd&quot;</span><span>];
+</span><span>     _managedObjectModel </span><span style="color:#3e999f;">= </span><span>[[NSManagedObjectModel </span><span style="color:#4271ae;">alloc</span><span>] initWithContentsOfURL</span><span style="color:#3e999f;">:</span><span>modelURL];
+</span><span>
+</span><span>     </span><span style="color:#8e908c;">// setup persistent store coordinator
+</span><span>     </span><span style="color:#c99e00;">NSURL </span><span style="color:#3e999f;">*</span><span>storeURL </span><span style="color:#3e999f;">= </span><span>[</span><span style="color:#c99e00;">NSURL </span><span style="color:#4271ae;">fileURLWithPath:[[</span><span style="color:#c99e00;">NSString </span><span style="color:#4271ae;">cachesPath] stringByAppendingPathComponent</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;Database.db&quot;</span><span style="color:#4271ae;">]</span><span>];
+</span><span>
+</span><span>     </span><span style="color:#c99e00;">NSError </span><span style="color:#3e999f;">*</span><span>error </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">nil</span><span>;
+</span><span>     _persistentStoreCoordinator </span><span style="color:#3e999f;">= </span><span>[[NSPersistentStoreCoordinator </span><span style="color:#4271ae;">alloc</span><span>] initWithManagedObjectModel</span><span style="color:#3e999f;">:</span><span>_managedObjectModel];
+</span><span>
+</span><span>     </span><span style="color:#8959a8;">if </span><span>(</span><span style="color:#3e999f;">!</span><span>[_persistentStoreCoordinator </span><span style="color:#4271ae;">addPersistentStoreWithType:NSSQLiteStoreType configuration:</span><span style="color:#f07219;">nil </span><span style="color:#4271ae;">URL:storeURL options:</span><span style="color:#f07219;">nil </span><span style="color:#4271ae;">error:</span><span style="color:#3e999f;">&amp;</span><span style="color:#4271ae;">amp;error</span><span>]) {
+</span><span>   	     </span><span style="color:#8e908c;">// handle error
+</span><span>   }
+</span><span>
+</span><span>     </span><span style="color:#8e908c;">// create MOC
+</span><span>     _managedObjectContext </span><span style="color:#3e999f;">= </span><span>[[NSManagedObjectContext </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>     [_managedObjectContext </span><span style="color:#4271ae;">setPersistentStoreCoordinator:_persistentStoreCoordinator</span><span>];
+</span><span>
+</span><span>     </span><span style="color:#8e908c;">// subscribe to change notifications
+</span><span>     [[</span><span style="color:#c99e00;">NSNotificationCenter </span><span style="color:#4271ae;">defaultCenter</span><span>] addObserver</span><span style="color:#3e999f;">:</span><span style="color:#c82728;">self</span><span> selector</span><span style="color:#3e999f;">:</span><span style="color:#8959a8;">@selector</span><span>(</span><span style="color:#4271ae;">_mocDidSaveNotification:</span><span>) name</span><span style="color:#3e999f;">:</span><span>NSManagedObjectContextDidSaveNotification object</span><span style="color:#3e999f;">:</span><span style="color:#f07219;">nil</span><span>];
+</span><span>}
+</span></code></pre>
+<p>再来看看 Notification Handler，主要作用就是合并新的变化。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)_mocDidSaveNotification</span><span style="color:#3e999f;">:</span><span>(</span><span style="color:#f07219;">NSNotification </span><span style="color:#3e999f;">*</span><span>)notification
+</span><span>{
+</span><span>     NSManagedObjectContext </span><span style="color:#3e999f;">*</span><span>savedContext </span><span style="color:#3e999f;">= </span><span>[notification </span><span style="color:#4271ae;">object</span><span>];
+</span><span>
+</span><span>     </span><span style="color:#8e908c;">// ignore change notifications for the main MOC
+</span><span>     </span><span style="color:#8959a8;">if </span><span>(_managedObjectContext </span><span style="color:#3e999f;">==</span><span> savedContext) {
+</span><span>          </span><span style="color:#8959a8;">return</span><span>;
+</span><span>     }
+</span><span>
+</span><span>     </span><span style="color:#c82728;">dispatch_sync</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">dispatch_get_main_queue</span><span style="color:#4271ae;">(), </span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">{
+</span><span style="color:#4271ae;">      [_managedObjectContext mergeChangesFromContextDidSaveNotification:notification];
+</span><span style="color:#4271ae;">     })</span><span>;
+</span><span>}
+</span></code></pre>
+<p>这种方式实现起来和维护起来都有点麻烦，所以 iOS 5 中就出现了更加方便和灵活的实现，也就是「Nested MOC」。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[[NSManagedObjectContext </span><span style="color:#4271ae;">alloc</span><span>] initWithConcurrencyType</span><span style="color:#3e999f;">:</span><span>NSMainQueueConcurrencyType];
+</span></code></pre>
+<p>可以看到在初始化时可以选择 ConcurrencyType，可选的有 3 个：</p>
+<h3 id="nsconfinementconcurrencytype">NSConfinementConcurrencyType</h3>
+<p>这个是默认项，每个线程一个独立的 Context，主要是为了兼容之前的设计。</p>
+<h3 id="nsprivatequeueconcurrencytype">NSPrivateQueueConcurrencyType</h3>
+<p>创建一个 private queue(使用 GCD)，这样就不会阻塞主线程。</p>
+<h3 id="nsmainqueueconcurrencytype">NSMainQueueConcurrencyType</h3>
+<p>创建一个 main queue，使用主线程，会阻塞。</p>
+<p>还有一个重要的变化是 MOC 可以指定 parent。有了 parent 后，CUD 操作会冒泡到 parent。一个 parent 可以有多个 child。parent 还可以有 parent。</p>
+<p>因为 UI 相关的数据必须在主线程获取，同时又要避免数据库的 I/O 操作阻塞主线程，所以就有了下面这个模型：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data_nested.png"
+    srcset="&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data_nested.png 255.5w,&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data_nested.png 255.5w"
+    sizes="(max-width: 255.5px) 100vw, 255.5px" width="255.5" /></p>
+<p>我对这种实现方式的一个困惑是：child 无法得知 parent 的变化，也就是说，如果 NSFetchedResultsController 绑定了 Main MOC，当 Background Write MOC save 时，NSFetchedResultsController 为何能知晓？求指点。</p>
+<p>这种方式比「Thread Confinement」稍微简单了点，也更明了。不过个人还是推荐使用 MagicalRecord，因为实现起来更加简单，等有空再写一篇。</p>
+<p>写了一个使用了这个模型的 demo，配合 TableView 和 NSFetchedResultsController，有兴趣的可以看下：<a href="https://github.com/limboy/coredata-with-tableview">https://github.com/limboy/coredata-with-tableview</a></p>
+<h3 id="2013-06-17-geng-xin">2013/06/17 更新</h3>
+<p>之前的困惑已消除，<code>NSFetchedResultsController</code>跟 PSC 无关，只要绑定的 MOC 有了<code>save</code>动作，<code>NSFetchedResultsController</code>就会收到通知，无论这个<code>save</code>操作有没有写入到持久层。</p>
+<h3 id="can-kao">参考</h3>
+<ul>
+<li><a href="http://www.cocoanetics.com/2012/07/multi-context-coredata/">http://www.cocoanetics.com/2012/07/multi-context-coredata/</a></li>
+<li><a href="http://www.slideshare.net/Inferis/adventures-in-multithreaded-core-data">http://www.slideshare.net/Inferis/adventures-in-multithreaded-core-data</a></li>
+</ul>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

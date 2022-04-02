@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+写了个基于SQLAlchemy的ORM
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/introduce-thing-an-sqlalchemy-based-orm/">
+
+<meta name="twitter:title" content="写了个基于SQLAlchemy的ORM">
+<meta property="og:title" content="写了个基于SQLAlchemy的ORM">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;introduce-thing-an-sqlalchemy-based-orm&#x2F;">写了个基于SQLAlchemy的ORM</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2012-02-10</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>看 Rails 时，觉得 Rails 的 ORM 用起来好方便，就想找找 python 有没有类似的，没发现太尽如人意的，就按照自己的意愿，基于 SQLAlchemy Core 重新写了个，取名为 Thing，项目主页: &quot;https://github.com/limboy/thing&quot;:https://github.com/limboy/thing</p>
+<h3 id="zhu-yao-te-xing">主要特性</h3>
+<h1 id="shi-yong-fang-bian-ling-huo">使用方便，灵活</h1>
+<h1 id="zhi-chi-yan-zheng">支持验证</h1>
+<h1 id="zhi-chi-shi-jian-hong-fa">支持事件触发</h1>
+<h1 id="zhi-chi-duo-shu-ju-ku-lian-jie">支持多数据库连接</h1>
+<p>不想把 ORM 做得太 magic，将来优化起来会不太方便，所以只是简单地封装了下，既保证了使用起来比较方便，将来涉及到分库分表或缓存时也可以从容应付。</p>
+<h3 id="an-zhuang">安装</h3>
+<p>推荐使用 virtualenvwrapper</p>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span>mkvirtualenv thing
+</span><span>cdvirtualenv
+</span><span>pip install </span><span style="color:#839c00;">&quot;git+git://github.com/lzyy/thing.git&quot;
+</span></code></pre>
+<h3 id="chuang-jian-mo-xing">创建模型</h3>
+<p>创建一个继承 Thing 的基类，主要是设置数据库连接</p>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span style="color:#8959a8;">from </span><span>sqlalchemy </span><span style="color:#8959a8;">import </span><span>create_engine
+</span><span style="color:#8959a8;">import </span><span>thing
+</span><span>
+</span><span>master_engine </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">create_engine</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;mysql://root:123456@localhost:3306/test&#39;</span><span style="color:#4271ae;">)
+</span><span>slave_engine </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">create_engine</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;mysql://root:123456@localhost:3307/test&#39;</span><span style="color:#4271ae;">)
+</span><span>
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">BaseThing</span><span>(</span><span style="color:#839c00;">thing.Thing</span><span>):
+</span><span>    </span><span style="color:#8959a8;">def </span><span style="color:#4271ae;">__init__</span><span>(</span><span style="color:#f07219;">self</span><span>):
+</span><span>        </span><span style="color:#4271ae;">thing.Thing.__init__(</span><span style="color:#c82728;">self</span><span style="color:#4271ae;">, {</span><span style="color:#839c00;">&#39;master&#39;</span><span style="color:#4271ae;">: master_engine,
+</span><span style="color:#4271ae;">                                    </span><span style="color:#839c00;">&#39;slave&#39;</span><span style="color:#4271ae;">: slave_engine})
+</span></code></pre>
+<p>h5. 注意事项：</p>
+<h1 id="suo-you-de-mo-xing-lei-du-yao-ji-cheng-basething">所有的模型类都要继承 BaseThing</h1>
+<h1 id="ru-guo-mei-you-zai-zi-lei-li-ding-yi-tablename-ze-mo-ren-shi-yong-xiao-xie-de-zi-lei-ming-zuo-wei-biao-ming">如果没有在子类里定义_tablename，则默认使用小写的子类名作为表名</h1>
+<h1 id="biao-zi-duan-hui-bei-zi-dong-huo-qu">表字段会被自动获取</h1>
+<p>假设有这么个场景：一个用户有多个答案，每个答案可以被多人投票。我们可以新建 3 个 Model</p>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span style="color:#8959a8;">import </span><span>thing
+</span><span style="color:#8959a8;">from </span><span>sqlalchemy </span><span style="color:#8959a8;">import </span><span>create_engine
+</span><span style="color:#8959a8;">from </span><span>formencode </span><span style="color:#8959a8;">import </span><span>validators
+</span><span style="color:#8959a8;">from </span><span>blinker </span><span style="color:#8959a8;">import </span><span>signal
+</span><span>
+</span><span>vote_before_insert </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">signal</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;vote.before_insert&#39;</span><span style="color:#4271ae;">)
+</span><span>
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Member</span><span>(</span><span style="color:#839c00;">BaseThing</span><span>):
+</span><span>    </span><span style="color:#8e908c;"># 验证email字段
+</span><span>    email </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">validators.</span><span style="color:#c82728;">Email</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">messages </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">{</span><span style="color:#839c00;">&#39;noAt&#39;</span><span style="color:#4271ae;">: </span><span style="color:#8959a8;">u</span><span style="color:#839c00;">&#39;invalid email&#39;</span><span style="color:#4271ae;">})
+</span><span>
+</span><span>    @</span><span style="color:#4271ae;">property
+</span><span>    </span><span style="color:#8959a8;">def </span><span style="color:#4271ae;">answers</span><span>(</span><span style="color:#f07219;">self</span><span>):
+</span><span>        </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">Answer</span><span style="color:#4271ae;">().</span><span style="color:#c82728;">where</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;member_id&#39;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;=&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.id)
+</span><span>
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Answer</span><span>(</span><span style="color:#839c00;">BaseThing</span><span>):
+</span><span>    @</span><span style="color:#4271ae;">property
+</span><span>    </span><span style="color:#8959a8;">def </span><span style="color:#4271ae;">votes</span><span>(</span><span style="color:#f07219;">self</span><span>):
+</span><span>        </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">Vote</span><span style="color:#4271ae;">().</span><span style="color:#c82728;">where</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;answer_id&#39;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;=&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.id)
+</span><span>
+</span><span>    @vote_before_insert.</span><span style="color:#c82728;">connect
+</span><span>    </span><span style="color:#8959a8;">def </span><span style="color:#4271ae;">_vote_before_insert</span><span>(</span><span style="color:#f07219;">vote</span><span>, </span><span style="color:#f07219;">data</span><span>):
+</span><span>        </span><span style="color:#8959a8;">if </span><span>vote.answer.title </span><span style="color:#3e999f;">== </span><span style="color:#839c00;">&#39;test&#39;</span><span>:
+</span><span>            vote.errors </span><span style="color:#3e999f;">= </span><span>{</span><span style="color:#839c00;">&#39;answer&#39;</span><span>: </span><span style="color:#839c00;">&#39;signal test&#39;</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">Vote</span><span>(</span><span style="color:#839c00;">BaseThing</span><span>):
+</span><span>    @</span><span style="color:#4271ae;">property
+</span><span>    </span><span style="color:#8959a8;">def </span><span style="color:#4271ae;">member</span><span>(</span><span style="color:#f07219;">self</span><span>):
+</span><span>        </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">Member</span><span style="color:#4271ae;">().</span><span style="color:#c82728;">where</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;id&#39;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;=&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.member_id).</span><span style="color:#c82728;">find</span><span style="color:#4271ae;">()
+</span><span>
+</span><span>    @</span><span style="color:#4271ae;">property
+</span><span>    </span><span style="color:#8959a8;">def </span><span style="color:#4271ae;">answer</span><span>(</span><span style="color:#f07219;">self</span><span>):
+</span><span>        </span><span style="color:#8959a8;">return </span><span style="color:#c82728;">Answer</span><span style="color:#4271ae;">().</span><span style="color:#c82728;">where</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;id&#39;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;=&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">self</span><span style="color:#4271ae;">.answer_id).</span><span style="color:#c82728;">find</span><span style="color:#4271ae;">()
+</span></code></pre>
+<p>用户与答案是一对多的关系，这里通过@property 装饰器来实现，在 answers 方法内，可以很灵活地实现答案获取的方法。</p>
+<p>在 Answer 模型里有一个 vote_before_insert 装饰器，在 vote 执行 insert 操作前_vote_before_insert 方法会被触发，可以在这里做很多事，如缓存的处理，数据的验证等等。如果验证不通过，可以设置 sender 的 errors 属性，该属性一旦被设置，后续的操作将被中断，在这里 vote 就不会执行 insert 操作。</p>
+<p>h5. 注意事项：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span># 验证使用的是formencode，这个库支持很多的验证操作，&quot;http://www.formencode.org/en/latest/Validator.html&quot;
+</span><span># 一共有6类事件：model.before_validation / after_validation / before_insert / after_insert / before_update / after_update
+</span><span># 事件触发时第一个参数为model本身，第二个参数为数据，如果在某个事件响应函数处，设置了model.errors属性，则此次事件之后的代码都不会执行。
+</span></code></pre>
+<h3 id="shi-yong">使用</h3>
+<h4 id="lie-chu-yi-ge-yong-hu-de-id-10-de-suo-you-hui-da-mei-ci-qu-10-ge">列出一个用户的 id&gt;10 的所有回答，每次取 10 个</h4>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span>member </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">Member</span><span style="color:#4271ae;">().</span><span style="color:#c82728;">find</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">)
+</span><span>
+</span><span style="color:#8959a8;">for </span><span>answer </span><span style="color:#8959a8;">in </span><span style="color:#4271ae;">member.answers.</span><span style="color:#c82728;">where</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;id&#39;</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;&gt;&#39;</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">10</span><span style="color:#4271ae;">).</span><span style="color:#c82728;">findall</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">limit</span><span style="color:#3e999f;">=</span><span style="color:#f07219;">10</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">offset</span><span style="color:#3e999f;">=</span><span style="color:#f07219;">0</span><span style="color:#4271ae;">)</span><span>:
+</span><span>    </span><span style="color:#8959a8;">print </span><span>answer.title
+</span></code></pre>
+<h4 id="chuang-jian-xin-yong-hu">创建新用户</h4>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span>member </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">Member</span><span style="color:#4271ae;">()
+</span><span>member.email </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;foo@bar.com&#39;
+</span><span>member.password </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;123&#39;
+</span><span style="color:#4271ae;">member.</span><span style="color:#c82728;">save</span><span style="color:#4271ae;">()
+</span><span style="color:#8959a8;">print </span><span>member.saved </span><span style="color:#8e908c;"># True
+</span><span style="color:#8959a8;">print </span><span>member.email </span><span style="color:#8e908c;"># foo@bar.com
+</span></code></pre>
+<h4 id="geng-xin-yong-hu-xin-xi">更新用户信息</h4>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span>member </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">Member</span><span style="color:#4271ae;">().</span><span style="color:#c82728;">find</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">)
+</span><span>member.email </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;foo@bar.com&#39;
+</span><span style="color:#4271ae;">member.</span><span style="color:#c82728;">save</span><span style="color:#4271ae;">()
+</span><span style="color:#8959a8;">print </span><span>member.saved </span><span style="color:#8e908c;"># True
+</span><span style="color:#8959a8;">print </span><span>member.email </span><span style="color:#8e908c;"># foo@bar.com
+</span></code></pre>
+<h4 id="yan-zheng-xin-xi">验证信息</h4>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span>member </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">Member</span><span style="color:#4271ae;">()
+</span><span>member.password </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;123&#39;
+</span><span>member.email </span><span style="color:#3e999f;">= </span><span style="color:#839c00;">&#39;foo&#39;
+</span><span style="color:#4271ae;">member.</span><span style="color:#c82728;">save</span><span style="color:#4271ae;">()
+</span><span style="color:#8959a8;">print </span><span>member.errors[</span><span style="color:#839c00;">&#39;email&#39;</span><span>] </span><span style="color:#8e908c;"># invalid email
+</span></code></pre>
+<h3 id="duo-shu-ju-ku-lian-jie">多数据库连接</h3>
+<pre data-lang="py" style="background-color:#f9f9f9;color:#111111;" class="language-py "><code class="language-py" data-lang="py"><span>member </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">Member</span><span style="color:#4271ae;">().</span><span style="color:#c82728;">find</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;slave&#39;</span><span style="color:#4271ae;">)
+</span></code></pre>
+<p>在执行 find / findall / save 操作时，有一个 db_section 选项，如果忽略，则默认使用初始化时传入的 engide dict 的第一项，在这里就是 master，如果想选择其他的数据库，传入该数据库对应的 key 就行，比如 slave</p>
+<h3 id="qi-ta">其他</h3>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span># 查看某次插入或更新是否成功，可以检查errors属性，如果为空表示执行成功
+</span><span># 如果model的key中包含主键，如id，则执行save时是一个更新操作，否则为插入
+</span><span># 欢迎fork / test / feedback
+</span></code></pre>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/python/">python</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/project/">project</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

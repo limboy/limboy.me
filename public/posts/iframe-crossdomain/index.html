@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+通过iframe实现跨域通信
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/iframe-crossdomain/">
+
+<meta name="twitter:title" content="通过iframe实现跨域通信">
+<meta property="og:title" content="通过iframe实现跨域通信">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;iframe-crossdomain&#x2F;">通过iframe实现跨域通信</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2019-02-16</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>iframe 还是很强大的，不仅能实现同域通信，还可以跨域通信，甚至跨协议通信(如 file/http)，如果再结合 jsonp，那就有很多种玩法了。不过有几条原则需要记住：</p>
+<h1 id="dang-qian-ceng-ji-zhong-de-ren-he-window-du-ke-yi-huo-qu-qi-ta-window-iframe-ye-shi-yi-ge-window">当前层级中的任何 Window 都可以获取其他 Window(iframe 也是一个 Window)</h1>
+<h1 id="zhi-you-tong-yu-window-cai-ke-yi-hu-xiang-cao-zuo">只有同域 Window 才可以互相操作</h1>
+<h1 id="dang-qian-ceng-ji-xia-de-ren-he-window-ke-yi-she-zhi-qi-ta-window-de-location-ji-shi-shi-bu-tong-de-yu">当前层级下的任何 Window 可以设置其他 Window 的 location，即使是不同的域</h1>
+<h1 id="dang-ni-gai-bian-url-de-hashtag-hou-mian-de-dong-dong-shi-ye-mian-bu-hui-shua-xin">当你改变 url 的 hashtag(#后面的东东)时，页面不会刷新</h1>
+<p>举例来说，有这么个页面</p>
+<pre data-lang="html" style="background-color:#f9f9f9;color:#111111;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#5d9be5;">&lt;!</span><span style="color:#8959a8;">DOCTYPE </span><span style="color:#f07219;">html</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">html</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">meta http-equiv</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;content-type&quot; </span><span style="color:#c82728;">content</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;text/html;charset=utf-8&quot; </span><span style="color:#5d9be5;">/&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script src=</span><span style="color:#839c00;">&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">body</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#8e908c;">&lt;!-- 不同域的iframe页面 --&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">iframe src</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;http://www.domain.com/foo&quot; </span><span style="color:#c82728;">name</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;foo&quot; </span><span style="color:#c82728;">id</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;foo&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">iframe</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">iframe src</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;http://www.domain.com/bar&quot; </span><span style="color:#c82728;">name</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;bar&quot; </span><span style="color:#c82728;">id</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;bar&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">iframe</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">body</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">html</span><span style="color:#5d9be5;">&gt;
+</span></code></pre>
+<p><em>可以在当前页面设置 proxy iframe 的 location(原则 1,3,4)</em></p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8e908c;">// 添加了一个hashtag，这样该iframe就不会刷新
+</span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#839c00;">&#39;#foo&#39;</span><span>)</span><span style="color:#4271ae;">.attr</span><span>(</span><span style="color:#839c00;">&#39;src&#39;</span><span>, </span><span style="color:#839c00;">&#39;http://www.domain.com/foo#tag&#39;</span><span>);
+</span></code></pre>
+<p><em>iframe foo 操作 iframe bar(原则 1,2)</em></p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8e908c;">// in http://www.domain.com/foo
+</span><span style="color:#4271ae;">$</span><span>(</span><span style="color:#c82728;">parent</span><span>.frames[</span><span style="color:#839c00;">&#39;bar&#39;</span><span>].</span><span style="color:#c82728;">document</span><span>)</span><span style="color:#4271ae;">.find</span><span>(</span><span style="color:#839c00;">&#39;#someid&#39;</span><span>)</span><span style="color:#4271ae;">.html</span><span>(</span><span style="color:#839c00;">&#39;message from foo&#39;</span><span>);
+</span></code></pre>
+<p>所以跨域通信其实很简单，在 iframe 和主页里都不断地检测 hashtag 有没有变化，一旦有变化，就做出相应的改变。</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#4271ae;">setInterval</span><span>(</span><span style="color:#8959a8;">function </span><span>() {
+</span><span>  </span><span style="color:#8959a8;">var </span><span style="color:#c82728;">hashVal </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">window.location.hash.substr</span><span>(</span><span style="color:#f07219;">1</span><span>);
+</span><span>  document.body.style.backgroundColor </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">hashVal</span><span>;
+</span><span>}, </span><span style="color:#f07219;">1000</span><span>);
+</span></code></pre>
+<p>这么做的问题就是，需要不断地去检测 hashtag 是否改变，效率有点低，如果能通过原生的监听来实现，就会更加高效和优雅。这里就涉及到另一个 iframe 特性：可以设置其他 iframe 的大小，即使是不同域的。而页面的 resize 事件是可以监听的，所以就有了下面这个模型。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;iframe-crossdomain&#x2F;crossdomain.png"
+    srcset="&#x2F;posts&#x2F;iframe-crossdomain&#x2F;crossdomain.png 340.5w,&#x2F;posts&#x2F;iframe-crossdomain&#x2F;crossdomain.png 340.5w"
+    sizes="(max-width: 340.5px) 100vw, 340.5px" width="340.5" /></p>
+<p>主页面先把消息附加到 hashtag，然后改变一个隐藏的(或者页面外的)iframe 的 size。这个 iframe 会监听 resize 事件，同时捕获到 hashtag。捕获到 hashtag 后(也就是所需的数据)，再对 hashtag 做进一步的处理。处理完后把数据传到主页内的一个 iframe，或者直接操作该 iframe。这样就比较优雅地完成了跨域操作。</p>
+<h3 id="demo">demo</h3>
+<p>将以下代码拷贝到本地的一个 html 文件，然后双击在浏览器中打开，看看能不能查单词。(ajax 无法跨协议，这是 iframe 比 ajax 强大的地方)</p>
+<pre data-lang="html" style="background-color:#f9f9f9;color:#111111;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#5d9be5;">&lt;!</span><span style="color:#8959a8;">DOCTYPE </span><span style="color:#f07219;">html</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">html</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">meta http-equiv</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;content-type&quot; </span><span style="color:#c82728;">content</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;text/html;charset=utf-8&quot; </span><span style="color:#5d9be5;">/&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script src=</span><span style="color:#839c00;">&quot;http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>      </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">() {
+</span><span style="color:#4271ae;">        </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;#btn&#39;</span><span style="color:#4271ae;">).</span><span style="color:#c82728;">click</span><span style="color:#4271ae;">(</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">() {
+</span><span style="color:#4271ae;">          </span><span style="color:#c82728;">$proxy </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;#proxy&#39;</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">          </span><span style="color:#8959a8;">var </span><span>src </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$proxy</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">attr</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;src&#39;</span><span style="color:#4271ae;">).</span><span style="color:#c82728;">split</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;#&#39;</span><span style="color:#4271ae;">)[</span><span style="color:#f07219;">0</span><span style="color:#4271ae;">];
+</span><span style="color:#4271ae;">          </span><span style="color:#c82728;">$proxy</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">attr</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;src&#39;</span><span style="color:#4271ae;">, </span><span>src </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;#&#39; </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">$</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;input[name=it]&#39;</span><span style="color:#4271ae;">).</span><span style="color:#c82728;">val</span><span style="color:#4271ae;">());
+</span><span style="color:#4271ae;">          </span><span style="color:#c82728;">$proxy</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">css</span><span style="color:#4271ae;">(</span><span style="color:#839c00;">&#39;width&#39;</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$proxy</span><span style="color:#4271ae;">.</span><span style="color:#c82728;">width</span><span style="color:#4271ae;">() </span><span style="color:#3e999f;">+ </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">+ </span><span style="color:#839c00;">&#39;px&#39;</span><span style="color:#4271ae;">);
+</span><span style="color:#4271ae;">        });
+</span><span style="color:#4271ae;">      })</span><span>;
+</span><span>    </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">body</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">input type=</span><span style="color:#839c00;">&quot;text&quot; </span><span style="color:#c82728;">name=</span><span style="color:#839c00;">&quot;it&quot; </span><span style="color:#5d9be5;">/&gt; &lt;</span><span style="color:#c82728;">button id=</span><span style="color:#839c00;">&quot;btn&quot;</span><span style="color:#5d9be5;">&gt;</span><span>Translate</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">button</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">p</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">p</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">iframe
+</span><span style="color:#5d9ae5;">      </span><span style="color:#c82728;">src</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;http://demo.leezhong.com/crossdomain/proxy.html&quot;
+</span><span style="color:#5d9ae5;">      </span><span style="color:#c82728;">name</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;proxy&quot;
+</span><span style="color:#5d9ae5;">      </span><span style="color:#c82728;">id</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;proxy&quot;
+</span><span style="color:#5d9ae5;">      </span><span style="color:#c82728;">style</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;position</span><span style="color:#5d9ae5;">:</span><span style="color:#3e999f;">absolute</span><span style="color:#5d9ae5;">; </span><span style="color:#839c00;">top</span><span style="color:#5d9ae5;">:</span><span style="color:#f07219;">-10px</span><span style="color:#5d9ae5;">; </span><span style="color:#839c00;">width</span><span style="color:#5d9ae5;">:</span><span style="color:#f07219;">1px</span><span style="color:#5d9ae5;">; </span><span style="color:#839c00;">height</span><span style="color:#5d9ae5;">:</span><span style="color:#f07219;">1px</span><span style="color:#839c00;">&quot;
+</span><span style="color:#5d9ae5;">    </span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">iframe</span><span style="color:#5d9be5;">&gt;
+</span><span>    </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">iframe
+</span><span style="color:#5d9ae5;">      </span><span style="color:#c82728;">src</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;http://demo.leezhong.com/crossdomain/show.html&quot;
+</span><span style="color:#5d9ae5;">      </span><span style="color:#c82728;">name</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;show&quot;
+</span><span style="color:#5d9ae5;">      </span><span style="color:#c82728;">id</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;show&quot;
+</span><span style="color:#5d9ae5;">      </span><span style="color:#c82728;">style</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;width</span><span style="color:#5d9ae5;">:</span><span style="color:#f07219;">60%</span><span style="color:#5d9ae5;">;</span><span style="color:#839c00;">height</span><span style="color:#5d9ae5;">:</span><span style="color:#f07219;">300px</span><span style="color:#839c00;">&quot;
+</span><span style="color:#5d9ae5;">    </span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">iframe</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">body</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">html</span><span style="color:#5d9be5;">&gt;
+</span></code></pre>
+<p>更多玩法，可以参考这篇文章: <a href="Cross-Domain Communication with IFrames">Cross-Domain Communication with IFrames</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/html/">html</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

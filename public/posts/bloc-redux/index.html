@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+Architecture Flutter App the Bloc_Redux Way
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/bloc-redux/">
+
+<meta name="twitter:title" content="Architecture Flutter App the Bloc_Redux Way">
+<meta property="og:title" content="Architecture Flutter App the Bloc_Redux Way">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;bloc-redux&#x2F;">Architecture Flutter App the Bloc_Redux Way</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2019-01-05</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>这是<a href="https://github.com/lzyy/bloc_redux">项目地址</a>，下面来阐述下产生背景和它的一些特点。</p>
+<p>接触 Flutter 也有一段时间了，在如何管理状态和处理数据流这块，并没有一个可以直接拿来用的现成方案。好吧，其实有，一个是 <a href="https://github.com/brianegan/flutter_redux">flutter_redux</a>，一个是 <a href="https://github.com/felangel/bloc">flutter_bloc</a>。先来说说 flutter_redux，这个可以算是 redux 在 flutter 的官方实现了，主要由两部分组成: <code>StoreProvider</code> 和 <code>StoreConnector</code>，前者用来保存 store，后者用来响应新的 state，看一个代码片段：</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8e908c;">// Every time the button is tapped, an action is dispatched and
+</span><span style="color:#8e908c;">// run through the reducer. After the reducer updates the state,
+</span><span style="color:#8e908c;">// the Widget will be automatically rebuilt with the latest
+</span><span style="color:#8e908c;">// count. No need to manually manage subscriptions or Streams!
+</span><span style="color:#8959a8;">new </span><span style="color:#c99e00;">StoreConnector</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">int</span><span>, </span><span style="color:#c99e00;">String</span><span style="color:#3e999f;">&gt;</span><span>(
+</span><span>  converter</span><span style="color:#3e999f;">:</span><span> (store) </span><span style="color:#3e999f;">=&gt;</span><span> store.state.</span><span style="color:#4271ae;">toString</span><span>(),
+</span><span>  builder</span><span style="color:#3e999f;">:</span><span> (context, count) {
+</span><span>    </span><span style="color:#8959a8;">return new </span><span style="color:#c99e00;">Text</span><span>(
+</span><span>      count,
+</span><span>      style</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">Theme</span><span>.</span><span style="color:#4271ae;">of</span><span>(context).textTheme.display1,
+</span><span>    );
+</span><span>  },
+</span><span>)
+</span></code></pre>
+<p>这段代码的问题在于只要 reducer 有更新 state，那么所有消费该 Store 的 Connector 就会被 rebuild，哪怕这个 state 有 10 个属性，而 reducer 只是改了其中的一个 bool 值。</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8e908c;">// Creates the base [NextDispatcher].
+</span><span style="color:#8e908c;">//
+</span><span style="color:#8e908c;">// The base NextDispatcher will be called after all other middleware provided
+</span><span style="color:#8e908c;">// by the user have been run. Its job is simple: Run the current state through
+</span><span style="color:#8e908c;">// the reducer, save the result, and notify any subscribers.
+</span><span style="color:#c99e00;">NextDispatcher </span><span style="color:#4271ae;">_createReduceAndNotify</span><span>(</span><span style="color:#c99e00;">bool</span><span> distinct) {
+</span><span>  </span><span style="color:#8959a8;">return</span><span> (</span><span style="color:#c99e00;">dynamic</span><span> action) {
+</span><span>    </span><span style="color:#8959a8;">final</span><span> state </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">reducer</span><span>(_state, action);
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">if</span><span> (distinct </span><span style="color:#3e999f;">&amp;&amp;</span><span> state </span><span style="color:#3e999f;">==</span><span> _state) </span><span style="color:#8959a8;">return</span><span>;
+</span><span>
+</span><span>    _state </span><span style="color:#3e999f;">=</span><span> state;
+</span><span>    _changeController.</span><span style="color:#4271ae;">add</span><span>(state);
+</span><span>  };
+</span><span>}
+</span></code></pre>
+<p>这是 redux 这个 library 里的 Notify 机制，采用的是 <code>==</code> 判断，这就是问题。在 <a href="https://github.com/reduxjs/react-redux">react-redux</a> 中，这块是有优化的，通过 <code>connect</code> 的 <code>mapStateToProps</code>，可以让 Component 指定关心 State 的哪些属性，然后在 react-redux 内部会对 <code>mapStateToProps</code> 的返回值和上次保存的进行比较，如果不一样再 rebuild，这样的好处是只有当 Component 关心的哪些属性真的变化时才进行 render。而 flutter_redux 无法做到这点(可能跟 flutter 不让用反射有关)，效率上就会打折扣。</p>
+<p>再来看看 <a href="https://github.com/felangel/bloc">flutter_bloc</a>，这也是关注度蛮高的一个项目，说这个之前先说说 bloc，这是 flutter 提的一个概念，运行机制大致如下：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;bloc-redux&#x2F;movie250-bloc.png"
+    srcset="&#x2F;posts&#x2F;bloc-redux&#x2F;movie250-bloc.png 280.5w,&#x2F;posts&#x2F;bloc-redux&#x2F;movie250-bloc.png 280.5w"
+    sizes="(max-width: 280.5px) 100vw, 280.5px" width="280.5" /></p>
+<p>它更像一个提案，缺少标准和实现。flutter_bloc 就是对这个提案的一个实现。这个实现本质上没觉得跟 flutter_redux 有太大的区别，而复杂度倒是增加了不少，还提出了一些新的概念(比如 BlocSupervisor, BlocDelegate, Transation)，增加了理解上的困难。在处理核心的 state 问题上依旧跟 flutter_redux 一样，甚至都没有做 <code>==</code> check。</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">void </span><span style="color:#4271ae;">_bindStateSubject</span><span>() {
+</span><span>  </span><span style="color:#c99e00;">Event</span><span> currentEvent;
+</span><span>
+</span><span>  (</span><span style="color:#4271ae;">transform</span><span>(_eventSubject) </span><span style="color:#8959a8;">as </span><span style="color:#c99e00;">Observable</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">Event</span><span style="color:#3e999f;">&gt;</span><span>).</span><span style="color:#4271ae;">concatMap</span><span>((</span><span style="color:#c99e00;">Event</span><span> event) {
+</span><span>    currentEvent </span><span style="color:#3e999f;">=</span><span> event;
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#4271ae;">mapEventToState</span><span>(_stateSubject.value, event);
+</span><span>  }).</span><span style="color:#4271ae;">forEach</span><span>(
+</span><span>    (</span><span style="color:#c99e00;">State</span><span> nextState) {
+</span><span>      </span><span style="color:#8959a8;">final</span><span> transition </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">Transition</span><span>(
+</span><span>        currentState</span><span style="color:#3e999f;">:</span><span> _stateSubject.value,
+</span><span>        event</span><span style="color:#3e999f;">:</span><span> currentEvent,
+</span><span>        nextState</span><span style="color:#3e999f;">:</span><span> nextState,
+</span><span>      );
+</span><span>      </span><span style="color:#c99e00;">BlocSupervisor</span><span>().delegate</span><span style="color:#3e999f;">?</span><span>.</span><span style="color:#4271ae;">onTransition</span><span>(transition);
+</span><span>      </span><span style="color:#4271ae;">onTransition</span><span>(transition);
+</span><span>      _stateSubject.</span><span style="color:#4271ae;">add</span><span>(nextState);
+</span><span>    },
+</span><span>  );
+</span><span>}
+</span></code></pre>
+<p>可以看到在往 <code>_stateSubject</code> 里塞 nextState 时甚至都没有跟之前的 state 进行判断。同时从作者的意图上是希望多个 bloc 一起使用的，这也会造成使用上的不便（比如我这个 Event 到底应该 dispatch 给哪个 bloc？）。</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">return </span><span style="color:#c99e00;">BlocBuilder</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">LoginEvent</span><span>, </span><span style="color:#c99e00;">LoginState</span><span style="color:#3e999f;">&gt;</span><span>(
+</span><span>  bloc</span><span style="color:#3e999f;">:</span><span> widget.loginBloc,
+</span><span>  builder</span><span style="color:#3e999f;">:</span><span> (
+</span><span>    </span><span style="color:#c99e00;">BuildContext</span><span> context,
+</span><span>    </span><span style="color:#c99e00;">LoginState</span><span> loginState,
+</span><span>  ) {
+</span><span>    </span><span style="color:#8959a8;">if</span><span> (</span><span style="color:#4271ae;">_loginSucceeded</span><span>(loginState)) {
+</span><span>      widget.authBloc.</span><span style="color:#4271ae;">dispatch</span><span>(</span><span style="color:#c99e00;">Login</span><span>(token</span><span style="color:#3e999f;">:</span><span> loginState.token));
+</span><span>      widget.loginBloc.</span><span style="color:#4271ae;">dispatch</span><span>(</span><span style="color:#c99e00;">LoggedIn</span><span>());
+</span><span>    }
+</span><span>  }
+</span><span>);
+</span></code></pre>
+<p>综上，这两格 Library 都无法满足我，只能再造一个轮子了。</p>
+<h2 id="bloc-redux">Bloc_Redux</h2>
+<p>其实只要让 flutter_redux 能够更高效地把状态变化传递给 widgets，问题就解决了。那如何做呢？返回一个新的 state，也就是 reducer 之路，应该是行不通了，因为无法高效地找到变化过的属性，即使可以，还要维护一个属性跟 widgets 的 map，太复杂了。换一个想法，Flutter 不是提供了 <code>StreamBuilder</code> 么，那让 Widget 自己选择 listen 哪些 stream，然后当一个 action dispatch 过来后，这些 stream 获得相应的改变不就行了么？</p>
+<p><img src="https://raw.githubusercontent.com/limboy/bloc_redux/master/lib/bloc_redux/bloc_redux.png" alt="" /></p>
+<p>其中处理 action 的 reducer 被替换成了 bloc，来看一下核心代码。</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8e908c;">/// Action
+</span><span style="color:#8e908c;">///
+</span><span style="color:#8e908c;">/// every action should extends this class
+</span><span style="color:#8959a8;">abstract class </span><span style="color:#c99e00;">BRAction</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">T</span><span style="color:#3e999f;">&gt;</span><span> {
+</span><span>  </span><span style="color:#c99e00;">T</span><span> payload;
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">/// State
+</span><span style="color:#8e908c;">///
+</span><span style="color:#8e908c;">/// Input are used to change state.
+</span><span style="color:#8e908c;">/// usually filled with StreamController / BehaviorSubject.
+</span><span style="color:#8e908c;">/// handled by blocs.
+</span><span style="color:#8e908c;">///
+</span><span style="color:#8e908c;">/// implements disposable because stream controllers needs to be disposed.
+</span><span style="color:#8e908c;">/// they will be called within store&#39;s dispose method.
+</span><span style="color:#8959a8;">abstract class </span><span style="color:#c99e00;">BRStateInput </span><span style="color:#8959a8;">implements </span><span style="color:#c99e00;">Disposable</span><span> {}
+</span><span>
+</span><span style="color:#8e908c;">/// Output are streams.
+</span><span style="color:#8e908c;">/// followed by input. like someController.stream
+</span><span style="color:#8e908c;">/// UI will use it as data source.
+</span><span style="color:#8959a8;">abstract class </span><span style="color:#c99e00;">BRStateOutput</span><span> {}
+</span><span>
+</span><span style="color:#8e908c;">/// State
+</span><span style="color:#8e908c;">///
+</span><span style="color:#8e908c;">/// Combine these two into one.
+</span><span style="color:#8959a8;">abstract class </span><span style="color:#c99e00;">BRState</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">T </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BRStateInput</span><span>, </span><span style="color:#c99e00;">U </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BRStateOutput</span><span style="color:#3e999f;">&gt;</span><span> {
+</span><span>  </span><span style="color:#c99e00;">T</span><span> input;
+</span><span>  </span><span style="color:#c99e00;">U</span><span> output;
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">/// Bloc
+</span><span style="color:#8e908c;">///
+</span><span style="color:#8e908c;">/// like reducers in redux, but don&#39;t return a new state.
+</span><span style="color:#8e908c;">/// when they found something needs to change, just update state&#39;s input
+</span><span style="color:#8e908c;">/// then state&#39;s output will change accordingly.
+</span><span style="color:#8959a8;">typedef </span><span style="color:#c99e00;">Bloc</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">T </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BRStateInput</span><span style="color:#3e999f;">&gt; = </span><span style="color:#8959a8;">void </span><span style="color:#c99e00;">Function</span><span>(</span><span style="color:#c99e00;">BRAction</span><span> action, </span><span style="color:#c99e00;">T</span><span> input);
+</span><span>
+</span><span style="color:#8e908c;">/// Store
+</span><span style="color:#8e908c;">///
+</span><span style="color:#8e908c;">/// widget use `store.dispatch` to send action
+</span><span style="color:#8e908c;">/// store will iterate all blocs to handle this action
+</span><span style="color:#8e908c;">///
+</span><span style="color:#8e908c;">/// if this is an async action, blocs can dispatch another action
+</span><span style="color:#8e908c;">/// after data has received from remote.
+</span><span style="color:#8959a8;">abstract class </span><span style="color:#c99e00;">BRStore</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">T </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BRStateInput</span><span>, </span><span style="color:#c99e00;">U </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BRState</span><span style="color:#3e999f;">&gt;
+</span><span>    </span><span style="color:#8959a8;">implements </span><span style="color:#c99e00;">Disposable</span><span> {
+</span><span>  </span><span style="color:#c99e00;">List</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">Bloc</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">T</span><span style="color:#3e999f;">&gt;&gt;</span><span> blocs;
+</span><span>  </span><span style="color:#c99e00;">U</span><span> state;
+</span><span>
+</span><span>  </span><span style="color:#8959a8;">void </span><span style="color:#4271ae;">dispatch</span><span>(</span><span style="color:#c99e00;">BRAction</span><span> action) {
+</span><span>    blocs.</span><span style="color:#4271ae;">forEach</span><span>((f) </span><span style="color:#3e999f;">=&gt; </span><span style="color:#4271ae;">f</span><span>(action, state.input));
+</span><span>  }
+</span><span>
+</span><span>  </span><span style="color:#4271ae;">dispose</span><span>() {
+</span><span>    state.input.</span><span style="color:#4271ae;">dispose</span><span>();
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>其中 State 被分成了 StateInput 和 StateOutput，其中 Input 部分给 Bloc，方便更新 Stream；Output 部分给 Widgets，方便接收最新数据。同时 Store 也有一个 dispose 方法，因为到时 store 会被放到 StoreProvider 里，当它被 dispose 时，可以让 store 也 dispose，让那些 stream 可以被 close。</p>
+<p>就这么简单，我们来看一个 demo：</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8e908c;">/// Actions
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">ColorActionSelect </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BRAction</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">Color</span><span style="color:#3e999f;">&gt;</span><span> {}
+</span><span>
+</span><span style="color:#8e908c;">/// State
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">ColorStateInput </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BRStateInput</span><span> {
+</span><span>  </span><span style="color:#8959a8;">final </span><span style="color:#c99e00;">BehaviorSubject</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">Color</span><span style="color:#3e999f;">&gt;</span><span> selectedColor </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">BehaviorSubject</span><span>();
+</span><span>  </span><span style="color:#8959a8;">final </span><span style="color:#c99e00;">BehaviorSubject</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">List</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">ColorModel</span><span style="color:#3e999f;">&gt;&gt;</span><span> colors </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">BehaviorSubject</span><span>();
+</span><span>
+</span><span>  </span><span style="color:#4271ae;">dispose</span><span>() {
+</span><span>    selectedColor.</span><span style="color:#4271ae;">close</span><span>();
+</span><span>    colors.</span><span style="color:#4271ae;">close</span><span>();
+</span><span>  }
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">ColorStateOutput </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BRStateOutput</span><span> {
+</span><span>  </span><span style="color:#c99e00;">StreamWithInitialData</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">Color</span><span style="color:#3e999f;">&gt;</span><span> selectedColor;
+</span><span>  </span><span style="color:#c99e00;">StreamWithInitialData</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">List</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">ColorModel</span><span style="color:#3e999f;">&gt;&gt;</span><span> colors;
+</span><span>
+</span><span>  </span><span style="color:#c99e00;">ColorStateOutput</span><span>(</span><span style="color:#c99e00;">ColorStateInput</span><span> input) {
+</span><span>    selectedColor </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">StreamWithInitialData</span><span>(
+</span><span>        input.selectedColor.stream, input.selectedColor.value);
+</span><span>    colors </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">StreamWithInitialData</span><span>(input.colors.stream, input.colors.value);
+</span><span>  }
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">ColorState </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BRState</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">ColorStateInput</span><span>, </span><span style="color:#c99e00;">ColorStateOutput</span><span style="color:#3e999f;">&gt;</span><span> {
+</span><span>  </span><span style="color:#c99e00;">ColorState</span><span>() {
+</span><span>    input </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">ColorStateInput</span><span>();
+</span><span>    output </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">ColorStateOutput</span><span>(input);
+</span><span>  }
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">/// Blocs
+</span><span style="color:#c99e00;">Bloc</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">ColorStateInput</span><span style="color:#3e999f;">&gt;</span><span> colorSelectHandler </span><span style="color:#3e999f;">=</span><span> (action, input) {
+</span><span>  </span><span style="color:#8959a8;">if</span><span> (action </span><span style="color:#3e999f;">is </span><span style="color:#c99e00;">ColorActionSelect</span><span>) {
+</span><span>    input.selectedColor.</span><span style="color:#4271ae;">add</span><span>(action.payload);
+</span><span>    </span><span style="color:#8959a8;">var</span><span> colors </span><span style="color:#3e999f;">=</span><span> input.colors.value
+</span><span>        .</span><span style="color:#4271ae;">map</span><span>((colorModel) </span><span style="color:#3e999f;">=&gt;</span><span> colorModel
+</span><span>          ..isSelected </span><span style="color:#3e999f;">=</span><span> colorModel.color.value </span><span style="color:#3e999f;">==</span><span> action.payload.value)
+</span><span>        .</span><span style="color:#4271ae;">toList</span><span>();
+</span><span>    input.colors.</span><span style="color:#4271ae;">add</span><span>(colors);
+</span><span>  }
+</span><span>};
+</span><span>
+</span><span style="color:#8e908c;">/// Store
+</span><span style="color:#8959a8;">class </span><span style="color:#c99e00;">ColorStore </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BRStore</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">ColorStateInput</span><span>, </span><span style="color:#c99e00;">ColorState</span><span style="color:#3e999f;">&gt;</span><span> {
+</span><span>  </span><span style="color:#c99e00;">ColorStore</span><span>() {
+</span><span>    state </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">ColorState</span><span>();
+</span><span>    blocs </span><span style="color:#3e999f;">=</span><span> [colorSelectHandler];
+</span><span>
+</span><span>    </span><span style="color:#8e908c;">// init
+</span><span>    </span><span style="color:#8959a8;">var</span><span> _colors </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">List</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">ColorModel</span><span style="color:#3e999f;">&gt;</span><span>.</span><span style="color:#4271ae;">generate</span><span>(
+</span><span>        </span><span style="color:#f07219;">30</span><span>, (</span><span style="color:#c99e00;">int</span><span> index) </span><span style="color:#3e999f;">=&gt; </span><span style="color:#c99e00;">ColorModel</span><span>(</span><span style="color:#c99e00;">RandomColor</span><span>(index).</span><span style="color:#4271ae;">randomColor</span><span>()));
+</span><span>    _colors[</span><span style="color:#f07219;">0</span><span>].isSelected </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">true</span><span>;
+</span><span>    state.input.colors.</span><span style="color:#4271ae;">add</span><span>(_colors);
+</span><span>    state.input.selectedColor.</span><span style="color:#4271ae;">add</span><span>(_colors[</span><span style="color:#f07219;">0</span><span>].color);
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>Store 就像人的大脑，负责接收信息做出决策，而信息的处理者就是一个个的 Bloc。再来看看 Widget 是如何接收数据，发送 action 的。</p>
+<pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">class </span><span style="color:#c99e00;">ColorsWidget </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">StatelessWidget</span><span> {
+</span><span>  </span><span style="color:#8959a8;">@override
+</span><span>  </span><span style="color:#c99e00;">Widget </span><span style="color:#4271ae;">build</span><span>(</span><span style="color:#c99e00;">BuildContext</span><span> context) {
+</span><span>    </span><span style="color:#8959a8;">final</span><span> store </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">StoreProvider</span><span>.</span><span style="color:#4271ae;">of</span><span>&lt;</span><span style="color:#c99e00;">ColorStore</span><span style="color:#3e999f;">&gt;</span><span>(context);
+</span><span>    </span><span style="color:#8959a8;">final</span><span> colors </span><span style="color:#3e999f;">=</span><span> store.state.output.colors;
+</span><span>
+</span><span>    </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">StreamBuilder</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">List</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">ColorModel</span><span style="color:#3e999f;">&gt;&gt;</span><span>(
+</span><span>      stream</span><span style="color:#3e999f;">:</span><span> colors.stream,
+</span><span>      initialData</span><span style="color:#3e999f;">:</span><span> colors.initialData,
+</span><span>      builder</span><span style="color:#3e999f;">:</span><span> (context, snapshot) {
+</span><span>        </span><span style="color:#8959a8;">final</span><span> colors </span><span style="color:#3e999f;">=</span><span> snapshot.data;
+</span><span>        </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">SliverGrid</span><span>.</span><span style="color:#4271ae;">count</span><span>(
+</span><span>            crossAxisCount</span><span style="color:#3e999f;">: </span><span style="color:#f07219;">6</span><span>,
+</span><span>            children</span><span style="color:#3e999f;">:</span><span> colors.</span><span style="color:#4271ae;">map</span><span>((colorModel) {
+</span><span>              </span><span style="color:#8959a8;">return </span><span style="color:#c99e00;">GestureDetector</span><span>(
+</span><span>                onTap</span><span style="color:#3e999f;">:</span><span> () {
+</span><span>                  store.</span><span style="color:#4271ae;">dispatch</span><span>(
+</span><span>                      </span><span style="color:#c99e00;">ColorActionSelect</span><span>()..payload </span><span style="color:#3e999f;">=</span><span> colorModel.color);
+</span><span>                },
+</span><span>                child</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">Container</span><span>(
+</span><span>                  decoration</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">BoxDecoration</span><span>(
+</span><span>                      color</span><span style="color:#3e999f;">:</span><span> colorModel.color,
+</span><span>                      border</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">Border</span><span>.</span><span style="color:#4271ae;">all</span><span>(width</span><span style="color:#3e999f;">:</span><span> colorModel.isSelected </span><span style="color:#3e999f;">? </span><span style="color:#f07219;">4 </span><span style="color:#3e999f;">: </span><span style="color:#f07219;">0</span><span>)),
+</span><span>                ),
+</span><span>              );
+</span><span>            }).</span><span style="color:#4271ae;">toList</span><span>());
+</span><span>      },
+</span><span>    );
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>通过 <code>StreamBuilder</code> 来消费 state output，通过 <code>store.dispatch</code> 来发送 action，It's that simple.</p>
+<p>最后，附上项目地址：<a href="https://github.com/limboy/bloc_redux">https://github.com/limboy/bloc_redux</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/flutter/">flutter</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

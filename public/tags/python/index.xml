@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Limboy - python</title>
+        <link>https://limboy.me</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>zh</language>
+        <atom:link href="https://limboy.me/tags/python/index.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Fri, 10 Feb 2012 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>写了个基于SQLAlchemy的ORM</title>
+            <pubDate>Fri, 10 Feb 2012 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/introduce-thing-an-sqlalchemy-based-orm/</link>
+            <guid>https://limboy.me/posts/introduce-thing-an-sqlalchemy-based-orm/</guid>
+            <description>&lt;p&gt;看 Rails 时，觉得 Rails 的 ORM 用起来好方便，就想找找 python 有没有类似的，没发现太尽如人意的，就按照自己的意愿，基于 SQLAlchemy Core 重新写了个，取名为 Thing，项目主页: &amp;quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;thing&amp;quot;:https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;thing&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;zhu-yao-te-xing&quot;&gt;主要特性&lt;&#x2F;h3&gt;
+&lt;h1 id=&quot;shi-yong-fang-bian-ling-huo&quot;&gt;使用方便，灵活&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;zhi-chi-yan-zheng&quot;&gt;支持验证&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;zhi-chi-shi-jian-hong-fa&quot;&gt;支持事件触发&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;zhi-chi-duo-shu-ju-ku-lian-jie&quot;&gt;支持多数据库连接&lt;&#x2F;h1&gt;
+&lt;p&gt;不想把 ORM 做得太 magic，将来优化起来会不太方便，所以只是简单地封装了下，既保证了使用起来比较方便，将来涉及到分库分表或缓存时也可以从容应付。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;an-zhuang&quot;&gt;安装&lt;&#x2F;h3&gt;
+&lt;p&gt;推荐使用 virtualenvwrapper&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span&gt;mkvirtualenv thing
+&lt;&#x2F;span&gt;&lt;span&gt;cdvirtualenv
+&lt;&#x2F;span&gt;&lt;span&gt;pip install &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;git+git:&#x2F;&#x2F;github.com&#x2F;lzyy&#x2F;thing.git&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;chuang-jian-mo-xing&quot;&gt;创建模型&lt;&#x2F;h3&gt;
+&lt;p&gt;创建一个继承 Thing 的基类，主要是设置数据库连接&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span&gt;sqlalchemy &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;create_engine
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;thing
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;master_engine &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;create_engine&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;mysql:&#x2F;&#x2F;root:123456@localhost:3306&#x2F;test&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;slave_engine &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;create_engine&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;mysql:&#x2F;&#x2F;root:123456@localhost:3307&#x2F;test&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BaseThing&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;thing.Thing&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;__init__&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;thing.Thing.__init__(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, {&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;master&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;: master_engine,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;                                    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;slave&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;: slave_engine})
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;h5. 注意事项：&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;suo-you-de-mo-xing-lei-du-yao-ji-cheng-basething&quot;&gt;所有的模型类都要继承 BaseThing&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;ru-guo-mei-you-zai-zi-lei-li-ding-yi-tablename-ze-mo-ren-shi-yong-xiao-xie-de-zi-lei-ming-zuo-wei-biao-ming&quot;&gt;如果没有在子类里定义_tablename，则默认使用小写的子类名作为表名&lt;&#x2F;h1&gt;
+&lt;h1 id=&quot;biao-zi-duan-hui-bei-zi-dong-huo-qu&quot;&gt;表字段会被自动获取&lt;&#x2F;h1&gt;
+&lt;p&gt;假设有这么个场景：一个用户有多个答案，每个答案可以被多人投票。我们可以新建 3 个 Model&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;thing
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span&gt;sqlalchemy &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;create_engine
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span&gt;formencode &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;validators
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span&gt;blinker &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;signal
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;vote_before_insert &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;signal&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;vote.before_insert&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Member&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;BaseThing&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 验证email字段
+&lt;&#x2F;span&gt;&lt;span&gt;    email &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;validators.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Email&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;messages &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;noAt&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;u&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;invalid email&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;})
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;property
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;answers&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Answer&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;where&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;member_id&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;=&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.id)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Answer&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;BaseThing&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;property
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;votes&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Vote&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;where&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;answer_id&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;=&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.id)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    @vote_before_insert.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;connect
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;_vote_before_insert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;vote&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;vote.answer.title &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;test&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;            vote.errors &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;answer&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;signal test&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Vote&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;BaseThing&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;property
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;member&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Member&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;where&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;id&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;=&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.member_id).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;find&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    @&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;property
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;answer&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Answer&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;where&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;id&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;=&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.answer_id).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;find&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;用户与答案是一对多的关系，这里通过@property 装饰器来实现，在 answers 方法内，可以很灵活地实现答案获取的方法。&lt;&#x2F;p&gt;
+&lt;p&gt;在 Answer 模型里有一个 vote_before_insert 装饰器，在 vote 执行 insert 操作前_vote_before_insert 方法会被触发，可以在这里做很多事，如缓存的处理，数据的验证等等。如果验证不通过，可以设置 sender 的 errors 属性，该属性一旦被设置，后续的操作将被中断，在这里 vote 就不会执行 insert 操作。&lt;&#x2F;p&gt;
+&lt;p&gt;h5. 注意事项：&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;# 验证使用的是formencode，这个库支持很多的验证操作，&amp;quot;http:&#x2F;&#x2F;www.formencode.org&#x2F;en&#x2F;latest&#x2F;Validator.html&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;# 一共有6类事件：model.before_validation &#x2F; after_validation &#x2F; before_insert &#x2F; after_insert &#x2F; before_update &#x2F; after_update
+&lt;&#x2F;span&gt;&lt;span&gt;# 事件触发时第一个参数为model本身，第二个参数为数据，如果在某个事件响应函数处，设置了model.errors属性，则此次事件之后的代码都不会执行。
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;shi-yong&quot;&gt;使用&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;lie-chu-yi-ge-yong-hu-de-id-10-de-suo-you-hui-da-mei-ci-qu-10-ge&quot;&gt;列出一个用户的 id&amp;gt;10 的所有回答，每次取 10 个&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span&gt;member &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Member&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;find&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;answer &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;member.answers.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;where&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;id&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;&amp;gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;findall&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;limit&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;offset&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span&gt;answer.title
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;chuang-jian-xin-yong-hu&quot;&gt;创建新用户&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span&gt;member &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Member&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;member.email &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;foo@bar.com&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;member.password &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;123&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;member.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;save&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span&gt;member.saved &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# True
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span&gt;member.email &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# foo@bar.com
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;geng-xin-yong-hu-xin-xi&quot;&gt;更新用户信息&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span&gt;member &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Member&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;find&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;member.email &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;foo@bar.com&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;member.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;save&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span&gt;member.saved &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# True
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span&gt;member.email &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# foo@bar.com
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;yan-zheng-xin-xi&quot;&gt;验证信息&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span&gt;member &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Member&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;member.password &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;123&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;member.email &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;foo&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;member.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;save&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span&gt;member.errors[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;email&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# invalid email
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;duo-shu-ju-ku-lian-jie&quot;&gt;多数据库连接&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span&gt;member &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Member&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;find&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;slave&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;在执行 find &#x2F; findall &#x2F; save 操作时，有一个 db_section 选项，如果忽略，则默认使用初始化时传入的 engide dict 的第一项，在这里就是 master，如果想选择其他的数据库，传入该数据库对应的 key 就行，比如 slave&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;qi-ta&quot;&gt;其他&lt;&#x2F;h3&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;# 查看某次插入或更新是否成功，可以检查errors属性，如果为空表示执行成功
+&lt;&#x2F;span&gt;&lt;span&gt;# 如果model的key中包含主键，如id，则执行save时是一个更新操作，否则为插入
+&lt;&#x2F;span&gt;&lt;span&gt;# 欢迎fork &#x2F; test &#x2F; feedback
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+</description>
+        </item>
+        
+        
+        <item>
+            <title>使用python和redis实现实时聊天室</title>
+            <pubDate>Wed, 26 Oct 2011 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/python-comet/</link>
+            <guid>https://limboy.me/posts/python-comet/</guid>
+            <description>&lt;p&gt;实时的实现一般有 ajax long poll &#x2F; iframe stream &#x2F; websocket 这三种。websocket 有浏览器的限制;iframe 会使页面一直处于 loading 状态(如果没有这个限制，iframe stream 相比 long poll 还是比较有优势的); ajax long poll 因为它的跨浏览器特性，加上实现比较简单，所以不少的实时应用都选择了 long poll, 这里也选择 ajax long poll 来实现&lt;&#x2F;p&gt;
+&lt;p&gt;放个截图先：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_chat.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_chat.png 303w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_chat.png 303w&quot;
+    sizes=&quot;(max-width: 303px) 100vw, 303px&quot; width=&quot;303&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;主要工具：python (flask &#x2F; gevent &#x2F; apscheduler) + redis&lt;&#x2F;p&gt;
+&lt;p&gt;目前这个聊天室的功能还比较简单，可以实时更新全局在线用户，当前聊天室在线用户和聊天内容，都是通过一个 ajax 长连接实现的。在这个连接里定义了需要实时的内容，相应的内容一旦在服务端更新，可以马上推送到各个客户端。&lt;&#x2F;p&gt;
+&lt;p&gt;实时最大的挑战在于如何能在服务端尽量简单，灵活地实现。因为越是简单，就越不容易滋生 bug，即使出现问题，查找起来也很方便;越是灵活，就越容易应付多变的需求。以聊天室为例，当新用户加入后需要更新所有客户端的当前成员列表;有成员退出后也要更新该列表。每个聊天室有了新内容后都要实时推到所有客户端;给某个用户发私信，对方也可以实时收到。这些如果处理地不好，很容易与当前的逻辑发生耦合，为将来的调整和 bug 的查找带来困难。&lt;&#x2F;p&gt;
+&lt;p&gt;依靠强大的 redis，设计了这个简易的实时聊天室，基本架构如下:&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_arch.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_arch.png 243.5w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_arch.png 243.5w&quot;
+    sizes=&quot;(max-width: 243.5px) 100vw, 243.5px&quot; width=&quot;243.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;匆忙完成了初步的代码，还有不少需要优化的地方，有些功能也还没加上（如私信的实时通知）。接下来的一段时间内会逐步完善，如果有更好的 idea，欢迎沟通 :)&lt;&#x2F;p&gt;
+&lt;p&gt;代码地址：&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;chat&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;chat&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;如果使用过程中遇到什么问题，或有好的建议可以在&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;chat&#x2F;issues&quot;&gt;这里&lt;&#x2F;a&gt;反馈&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;version-0-2&quot;&gt;version 0.2&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;调整了实时的策略，抛弃 pubsub 模式，使用 zset+timestamp。同时修正了在聊天内容频繁发送时会丢部分信息的 bug&lt;&#x2F;li&gt;
+&lt;li&gt;添加了管理员角色（目前只能用于删除聊天室）&lt;&#x2F;li&gt;
+&lt;li&gt;修正重复名的 bug（无法完全避免，只能在登录时验证）&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;version-0-1-1&quot;&gt;version 0.1.1&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;调整了添加聊天室的体验&lt;&#x2F;li&gt;
+&lt;li&gt;更快的聊天内容显示速度&lt;&#x2F;li&gt;
+&lt;li&gt;可以删除自己创建的聊天室&lt;&#x2F;li&gt;
+&lt;li&gt;bugfixes&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;version-0-1&quot;&gt;version 0.1&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;intro&quot;&gt;intro&lt;&#x2F;h4&gt;
+&lt;p&gt;某天晚上打球回来，到家已将近 11 点，洗完澡，代码敲到 2 点左右倒下，天还没亮就被猫叫醒，醒来后就一直想如何改进这个聊天室，觉得能在一个页面实时看到每个聊天室的内容，还是很酷的，于是就按着这个想法实现了。&lt;&#x2F;p&gt;
+&lt;p&gt;PS: 如果不是全新安装，需要执行 bin&#x2F;python scripts&#x2F;clear_key.py 来清除 redis cache&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;changelog&quot;&gt;changelog&lt;&#x2F;h4&gt;
+&lt;ul&gt;
+&lt;li&gt;可以自定义昵称&lt;&#x2F;li&gt;
+&lt;li&gt;调整了聊天页的内容和样式&lt;&#x2F;li&gt;
+&lt;li&gt;添加了 home 页（显示所有的聊天室，并实时更新每个聊天室的内容）&lt;&#x2F;li&gt;
+&lt;li&gt;使用 coffee-script 重写了 js 部分&lt;&#x2F;li&gt;
+&lt;li&gt;bugfixes&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h4 id=&quot;screenshot&quot;&gt;screenshot&lt;&#x2F;h4&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_home_0.1.png&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_home_0.1.png 307w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_home_0.1.png 307w&quot;
+    sizes=&quot;(max-width: 307px) 100vw, 307px&quot; width=&quot;307&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_room_0.1.gif&quot;
+    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_room_0.1.gif 307w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_room_0.1.gif 307w&quot;
+    sizes=&quot;(max-width: 307px) 100vw, 307px&quot; width=&quot;307&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
+        </item>
+        
+        
+        <item>
+            <title>python的简单MapReduce实现：计算π</title>
+            <pubDate>Sat, 10 Sep 2011 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/python-mapreduce-pi/</link>
+            <guid>https://limboy.me/posts/python-mapreduce-pi/</guid>
+            <description>&lt;p&gt;MapReduce 是 Google 提出的一个软件架构，一般用于大规模数据集的并行运算。核心概念就是&amp;quot;Map（映射）&amp;quot;和&amp;quot;Reduce（化简）&amp;quot;。&lt;&#x2F;p&gt;
+&lt;p&gt;简单说来就是把一个任务分割成多个独立的子任务，子任务的分发由 map 实现，子任务计算结果的合并由 reduce 实现。&lt;&#x2F;p&gt;
+&lt;p&gt;mapreduce 的应用场景多是那种互不依赖，上下文无关的任务。所以类似 Fibonacci 数列这种对输入有依赖的就不适合使用 mapreduce。&lt;&#x2F;p&gt;
+&lt;p&gt;回到正题，要计算圆周率，我们先构建这么个模型&lt;&#x2F;p&gt;
+&lt;img src=&quot;http:&#x2F;&#x2F;code.google.com&#x2F;edu&#x2F;parallel&#x2F;img&#x2F;inscribe.png&quot; &#x2F;&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 外面的正方形面积
+&lt;&#x2F;span&gt;&lt;span&gt;As &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;(2r)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(2r) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;or&lt;&#x2F;span&gt;&lt;span&gt; 4r&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 里面的圆的面积
+&lt;&#x2F;span&gt;&lt;span&gt;Ac &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;pi&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;pi &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;Ac &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span&gt;(r&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r)
+&lt;&#x2F;span&gt;&lt;span&gt;As &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; 4r&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r
+&lt;&#x2F;span&gt;&lt;span&gt;r&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;r &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;As &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;4
+&lt;&#x2F;span&gt;&lt;span&gt;pi &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;4 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span&gt;Ac &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span&gt;As
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;也就是说只要算出圆的面积与正方形面积的比，就可以求出圆周率。&lt;&#x2F;p&gt;
+&lt;p&gt;可以通过以下步骤计算 Ac &#x2F; As：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;随机在正方形里生成许多点&lt;&#x2F;li&gt;
+&lt;li&gt;计算点在圆内与在正方形内的比例&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;测试的随机点越多，结果越精确&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;#coding=utf-8
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;random
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;multiprocessing
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span&gt;multiprocessing &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;Process
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MapReduce&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;object&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;__init__&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;map_func&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;reduce_func&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;workers_num&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;None&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.map_func &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;map_func
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.reduce_func &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;reduce_func
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.workers_num &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;workers_num
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;not &lt;&#x2F;span&gt;&lt;span&gt;workers_num:
+&lt;&#x2F;span&gt;&lt;span&gt;            workers_num &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;multiprocessing.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;cpu_count&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.pool &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;multiprocessing.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Pool&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(workers_num)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;__call__&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;inputs&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;        map_result &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.pool.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;map&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.map_func, inputs)
+&lt;&#x2F;span&gt;&lt;span&gt;        reduce_result &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;reduce_func&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(map_result)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span&gt;reduce_result
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;calculator&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;args&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;multiprocessing.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;current_process&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span&gt;.name,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39; processing&amp;#39;
+&lt;&#x2F;span&gt;&lt;span&gt;    points, circle_round &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;args[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;]
+&lt;&#x2F;span&gt;&lt;span&gt;    points_in_circle &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;range(points)&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;	    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 这里其实只取了1&#x2F;4圆
+&lt;&#x2F;span&gt;&lt;span&gt;        x &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;random.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;random&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;circle_round
+&lt;&#x2F;span&gt;&lt;span&gt;        y &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;random.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;random&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;circle_round
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(x&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span&gt;y&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt; &lt;&#x2F;span&gt;&lt;span&gt;circle_round&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;**&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;            points_in_circle &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span&gt;points_in_circle
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;def &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;count_circle_points&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;points_list&lt;&#x2F;span&gt;&lt;span&gt;):
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;sum(points_list)
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;__name__ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;__main__&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;:
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 半径
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;CIRCLE_ROUND &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 总点数
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;POINTS &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10000000
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# 总进程数
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;WORKERS_NUM &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;    map_reduce &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;MapReduce&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(calculator, count_circle_points, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;WORKERS_NUM&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    inputs &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;[(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;POINTS&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;WORKERS_NUM&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;CIRCLE_ROUND&lt;&#x2F;span&gt;&lt;span&gt;)] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;WORKERS_NUM
+&lt;&#x2F;span&gt;&lt;span&gt;    all_points_in_circle &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;map_reduce&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(inputs)
+&lt;&#x2F;span&gt;&lt;span&gt;    ac_as &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;float&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(all_points_in_circle)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;POINTS
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;print &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;pi approach to:&lt;&#x2F;span&gt;&lt;span&gt;%7f&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;ac_as)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;这是比较简单的单机 mapreduce，用多进程就可以实现。如果是多机运算的话，就麻烦多了，类似这张图：&lt;&#x2F;p&gt;
+&lt;img src=&quot;http:&#x2F;&#x2F;code.google.com&#x2F;edu&#x2F;parallel&#x2F;img&#x2F;mrfigure.png&quot; width=&#x27;700px&#x27;&#x2F;&gt;
+&lt;p&gt;参考链接[2]有对这张图的解释&lt;&#x2F;p&gt;
+&lt;p&gt;参考：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;[1] &lt;a href=&quot;http:&#x2F;&#x2F;blog.doughellmann.com&#x2F;2009&#x2F;04&#x2F;implementing-mapreduce-with.html&quot;&gt;http:&#x2F;&#x2F;blog.doughellmann.com&#x2F;2009&#x2F;04&#x2F;implementing-mapreduce-with.html&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;[2] &lt;a href=&quot;http:&#x2F;&#x2F;code.google.com&#x2F;edu&#x2F;parallel&#x2F;mapreduce-tutorial.html&quot;&gt;http:&#x2F;&#x2F;code.google.com&#x2F;edu&#x2F;parallel&#x2F;mapreduce-tutorial.html&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+        </item>
+        
+        
+        <item>
+            <title>php程序员是否该学习python</title>
+            <pubDate>Wed, 08 Sep 2010 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/php-vs-python/</link>
+            <guid>https://limboy.me/posts/php-vs-python/</guid>
+            <description>&lt;p&gt;其实标题可以变为&amp;quot;xx 程序员是否该学习 yy&amp;quot;，xx 和 yy 可以是任何编程语言，而答案总是&amp;quot;应该&amp;quot;。因为我本身跟 php 打了不少年的交道，同时 python 也学习了一段时间，所以就把这两种语言串起来了。&lt;&#x2F;p&gt;
+&lt;p&gt;php 和 python 上手都很容易，php 基本上是&amp;quot;大把函数任你抓，抓来就能做项目&amp;quot;，python 是&amp;quot;大把模块任你选，事半功倍全靠它&amp;quot;。双方都有强大的第三方扩展，很少需要自己费力去写一个，除非进行二次封装。&lt;&#x2F;p&gt;
+&lt;p&gt;先来看看 PHP 比较爽的几个特性&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;array&quot;&gt;array&lt;&#x2F;h3&gt;
+&lt;p&gt;php 的&lt;a href=&quot;http:&#x2F;&#x2F;php.net&#x2F;manual&#x2F;en&#x2F;language.types.array.php&quot;&gt;数组&lt;&#x2F;a&gt;几乎是所有语言中最强大的，同时扮演了 list, dictionary, stack, queue 甚至更多(相信这也是许多人喜欢 PHP 的一个重要原因)。而且使用还挺方便，提供了&lt;a href=&quot;http:&#x2F;&#x2F;cn2.php.net&#x2F;manual&#x2F;en&#x2F;ref.array.php&quot;&gt;77 个数组相关方法&lt;&#x2F;a&gt;(这也不可避免地产生了另一个问题，下面会提到)。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;yu-html-de-qin-mi-jie-he&quot;&gt;与 html 的亲密结合&lt;&#x2F;h3&gt;
+&lt;p&gt;这也是其他语言少有的特性，php 本身就是一个模板引擎，可以与 html 天然融合。不过也有弊端，如 html 不应该包含复杂的业务逻辑，而且 php 与 html 混杂实在不够美观。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;qi-quan-de-han-shu-he-feng-fu-de-di-san-fang-lei-ku&quot;&gt;齐全的函数和丰富的第三方类库&lt;&#x2F;h3&gt;
+&lt;p&gt;函数是 php 的核心，这也是 php 容易上手的一个重要原因。要完成什么功能，只要找到该函数即可，从这个方面来说，php 更适合脚本化编程(貌似这也是 php 的初衷)。随着 php 的流行，第三方类库也开始丰富起来，甚至可以为 php 写插件来增强 php 的功能。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;dui-oop-de-wan-mei-zhi-chi&quot;&gt;对 OOP 的完美支持&lt;&#x2F;h3&gt;
+&lt;p&gt;php4 虽然也可以进行 oop 编程，但语言本身不给力，只能努力往 OOP 方向去靠。到了 php5，情况就有了很大的好转，支持 PPP(private, protected, public) method 和 property，以及 static&#x2F;final 等语法。php5.3 还支持 LSB(late static bindings)，虽然我觉得支持得很不到位。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mo-zhu-fang-fa&quot;&gt;魔术方法&lt;&#x2F;h3&gt;
+&lt;pre&gt;__get&#x2F;__set&#x2F;__call&#x2F;__toString&lt;&#x2F;pre&gt;等等，这些魔术方法给类带来了很大的便利，随便找个流行的框架，查看源码都会发现这些魔术方法的影踪，仿佛一下子变得无所不能。
+&lt;p&gt;再来看看 PHP 几个让人不爽的地方&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;bian-liang-bei-fu-zhi-dan-que-bu-shi-yong&quot;&gt;变量被赋值，但却不使用&lt;&#x2F;h3&gt;
+&lt;p&gt;不太好理解，写段代码就知道了&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;php&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-php &quot;&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;&amp;lt;?php
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;error_reporting(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;-&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$str &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hello world&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 下面这段代码会报NOTICE ERROR，但事实上$str_arr已经被赋值，只是current方法没有使用这个变量
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 这段代码的运行过程是执行explode方法，然后将结果赋给$str_arr，然后将结果作为参数传递给current方法
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 也就是说整个过程没$str_arr什么事，$str_arr收到结果后就被踢走了
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 但有时候，只能使用变量而不能使用函数的返回值，如empty
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$hello &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;current(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$str_arr &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;explode(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39; &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$str&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;))&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;bu-neng-zai-han-shu-fang-fa-hou-gen&quot;&gt;不能在函数&#x2F;方法后跟[]&lt;&#x2F;h3&gt;
+&lt;p&gt;还是不太好理解，继续上代码&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;php&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-php &quot;&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;&amp;lt;?php
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;arr&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;array&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hello&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;world&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 会报错，于是只能先把结果赋给变量，再从这个变量去获取相应值，用完之后再unset该变量
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;echo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;arr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;hun-luan-de-ming-ming&quot;&gt;混乱的命名&lt;&#x2F;h3&gt;
+&lt;p&gt;上面说的几点只是小问题，这个就严重了。php 的命名几乎没有规律可循，随便举几个例子&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;php&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-php &quot;&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;&amp;lt;?php
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 其中一个单词缩写，中间没有分割符
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;strpos()&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;tempnam()&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 两个单词没有缩写，其中有一个分割符
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;str_repeat()&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;file_exists()&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 驼峰命名
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;__toString&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 下划线连接
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;__set_state&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;()&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 这个太恐怖了，强烈怀疑是酒后编程
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;mysql_real_escape_string()
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;nan-ji-de-can-shu&quot;&gt;难记的参数&lt;&#x2F;h3&gt;
+&lt;p&gt;这个是很要命的，有些方法，我是用一次，看一次手册，比如 strpos&#x2F;in_array&#x2F;basename&#x2F;...，完全没有套路可循。有些把$needle放到前面，$haystack 放到后面(如 explode)，有些正好倒过来(如 strpos)，太影响写程序的效率了。怪不得写 PHP 的基本都需要一个强大的 IDE(如 Zend&#x2F;NetBeans)。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ming-ming-kong-jian-de-que-shi&quot;&gt;命名空间的缺失&lt;&#x2F;h3&gt;
+&lt;p&gt;就好像一大堆能人异士挤在一个房子里，要用到什么功能了，就抓一个出来，如果要往这个房间加人的话，还得保证不能跟已有的重名。如果有命名空间的话，就方便了，新建一个屋子，只要这个屋子不跟别的屋子重名就行，屋子里的人爱起什么名起什么名，完全不用担心冲突。好在 php5.3 加入了命名空间，虽然用起来还是挺别扭。&lt;&#x2F;p&gt;
+&lt;p&gt;下面来说说 python 吧，其实 python 的职能是跨平台软件开发，但也可以用做 web 开发，而且出现了不少优秀的 web 框架，所以就不可避免地与 php 正面交锋(php 虽然也可以用来开发 gui 软件，但多少有点旁门左道的感觉)。&lt;&#x2F;p&gt;
+&lt;p&gt;python 给我的感觉是简洁，强大且优雅。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;jian-ji&quot;&gt;简洁&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;半个单词能搞定的就不用整个单词，如 def&#x2F;elif&#x2F;iter&lt;&#x2F;li&gt;
+&lt;li&gt;一行能搞定的就不用多行&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;#generator expressions
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;sum(i&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;in &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;range(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;))
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;同时对多个变量赋值&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;pre data-lang=&quot;py&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-py &quot;&gt;&lt;code class=&quot;language-py&quot; data-lang=&quot;py&quot;&gt;&lt;span&gt;a, b &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hello&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;world&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;qiang-da&quot;&gt;强大&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;内置了 3 种常用数据结构：tuple&#x2F;list&#x2F;dictionary&lt;&#x2F;li&gt;
+&lt;li&gt;支持匿名函数&lt;&#x2F;li&gt;
+&lt;li&gt;多线程&lt;&#x2F;li&gt;
+&lt;li&gt;函数的参数(可以不按顺序传参，这是个亮点)&lt;&#x2F;li&gt;
+&lt;li&gt;...(php 有的，python 基本也少不了)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;you-ya&quot;&gt;优雅&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;一切皆对象&lt;&#x2F;li&gt;
+&lt;li&gt;一切皆引用&lt;&#x2F;li&gt;
+&lt;li&gt;模块机制&lt;&#x2F;li&gt;
+&lt;li&gt;独特的书写风格(这个因人而异吧，觉得换行+tab 很别扭的也大有人在)&lt;&#x2F;li&gt;
+&lt;li&gt;自我说明(docstring+pydoc)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;当然 python 也非完美，不爽的地方也挺多的，如参数的默认值如果是 mutable(可变的)，只会在第一次调用时初始化；class 的方法至少要传一个 self 参数等等。但瑕不掩瑜，php 程序员还是应该了解一下 python，即使不是全面转向 python。&lt;&#x2F;p&gt;
+&lt;p&gt;对了，使用 python 还有一个很重要的原因是：GAE(我知道有 SAE，但~~~)&lt;&#x2F;p&gt;
+&lt;p&gt;参考：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;http:&#x2F;&#x2F;ioreader.com&#x2F;2007&#x2F;08&#x2F;19&#x2F;12-things-you-should-dislike-about-php&#x2F;&lt;&#x2F;li&gt;
+&lt;li&gt;http:&#x2F;&#x2F;ioreader.com&#x2F;2007&#x2F;08&#x2F;17&#x2F;11-cool-things-about-php-that-most-people-overlook&lt;&#x2F;li&gt;
+&lt;li&gt;http:&#x2F;&#x2F;wiki.python.org&#x2F;moin&#x2F;PythonVsPhp&lt;&#x2F;li&gt;
+&lt;li&gt;http:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;1486608&#x2F;is-switching-from-php-to-python-worth-the-trouble&lt;&#x2F;li&gt;
+&lt;li&gt;http:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;3319261&#x2F;php-devs-that-moved-to-python-is-the-experience-better&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+缩进输出目录结构并计算文件&#x2F;文件夹大小
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/calc-tree/">
+
+<meta name="twitter:title" content="缩进输出目录结构并计算文件&#x2F;文件夹大小">
+<meta property="og:title" content="缩进输出目录结构并计算文件&#x2F;文件夹大小">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;calc-tree&#x2F;">缩进输出目录结构并计算文件&#x2F;文件夹大小</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-06-10</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>如果把这个命题分开来实现会方便点，比如缩进输出目录结构可以通过先序遍历实现，计算文件夹大小可以通过后续遍历实现，但结合到一块就稍微有点麻烦了。比如我们要得到如下的输出</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span>LICENSE (1.040K)
+</span><span>README.md (0.951K)
+</span><span>UPDATE.ja.md (23.951K)
+</span><span>UPDATE.md (19.390K)
+</span><span>autoload.php.dist (0.875K)
+</span><span>check_cs (3.312K)
+</span><span>phpunit.xml.dist (1.160K)
+</span><span>src (8302.127K) // 文件夹
+</span><span>    Symfony (8302.127K) // 文件夹
+</span><span>        Bridge (84.567K) // 文件夹
+</span><span>...
+</span></code></pre>
+<p>我首先想到的方法是把文件/文件夹的计算和输出分开来实现，不过这样效率不高，因为有些文件会被多次使用 filesize 方法。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">get_size</span><span>(</span><span style="color:#f07219;">$file_or_dir</span><span>)
+</span><span>{
+</span><span>	</span><span style="color:#c82728;">$filesize </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">if</span><span>(</span><span style="color:#4271ae;">is_file(</span><span style="color:#c82728;">$file_or_dir</span><span style="color:#4271ae;">)</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#c82728;">$filesize </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">filesize(</span><span style="color:#c82728;">$file_or_dir</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	}
+</span><span>	</span><span style="color:#8959a8;">else
+</span><span>	{
+</span><span>		</span><span style="color:#c82728;">$filesize </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span>		</span><span style="color:#8959a8;">foreach</span><span>(</span><span style="color:#4271ae;">glob(</span><span style="color:#c82728;">$file_or_dir</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;/*&#39;</span><span style="color:#4271ae;">) </span><span style="color:#3e999f;">as </span><span style="color:#c82728;">$file</span><span>)
+</span><span>		{
+</span><span>			</span><span style="color:#c82728;">$filesize </span><span style="color:#3e999f;">+= </span><span style="color:#c82728;">get_size</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$file</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		}
+</span><span>	}
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">return </span><span style="color:#c82728;">$filesize</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">tree</span><span>(</span><span style="color:#f07219;">$prefix</span><span>, </span><span style="color:#f07219;">$file_or_dir</span><span>, </span><span style="color:#f07219;">$length</span><span>)
+</span><span>{
+</span><span>	</span><span style="color:#c82728;">$filename </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$prefix</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;/&#39;</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$file_or_dir</span><span>;
+</span><span>	</span><span style="color:#8959a8;">if</span><span>(</span><span style="color:#4271ae;">is_file(</span><span style="color:#c82728;">$filename</span><span style="color:#4271ae;">)</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#8e908c;">// 每次输出都计算一次，如果是文件夹的话，文件夹下的文件会被多次计算，浪费也就在此
+</span><span>		</span><span style="color:#c82728;">pad_output</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$file_or_dir</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">get_size</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$filename</span><span style="color:#4271ae;">), </span><span style="color:#c82728;">$length</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	}
+</span><span>	</span><span style="color:#8959a8;">else
+</span><span>	{
+</span><span>		</span><span style="color:#8959a8;">if</span><span>(</span><span style="color:#c82728;">$handle </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">opendir(</span><span style="color:#c82728;">$filename</span><span style="color:#4271ae;">)</span><span>)
+</span><span>		{
+</span><span>			</span><span style="color:#c82728;">pad_output</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$file_or_dir</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">get_size</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$filename</span><span style="color:#4271ae;">), </span><span style="color:#c82728;">$length</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">1</span><span style="color:#4271ae;">)</span><span>;
+</span><span>			</span><span style="color:#8959a8;">while</span><span>((</span><span style="color:#c82728;">$file </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">readdir(</span><span style="color:#c82728;">$handle</span><span style="color:#4271ae;">)</span><span>) </span><span style="color:#3e999f;">!== </span><span style="color:#f07219;">false</span><span>)
+</span><span>			{
+</span><span>				</span><span style="color:#8959a8;">if</span><span>(</span><span style="color:#c82728;">$file </span><span style="color:#3e999f;">!== </span><span style="color:#839c00;">&#39;.&#39; </span><span style="color:#3e999f;">&amp;&amp; </span><span style="color:#c82728;">$file </span><span style="color:#3e999f;">!== </span><span style="color:#839c00;">&#39;..&#39;</span><span>)
+</span><span>				{
+</span><span>					</span><span style="color:#c82728;">tree</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$filename</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$file</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">$length</span><span style="color:#4271ae;">)</span><span>;
+</span><span>				}
+</span><span>			}
+</span><span>		}
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>这样，假如 a/b/c.txt 这个文件，在获取 c.txt 文件大小时会计算 c.txt 一次，获取 b 文件夹大小时还会计算一次，获取 a 文件夹时仍然会计算一次。也就是说文件的重复计算次数跟目录深度成正比。</p>
+<p>后来又想了一个方法可以避免重复计算，且占用不多的内存，自认为效率还算高。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">cacl</span><span>(</span><span style="color:#f07219;">$file</span><span>, </span><span style="color:#8959a8;">&amp;</span><span style="color:#f07219;">$data</span><span>, </span><span style="color:#f07219;">$length</span><span>)
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">global </span><span style="color:#c82728;">$padding</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#c82728;">$f_pad </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$file</span><span>;
+</span><span>	</span><span style="color:#8959a8;">if</span><span>((</span><span style="color:#c82728;">$pos </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">strrpos(</span><span style="color:#c82728;">$file</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;/&#39;</span><span style="color:#4271ae;">)</span><span>) </span><span style="color:#3e999f;">!== </span><span style="color:#f07219;">false</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#c82728;">$f_pad </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">substr(</span><span style="color:#c82728;">$file</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$pos</span><span style="color:#3e999f;">+</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	}
+</span><span>	</span><span style="color:#c82728;">$f_pad </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">str_repeat(</span><span style="color:#c82728;">$padding</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$length</span><span style="color:#4271ae;">)</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$f_pad</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">if</span><span>(</span><span style="color:#4271ae;">is_file(</span><span style="color:#c82728;">$file</span><span style="color:#4271ae;">)</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#c82728;">$size </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">filesize(</span><span style="color:#c82728;">$file</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		</span><span style="color:#c82728;">$data</span><span>[</span><span style="color:#c82728;">$f_pad</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$size</span><span>;
+</span><span>	}
+</span><span>	</span><span style="color:#8959a8;">else
+</span><span>	{
+</span><span>		</span><span style="color:#c82728;">$data</span><span>[</span><span style="color:#c82728;">$f_pad</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span>		</span><span style="color:#c82728;">$size </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span>		</span><span style="color:#8959a8;">foreach</span><span>(</span><span style="color:#4271ae;">glob(</span><span style="color:#c82728;">$file</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;/*&#39;</span><span style="color:#4271ae;">) </span><span style="color:#3e999f;">as </span><span style="color:#c82728;">$filename</span><span>)
+</span><span>		{
+</span><span>			</span><span style="color:#c82728;">$size </span><span style="color:#3e999f;">+= </span><span style="color:#c82728;">cacl</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$filename</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$data</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">1 </span><span style="color:#3e999f;">+ </span><span style="color:#c82728;">$length</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		}
+</span><span>		</span><span style="color:#c82728;">$data</span><span>[</span><span style="color:#c82728;">$f_pad</span><span>] </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$size</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39;_&#39;</span><span>;
+</span><span>	}
+</span><span>	</span><span style="color:#8959a8;">return </span><span style="color:#c82728;">$size</span><span>;
+</span><span>}
+</span></code></pre>
+<p>这个只用了一个函数，更短，更快。引用数组负责数据的存储，递归返回值负责文件的大小，为了减少内存的使用，在文件夹的 size 后面加了&quot;<em>&quot;来表示这是一个文件夹，输出时去掉&quot;</em>&quot;就行了。</p>
+<p>如果你有更好的想法，欢迎交流 :)</p>
+<p>github 地址：<a href="https://github.com/limboy/cacl_tree">https://github.com/limboy/cacl_tree</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/php/">php</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

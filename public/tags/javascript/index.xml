@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+      <title>Limboy - javascript</title>
+        <link>https://limboy.me</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>zh</language>
+        <atom:link href="https://limboy.me/tags/javascript/index.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Fri, 04 Mar 2011 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>javascript大杂烩</title>
+            <pubDate>Fri, 04 Mar 2011 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/javascript/</link>
+            <guid>https://limboy.me/posts/javascript/</guid>
+            <description>&lt;p&gt;花了点时间学习了下 js 基础，跟大家分享一下，有不到之处，欢迎指出 :)&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;guan-yu-dui-xiang&quot;&gt;关于对象&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;dui-xiang-de-chuang-jian&quot;&gt;对象的创建&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;newObj &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= new &lt;&#x2F;span&gt;&lt;span&gt;Object();
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; var newObj = {};
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;newObj&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;someValue&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;val&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;yi-qie-jie-dui-xiang&quot;&gt;一切皆对象&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;instanceof &lt;&#x2F;span&gt;&lt;span&gt;Object &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; true
+&lt;&#x2F;span&gt;&lt;span&gt;{&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span&gt;} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;instanceof &lt;&#x2F;span&gt;&lt;span&gt;Object &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;true
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;但也有些特殊的对象，如 3, &#x27;str&#x27;, true 等等，但如果用 instanceof 测试的话，会发现&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;foo&amp;#39; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;instanceof &lt;&#x2F;span&gt;&lt;span&gt;Object; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; false
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;3 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;instanceof &lt;&#x2F;span&gt;&lt;span&gt;Object; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; false
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;true &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;instanceof &lt;&#x2F;span&gt;&lt;span&gt;Object; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; false
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;但它们真的也是对象&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;foo&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;.constructor &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;String &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; true
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;.constructor &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Boolean &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; true
+&lt;&#x2F;span&gt;&lt;span&gt;3.constructor &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Number &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; true
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;还有一个理由&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Number&lt;&#x2F;span&gt;&lt;span&gt;.prototype.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;times &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;func&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;index &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;index &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;index&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;func&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;index&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.times&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;print&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 5 .times(print); &#x2F;&#x2F;also works
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 加上括号是为了避免出现解析错误(js引擎会以为是小数点)
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;就连函数也是一个对象&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;() {};
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;foo &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hello world&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;fn&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;bar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;dui-xiang-de-chu-shi-hua&quot;&gt;对象的初始化&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;User&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;first&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;last&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;first &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39; &amp;#39; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;last&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;user &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= new &lt;&#x2F;span&gt;&lt;span&gt;User(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;John&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;Resig&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; var user = User(&amp;#39;John&amp;#39;, &amp;#39;Resig&amp;#39;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;一个 function，可以看成是一个 Class，也可以看成是一个正常的函数，这就麻烦了，因为无论加不加上 new 这个关键字，function 都能正常运行，虽然结果会不一样。&lt;&#x2F;p&gt;
+&lt;p&gt;如果看成 Class，使用 new 关键字初始化，那么 function 里的 this 指向当前的 function。如果不使用 new 关键字，则 function 里的 this 默认指向 Window&lt;&#x2F;p&gt;
+&lt;p&gt;有两种解决方法，一个是将 Class function 的首字母大写，如 User，这样就能清楚地知道哪些 function 是 Class。但这样还是避免不了写程序时粗心，忘了加 new 关键字。&lt;&#x2F;p&gt;
+&lt;p&gt;另一种方法就是不是用 new 关键字，在 function 里自动判断，保证返回的一定是当前对象&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;User&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;first&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;last&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;instanceof &lt;&#x2F;span&gt;&lt;span&gt;User) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;first &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39; &amp;#39; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;last&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  } &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;else return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;new &lt;&#x2F;span&gt;&lt;span&gt;User(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;first&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;last&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;更通用的方法是创建一个 makeClass 方法&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; makeClass - By John Resig (MIT Licensed)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;makeClass&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;args&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;instanceof &lt;&#x2F;span&gt;&lt;span&gt;arguments.callee) {
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;typeof &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;init &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;function&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;init&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.apply&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;args&lt;&#x2F;span&gt;&lt;span&gt;.callee &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;? &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;args &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;arguments&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    } &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;else return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;new &lt;&#x2F;span&gt;&lt;span&gt;arguments.callee(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;arguments&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  };
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;因为函数名未知，所以使用了 arguments.callee 来实现。&lt;&#x2F;p&gt;
+&lt;p&gt;makeClass 的使用&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;User &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;makeClass&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;User&lt;&#x2F;span&gt;&lt;span&gt;.prototype.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;init &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;first&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;last&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;first &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39; &amp;#39; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;last&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;user &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;User&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;John&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;Resig&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;user&lt;&#x2F;span&gt;&lt;span&gt;.name;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; =&amp;gt; &amp;quot;John Resig&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;dui-xiang-de-ji-cheng&quot;&gt;对象的继承&lt;&#x2F;h4&gt;
+&lt;p&gt;每个 function 都有一个特殊的变量&amp;quot;prototype&amp;quot;，当实例化对象时，这个变量上的各个属性也会被附加到对象上&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;Car&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;model&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;year&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;miles&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;model &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;model&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;year &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;year&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;miles &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;miles&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Car&lt;&#x2F;span&gt;&lt;span&gt;.prototype &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;info&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;model &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;year &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;miles&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  },
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;car &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= new &lt;&#x2F;span&gt;&lt;span&gt;Car(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;Benz&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1500&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;car&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.info&lt;&#x2F;span&gt;&lt;span&gt;());
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;如果不使用 new 关键字，prototype 就失效了&lt;&#x2F;p&gt;
+&lt;p&gt;prototype 属性也有一个特殊的属性&amp;quot;constructor&amp;quot;，通过它我们就能实现继承了&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Object&lt;&#x2F;span&gt;&lt;span&gt;.prototype.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;inObj &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;A&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;inA &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;A&lt;&#x2F;span&gt;&lt;span&gt;.prototype.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;inAProto &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span&gt;.prototype &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= new &lt;&#x2F;span&gt;&lt;span&gt;A(); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Hook up A into B&amp;#39;s prototype chain
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span&gt;.prototype.constructor &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;inB &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;4&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;B&lt;&#x2F;span&gt;&lt;span&gt;.prototype.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;inBProto &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;5&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;x &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= new &lt;&#x2F;span&gt;&lt;span&gt;B();
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;bi-bao-yu-mo-kuai-hua&quot;&gt;闭包与模块化&lt;&#x2F;h3&gt;
+&lt;p&gt;闭包是一种现象，通常是因为一个 function 返回了一个内部的 function，如&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;f1&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2011&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;f2&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;n&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 2011
+&lt;&#x2F;span&gt;&lt;span&gt;  };
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;可以看到内部 function f2 成功地得到了 f1 的 local 变量，又因为 n 被 f2 使用，所以变量 n 就常驻内存了
+从这个角度上说，如果把 f1 看成一个 class，n 就变成了私有变量，而 f2 成为了公共方法，所以就有了模块化的概念&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;myNamespace &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;myPrivateVar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;myPrivateMethod &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;someText&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;console&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.log&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;someText&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  };
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;    myPublicVar: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;foo&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;myPublicFunction&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;bar&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;myPrivateVar&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;myPrivateMethod&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;bar&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    },
+&lt;&#x2F;span&gt;&lt;span&gt;  };
+&lt;&#x2F;span&gt;&lt;span&gt;})();
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;qi-ta&quot;&gt;其他&lt;&#x2F;h3&gt;
+&lt;h4 id=&quot;bi-mian-ming-ming-wu-ran-de-fang-fa&quot;&gt;避免命名污染的方法&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; self executing
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; if you want some var global accessable, put &amp;quot;window.&amp;quot; ahead
+&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;myVar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;myVar&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  window.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;globalVar &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;})();
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;qiang-da-de-prototype&quot;&gt;强大的 prototype&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Array&lt;&#x2F;span&gt;&lt;span&gt;.prototype.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;contains &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;value&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;for &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.length; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;value&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;stringArray &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;foo&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;bar&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;foobar&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;stringArray&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.contains&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;foobar&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;fang-bian-de&quot;&gt;方便的&amp;quot;+&amp;quot;&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Quick hex to dec conversion:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;0xFF&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; 255
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Get a timestamp for now, the equivalent of `new Date().getTime()`:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+new &lt;&#x2F;span&gt;&lt;span&gt;Date();
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Safer parsing than parseFloat()&#x2F;parseInt()
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;parseInt&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;1,000&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; 1, not 1000
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;1,000&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; NaN, much better for testing user input
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;parseInt&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;010&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; 8, because of the octal literal prefix
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;010&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; 10, `Number()` doesn&amp;#39;t parse octal literals
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; A use case for this would be rare, but still useful in cases
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; for shortening something like if (someVar === null) someVar = 0;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;null&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; 0;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Boolean to integer
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; 1;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; 0;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Other useful tidbits:
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;1e10&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; 10000000000
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;1e-4&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; 0.0001
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;-12&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; -&amp;gt; -12
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;注意：如果是字符串与数字相加的话，结果还是字符串，如&amp;quot;hello&amp;quot; + 3，结果为&amp;quot;hello3&amp;quot;&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;tong-guo-lai-huo-qu-she-zhi-object-de-shu-xing&quot;&gt;通过[]来获取&#x2F;设置 Object 的属性&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;a &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;{};
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;a&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;class&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hello&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; access reversed property
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;a&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;have space&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;world&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; has space
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;a&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;.class .subclass&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;] &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;value&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; can have .
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;string-de-split-he-replace-ke-yi-bao-han-zheng-ze&quot;&gt;String 的 split 和 replace 可以包含正则&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hello world   with  spaces&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.split&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;\s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;g&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;returns an array: [&amp;quot;hello&amp;quot;, &amp;quot;world&amp;quot;, &amp;quot;with&amp;quot;, &amp;quot;spaces&amp;quot;]
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;i &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;foo bar baz &amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.replace&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span&gt;\s&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;g&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;i&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;++&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;});
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;returns &amp;quot;foo1bar2baz3&amp;quot;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h4 id=&quot;han-shu-ding-yi-shi-yu-han-shu-biao-da-shi&quot;&gt;函数定义式与函数表达式&lt;&#x2F;h4&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;typeof &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;eve&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;结果:function
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;typeof &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;walle&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;结果:undefined
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;eve&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;函数定义式
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;I am Laruence&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;walle &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;函数表达式
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;typeof &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;walle&lt;&#x2F;span&gt;&lt;span&gt;); &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;结果:function
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;对于函数定义式，会将函数定义提前，而对于函数表达式，只有在执行过程中才会计算&lt;&#x2F;p&gt;
+&lt;h4 id=&quot;zuo-yong-yu&quot;&gt;作用域&lt;&#x2F;h4&gt;
+&lt;p&gt;对于下面的 demo&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;laruence&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;echo&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;eve&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;alert&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;age&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;echo&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;输出结果为&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;undefined&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;eve&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;ReferenceError&lt;&#x2F;span&gt;&lt;span&gt;];
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;原因是 js 在执行函数之前，会有一个预编译的过程，这个过程中会把局部变量提取出来，放到 scope chain 中，value 都为 undefined(不包括传递过来的参数)，所以在执行 echo 函数时，name 的值在设置为&amp;quot;eve&amp;quot;前，为 undefined&lt;&#x2F;p&gt;
+&lt;p&gt;参考：&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;ejohn.org&#x2F;blog&#x2F;simple-class-instantiation&#x2F;&quot;&gt;simple class instantiation&#x2F;&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;stackoverflow.com&#x2F;q&#x2F;61088&#x2F;94962&quot;&gt;hidden features of javascript&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;mckoss.com&#x2F;jscript&#x2F;object.htm&quot;&gt;Object Oriented Programming in JavaScript&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;yuiblog.com&#x2F;blog&#x2F;2007&#x2F;06&#x2F;12&#x2F;module-pattern&#x2F;&quot;&gt;module pattern&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;www.laruence.com&#x2F;2009&#x2F;05&#x2F;28&#x2F;863.html&quot;&gt;javascript 的作用域原理&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
+        </item>
+        
+        
+        <item>
+            <title>大型应用的javascript架构</title>
+            <pubDate>Mon, 29 Nov 2010 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/javascript-arch/</link>
+            <guid>https://limboy.me/posts/javascript-arch/</guid>
+            <description>&lt;p&gt;目前很多网站基本没有明确的前端架构，大多是服务端渲染视图页，输出到浏览器，再配合一些 js，来进行交互。如果只是实现一些简单的效果，没有较复杂的逻辑，那么这种处理是合理的，尤其是有了 jQuery 之类的利器，js 代码写起来甚至有种随心所欲的感觉。&lt;&#x2F;p&gt;
+&lt;p&gt;但一旦网站要改版，或者随着网站的发展，逻辑变得越来越复杂，或者为了更好的用户体验，js 要承担更多的任务，这时如果维持现状不变，那 js 就会变得越来越臃肿，越来越难维护。&lt;&#x2F;p&gt;
+&lt;p&gt;解决之道就是采用模块化编程，将页面分成多个模块，模块之间互相独立，通过发布&#x2F;订阅方式来进行模块间交互，从而使模块与模块解耦，也就是说移除一个模块不会对当前页面造成影响。&lt;&#x2F;p&gt;
+&lt;p&gt;配合模板的话，可以让前端和后端程序员更高效地配合。前端只负责数据的显示与页面的交互，开发时，可以拟造数据，而不需要服务端程序。后端程序员也可以专注于提供更易用，稳定的接口，而不需要关心数据的展示。&lt;&#x2F;p&gt;
+&lt;p&gt;yahoo 的&lt;a href=&quot;http:&#x2F;&#x2F;developer.yahoo.com&#x2F;yui&#x2F;theater&#x2F;video.php?v=zakas-architecture&quot;&gt;这个视频&lt;&#x2F;a&gt;详细地阐述了前端模块化编程，大致摘录如下：&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;js-jia-gou-de-4-ge-zu-cheng-bu-fen&quot;&gt;js 架构的 4 个组成部分&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;模块(Modules)&lt;&#x2F;li&gt;
+&lt;li&gt;沙箱(Sandbox)&lt;&#x2F;li&gt;
+&lt;li&gt;应用(App Core)&lt;&#x2F;li&gt;
+&lt;li&gt;类库(Base Lib)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;mo-kuai-yi-qie-jie-mo-kuai&quot;&gt;模块(一切皆模块)&lt;&#x2F;h3&gt;
+&lt;p&gt;模块就像孩子一样，他们需要遵守一些规则才能保证不会到处惹麻烦&lt;&#x2F;p&gt;
+&lt;p&gt;模块必须在沙箱里，无论条件多么苛刻&lt;&#x2F;p&gt;
+&lt;p&gt;模块不知道页面到底是怎样的，他们只知道沙箱&lt;&#x2F;p&gt;
+&lt;p&gt;模块之间要解耦&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mo-kuai-de-gui-ze&quot;&gt;模块的规则&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;管好自己
+** 只能调用自己的或沙箱的方法
+** 不要访问不属于自己的 DOM 节点
+** 不要访问非内置全局变量&lt;&#x2F;li&gt;
+&lt;li&gt;先申请，再使用
+** 你需要的任何东西，要向沙箱提出申请&lt;&#x2F;li&gt;
+&lt;li&gt;不要把玩具放得到处都是
+** 不要创建全局变量&lt;&#x2F;li&gt;
+&lt;li&gt;不要和陌生人说话
+** 不要直接引用其他模块&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;an-quan-sha-xiang&quot;&gt;安全沙箱&lt;&#x2F;h3&gt;
+&lt;p&gt;沙箱要保证接口的一致性，模块调用时一定要有&lt;&#x2F;p&gt;
+&lt;p&gt;模块只知道沙箱，其他的架构对模块而言是不存在的&lt;&#x2F;p&gt;
+&lt;p&gt;沙箱就像一个安保员，知道哪些是模块可以调用的&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;sha-xiang-de-zhi-ze&quot;&gt;沙箱的职责&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;一致性
+** 接口一定要可靠&lt;&#x2F;li&gt;
+&lt;li&gt;安全性
+** 检测哪一部分是模块可以访问的&lt;&#x2F;li&gt;
+&lt;li&gt;交互
+** 将模块的请求发送到系统&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;多花些时间来设计沙箱接口，可以添加新方法，但不能移除，也不能修改已有方法&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ying-yong-he-xin&quot;&gt;应用核心&lt;&#x2F;h3&gt;
+&lt;p&gt;应用核心负责模块间的交互&lt;&#x2F;p&gt;
+&lt;p&gt;应用核心通知一个模块何时该初始化，何时该注销&lt;&#x2F;p&gt;
+&lt;p&gt;应用核心处理错误&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ying-yong-he-xin-de-ren-wu&quot;&gt;应用核心的任务&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;管理模块的生存周期
+** 通知一个模块何时该初始化，何时该注销&lt;&#x2F;li&gt;
+&lt;li&gt;内部模块间的交互
+** 让模块尽可能解耦&lt;&#x2F;li&gt;
+&lt;li&gt;错误处理
+** 检测，报告错误&lt;&#x2F;li&gt;
+&lt;li&gt;可扩展
+** 任何可扩展的东西都不会过时&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;ji-ben-lei-ku&quot;&gt;基本类库&lt;&#x2F;h3&gt;
+&lt;p&gt;理想状态下，只有应用核心知道使用了哪个类库&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ji-ben-lei-ku-de-ren-wu&quot;&gt;基本类库的任务&lt;&#x2F;h3&gt;
+&lt;ul&gt;
+&lt;li&gt;浏览器兼容性&lt;&#x2F;li&gt;
+&lt;li&gt;常用的工具
+** 解析&#x2F;序列化 XML，JSON 等等
+** 对象操作
+** DOM 操作
+** Ajax 操作&lt;&#x2F;li&gt;
+&lt;li&gt;提供底层的可扩展性&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h3 id=&quot;shi-jian&quot;&gt;实践&lt;&#x2F;h3&gt;
+&lt;p&gt;我没有全部按照上面说的来实现，而是借鉴了部分&lt;a href=&quot;http:&#x2F;&#x2F;dothanhlam.files.wordpress.com&#x2F;2009&#x2F;02&#x2F;puremvc-conceptual-diagram.jpg&quot;&gt;pureMVC 的思想&lt;&#x2F;a&gt;，这样似乎更简单些。&lt;&#x2F;p&gt;
+&lt;p&gt;概述&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;一个模块对应页面的某一部分&lt;&#x2F;li&gt;
+&lt;li&gt;模块提供了所有 Mediator 可以调用的方法&lt;&#x2F;li&gt;
+&lt;li&gt;一个 Mediator 管理一个特定的模块&lt;&#x2F;li&gt;
+&lt;li&gt;模块只被 Mediator 调用，模块甚至不知道 Mediator 的存在&lt;&#x2F;li&gt;
+&lt;li&gt;Mediator 之间通过发布&#x2F;订阅的方式进行交互&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;&lt;a href=&quot;http:&#x2F;&#x2F;demo.leezhong.com&#x2F;js-arch&#x2F;&quot;&gt;demo&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;mo-kuai-ji-lei-zhe-li-shi-yong-liao-john-resig-de-simple-javascript-inheritance&quot;&gt;模块基类(这里使用了 John Resig 的&lt;a href=&quot;http:&#x2F;&#x2F;ejohn.org&#x2F;blog&#x2F;simple-javascript-inheritance&#x2F;&quot;&gt;simple javascript inheritance&lt;&#x2F;a&gt;)&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Module &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Class&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.extend&lt;&#x2F;span&gt;&lt;span&gt;({
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;init&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;.name;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;tpl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;tpl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;? &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;tpl&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.text&lt;&#x2F;span&gt;&lt;span&gt;() &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;#&amp;#39; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;.name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;-tpl&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.text&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$el &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;el &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;? &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;el&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;#&amp;#39; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;obj&lt;&#x2F;span&gt;&lt;span&gt;.name);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.data &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;{};
+&lt;&#x2F;span&gt;&lt;span&gt;  },
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;getTplData&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.data.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;tplData&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;  },
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;renderTpl&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.data.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;tplData &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;使用了Mustache模板引擎
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;html &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Mustache&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.to_html&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;tpl&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$el&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.html&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;html&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  },
+&lt;&#x2F;span&gt;&lt;span&gt;});
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;h3 id=&quot;lie-biao-mo-kuai&quot;&gt;列表模块&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;List &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Module&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.extend&lt;&#x2F;span&gt;&lt;span&gt;({
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; Module 提供方法供Mediator调用
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;hl&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;$item&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;lock&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$lis &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$el&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.find&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;li&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$lis&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.each&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.removeClass&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hl&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;lock&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.data&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;locked&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;false&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;      }
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;!&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;lock &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;amp;&amp;amp; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.data&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;locked&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.addClass&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hl&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;      }
+&lt;&#x2F;span&gt;&lt;span&gt;    });
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;if &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;lock&lt;&#x2F;span&gt;&lt;span&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$item&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.data&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;locked&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$item&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.addClass&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hl&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  },
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;unhl&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;$item&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$item&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.removeClass&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;hl&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;  },
+&lt;&#x2F;span&gt;&lt;span&gt;});
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;前面说了模块就是准备好方法，让 Mediator 调用。&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;lie-biao-mediator&quot;&gt;列表 Mediator&lt;&#x2F;h3&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;ListMediator &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Mediator&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.extend&lt;&#x2F;span&gt;&lt;span&gt;({
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;init&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 初始化Module
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;module &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= new &lt;&#x2F;span&gt;&lt;span&gt;List({
+&lt;&#x2F;span&gt;&lt;span&gt;      name: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;list&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    });
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 绑定事件
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;module&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$el
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.delegate&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;li&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;click&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;e&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;e&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.preventDefault&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 调用Module方法
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;module&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.hl&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;), &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;true&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;var &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;index &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;module&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$el&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.find&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;li&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.index&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;));
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 发布消息，所有监听该事件的方法将被触发
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 参数为object，方便以后添加键值对
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.publish&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;module&lt;&#x2F;span&gt;&lt;span&gt;.name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;:click&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, {
+&lt;&#x2F;span&gt;&lt;span&gt;          content: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;module&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.getTplData&lt;&#x2F;span&gt;&lt;span&gt;().&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;list&lt;&#x2F;span&gt;&lt;span&gt;[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;index&lt;&#x2F;span&gt;&lt;span&gt;].content,
+&lt;&#x2F;span&gt;&lt;span&gt;        });
+&lt;&#x2F;span&gt;&lt;span&gt;      })
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.delegate&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;li&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;mouseover&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;e&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;module&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.hl&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;));
+&lt;&#x2F;span&gt;&lt;span&gt;      })
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.delegate&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;li&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;mouseout&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;e&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;module&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.unhl&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;));
+&lt;&#x2F;span&gt;&lt;span&gt;      });
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 获取源数据，使用了$.proxy，创建特定的context
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.getJSON&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;data.json&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;      &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.proxy&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;function &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;) {
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 调用Module的方法
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;module&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.renderTpl&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 发布数据已载入消息
+&lt;&#x2F;span&gt;&lt;span&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.publish&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;self&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;module&lt;&#x2F;span&gt;&lt;span&gt;.name &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;:loaded&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;data&lt;&#x2F;span&gt;&lt;span&gt;);
+&lt;&#x2F;span&gt;&lt;span&gt;      }, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;this&lt;&#x2F;span&gt;&lt;span&gt;)
+&lt;&#x2F;span&gt;&lt;span&gt;    );
+&lt;&#x2F;span&gt;&lt;span&gt;  },
+&lt;&#x2F;span&gt;&lt;span&gt;});
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;可以把模块想像成 Model，Mediator 想像成 Controller，这样就实现了高内聚，低耦合。每一个单元(模块+Mediator)都可以单独使用，也可以被移除，而不影响现有架构。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;http:&#x2F;&#x2F;demo.leezhong.com&#x2F;js-arch&#x2F;&quot;&gt;demo&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;lzyy&#x2F;js-arch&quot;&gt;source&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
+    </channel>
+</rss>

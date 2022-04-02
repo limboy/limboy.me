@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+API的返回值形式
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/api-return-format/">
+
+<meta name="twitter:title" content="API的返回值形式">
+<meta property="og:title" content="API的返回值形式">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;api-return-format&#x2F;">API的返回值形式</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-05-04</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>假设我们有一个 rest 服务，该 rest 服务会返回 json 格式的信息，以 twitter 为例：访问<code>http://api.twitter.com/1/users/show.json?user_id=12345</code>会得到如下结果：</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span>{
+</span><span>	id_str: </span><span style="color:#839c00;">&quot;12345&quot;
+</span><span>	is_translator: </span><span style="color:#f07219;">false
+</span><span>	following: </span><span style="color:#f07219;">null
+</span><span>	profile_text_color: </span><span style="color:#839c00;">&quot;333333&quot;
+</span><span>	description: </span><span style="color:#839c00;">&quot;ID 12345&quot;
+</span><span>	status: {
+</span><span>		coordinates: </span><span style="color:#f07219;">null
+</span><span>		text: </span><span style="color:#839c00;">&quot;Follow @h</span><span style="font-style:italic;color:#c82829;">a
+</span><span>	}
+</span><span>	</span><span style="color:#8e908c;">//...
+</span><span>}
+</span></code></pre>
+<p>这是一个正常用户的信息，如果访问一个不存在用户，会返回类似下面的结果</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span>{
+</span><span>  request: </span><span style="color:#839c00;">&#39;/1/users/show.json?user_id=12345111&#39;</span><span>;
+</span><span>  error: </span><span style="color:#839c00;">&#39;Not found&#39;</span><span>;
+</span><span>}
+</span></code></pre>
+<p>有没有发现，两次请求只是 userid 不一样，但返回形式却截然不同，这其实也不是什么大问题，客户端只要先检查一下是否有 error 这个 key，就能知道这次请求是否出错。不过我想了个另一个方法，能让返回形式有相同的结构。</p>
+<p>借鉴了一下 http 协议，把返回结果分为 header 和 body 两部分，一个正常的请求会返回如下的信息</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span>{
+</span><span>	</span><span style="color:#839c00;">&#39;status&#39; </span><span style="color:#8959a8;">=&gt; </span><span style="color:#839c00;">&#39;ok&#39;</span><span>,
+</span><span>	</span><span style="color:#839c00;">&#39;content&#39; </span><span style="color:#8959a8;">=&gt;
+</span><span>	{
+</span><span>		</span><span style="color:#839c00;">&#39;blah&#39; </span><span style="color:#8959a8;">=&gt; </span><span style="color:#839c00;">&#39;blah&#39;</span><span>,
+</span><span>		</span><span style="color:#8e908c;">//...
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>status 相当于 http 的 status 头信息，通过检查该信息可以知道请求是否正常，如果是'ok'则为正常，如为'error'则不正常，如果返回出错，则会在 content 字段里包含足够的错误信息</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span>{
+</span><span>	</span><span style="color:#839c00;">&#39;status&#39; </span><span style="color:#8959a8;">=&gt; </span><span style="color:#839c00;">&#39;error&#39;</span><span>,
+</span><span>	</span><span style="color:#839c00;">&#39;content&#39; </span><span style="color:#8959a8;">=&gt;
+</span><span>	{
+</span><span>		</span><span style="color:#839c00;">&#39;request&#39; </span><span style="color:#8959a8;">=&gt; </span><span style="color:#839c00;">&#39;http://...&#39;</span><span>,
+</span><span>		</span><span style="color:#839c00;">&#39;code&#39; </span><span style="color:#8959a8;">=&gt; </span><span style="color:#f07219;">404</span><span>,
+</span><span>		</span><span style="color:#839c00;">&#39;message&#39; </span><span style="color:#8959a8;">=&gt; </span><span style="color:#839c00;">&#39;file not found&#39;</span><span>,
+</span><span>	}
+</span><span>}
+</span></code></pre>
+<p>这里只包含了最基本的 3 项信息，request 指代的是本次请求的 url，code 类似 http 状态码，message 指代出错信息。</p>
+<p>这样是不是更优雅些？</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

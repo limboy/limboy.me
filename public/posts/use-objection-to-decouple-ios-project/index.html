@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+使用objection来模块化开发iOS项目
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/use-objection-to-decouple-ios-project/">
+
+<meta name="twitter:title" content="使用objection来模块化开发iOS项目">
+<meta property="og:title" content="使用objection来模块化开发iOS项目">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;use-objection-to-decouple-ios-project&#x2F;">使用objection来模块化开发iOS项目</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2014-04-15</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p><a href="https://github.com/atomicobject/objection">objection</a> 是一个轻量级的依赖注入框架，受<a href="https://code.google.com/p/google-guice/">Guice</a>的启发，<a href="http://www.google.com/wallet/">Google Wallet</a> 也是使用的该项目。「依赖注入」是面向对象编程的一种设计模式，用来减少代码之间的耦合度。通常基于接口来实现，也就是说不需要 new 一个对象，而是通过相关的控制器来获取对象。2013 年最火的 PHP 框架 <a href="http://laravel.com">laravel</a> 就是其中的典型。</p>
+<p>假设有以下场景：ViewControllerA.view 里有一个 button，点击之后 push 一个 ViewControllerB，最简单的写法类似这样：</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)viewDidLoad
+</span><span>{
+</span><span>    [</span><span style="color:#c82728;">super </span><span style="color:#4271ae;">viewDidLoad</span><span>];
+</span><span>    UIButton </span><span style="color:#3e999f;">*</span><span>button </span><span style="color:#3e999f;">= </span><span>[UIButton </span><span style="color:#4271ae;">buttonWithType:UIButtonTypeSystem</span><span>];
+</span><span>    button.</span><span style="color:#c82728;">frame </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">CGRectMake</span><span style="color:#4271ae;">(</span><span style="color:#f07219;">100</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">100</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">100</span><span style="color:#4271ae;">, </span><span style="color:#f07219;">30</span><span style="color:#4271ae;">)</span><span>;
+</span><span>    [button </span><span style="color:#4271ae;">setTitle:</span><span style="color:#839c00;">@&quot;Button&quot; </span><span style="color:#4271ae;">forState:UIControlStateNormal</span><span>];
+</span><span>    [button </span><span style="color:#4271ae;">addTarget:</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">action:</span><span style="color:#8959a8;">@selector</span><span style="color:#4271ae;">(buttonTapped) forControlEvents:UIControlEventTouchUpInside</span><span>];
+</span><span>    [</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">view</span><span> addSubview</span><span style="color:#3e999f;">:</span><span>button];
+</span><span>}
+</span><span>
+</span><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)buttonTapped
+</span><span>{
+</span><span>	ViewControllerB </span><span style="color:#3e999f;">*</span><span>vc </span><span style="color:#3e999f;">= </span><span>[[ViewControllerB </span><span style="color:#4271ae;">alloc</span><span>] init];
+</span><span>    [</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">navigationController</span><span> pushViewController</span><span style="color:#3e999f;">:</span><span>vc animated</span><span style="color:#3e999f;">:</span><span style="color:#f07219;">YES</span><span>];
+</span><span>}
+</span></code></pre>
+<p>这样写的一个问题是，ViewControllerA 需要 import ViewControllerB，也就是对 ViewControllerB 产生了依赖。依赖的东西越多，维护起来就越麻烦，也容易出现循环依赖的问题，而 objection 正好可以处理这些问题。</p>
+<p>实现方法是：先定义一个协议(protocol)，然后通过 objection 来注册这个协议对应的 class，需要的时候，可以获取该协议对应的 object。对于使用方无需关心到底使用的是哪个 Class，反正该有的方法、属性都有了(在协议中指定)。这样就去除了对某个特定 Class 的依赖。也就是通常所说的「面向接口编程」。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>JSObjectionInjector </span><span style="color:#3e999f;">*</span><span>injector </span><span style="color:#3e999f;">= </span><span>[JSObjection </span><span style="color:#4271ae;">defaultInjector</span><span>]; </span><span style="color:#8e908c;">// [1]
+</span><span>UIViewController </span><span style="color:#3e999f;">&lt;</span><span>ViewControllerAProtocol</span><span style="color:#3e999f;">&gt; *</span><span>vc </span><span style="color:#3e999f;">= </span><span>[injector </span><span style="color:#4271ae;">getObject:</span><span style="color:#8959a8;">@protocol</span><span style="color:#4271ae;">(ViewControllerAProtocol)</span><span>]; </span><span style="color:#8e908c;">// [2]
+</span><span>vc.</span><span style="color:#c82728;">backgroundColor </span><span style="color:#3e999f;">= </span><span>[UIColor </span><span style="color:#4271ae;">lightGrayColor</span><span>]; </span><span style="color:#8e908c;">// [3]
+</span><span>UINavigationController </span><span style="color:#3e999f;">*</span><span>nc </span><span style="color:#3e999f;">= </span><span>[[UINavigationController </span><span style="color:#4271ae;">alloc</span><span>] initWithRootViewController</span><span style="color:#3e999f;">:</span><span>vc];
+</span><span style="color:#c82728;">self</span><span>.</span><span style="color:#c82728;">window</span><span>.</span><span style="color:#c82728;">rootViewController </span><span style="color:#3e999f;">=</span><span> nc;
+</span></code></pre>
+<ul>
+<li>[1] 获取默认的 injector，这个 injector 已经注册过<code>ViewControllerAProtocol</code>了。</li>
+<li>[2] 获取<code>ViewControllerAProtocol</code>对应的 Object。</li>
+<li>[3] 拿到 VC 后，设置它的某些属性，比如这里的 backgroundColor，因为在<code>ViewControllerAProtocol</code>里有定义这个属性，所以不会有 warning。</li>
+</ul>
+<p>可以看到这里没有引用 ViewControllerA。再来看看这个<code>ViewControllerAProtocol</code>是如何注册到 injector 中的，这里涉及到了<code>Module</code>，对 Protocol 的注册都是在 Module 中完成的。Module 只要继承<code>JSObjectionModule</code>这个 Class 即可。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@interface </span><span>ViewControllerAModule : </span><span style="color:#839c00;">JSObjectionModule
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span style="color:#8959a8;">@implementation </span><span>ViewControllerAModule
+</span><span>- (</span><span style="color:#8959a8;">void</span><span>)</span><span style="color:#4271ae;">configure
+</span><span>{
+</span><span>    [</span><span style="color:#c82728;">self </span><span style="color:#4271ae;">bindClass:[ViewControllerA class] toProtocol:</span><span style="color:#8959a8;">@protocol</span><span style="color:#4271ae;">(ViewControllerAProtocol)</span><span>];
+</span><span>}
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<p>绑定操作是在<code>configure</code>方法里进行的，这个方法在被添加到 injector 里时会被自动触发。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>JSObjectionInjector </span><span style="color:#3e999f;">*</span><span>injector </span><span style="color:#3e999f;">= </span><span>[JSObjection </span><span style="color:#4271ae;">defaultInjector</span><span>]; </span><span style="color:#8e908c;">// [1]
+</span><span>injector </span><span style="color:#3e999f;">=</span><span> injector </span><span style="color:#3e999f;">? : </span><span>[JSObjection </span><span style="color:#4271ae;">createInjector</span><span>]; </span><span style="color:#8e908c;">// [2]
+</span><span>injector </span><span style="color:#3e999f;">= </span><span>[injector </span><span style="color:#4271ae;">withModule:[[ViewControllerAModule alloc] init]</span><span>]; </span><span style="color:#8e908c;">// [3]
+</span><span>[JSObjection </span><span style="color:#4271ae;">setDefaultInjector:injector</span><span>]; </span><span style="color:#8e908c;">// [4]
+</span></code></pre>
+<ul>
+<li>[1] 获取默认的 injector</li>
+<li>[2] 如果默认的 injector 不存在，就新建一个</li>
+<li>[3] 往这个 injector 里注册我们的 Module</li>
+<li>[4] 设置该 injector 为默认的 injector</li>
+</ul>
+<p>这段代码可以直接放到 <code>+ (void)load</code>里执行，这样就可以避免在 AppDelegate 里 import 各种 Module。</p>
+<p>因为我们无法直接获得对应的 Class，所以必须要在协议里定义好对外暴露的方法和属性，然后该 Class 也要实现该协议。</p>
+<pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8959a8;">@protocol </span><span>ViewControllerAProtocol &lt;NSObject&gt;
+</span><span style="color:#8959a8;">@property </span><span>(</span><span style="color:#8959a8;">nonatomic</span><span>) </span><span style="color:#c99e00;">NSUInteger</span><span> currentIndex;
+</span><span style="color:#8959a8;">@property </span><span>(</span><span style="color:#8959a8;">nonatomic</span><span>) UIColor </span><span style="color:#3e999f;">*</span><span>backgroundColor;
+</span><span style="color:#8959a8;">@end
+</span><span>
+</span><span style="color:#8959a8;">@interface </span><span>ViewControllerA : </span><span style="color:#839c00;">UIViewController </span><span>&lt;ViewControllerAProtocol&gt;
+</span><span style="color:#8959a8;">@end
+</span></code></pre>
+<p>通过 objection 实现依赖注入后，就能更好地实现 SRP(Single Responsibility Principle)，代码更简洁，心情更舒畅，生活更美好。拿 Pinterest 来说，下面的页面就可以划分为 3 个 Section。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;use-objection-to-decouple-ios-project&#x2F;demo_4_objection.png"
+    srcset="&#x2F;posts&#x2F;use-objection-to-decouple-ios-project&#x2F;demo_4_objection.png 160w,&#x2F;posts&#x2F;use-objection-to-decouple-ios-project&#x2F;demo_4_objection.png 160w"
+    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+<p>各个 Section 可以由不同的人负责，然后串到一起就行，也能一定程度地避免 MVC(Mess View Controller)的出现。</p>
+<p>总体来说，这个 lib 还是挺靠谱的，已经维护了两年多，也有一些项目在用，对于提高开发成员的效率也会有不少的帮助，可以考虑尝试下。</p>
+<p>---- update (2014-04-30) ----</p>
+<p>写了个壁纸的 demo，<a href="https://github.com/limboy/bizhi">https://github.com/limboy/bizhi</a></p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

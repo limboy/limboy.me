@@ -393,12 +393,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .nav-link:hover {
   opacity: 1;
 }
-.footer-link:hover {
-  -webkit-text-decoration-line: underline;
-          text-decoration-line: underline;
-  -webkit-text-decoration-color: #9ca3af;
-          text-decoration-color: #9ca3af;
-}
 .absolute {
   position: absolute;
 }
@@ -424,8 +418,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mb-2 {
   margin-bottom: 0.5rem;
 }
+.mt-2 {
+  margin-top: 0.5rem;
+}
 .mt-6 {
   margin-top: 1.5rem;
+}
+.-mb-2 {
+  margin-bottom: -0.5rem;
 }
 .mt-4 {
   margin-top: 1rem;
@@ -438,9 +438,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .mb-8 {
   margin-bottom: 2rem;
-}
-.-mb-2 {
-  margin-bottom: -0.5rem;
 }
 .mb-4 {
   margin-bottom: 1rem;
@@ -523,6 +520,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 .overflow-hidden {
   overflow: hidden;
 }
+.text-ellipsis {
+  text-overflow: ellipsis;
+}
+.whitespace-nowrap {
+  white-space: nowrap;
+}
 .rounded-lg {
   border-radius: 0.5rem;
 }
@@ -534,6 +537,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .border-t {
   border-top-width: 1px;
+}
+.border-b {
+  border-bottom-width: 1px;
 }
 .border-t-\[3px\] {
   border-top-width: 3px;
@@ -555,6 +561,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 .bg-black {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
+}
+.bg-gray-50 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
 .bg-nav-color {
   background-color: var(--nav-color);
@@ -596,6 +606,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-left: 0.75rem;
   padding-right: 0.75rem;
 }
+.pb-1 {
+  padding-bottom: 0.25rem;
+}
 .pb-\[2px\] {
   padding-bottom: 2px;
 }
@@ -617,13 +630,13 @@ Ensure the default browser behavior of the `hidden` attribute.
   font-size: 0.875rem;
   line-height: 1.25rem;
 }
-.text-lg {
-  font-size: 1.125rem;
-  line-height: 1.75rem;
-}
 .text-3xl {
   font-size: 1.875rem;
   line-height: 2.25rem;
+}
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 .font-medium {
   font-weight: 500;
@@ -634,6 +647,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 .leading-tight {
   line-height: 1.25;
 }
+.text-gray-600 {
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity));
+}
+.text-gray-400 {
+  --tw-text-opacity: 1;
+  color: rgb(156 163 175 / var(--tw-text-opacity));
+}
 .text-gray-500 {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity));
@@ -641,10 +662,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-gray-700 {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity));
-}
-.text-gray-400 {
-  --tw-text-opacity: 1;
-  color: rgb(156 163 175 / var(--tw-text-opacity));
 }
 .text-violet-700 {
   --tw-text-opacity: 1;
@@ -658,9 +675,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .opacity-90 {
   opacity: 0.9;
-}
-.opacity-20 {
-  opacity: 0.2;
 }
 .transition-all {
   transition-property: all;
@@ -914,11 +928,9 @@ hr.separator:last-child {
   color: rgb(243 244 246 / var(--tw-text-opacity));
 }
 
-@media (min-width: 640px) {
-
-  .sm\:gap-4 {
-    gap: 1rem;
-  }
+.hover\:underline:hover {
+  -webkit-text-decoration-line: underline;
+          text-decoration-line: underline;
 }
 
 @media (min-width: 768px) {

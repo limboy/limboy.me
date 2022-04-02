@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+一次失败的上线
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/learned-from-an-unsuccessful-project/">
+
+<meta name="twitter:title" content="一次失败的上线">
+<meta property="og:title" content="一次失败的上线">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;learned-from-an-unsuccessful-project&#x2F;">一次失败的上线</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-12-04</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>由于上一次通知的上线引来用户的一些不满，所以产品马不停蹄，在一轮又一轮的需求讨论中设计了下一版通知，希望尽快上线，我负责通知的后端实现，当时看到图后，有点小小的崩溃：时间太紧，难度很大，很多地方不属于通知。但是既然定下来了，就只能咬咬牙，拼一拼了。</p>
+<p>于是接下来的 9 天，变成了一段难忘的回忆，基本上都是 3 点以后回家，第二天赶上免费的午餐后，继续 coding。最后一天还剩了些 bug，索性就不回家了，就这样勉强完成了新版的通知，但随后又被推翻，当时确实很愤怒，但细细想想确实有不少地方还不够到位，尤其是新通知的架构，作为责任人之一，以下是我的一些感悟和反思。</p>
+<h3 id="mei-you-bu-ke-neng">没有不可能</h3>
+<p>阿迪同学让这句话在全世界流行，但越是常见的东西，越容易熟视无睹。我们相信没有不可能，因为有太多的案例可以证明这句话，但要身体的每一个细胞都坚信这句话就很难了。只有在自己做了一些让后来的自己都不得不佩服的事情时，才会把这句话刻在心里。这样的事对我来说还太少了。</p>
+<h3 id="hao-de-dui-you-hen-guan-jian">好的队友很关键</h3>
+<p>产品同学(ecvip)会把每个设计和交互讲解地很清楚，会陪着我们熬到很晚。前端同学(Dang &amp; 骁哥)总是能高效地完成页面，思路很清晰，我总是觉得自己在拖他们的后腿。后端同学也就是我，估计是这个木桶最短的那块。还有就是 CTO 申申同学并没有过于责备这次的失败，而是要请我们撮一顿，那个感动啊。</p>
+<h3 id="xu-qiu-shi-hui-bian-hua-de">需求是会变化的</h3>
+<p>我这次就是栽倒这上了，为了满足当前的需求而设计了对应的架构，导致后来需求发生变化时很难应对。在设计时就应该考虑到将来的可变性，尽量灵活。</p>
+<h3 id="duo-xiang-bie-ren-qing-jiao">多向别人请教</h3>
+<p>由于时间比较紧，加上自己理解上的偏差，在设计后端架构时没有与其他同学进行沟通，就直接进行代码实现。写着写着就觉得有点奇怪，但已经这样了，就只能继续按着现在的架构走。等到后来杨昆同学 review 代码时才发现：我靠，怎么成了这样。</p>
+<h3 id="sheng-ji-zi-ji-de-ji-neng">升级自己的技能</h3>
+<p>海贼王里，每一次战斗，大家的技能都会有提升，越是大的战斗，敌人越强劲，技能升级地越高。在现实中，应该是在大的战役前做好充足的技能储备，打完战役后，总结哪些地方还需要继续提升和完善，接下来再有目的地去改进，避免在下次的战役中出现同样的问题。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;learned-from-an-unsuccessful-project&#x2F;little-miss-sunshine1.jpg"
+    srcset="&#x2F;posts&#x2F;learned-from-an-unsuccessful-project&#x2F;little-miss-sunshine1.jpg 350w,&#x2F;posts&#x2F;learned-from-an-unsuccessful-project&#x2F;little-miss-sunshine1.jpg 350w"
+    sizes="(max-width: 350px) 100vw, 350px" width="350" /></p>
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;learned-from-an-unsuccessful-project&#x2F;little-miss-sunshine2.jpg"
+    srcset="&#x2F;posts&#x2F;learned-from-an-unsuccessful-project&#x2F;little-miss-sunshine2.jpg 350w,&#x2F;posts&#x2F;learned-from-an-unsuccessful-project&#x2F;little-miss-sunshine2.jpg 350w"
+    sizes="(max-width: 350px) 100vw, 350px" width="350" /></p>
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/essay/">essay</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

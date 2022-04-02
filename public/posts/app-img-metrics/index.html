@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+App 图片体验指标
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/app-img-metrics/">
+
+<meta name="twitter:title" content="App 图片体验指标">
+<meta property="og:title" content="App 图片体验指标">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;app-img-metrics&#x2F;">App 图片体验指标</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2017-09-27</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>网络图片作为 App 的一个重要组成，自然也需要一些关键指标来衡量，有了指标方便看到优化的效果。不过目前貌似没有比较广泛采用的指标，跟其他公司交流时，当聊到 Crash 率，大家都有统一的认知，但聊到图片体验，就很难进行比较了：我们这块一直都不错，用户反馈也不多。但事实可能并不如此。</p>
+<p>为什么图片的指标不好定？因为环境比较复杂，边界也不太好确定（不像 Crash，判断条件非常清晰）。</p>
+<ul>
+<li>网速比较慢，图片出不来或出来得很慢正不正常。</li>
+<li>图片本身就比较大，下载过程自然就慢了，耗时长一点也正常。</li>
+<li>即使下载速度比较快，如果是单线程的话，显示上也是一张一张出来，体验并不好。</li>
+<li>有时图片即使下载成功了，也有可能无法显示。</li>
+<li>···</li>
+</ul>
+<p>如果把图片从请求到渲染完成作为一个任务，这个任务的成功跟很多因素有关，但核心阻碍只有一个，就是「图片请求」，其他可优化的空间不多或效果不那么明显，且相对成熟（比如后台多线程下载，滑出屏幕时取消下载等）。因此图片体验的指标可以缩小范围为「图片请求指标」。</p>
+<p>跟图片请求最相关的几个因素：</p>
+<ul>
+<li>CDN</li>
+<li>客户端网络状况</li>
+<li>图片大小</li>
+<li>图片格式</li>
+<li>请求协议（http/1.1 http/2）</li>
+</ul>
+<p>这些就好像汽车的离合、油门、刹车可以供我们控制，也需要一个仪表盘来看到控制的效果。那这个仪表盘里显示的是什么？</p>
+<p>我们希望显示的内容能真实地体现用户的图片体验。在这个前提下，很多因素就不需要考虑了，比如网络环境、机型等。因为同样一张图，如果 3 秒后还没有出来，无论是 wifi 还是 2G，这个体验就是不好的。</p>
+<p>接下来再来看图片请求会有哪些结果，很简单，请求成功和请求失败。请求失败比较好办，失败就是失败了，记录一下即可。那么请求成功该怎么细分呢？</p>
+<p>我们知道在 web 时代，如果页面 3 秒没有出来，用户离开网页的可能性就会高很多。在图片领域没有相对权威的值，因此结合真实体验，拟定了以下的体验指标：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>图片请求失败率:
+</span><span>	图片请求失败次数 / 图片请求次数
+</span><span>
+</span><span>图片请求耗时：
+</span><span>	优: 耗时在 (0, 1] 的次数 / 图片请求次数
+</span><span>	良: 耗时在 (1, 2] 的次数 / 图片请求次数
+</span><span>	中: 耗时在 (2, 3] 的次数 / 图片请求次数
+</span><span>	差: 耗时在 (3, ∞) 的次数 / 图片请求次数
+</span></code></pre>
+<p>由于真实环境下图片请求次数会很大，因此可以设置采样率，比如 <code>1/1000</code>，也就是 1000 次图片请求记录 1 次，将样本量缩到恰当的范围。</p>
+<p>有了这 5 份数据，对于线上的图片体验就能有一定的了解了，接下来可以针对每份数据进行不同维度的数据聚合，比如：城市、网络类型、页面 URL、error_code、CDN 等。如果某个城市的图片访问出了问题，就能很快知道，或者某个 CDN 调整也能快速定位。</p>
+<p>同时可以对每份数据的前 N 位 Top 用户进行记录，因为有可能某几个用户发生异常，贡献了大部分的数据。</p>
+<p>在这些指标的基础上，可以再从图片大小、尺寸、CDN、网络请求等维度进行优化，方便验证效果。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/ios/">iOS</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

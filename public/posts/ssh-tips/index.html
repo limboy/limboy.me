@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+SSH小技巧
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/ssh-tips/">
+
+<meta name="twitter:title" content="SSH小技巧">
+<meta property="og:title" content="SSH小技巧">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;ssh-tips&#x2F;">SSH小技巧</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2010-08-28</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>参考：
+<a href="http://blog.ksplice.com/2010/08/six-things-i-wish-mom-told-me-about-ssh/">Six Things I wish Mom told me(about ssh)</a>
+<a href="http://troy.jdmz.net/rsync/index.html">Using Rsync and Ssh</a></p>
+<p>用过 linux 的，对 SSH 应该就比较熟悉了，但有些技巧可能你未必知道。</p>
+<h3 id="lian-jie-cheng-gong-hou-yun-xing-ming-ling">连接成功后运行命令</h3>
+<p>我们都知道可以通过 SSH 获取远程 shell，然后运行命令。如果只想运行单个命令的话，直接把命令附加在 SSH 命令之后即可，如</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">wdaher@rocksteady:~$</span><span style="color:#4271ae;"> ssh bebop uname</span><span style="color:#f07219;"> -a
+</span><span style="color:#c82728;">Linux</span><span style="color:#4271ae;"> bebop 2.6.32-24-generic </span><span style="color:#8e908c;">#39-Ubuntu SMP Wed Jul 28 05:14:15 UTC 2010 x86_64 GNU/Linux
+</span></code></pre>
+<p>这个最好结合无须输入密码的 SSH 登录。如果想获取 python 版本，直接&quot;ssh hostname python -V&quot;</p>
+<p>但有些命令可能会报错，如&quot;top&quot;</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">wdaher@rocksteady:~$</span><span style="color:#4271ae;"> ssh bebop top
+</span><span style="color:#c82728;">TERM</span><span style="color:#4271ae;"> environment variable not set.
+</span></code></pre>
+<p>这时只需加上&quot;-t&quot;参数就行了。</p>
+<p>这里我们执行 ssh 连接时并没有指定具体的主机名(ip)和用户，而只是&quot;bebop&quot;，这是如何做到的呢？且看下文</p>
+<h3 id="shi-yong-bie-ming">使用别名</h3>
+<p>假如在一个主机上为不同用户分别开通了不同的 ssh 账号，连接时就得这样</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">wdaher@rocksteady:~$</span><span style="color:#4271ae;"> ssh</span><span style="color:#f07219;"> -p</span><span style="color:#4271ae;"> 2222 bob.example.com
+</span><span style="color:#c82728;">wdaher@rocksteady:~$</span><span style="color:#4271ae;"> ssh</span><span style="color:#f07219;"> -p</span><span style="color:#4271ae;"> 8183 waseem@alice.example.com
+</span><span style="color:#c82728;">wdaher@rocksteady:~$</span><span style="color:#4271ae;"> ssh</span><span style="color:#f07219;"> -p</span><span style="color:#4271ae;"> 31337</span><span style="color:#f07219;"> -l</span><span style="color:#4271ae;"> waseemio wsd.example.com
+</span></code></pre>
+<p>很麻烦，而且端口或者其他参数有变动的话，不一定记得住。其实只要配置一下.ssh/config 文件就可以了。</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>Host bob
+</span><span>    HostName bob.example.com
+</span><span>    Port 2222
+</span><span>    User wdaher
+</span><span>
+</span><span>Host alice
+</span><span>    HostName alice.example.com
+</span><span>    Port 8183
+</span><span>    User waseem
+</span><span>
+</span><span>Host self
+</span><span>    HostName wsd.example.com
+</span><span>    Port 31337
+</span><span>    User waseemio
+</span></code></pre>
+<p>连接时，就变成这样了</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">wdaher@rocksteady:~$</span><span style="color:#4271ae;"> ssh bob
+</span><span style="color:#c82728;">wdaher@rocksteady:~$</span><span style="color:#4271ae;"> ssh alice
+</span><span style="color:#c82728;">wdaher@rocksteady:~$</span><span style="color:#4271ae;"> ssh self
+</span></code></pre>
+<p>是不是很方便，如果 SSH 的参数改变的话，修改配置文件就行了，命令不变。</p>
+<h3 id="duan-kou-zhuan-fa">端口转发</h3>
+<p>假设有这么个情况：你已下班回家，这时想要查看公司内网(analytics)的某个 web 页，但只能 SSH 到自己在公司的电脑(desktop)，desktop 和 analytics 在一个局域网。</p>
+<p>先来看一段命令</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">ssh</span><span style="color:#4271ae;"> desktop</span><span style="color:#f07219;"> -L</span><span style="color:#4271ae;"> 8080:desktop:80
+</span></code></pre>
+<p>这段命令表示的是 ssh 连到 desktop 后，转发本地 8080 端口到 desktop 的 80 端口，这时，如果访问&quot;http://localhost:8080&quot;，就会转发到 desktop 的 80 端口。这样的话，把 desktop:80 换成 analytics:80 不就大功告成了吗</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">ssh</span><span style="color:#4271ae;"> desktop</span><span style="color:#f07219;"> -L</span><span style="color:#4271ae;"> 8080:analytics:80
+</span></code></pre>
+<p>这样访问本地的 8080 端口，就会转到 analytics 的 80 端口，通过 desktop 这个跳板。</p>
+<p>更加一劳永逸的方法是使用-D 参数，将 desktop 变成一个<a href="http://baike.baidu.com/view/490489.htm?fr=ala0_1">socks5</a>代理服务器(对这个-D 命令，大家应该都很熟悉了吧)，然后在浏览器中配置代理为&quot;localhost:8080&quot;</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">ssh</span><span style="color:#4271ae;"> desktop</span><span style="color:#f07219;"> -D</span><span style="color:#4271ae;"> 8080 desktop
+</span></code></pre>
+<p>这样所有的浏览器访问都会通过 desktop 进行转发，也就是说直接访问 http://analytics 就可以了。(analytics 地址在 hosts 里配置，如 192.168.1.110 analytics)</p>
+<h3 id="shi-yong">使用&quot;~&quot;</h3>
+<p>&quot;~&quot;(不包括引号)是 ssh 保留字符，在新行输入&quot;~&quot;后，可以配合很多键，其中最常用的就是&quot;~.&quot;和&quot;~^Z&quot;(Ctrl+Z)</p>
+<p>&quot;~.&quot;会终止 ssh 连接，如果中断了连接，又不想等 ssh session 过期，就可以使用这个快捷键。</p>
+<p>&quot;~^Z&quot;会把当前的 ssh 连接放到后台，等完成了其他工作后，再把这个连接取出来。</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">wdaher@rocksteady:~$</span><span style="color:#4271ae;"> ssh bebop
+</span><span style="color:#c82728;">wdaher@bebop:~$</span><span style="color:#4271ae;"> sleep 10000
+</span><span style="color:#c82728;">wdaher@bebop:~$ ~</span><span style="color:#4271ae;">^Z </span><span style="color:#8959a8;">[</span><span style="color:#4271ae;">suspend ssh</span><span style="color:#8959a8;">]
+</span><span>
+</span><span style="color:#c82728;">[1]+</span><span style="color:#4271ae;">  Stopped                 ssh bebop
+</span><span style="color:#c82728;">wdaher@rocksteady:~$ </span><span style="color:#8e908c;"># Do something else
+</span><span style="color:#c82728;">wdaher@rocksteady:~$</span><span style="color:#4271ae;"> fg </span><span style="color:#8e908c;"># and you&#39;re back!
+</span></code></pre>
+<h3 id="tong-guo-authorized-keys-zhi-ding-deng-lu-hou-yao-zhi-xing-de-ming-ling">通过 authorized_keys 指定登录后要执行的命令</h3>
+<p>这个跟前面提到的&quot;连接成功后运行命令&quot;不一样，这个命令是定义在 authorized_keys 里的，ssh 连上后，只能执行该命令，并且执行完后立即退出。</p>
+<p>先看看正常的 authorized_keys</p>
+<pre>
+ssh-dss AAAAB3NzaC1kc3MAAAEBAKYJenaYvMG3nHwWxKwlWLjHb77CT2hXwmC8Ap+fG8wjlaY/9t4u
+A+2qx9JNorgdrWKhHSKHokFFlWRj+qk3q+lGHS+hsXuvta44W0yD0y0sW62wrEVegz+JVmntxeYc0nDz
+5tVGfZe6ydlgomzj1bhfdpYe+BAwop8L+EMqKLS4iSacNjoPlHsmqHMnbibn3tBqJEq2QJjEPaiYj1iP
+5IaCuYBhuTKQGa+oyH3mXEif5CKdsIKBj46B0tCy0/GC7oWcUN92QdLrUyTeRJZsTWsxKpRbMliD2pBh
+4oyX/aXEf8+HZBrO5vQjDBCfTFQA+35Xrd3eTVEjkGkncI0SAeUAAAAVAMZSASmQ9Pi38mdm6oiVXD55
+Kk2rAAABAE/bA402VuCsOLg9YS0NKxugT+o4UuIjyl6b2/cMmBVWO39lWAjcsKK/zEdJbrOdt/sKsxIK
+1/ZIvtl92DLlMhci5c4tBjCODey4yjLhApjWgvX9D5OPp89qhah4zu509uNX7uH58Zw/+m6ZOLHN28mV
+5KLUl7FTL2KZ583KrcWkUA0Id4ptUa9CAkcqn/gWkHMptgVwaZKlqZ+QtEa0V2IwUDWS097p3SlLvozw
+46+ucWxwTJttCHLzUmNN7w1cIv0w/OHh5IGh+wWjV9pbO0VT3/r2jxkzqksKOYAb5CYzSNRyEwp+NIKr
+Y+aJz7myu4Unn9de4cYsuXoAB6FQ5I8AAAEBAJSmDndXJCm7G66qdu3ElsLT0Jlz/es9F27r+xrg5pZ5
+GjfBCRvHNo2DF4YW9MKdUQiv+ILMY8OISduTeu32nyA7dwx7z5M8b+DtasRAa1U03EfpvRQps6ovu79m
+bt1OE8LS9ql8trx8qyIpYmJxmzIdBQ+kzkY+9ZlaXsaU0Ssuda7xPrX4405CbnKcpvM6q6okMP86Ejjn
+75Cfzhv65hJkCjbiF7FZxosCRIuYbhEEKu2Z9Dgh+ZbsZ+9FETZVzKBs4fySA6dIw6zmGINd+KY6umMW
+yJNej2Sia70fu3XLHj2yBgN5cy8arlZ80q1Mcy763RjYGkR/FkLJ611HWIA= thisuser@thishost
+</pre>
+<p>修改之后，就是这样</p>
+<pre>
+from="10.1.1.1",command="/home/remoteuser/command" ssh-dss AAAA...
+</pre>
+<p>其实就是在最前面加了 from 和 command，from 表明从哪个 ip 连过来的，如果是用 adsl 拨号上网，ip 会经常变动，可以把这个参数去掉。command 表明连接成功后要执行的命令，可以在 command 里限制该用户可以执行的命令(别忘了加上可执行权限)，假设限制该用户只能执行 rsync 命令:</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;">#!/bin/sh
+</span><span>
+</span><span style="color:#8959a8;">case </span><span style="color:#839c00;">&quot;$</span><span style="color:#c82728;">SSH_ORIGINAL_COMMAND</span><span style="color:#839c00;">&quot; </span><span style="color:#8959a8;">in
+</span><span style="color:#3e999f;">*</span><span style="color:#f07219;">\&amp;</span><span style="color:#3e999f;">*</span><span style="color:#8959a8;">)
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;Rejected&quot;
+</span><span>;;
+</span><span style="color:#3e999f;">*</span><span style="color:#f07219;">\(</span><span style="color:#3e999f;">*</span><span style="color:#8959a8;">)
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;Rejected&quot;
+</span><span>;;
+</span><span style="color:#3e999f;">*</span><span style="color:#f07219;">\{</span><span style="color:#3e999f;">*</span><span style="color:#8959a8;">)
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;Rejected&quot;
+</span><span>;;
+</span><span style="color:#3e999f;">*</span><span style="color:#f07219;">\;</span><span style="color:#3e999f;">*</span><span style="color:#8959a8;">)
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;Rejected&quot;
+</span><span>;;
+</span><span style="color:#3e999f;">*</span><span style="color:#f07219;">\&lt;</span><span style="color:#3e999f;">*</span><span style="color:#8959a8;">)
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;Rejected&quot;
+</span><span>;;
+</span><span style="color:#3e999f;">*</span><span style="color:#f07219;">\`</span><span style="color:#3e999f;">*</span><span style="color:#8959a8;">)
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;Rejected&quot;
+</span><span>;;
+</span><span style="color:#3e999f;">*</span><span style="color:#f07219;">\|</span><span style="color:#3e999f;">*</span><span style="color:#8959a8;">)
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;Rejected&quot;
+</span><span>;;
+</span><span>rsync</span><span style="color:#f07219;">\ </span><span>--server</span><span style="color:#3e999f;">*</span><span style="color:#8959a8;">)
+</span><span style="color:#c82728;">$SSH_ORIGINAL_COMMAND
+</span><span>;;
+</span><span style="color:#3e999f;">*</span><span style="color:#8959a8;">)
+</span><span style="color:#4271ae;">echo </span><span style="color:#839c00;">&quot;Rejected&quot;
+</span><span>;;
+</span><span style="color:#8959a8;">esac
+</span></code></pre>
+<p>$SSH_ORIGINAL_COMMAND 表示的是用户实际执行的命令</p>
+<h3 id="qi-ta-ji-qiao">其他技巧</h3>
+<h3 id="jin-zhi-root-yong-hu-deng-lu">禁止 Root 用户登录</h3>
+<p>允许 root 用户登录太危险了(虽然很方便)，因为可以删除任何文件，可以在'/etc/ssh/sshd_config'里配置一下。</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#c82728;">PermitRootLogin</span><span style="color:#4271ae;"> no
+</span><span style="color:#8e908c;">#或者只允许执行有限的命令
+</span><span style="color:#c82728;">PermitRootLogin</span><span style="color:#4271ae;"> forced-commands-only
+</span></code></pre>
+<h3 id="mian-mi-ma-deng-lu">免密码登录</h3>
+<p>先用 ssh-keygen 生成一对私钥和公钥，然后把公钥添加到远程主机的 authorized_keys 里就行了</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#8e908c;">#生成私钥和公钥，默认放在~/.ssh/文件夹下，也可以自定义，提示输入passphare时，直接回车
+</span><span style="color:#8e908c;">#顺利的话就会在~/.ssh/文件夹下生成id_rsa.pub和id_rsa两个文件
+</span><span style="color:#c82728;">ssh-keygen</span><span style="color:#f07219;"> -t</span><span style="color:#4271ae;"> rsa
+</span><span>
+</span><span style="color:#8e908c;">#把id_rsa.pub上传到远程主机，方法很多，ssh-copy-id只是其中一种
+</span><span style="color:#c82728;">ssh-copy-id</span><span style="color:#4271ae;"> username@hostname
+</span><span style="color:#8e908c;">#如果id_rsa.pub在其他文件夹下
+</span><span style="color:#c82728;">ssh-copy-id</span><span style="color:#f07219;"> -i</span><span style="color:#4271ae;"> /path/to/id_rsa.pub username@hostname
+</span></code></pre>
+<p>这样下次就可以直接登录了</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

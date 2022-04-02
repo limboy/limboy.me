@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <title>
+一道面试题的思考
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/php-xor-find-num/">
+
+<meta name="twitter:title" content="一道面试题的思考">
+<meta property="og:title" content="一道面试题的思考">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;php-xor-find-num&#x2F;">一道面试题的思考</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2011-06-03</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>前几天下班途中跟同事聊到了一道面试题，大意是，给你 1-1000 个连续自然数，然后从中随机去掉两个，再打乱顺序，要求只遍历一次，求出被去掉的两个数。</p>
+<p>这题其实挺为面试者的，因为要求 1 分钟内说出解法，且不能使用计算机、纸和笔。如果之前没有遇到过类似的题目，加上面试时的紧张心情，很难能在那么短的时间里想到解决方案，至少我做不到。</p>
+<p>好在我有时间，上网看了一下，比较常见的有两种方法</p>
+<h3 id="qiu-fang-cheng-zu-de-jie">求方程组的解</h3>
+<p>遍历被打乱的数组时，计算 value 的累加值和 value 平方的累加值。结合未打乱之前的数组，这样就能得出 x+y = m 与 x<em>x+y</em>y = n 两个方程，解这组方程即可算出被去掉的两个数。这种方法比较容易理解，实现起来也比较简单</p>
+<h3 id="shi-yong-yi-huo">使用异或</h3>
+<p>这个就麻烦点了。先来说说异或的定义：两个二进制位不同的取 1。再来说说异或的两个特性：顺序无关 / 对一个数异或两次等于没有异或。顺序无关就是说异或的元素可以随意交换顺序，而不会影响结果。异或两次可以理解为+x 和-x。</p>
+<h4 id="ji-suan-chu-x-y-de-zhi">计算出 x^y 的值</h4>
+<p>首先，这两个数组(打乱前和打乱后)各自异或，也就是 1^2^...^1000，得到两个异或值。再对这两个异或值进行一次异或，这样就得到了 x^y 的指(重复部分互相抵消了)。</p>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span>// 其实就是把数组的所有元素进行异或，重复部分互相抵消
+</span><span>result = 1^2^...^1000^1^2...^1000;
+</span><span>result = 1^1^2^2...^x...^y...^1000^1000;
+</span><span>result = x^y;
+</span></code></pre>
+<h4 id="huo-qu-ji-suan-chu-de-yi-huo-zhi-de-1-suo-zai-de-wei-zhi-bing-ji-xu-yi-huo">获取计算出的异或值的 1 所在的位置，并继续异或</h4>
+<p>因为 x 和 y 是两个不同的整数，所以这两个数的异或结果，转化为二进制的话，一定在某位是 1，假设在第 3 位。也就是说如果把原始数组按第 3 位是否为 0 进行划分，就可以分成两个数组，每个数组各包含一个被抽取的数。如果打乱后的数组也按这个规则划分为两个数组，这样就得到了 4 个数组，其中两组是第 3 位为 0，另外两组是第 3 位为 1。把第 3 位为 0 的两个数组所有元素进行异或就能得到被抽取的一个数，同理也就能获得另外一个被抽取的数，于是问题解决。</p>
+<h3 id="php-de-shi-xian">PHP 的实现</h3>
+<pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
+</span><span style="color:#8e908c;">// 起始长度
+</span><span style="color:#c82728;">$length </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">10</span><span>;
+</span><span>
+</span><span style="color:#c82728;">$arr </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$arr_copy </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">range(</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$length</span><span style="color:#4271ae;">)</span><span>;
+</span><span style="color:#8e908c;">// 将要被移除的两个数
+</span><span style="color:#c82728;">$num1 </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$num2 </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span style="color:#8e908c;">// 两个数组异或再互相异或的结果
+</span><span style="color:#c82728;">$num1_num2_xor </span><span style="color:#3e999f;">= </span><span style="color:#f07219;">0</span><span>;
+</span><span style="color:#8e908c;">// 存放被pos分割的数字
+</span><span style="color:#c82728;">$arr_0 </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$arr_1 </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$arr_copy_0 </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$arr_copy_1 </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array</span><span>();
+</span><span>
+</span><span style="color:#8e908c;">// 获取一个数字转化为二进制后1所在的位置
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">get_pos</span><span>(</span><span style="color:#f07219;">$num</span><span>)
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">for</span><span>(</span><span style="color:#c82728;">$i</span><span style="color:#3e999f;">=</span><span style="color:#f07219;">0 </span><span>;</span><span style="color:#c82728;">$i</span><span style="color:#3e999f;">&lt;</span><span style="color:#f07219;">10</span><span>; </span><span style="color:#c82728;">$i</span><span style="color:#3e999f;">++</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#c82728;">$b </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">pow(</span><span style="color:#f07219;">2</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$i</span><span style="color:#4271ae;">)</span><span>;
+</span><span>		</span><span style="color:#c82728;">$rs </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$num</span><span style="color:#8959a8;">&amp;</span><span style="color:#c82728;">$b</span><span>;
+</span><span>		</span><span style="color:#8959a8;">if</span><span>(</span><span style="color:#c82728;">$rs </span><span style="color:#3e999f;">% </span><span style="color:#f07219;">2 </span><span style="color:#3e999f;">== </span><span style="color:#f07219;">0 </span><span style="color:#3e999f;">&amp;&amp; </span><span style="color:#c82728;">$rs </span><span style="color:#3e999f;">!= </span><span style="color:#f07219;">0</span><span>)
+</span><span>		{
+</span><span>			</span><span style="color:#8959a8;">return </span><span style="color:#c82728;">$i</span><span>;
+</span><span>		}
+</span><span>	}
+</span><span>	</span><span style="color:#8959a8;">return </span><span style="color:#f07219;">0</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// 进行异或计算
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">do_xor</span><span>(</span><span style="color:#f07219;">$x</span><span>, </span><span style="color:#f07219;">$y</span><span>)
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">return </span><span style="color:#c82728;">$x</span><span style="color:#3e999f;">^</span><span style="color:#c82728;">$y</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">init</span><span>()
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">global </span><span style="color:#c82728;">$arr</span><span>, </span><span style="color:#c82728;">$arr_copy</span><span>, </span><span style="color:#c82728;">$num1</span><span>, </span><span style="color:#c82728;">$num2</span><span>, </span><span style="color:#c82728;">$num1_num2_xor</span><span>, </span><span style="color:#c82728;">$length</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#c82728;">$rand_index_1 </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">mt_rand(</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$length</span><span style="color:#3e999f;">/</span><span style="color:#f07219;">2</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	</span><span style="color:#c82728;">$rand_index_2 </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">mt_rand(</span><span style="color:#c82728;">$length</span><span style="color:#3e999f;">/</span><span style="color:#f07219;">2</span><span style="color:#3e999f;">+</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$length</span><span style="color:#3e999f;">-</span><span style="color:#f07219;">1</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#8e908c;">// 获取两个随机数，然后去掉从数组中去掉它们
+</span><span>	</span><span style="color:#c82728;">$num1 </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$arr</span><span>[</span><span style="color:#c82728;">$rand_index_1</span><span>];
+</span><span>	</span><span style="color:#c82728;">$num2 </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$arr</span><span>[</span><span style="color:#c82728;">$rand_index_2</span><span>];
+</span><span>
+</span><span>	</span><span style="color:#4271ae;">unset(</span><span style="color:#c82728;">$arr</span><span style="color:#4271ae;">[</span><span style="color:#c82728;">$rand_index_1</span><span style="color:#4271ae;">])</span><span>;
+</span><span>	</span><span style="color:#4271ae;">unset(</span><span style="color:#c82728;">$arr</span><span style="color:#4271ae;">[</span><span style="color:#c82728;">$rand_index_2</span><span style="color:#4271ae;">])</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#c82728;">cacl_num1_num2_xor</span><span style="color:#4271ae;">()</span><span>;
+</span><span>	</span><span style="color:#c82728;">divide_by_pos</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">get_pos</span><span style="color:#4271ae;">(</span><span style="color:#c82728;">$num1_num2_xor</span><span style="color:#4271ae;">))</span><span>;
+</span><span>	</span><span style="color:#c82728;">get_num</span><span style="color:#4271ae;">()</span><span>;
+</span><span>
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// 获取两个数组各自异或再互相异或的结果
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">cacl_num1_num2_xor</span><span>()
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">global </span><span style="color:#c82728;">$arr</span><span>, </span><span style="color:#c82728;">$arr_copy</span><span>, </span><span style="color:#c82728;">$num1_num2_xor</span><span>;
+</span><span>	</span><span style="color:#c82728;">$arr_xor </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array_reduce(</span><span style="color:#c82728;">$arr</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;do_xor&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	</span><span style="color:#c82728;">$arr_copy_xor </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array_reduce(</span><span style="color:#c82728;">$arr_copy</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;do_xor&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#c82728;">$num1_num2_xor </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$arr_xor </span><span style="color:#3e999f;">^ </span><span style="color:#c82728;">$arr_copy_xor</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// 根据pos将两个数组再各自细分成两个数组
+</span><span style="color:#8e908c;">// 其中$arr_copy_0和$arr_copy_1各自包含了一个被抽取的数
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">divide_by_pos</span><span>(</span><span style="color:#f07219;">$pos</span><span>)
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">global </span><span style="color:#c82728;">$arr</span><span>, </span><span style="color:#c82728;">$arr_copy</span><span>, </span><span style="color:#c82728;">$arr_0</span><span>, </span><span style="color:#c82728;">$arr_1</span><span>, </span><span style="color:#c82728;">$arr_copy_0</span><span>, </span><span style="color:#c82728;">$arr_copy_1</span><span>;
+</span><span>	</span><span style="color:#c82728;">$b </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">pow(</span><span style="color:#f07219;">2</span><span style="color:#4271ae;">, </span><span style="color:#c82728;">$pos</span><span style="color:#4271ae;">)</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">foreach</span><span>(</span><span style="color:#c82728;">$arr </span><span style="color:#3e999f;">as </span><span style="color:#c82728;">$val</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#c82728;">$rs </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$val</span><span style="color:#8959a8;">&amp;</span><span style="color:#c82728;">$b</span><span>;
+</span><span>		</span><span style="color:#8959a8;">if</span><span>(</span><span style="color:#c82728;">$rs </span><span style="color:#3e999f;">== </span><span style="color:#f07219;">0</span><span>)
+</span><span>		{
+</span><span>			</span><span style="color:#c82728;">$arr_0</span><span>[] </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$val</span><span>;
+</span><span>		}
+</span><span>		</span><span style="color:#8959a8;">else
+</span><span>		{
+</span><span>			</span><span style="color:#c82728;">$arr_1</span><span>[] </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$val</span><span>;
+</span><span>		}
+</span><span>	}
+</span><span>
+</span><span>	</span><span style="color:#8959a8;">foreach</span><span>(</span><span style="color:#c82728;">$arr_copy </span><span style="color:#3e999f;">as </span><span style="color:#c82728;">$val</span><span>)
+</span><span>	{
+</span><span>		</span><span style="color:#c82728;">$rs </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$val</span><span style="color:#8959a8;">&amp;</span><span style="color:#c82728;">$b</span><span>;
+</span><span>		</span><span style="color:#8959a8;">if</span><span>(</span><span style="color:#c82728;">$rs </span><span style="color:#3e999f;">== </span><span style="color:#f07219;">0</span><span>)
+</span><span>		{
+</span><span>			</span><span style="color:#c82728;">$arr_copy_0</span><span>[] </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$val</span><span>;
+</span><span>		}
+</span><span>		</span><span style="color:#8959a8;">else
+</span><span>		{
+</span><span>			</span><span style="color:#c82728;">$arr_copy_1</span><span>[] </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$val</span><span>;
+</span><span>		}
+</span><span>	}
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;">// 对这4个数组进行对应的异或操作，就出结果了
+</span><span style="color:#8959a8;">function </span><span style="color:#4271ae;">get_num</span><span>()
+</span><span>{
+</span><span>	</span><span style="color:#8959a8;">global </span><span style="color:#c82728;">$arr_0</span><span>, </span><span style="color:#c82728;">$arr_1</span><span>, </span><span style="color:#c82728;">$arr_copy_0</span><span>, </span><span style="color:#c82728;">$arr_copy_1</span><span>, </span><span style="color:#c82728;">$num1</span><span>, </span><span style="color:#c82728;">$num2</span><span>;
+</span><span>	</span><span style="color:#c82728;">$arr_0_xor </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array_reduce(</span><span style="color:#c82728;">$arr_0</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;do_xor&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	</span><span style="color:#c82728;">$arr_copy_0_xor </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array_reduce(</span><span style="color:#c82728;">$arr_copy_0</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;do_xor&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	</span><span style="color:#c82728;">$cacl_num1 </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$arr_0_xor</span><span style="color:#3e999f;">^</span><span style="color:#c82728;">$arr_copy_0_xor</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#c82728;">$arr_1_xor </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array_reduce(</span><span style="color:#c82728;">$arr_1</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;do_xor&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	</span><span style="color:#c82728;">$arr_copy_1_xor </span><span style="color:#3e999f;">= </span><span style="color:#4271ae;">array_reduce(</span><span style="color:#c82728;">$arr_copy_1</span><span style="color:#4271ae;">, </span><span style="color:#839c00;">&#39;do_xor&#39;</span><span style="color:#4271ae;">)</span><span>;
+</span><span>	</span><span style="color:#c82728;">$cacl_num2 </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">$arr_1_xor</span><span style="color:#3e999f;">^</span><span style="color:#c82728;">$arr_copy_1_xor</span><span>;
+</span><span>
+</span><span>	</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$cacl_num1</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39; / &#39;</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$cacl_num2</span><span style="color:#3e999f;">. </span><span style="color:#f07219;">PHP_EOL</span><span>;
+</span><span>	</span><span style="color:#4271ae;">echo </span><span style="color:#c82728;">$num1</span><span style="color:#3e999f;">.</span><span style="color:#839c00;">&#39; / &#39;</span><span style="color:#3e999f;">.</span><span style="color:#c82728;">$num2</span><span>;
+</span><span>}
+</span><span>
+</span><span style="color:#c82728;">init</span><span style="color:#4271ae;">()</span><span>;
+</span></code></pre>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/telescope"
+    data-repo-id="MDEwOlJlcG9zaXRvcnkzODEwOTA2MTg=" data-category="General"
+    data-category-id="MDE4OkRpc2N1c3Npb25DYXRlZ29yeTMzMDY2MTQy" data-mapping="title" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>
