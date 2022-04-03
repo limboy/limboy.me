@@ -21,20 +21,17 @@
 &lt;h3 id=&quot;ji-ben-jia-gou&quot;&gt;基本架构&lt;&#x2F;h3&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-arch.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-arch.png 350w,&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-arch.png 350w&quot;
-    sizes=&quot;(max-width: 350px) 100vw, 350px&quot; width=&quot;350&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;700&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;其中最底层是其他项目也会引用的基础类库。&lt;code&gt;HBToolkit&lt;&#x2F;code&gt;包含了一些常用、好用的 Categories，如图片缩放、UIView Layout 等等；&lt;code&gt;HBBussiness&lt;&#x2F;code&gt;是跟业务相关的一些类库，如弹出新版本提示、登录等等；&lt;code&gt;HBAPI&lt;&#x2F;code&gt;是花瓣主站点的 API 接口。这些类库都是私有的 pod 源，可以通过&lt;code&gt;pod install&lt;&#x2F;code&gt;安装。&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;AppCommon&lt;&#x2F;code&gt;是一个 xcode project，包含了该项目会用到的一些公共内容，如颜色值、按钮样式、图片、APIKey 等等，同样，也是私有 pod 源。&lt;&#x2F;p&gt;
 &lt;p&gt;再上层就是各个 sub app 了。所谓 sub app，就是功能单一，可独立运行的 app。同样，每个 sub app 会提供相应的 podspec 文件，可以在这个 podspec 里指定最后会用到的 Classes。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapps.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapps.png 160w,&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapps.png 160w&quot;
-    sizes=&quot;(max-width: 160px) 100vw, 160px&quot; width=&quot;160&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;进去之后会是这样&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapp-index.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapp-index.png 320w,&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapp-index.png 320w&quot;
-    sizes=&quot;(max-width: 320px) 100vw, 320px&quot; width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;640&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;对于使用者来说，可以通过查看 demo，很快地了解接口的使用。对测试人员，也可以在 App 还没有开发完成的情况下，对各个子模块进行测试。&lt;&#x2F;p&gt;
 &lt;p&gt;各个 sub app 都完成了的话，就可以组装成最终的 App 了，这里用到了一个 URL Route 类：&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;joeldev&#x2F;JLRoutes&quot;&gt;JLRoutes&lt;&#x2F;a&gt;，它的作用是让按钮的点击像网页里的链接一样，只是触发了某个 URL，而没有像 pushViewController 这样的行为。这样如果点击 A 模块的某个按钮，会 push 一个 B 模块的 ViewController，也不需要在 A 模块里 import 模块 B 的 ViewController，而只是&lt;code&gt;[JLRoutes routeURL:parameters]&lt;&#x2F;code&gt;即可，也就实现了解耦。&lt;&#x2F;p&gt;
 &lt;p&gt;每个 sub app 需要注册自己感兴趣的 URL，这样当某个 URL 被触发时，就能捕获到并做适当的处理。如果注册的行为统一放到最终的 App 里去做，会不够灵活，且显得杂乱。所以最好是在类加载的过程中就完成注册。 而 Class 正好有一个&lt;code&gt;+ (void)load&lt;&#x2F;code&gt;方法，会在该 Class 被加入到运行时触发，且只触发一次。&lt;&#x2F;p&gt;

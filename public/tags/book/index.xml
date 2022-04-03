@@ -615,8 +615,7 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;wei-shi-yao-you-shi-hou-ming-zhi-dao-gai-zuo-shi-yao-que-zong-shi-mai-bu-chu-na-yi-bu&quot;&gt;为什么有时候明知道该做什么，却总是迈不出那一步&lt;&#x2F;h3&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;the-war-of-art&amp;#x2F;which-to-choose.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;the-war-of-art&amp;#x2F;which-to-choose.jpg 900w,&amp;#x2F;posts&amp;#x2F;the-war-of-art&amp;#x2F;which-to-choose.jpg 900w&quot;
-    sizes=&quot;(max-width: 900px) 100vw, 900px&quot; width=&quot;900&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1800&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;左边的事情对自己的成长会更有帮助，右边的事情往往占据了更多的注意力。联想到该做的事时，会查询数据库，看看之前留下的印象是偏愉悦还是偏痛苦的。如果是偏痛苦，就自然不太想去做，也就产生了「Resistance」。同时，那些打发时间的事情查询结果却往往偏愉悦。那边一推，这边一拉，很容易就有了决定。这也是愧疚感产生的原因。&lt;&#x2F;p&gt;
 &lt;p&gt;为什么该做的事会产生抗拒心理？因为&lt;&#x2F;p&gt;
 &lt;ol&gt;
@@ -631,8 +630,7 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;要让自己变得专业起来，如此才能创作出好的作品，享受进步的愉悦和开悟的快感。专业和业余的区别在于前者更持久，后者主要基于乐趣，一旦乐趣降低或消失就失去了前进的动力，而这个过程不可避免会遭遇低谷。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;the-war-of-art&amp;#x2F;grow-curves.gif&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;the-war-of-art&amp;#x2F;grow-curves.gif 1592w,&amp;#x2F;posts&amp;#x2F;the-war-of-art&amp;#x2F;grow-curves.gif 1592w&quot;
-    sizes=&quot;(max-width: 1592px) 100vw, 1592px&quot; width=&quot;1592&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;3184&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;接触到新事物时，往往遵循类似的曲线，状态会有起伏。要变得更专业，就必须降低叙事自我的权重，通过一些技巧来响应内心的召唤。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;gao-ding-kang-ju&quot;&gt;搞定「抗拒」&lt;&#x2F;h3&gt;
 &lt;blockquote&gt;
@@ -684,15 +682,13 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;yuan-gu-shi-dai&quot;&gt;远古时代&lt;&#x2F;h2&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;1.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;1.jpg 111w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;1.jpg 111w&quot;
-    sizes=&quot;(max-width: 111px) 100vw, 111px&quot; width=&quot;111&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;222&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;一开始，只有一个进程，一切都很美好，除了操作系统的自留地外，剩下的都给那个进程，想怎么折腾都行，只要别超出最大的容量。&lt;&#x2F;p&gt;
 &lt;p&gt;但我们知道，那个时候，一台计算机是很贵的，比 iPhone XS Max 还贵，在这么昂贵的机器上同时只能运行一个程序实在浪费，于是就有了支持多进程的需求，所谓多进程，并不需要同时运行这些进程，只要它们都处于 ready 状态，操作系统快速地在它们之间切换，就能达到同时运行的假象。每个进程都需要内存，Context Switch 时，之前内存里的内容怎么办？简单粗暴的方式就是先 dump 到磁盘上，然后再从磁盘上 restore 之前 dump 的内容（如果有的话），但效果并不好，太慢了！&lt;&#x2F;p&gt;
 &lt;p&gt;那怎么才能不慢呢？把进程对应的内存依旧留在物理内存中，需要的时候就切换到特定的区域。这就涉及到了内存的保护机制，毕竟进程之间可以随意读取、写入内容就乱套了，非常不安全。因此操作系统需要对物理内存做一层抽象，也就是「地址空间」(Address Space)，一个进程的地址空间包含了该进程所有相关内存，比如 code &#x2F; stack &#x2F; heap。一个 16 KB 的地址空间可能长这样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;2.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;2.jpg 181.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;2.jpg 181.5w&quot;
-    sizes=&quot;(max-width: 181.5px) 100vw, 181.5px&quot; width=&quot;181.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;363&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;当程序运行时，heap 和 stack 共用中间 free 的区域，当然这只是 OS 层面的抽象。比如下面这段代码：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; x;
 &lt;&#x2F;span&gt;&lt;span&gt;x &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; x &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; this is the line of code we are interested in
@@ -706,13 +702,11 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;从进程的角度看，内存可能是这样的：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;3.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;3.jpg 136w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;3.jpg 136w&quot;
-    sizes=&quot;(max-width: 136px) 100vw, 136px&quot; width=&quot;136&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;272&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;真实的物理内存可能是这样的：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;4.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;4.jpg 141.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;4.jpg 141.5w&quot;
-    sizes=&quot;(max-width: 141.5px) 100vw, 141.5px&quot; width=&quot;141.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;283&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;从 32KB 处作为开始，48KB 作为结束。那 32 &#x2F; 48 可不可以动态设置呢，只要在 CPU 上整两个寄存器，base 和 bounds 就可以了，base 指明从哪里开始，bounds 指定哪里是边界。 因此真实物理地址和虚拟地址之间的关系是：&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;physical address = virtual address + base
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
@@ -722,16 +716,13 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;分段的思想很简单，之前不是一大块都是连在一起的么，现在要把你们都分开，code &#x2F; stack &#x2F; heap 各自成为一段，段内的空间是连续的，段与段之间不必连续，这样空间利用率上就更高了。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;7.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;7.jpg 252.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;7.jpg 252.5w&quot;
-    sizes=&quot;(max-width: 252.5px) 100vw, 252.5px&quot; width=&quot;252.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;505&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;5.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;5.jpg 242w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;5.jpg 242w&quot;
-    sizes=&quot;(max-width: 242px) 100vw, 242px&quot; width=&quot;242&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;484&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;接下来问题就来了，一个进程会有多个段，如何知道一个内存地址对应的是哪个段呢？一个方法是用地址的前两个字节来表示：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;6.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;6.jpg 166.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;6.jpg 166.5w&quot;
-    sizes=&quot;(max-width: 166.5px) 100vw, 166.5px&quot; width=&quot;166.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;333&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;比如 &lt;code&gt;00&lt;&#x2F;code&gt; 表示 code, &lt;code&gt;01&lt;&#x2F;code&gt; 表示 heap。获取物理地址的过程大概像这样：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 获取前两个比特
 &lt;&#x2F;span&gt;&lt;span&gt;Segment &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;(VirtualAddress &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt; SEG_MASK) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; SEG_SHIFT
@@ -749,8 +740,7 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;每个段依旧会有 Base 和 Bounds，但注意到有些段是向上扩张，有些是向下扩张，这个信息也需要被额外记录：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;8.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;8.jpg 312w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;8.jpg 312w&quot;
-    sizes=&quot;(max-width: 312px) 100vw, 312px&quot; width=&quot;312&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;624&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;除此之外，还会有其他的信息需要记录，比如是否可读写等。&lt;&#x2F;p&gt;
 &lt;p&gt;那这个做法有没有问题呢，有的：&lt;&#x2F;p&gt;
 &lt;ol&gt;
@@ -759,14 +749,12 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;&#x2F;ol&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;9.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;9.jpg 285w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;9.jpg 285w&quot;
-    sizes=&quot;(max-width: 285px) 100vw, 285px&quot; width=&quot;285&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;570&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;在这个例子中，当一个进程想要申请 20KB 的段时，虽然有 24KB 的剩余空间，但并不连续，因此会申请失败。一种解决方法是让内存空间变得更紧凑，比如暂停正在运行的进程，把内存拷贝到连续的地址空间，修改 Segment Register，这样就可以变成右图那样了。但是代价有点大，拷贝段会花费显著的时间。无论使用何种算法，碎片化一定会存在，只是好点的算法能降低碎片化程度。&lt;&#x2F;p&gt;
 &lt;p&gt;顺便提一下 C 里面的内存申请，当 &lt;code&gt;malloc(size_t size)&lt;&#x2F;code&gt; 时，会返回一个指针，当 &lt;code&gt;free(void *pointer)&lt;&#x2F;code&gt; 时，会释放指针对应的区域，也就是说 &lt;code&gt;free&lt;&#x2F;code&gt; 时，不需要知道 &lt;code&gt;size&lt;&#x2F;code&gt;，这是因为申请内存时，有一块额外的区域用来存储这些信息，比如当用户执行 &lt;code&gt;ptr = malloc(20)&lt;&#x2F;code&gt; 时&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;10.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;10.jpg 305.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;10.jpg 305.5w&quot;
-    sizes=&quot;(max-width: 305.5px) 100vw, 305.5px&quot; width=&quot;305.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;611&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;除了那 20 个字节，头部还留了点空间用来放 &lt;code&gt;size&lt;&#x2F;code&gt; 和 &lt;code&gt;magic&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;typedef struct&lt;&#x2F;span&gt;&lt;span&gt; __header_t {
 &lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; size;
@@ -783,41 +771,34 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;Paging 的思想是把地址空间切分成固定大小的单元。比如下面一个只有 64 字节的地址空间，每个 Page 16 个字节&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;11.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;11.jpg 235.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;11.jpg 235.5w&quot;
-    sizes=&quot;(max-width: 235.5px) 100vw, 235.5px&quot; width=&quot;235.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;471&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;对应到真实的物理地址：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;12.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;12.jpg 220.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;12.jpg 220.5w&quot;
-    sizes=&quot;(max-width: 220.5px) 100vw, 220.5px&quot; width=&quot;220.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;441&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;可以看到，虽然地址空间是连续的，但物理地址并不是。这样的好处是，不用去考虑 heap &#x2F; stack 会被申请多少 size，比如要申请 64 字节地址空间，只要给 4 个 free 的 page 即可，这样 OS 管理起来也很简单，比如只要维护一份 free pages list，然后给出前 4 个。为了记录虚拟页(Virtual Page)跟物理地址之间的关系，OS 需要维护给每个进程维护一份 Page Table，它的作用就是地址翻译。比如 &lt;code&gt;movl &amp;lt;virtual address&amp;gt;, %eax&lt;&#x2F;code&gt;，由于进程的地址空间是 64 字节，因此需要 6 个比特来表示（2^6 = 64）&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;13.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;13.jpg 139.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;13.jpg 139.5w&quot;
-    sizes=&quot;(max-width: 139.5px) 100vw, 139.5px&quot; width=&quot;139.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;279&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;由于 Page Size 为 16 字节，因此 offset 为 4（4 个比特就能表示全一个 Page 里的任意位置），剩下的前两位作为 VPN (Virtual Page Number)&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;14.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;14.jpg 137.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;14.jpg 137.5w&quot;
-    sizes=&quot;(max-width: 137.5px) 100vw, 137.5px&quot; width=&quot;137.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;275&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;比如 &lt;code&gt;movl 21, %eax&lt;&#x2F;code&gt;, 21 转成 2 进制就是 &lt;code&gt;010101&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;15.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;15.jpg 142.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;15.jpg 142.5w&quot;
-    sizes=&quot;(max-width: 142.5px) 100vw, 142.5px&quot; width=&quot;142.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;285&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;经过地址翻译后，就能找到物理内存中的地址了&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;16.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;16.jpg 172.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;16.jpg 172.5w&quot;
-    sizes=&quot;(max-width: 172.5px) 100vw, 172.5px&quot; width=&quot;172.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;345&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;那么问题又来了，Page Tables (用来将虚拟地址翻译成物理地址)存在哪里呢？在想这个问题前，先想下 Page Tables 大概有多大？&lt;&#x2F;p&gt;
 &lt;p&gt;如果每个 Page Table Entry (PTE) 需要 4 个字节来保存 物理地址(PFN, Physical Frame Number)和其他的状态码，一个进程会有多少个 PTE 呢？假设地址空间为 32 位，Page Size 为 4KB，那么虚拟地址就可以被拆分成 20 bits 的 VPN 和 12 bits 的 Offset，有 2^20 个 VPN 可能需要翻译，就需要有对应数量的 PTE，因此一个进程大概需要 4MB 的内存来存储 Page Tables，想想如果有 100 个进程在运行，就需要 400MB，这个数量可不算小。&lt;&#x2F;p&gt;
 &lt;p&gt;既然 Page Tables 如此之大，放 CPU 的寄存器里是不可能了，那就只能放内存了，因此在获取虚拟地址对应的物理内存地址时，需要先访问一次内存，这比直接访问 CPU 的寄存器会慢很多。&lt;&#x2F;p&gt;
 &lt;p&gt;顺便来看一下 PTE 到底长啥样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;17.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;17.jpg 299.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;17.jpg 299.5w&quot;
-    sizes=&quot;(max-width: 299.5px) 100vw, 299.5px&quot; width=&quot;299.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;599&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;前几位都是状态位，用来表示这段内存目前的状态，比如是否有效（Valid），是否可读，是否在 Swap 等。PFN 是真正的物理内存地址。&lt;&#x2F;p&gt;
 &lt;p&gt;采用分页模式后，物理地址的获取过程就变成了这样：&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;&#x2F;&#x2F; 把 VPN 摘出来
@@ -845,8 +826,7 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;再来看看 Context Switch。每个进程的 VPN 和 PFN 的对应关系是不一样的，因此上一个进程的对应关系对于下一个进程来说，完全无用。那怎么办？最简单粗暴的方式就是进程切换时，直接清空，这样虽然不会出问题，但也降低了缓存命中率，尤其是频繁切换的话。还有一种方法是多加一个字段来表示该段翻译对应的是哪个地址空间（ASID），有点像 PID。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;18.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;18.jpg 181w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;18.jpg 181w&quot;
-    sizes=&quot;(max-width: 181px) 100vw, 181px&quot; width=&quot;181&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;362&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;但 CPU 这寸土寸金的地方，不可能放很大的缓存，而且 size 越小，访问速度才会越快，当缓存满了之后怎么办？可以采用常见的策略，比如 LRU 或 Random。所以虽然内存被叫做 Random Access Memory，但也分是否命中缓存，那些命中 TLB 缓存的才是最快的。&lt;&#x2F;p&gt;
 &lt;p&gt;OK，访问速度这个问题算是解决了，还有一个体积大的问题又该怎么处理呢？&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;smaller-tables&quot;&gt;Smaller Tables&lt;&#x2F;h2&gt;
@@ -856,8 +836,7 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;回顾之前，我们采用段模式时，并没有体积大的问题，因为只需要 base and bounds 就可以了，那有没有可能把段和页结合起来呢？我们来试试，如果每个 Segment 对应一个 Table，这样就只需要 3 个 Table。对于 Segment 来说，现在 Bounds 变为了判断 Page Table 的边界（比如有多少个 Pages）。假设 32 位的地址空间，4KB Pages，就会变成这样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;20.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;20.jpg 324w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;20.jpg 324w&quot;
-    sizes=&quot;(max-width: 324px) 100vw, 324px&quot; width=&quot;324&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;648&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;如果 TLB 没有命中的话，过程大概如此&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;SN = (VirtualAddress &amp;amp; SEG_MASK) &amp;gt;&amp;gt; SN_SHIFT
 &lt;&#x2F;span&gt;&lt;span&gt;VPN = (VirtualAddress &amp;amp; VPN_MASK) &amp;gt;&amp;gt; VPN_SHIFT
@@ -866,20 +845,17 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;但这样 Segment 自带的碎片化问题依旧存在，到时 malloc 寻找可用空间时依旧会比较复杂。回过头来，我们再来看下，占用的这 4MB 空间真的是必须的么？&lt;&#x2F;p&gt;
 &lt;p&gt;
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;21.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;21.jpg 222w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;21.jpg 222w&quot;
-    sizes=&quot;(max-width: 222px) 100vw, 222px&quot; width=&quot;222&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;444&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;22.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;22.jpg 255.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;22.jpg 255.5w&quot;
-    sizes=&quot;(max-width: 255.5px) 100vw, 255.5px&quot; width=&quot;255.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;511&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;可以看到，中间的一大部分都是空的，但依旧会被填充（因为是采用数组的方式来访问），那有没有办法既能表达「无」的信息，又不占用空间呢？&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;multi-level-page-tables&quot;&gt;Multi-level Page Tables&lt;&#x2F;h3&gt;
 &lt;p&gt;多级分页表。比如要去宿舍找同学玩，发现宿舍大楼门关着，那么就不用再到寝室了，多级分页表的思路也类似，在最前面先做一次粗检，如果粗检都不符合就直接打回，粗检通过之后再来一次细检，这样就能把空间给省下来，具体是怎么做的呢？&lt;&#x2F;p&gt;
 &lt;p&gt;把 PTE(Page Table Entry, 包含了物理地址和状态码)放进 page-sized units（比如一个 Page 里放 16 个 PTE），如果该 Page 的 PTE 都无效，那么压根就不申请内存，然后外面包一层 Page Directory 用来表示里面是否有有效的 PTE。就像文件夹一样，如果文件夹里没有文件，自然就不会占用空间。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;23.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;23.jpg 461.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;23.jpg 461.5w&quot;
-    sizes=&quot;(max-width: 461.5px) 100vw, 461.5px&quot; width=&quot;461.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;923&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;左边是单层 Page Table 的实现，可以看到，虽然只有最下面两层是 valid 的，但中间依旧会有很多被占用的空间（就像要访问数组的第 1000 个元素，必须先要把这 1000 个元素填满）。&lt;&#x2F;p&gt;
 &lt;p&gt;右边是两层 Page Table 的实现，通过 Valid 状态码就可以知道是否有必要去物理地址拿内容，如果第一层的 Valid 为 1，那么地址转换后就可以拿到第二层 PTE 的内容，如果此时 Valid 为 0，抛出 Exception，为 1，那么继续去拿真正的存放在物理内存中的内容。 因此最外层的 Valid 为 1，只是表示里面至少有一个 Valid 的 PTE。&lt;&#x2F;p&gt;
 &lt;p&gt;相比之下，空间上是不是节省了不少。但也有弊端，比如需要两次内存访问才能拿到真正的虚拟地址对应的内容，所以这是一个典型的时间换空间的做法。还有一个弊端就是复杂度，无论是硬件还是操作系统，处理起来肯定比一个线性的 Page Table 查找复杂，但为了省出来的内存，这个 tradeoff 还是可以接受的。&lt;&#x2F;p&gt;
@@ -887,8 +863,7 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;假设 CPU 在解析指令时，遇到了一个 14 位长的虚拟地址，现在要把它转换为真实地址，并取出其中的内容：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;25.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;25.jpg 224w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;25.jpg 224w&quot;
-    sizes=&quot;(max-width: 224px) 100vw, 224px&quot; width=&quot;224&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;448&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;Page Directory Index 告诉 CPU 去第几层找 PDE(Page Directory Entry)&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;PDEAddr = PageDirBase + (PDIndex * sizeof(PDE))
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
@@ -911,8 +886,7 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;大脑的皮质层有一块区域叫「前额叶皮层」，这是人类进化到晚期才出现的皮质结构之一。这个区域主要负责高级认知功能，比如思考和决策（飞越疯人院里男主 McMurphy 最后就是被切除了额叶）。那它的工作机理大概是怎样的呢？作者给我们做了一个很好的比喻：舞台模型。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;your-brain-at-work&amp;#x2F;brain_1.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;your-brain-at-work&amp;#x2F;brain_1.jpg 417w,&amp;#x2F;posts&amp;#x2F;your-brain-at-work&amp;#x2F;brain_1.jpg 417w&quot;
-    sizes=&quot;(max-width: 417px) 100vw, 417px&quot; width=&quot;417&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h4 id=&quot;wu-tai-hen-xiao-zhi-rong-de-xia-4-ge-yan-yuan&quot;&gt;舞台很小，只容得下 4 个演员&lt;&#x2F;h4&gt;
+        width=&quot;834&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h4 id=&quot;wu-tai-hen-xiao-zhi-rong-de-xia-4-ge-yan-yuan&quot;&gt;舞台很小，只容得下 4 个演员&lt;&#x2F;h4&gt;
 &lt;p&gt;如果我们把前额叶的活动都抽象为「导演导一场戏」，什么时候演员演好了，导演满意了，任务就完成了。演员就是参与思考、决策的要素，也就是同一时间大脑可以容纳的思考元素是有限的。因此选择思考什么内容很重要。当你在思考中午应该吃什么、明天穿什么衣服、要不要给 XX 去个电话时，都会消耗舞台能量。舞台是一个神圣的地方，尽量让大人物在上面显摆吧。&lt;&#x2F;p&gt;
 &lt;p&gt;4 个演员不是指 4 件事，而是某件事会涉及到的一些概念、要点。生活中我们会发现有一些人，他们的反应速度很快，感觉一下能思考很多层面，这并不是他们的舞台很大，而是演员的切换速度比较快，演员的选择上更优，以及演员和观众之间的联系更加密切。&lt;&#x2F;p&gt;
 &lt;p&gt;对于新的概念，我们理解起来会比较累，因为观众都不太认识这个演员，自然光要给得足够强(新手光环)，这样能量消耗就多，就会感觉比较累。&lt;&#x2F;p&gt;
@@ -952,8 +926,7 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;p&gt;又是一张辣眼睛的图···&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;your-brain-at-work&amp;#x2F;brain_2.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;your-brain-at-work&amp;#x2F;brain_2.jpg 417w,&amp;#x2F;posts&amp;#x2F;your-brain-at-work&amp;#x2F;brain_2.jpg 417w&quot;
-    sizes=&quot;(max-width: 417px) 100vw, 417px&quot; width=&quot;417&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;834&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;我们总觉得人是有自由意志的，在「未来简史」里也有提到，人其实并没有自由意志，甚至可能连意识都没有，只不过是神经元之间的神经递质传递，从树突传到轴突，轴突通过电信号再释放出一些化学物质给下一个神经元，这些数量庞大的神经元之间的信息传递让我们感觉有了意识、思维等。&lt;&#x2F;p&gt;
 &lt;p&gt;我们做一个决定时有可能是前额叶帮我们做的（理性），也有可能是杏仁核处理的。杏仁核所在的边缘系统由来已久，哺乳动物也有类似的系统，它帮助我们在远古时代能够躲避猛兽的袭击，在面对老虎时，不需要计算它的瞬时启动速度、经过多久能追上自己等，杏仁核下命令直接跑就是了。又比如婴儿一般都喜欢花，害怕蛇，这些都是根植于基因，不需要后天习得。杏仁核就像一个小孩，很容易有情绪，它后面有一堵墙，上面记录了基因里的信息，以及后天的经验。当一件事情发生时，杏仁核如果发现能在墙上找到记录，可能就自动做决定了。在精心布置的苹果店里，会觉得苹果产品非常高贵，进而产生拥有欲望，然后就下单了。其实从理性层面上考虑，自己真的需要功能这么强劲的手机么，不一定吧。德州扑克也一样，在情绪主导下，很容易做出错误的决定。所以要避免杏仁核有比较大的波动，然后做出非理性决定。有几个方式可以试一下：&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;tie-biao-qian&quot;&gt;贴标签&lt;&#x2F;h4&gt;
@@ -965,8 +938,7 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;scarf-mo-xing&quot;&gt;SCARF 模型&lt;&#x2F;h3&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;your-brain-at-work&amp;#x2F;brain_3.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;your-brain-at-work&amp;#x2F;brain_3.jpg 200w,&amp;#x2F;posts&amp;#x2F;your-brain-at-work&amp;#x2F;brain_3.jpg 200w&quot;
-    sizes=&quot;(max-width: 200px) 100vw, 200px&quot; width=&quot;200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;400&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这是一个动力模型，符合这个模型的，人们就更愿意去做；跟这个模型相背的，意愿就不那么强了，比较适合管理人员。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;status&quot;&gt;Status&lt;&#x2F;h4&gt;
 &lt;p&gt;地位。我们都希望在一个团体中有一定的地位，或者说受到尊敬，当然这需要自己争取，从管理者的角度，也可以有意识地去加强一些成员的「地位感」，当发现一些事做得还不错时，及时在公众场合给予表扬。&lt;&#x2F;p&gt;
@@ -1279,14 +1251,12 @@ You won’t over-work, over-play, or over-indulge.&lt;&#x2F;p&gt;
             <description>&lt;p&gt;&lt;a href=&quot;http:&#x2F;&#x2F;sethgodin.typepad.com&#x2F;the_dip&#x2F;&quot;&gt;The Dip&lt;&#x2F;a&gt; 是营销大师 Seth Godin 在 07 年写的一本小书，其核心的思想是：找到一个自己愿意投身的领域，并成为该领域的 No.1&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;the-dip&amp;#x2F;the-dip.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;the-dip&amp;#x2F;the-dip.jpg 319.5w,&amp;#x2F;posts&amp;#x2F;the-dip&amp;#x2F;the-dip.jpg 319.5w&quot;
-    sizes=&quot;(max-width: 319.5px) 100vw, 319.5px&quot; width=&quot;319.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;639&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;很多人，无论是主动地还是被动地选择某个领域，无论是从事了 1 年还是 10 年，大部分都是处于「平均水平」，或者「高于平均水平」，但绝没到「该领域最好」的程度。这也是 Seth Godin 希望人们摆脱的状态，因为「赢者通吃」。大部分人是懒得去比较去探究的，它们会问：干这行的谁最 NB，然后直接就去找 TA 了。好比我们一说到巴黎马上就想到了「埃菲尔铁塔」，或者「卢浮宫」、「塞纳河」，又有多少人知道「玛德莱娜教堂」教堂呢。&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;a href=&quot;http:&#x2F;&#x2F;baike.baidu.com&#x2F;view&#x2F;1519158.htm&quot;&gt;Zipf 定律&lt;&#x2F;a&gt;跟 80&#x2F;20 原则有点类似。Zipf 这个人做了一个研究，并得出结论：一个词在一个有相当长度的语篇中的等级序号与改词的出现次数乘积几乎是一个常数。比如：「the」出现得最多，为 200 次，那么「the」的 rank _ frequency = 200；「this」出现次数排第 5，为 40 次，那么「this」的 r _ f = 200；「September」的出现次数排第 100，一共出现了 2 次，那么 r * f = 200。如果把出现次数比作客户的话，第二名的客户数比第一名少了一半，第五名比第一名更是少了 80%。有点类似「长尾理论」的这张图&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;the-dip&amp;#x2F;the-long-tail.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;the-dip&amp;#x2F;the-long-tail.jpg 249w,&amp;#x2F;posts&amp;#x2F;the-dip&amp;#x2F;the-long-tail.jpg 249w&quot;
-    sizes=&quot;(max-width: 249px) 100vw, 249px&quot; width=&quot;249&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;498&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;既然成为第一有这么明显的好处，为什么还是绝大多数人都无法做到呢？这里有很多原因，比如：没有看到成为第一能够带来的好处；在一个自己没有热情的领域苦苦挣扎；习惯了「舒适区」，不愿到「学习区」磨练等等。最常见的还是被短期的痛苦打败，因而放慢甚至停止了前进的步伐。&lt;&#x2F;p&gt;
 &lt;p&gt;经历痛苦是难免的，它是实实在在的槛，只有真正能跨过去的，才能站在这个行业的顶端，也正是因为稀缺性，他们的价值被大大增加了。生活中的我们，会被各种各样的事物吸引注意力，在经历过一番努力后，开始沉浸于「Comfort Zone」，觉得已经「Good Enough」。按「Zipf 理论」来说，这是不划算的，因为越是处于前列，那么每进步一点带来的回报都是巨大的。&lt;&#x2F;p&gt;
 &lt;p&gt;还要注意分辨 Dip 和 cul-de-sac(死胡同)，所谓「死胡同」，就是你明明花了很多时间，但收获却很小，或者 Dip 不够深，没有稀缺性。把过多的精力放在后者，带来的损失是双倍的。一旦发现是死胡同，那就尽快抽身。去找 Dip，找到很多人跨不过去，且已跨过去的人还不多的领域。&lt;&#x2F;p&gt;
@@ -1746,8 +1716,7 @@ INSERT+DELETE&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;unix-zhe-xue-yi-yan-yi-bi-zhi&quot;&gt;Unix 哲学一言以蔽之&lt;&#x2F;h3&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;the-art-of-unix-programming&amp;#x2F;kiss.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;the-art-of-unix-programming&amp;#x2F;kiss.png 234w,&amp;#x2F;posts&amp;#x2F;the-art-of-unix-programming&amp;#x2F;kiss.png 234w&quot;
-    sizes=&quot;(max-width: 234px) 100vw, 234px&quot; width=&quot;234&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
+        width=&quot;468&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
         </item>
         
         
@@ -1901,8 +1870,7 @@ INSERT+DELETE&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;zai-xian-shi-she-hui-zhong-cheng-chang&quot;&gt;在现实社会中成长&lt;&#x2F;h3&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;becoming-a-technical-leader&amp;#x2F;grow.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;becoming-a-technical-leader&amp;#x2F;grow.png 263w,&amp;#x2F;posts&amp;#x2F;becoming-a-technical-leader&amp;#x2F;grow.png 263w&quot;
-    sizes=&quot;(max-width: 263px) 100vw, 263px&quot; width=&quot;263&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;526&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;不论你取得的成就有多大，多辉煌，你永远不会忘记深处低谷体会到的痛苦。没有对美好事物的向往，这些痛苦会在你开始攀登之前就把你拉回原地。所以在你下次攀登之前，要想到站在顶峰的感觉。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;yuan-xun-huan&quot;&gt;元循环&lt;&#x2F;h3&gt;
 &lt;ul&gt;

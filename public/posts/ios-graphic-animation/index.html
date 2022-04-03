@@ -117,13 +117,11 @@
 <p>以 twitter 为例，可以通过 subviews 来实现，不过性能会有点影响，但实现起来简单。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_subviews.jpg"
-    srcset="&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_subviews.jpg 200w,&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_subviews.jpg 200w"
-    sizes="(max-width: 200px) 100vw, 200px" width="200" /></p>
+        width="400" /></p>
 <p>因为 cell 在形态上不会经常改变，所以也可以通过 drawRect 直接绘制，只要这个时间足够短就可以。好处是 layer 不用处理多个子 layer 的组合和叠加，就像一张 jpg 图片一样，滑动会更流畅。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_drawrect.png"
-    srcset="&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_drawrect.png 200w,&#x2F;posts&#x2F;ios-graphic-animation&#x2F;twitter_tvc_drawrect.png 200w"
-    sizes="(max-width: 200px) 100vw, 200px" width="200" /></p><h3 id="can-kao">参考</h3>
+        width="400" /></p><h3 id="can-kao">参考</h3>
 <ul>
 <li><a href="http://geeklu.com/2012/09/animation-in-ios/">http://geeklu.com/2012/09/animation-in-ios/</a></li>
 <li><a href="http://robots.thoughtbot.com/post/33427366406/designing-for-ios-taming-uibutton">http://robots.thoughtbot.com/post/33427366406/designing-for-ios-taming-uibutton</a></li>

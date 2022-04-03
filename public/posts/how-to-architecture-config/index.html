@@ -60,38 +60,32 @@
 <p>对「配置中心」这个需求进行分解就是：第一时间把配置发送给客户端。因此我们先来构想一个最简单的场景：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_01.jpg"
-    srcset="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_01.jpg 600w,&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_01.jpg 600w"
-    sizes="(max-width: 600px) 100vw, 600px" width="600" /></p>
+        width="1200" /></p>
 <p>客户端和服务端保持一个长链，当在后台操作配置时，会把这个配置以 K/V 形式存储，然后通知 Procesor，后者拿到 K/V 之后把它推给客户端，整个过程就完成了。这是最原始的形态，接下来会在这个基础上进行演化。</p>
 <h3 id="pei-zhi-geng-xin-shi-ke-hu-duan-chu-yu-chi-xian-zhuang-tai-zen-yao-ban">配置更新时，客户端处于离线状态怎么办</h3>
 <p>长链只能保证(尽量)客户端在线时能第一时间拿到配置中心的值，处于离线状态（比如没有打开 App）时就无能为力了，因此需要想办法到用户下一次打开 App 时可以拿到最新的值，这个简单处理就是在保存 K/V 时，额外存一个 flag 字段，用来表示这个 K/V 是否已经成功发送给客户端。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_02.jpg"
-    srcset="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_02.jpg 600w,&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_02.jpg 600w"
-    sizes="(max-width: 600px) 100vw, 600px" width="600" /></p><h3 id="duo-fen-pei-zhi-de-chu-li">多份配置的处理</h3>
+        width="1200" /></p><h3 id="duo-fen-pei-zhi-de-chu-li">多份配置的处理</h3>
 <p>通常 K/V 对不止一份，那么多份配置，也就是多个 K/V 对，又会带来哪些变化呢。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_03.jpg"
-    srcset="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_03.jpg 600w,&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_03.jpg 600w"
-    sizes="(max-width: 600px) 100vw, 600px" width="600" /></p>
+        width="1200" /></p>
 <p>这时就有三个问题需要我们考虑：存储、流量和同步策略。</p>
 <h4 id="cun-chu">存储</h4>
 <p>一个设备的 K/V 对通常不会超过 100 项，每对 Size 不超过 1K，也就是一台设备对应的大小上限为 100K 左右，假如设备数为 100 万，就需要 100G 的磁盘空间。这个量还是有点大的，可以优化下。考虑到一些配置项会在多个设备共存，可以把这些配置单独存储，然后把 hash 值作为 Value。假设 Key 的 size 为 30 字节，Value 为 10 字节，这样就只需 40M 的 K/V 存储空间。因此由于存储上的限制，我们的设计也要做一下调整:</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_04.jpg"
-    srcset="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_04.jpg 600w,&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_04.jpg 600w"
-    sizes="(max-width: 600px) 100vw, 600px" width="600" /></p>
+        width="1200" /></p>
 <p>但这样还是有问题，Value 的组合会很多：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_05.jpg"
-    srcset="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_05.jpg 600w,&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_05.jpg 600w"
-    sizes="(max-width: 600px) 100vw, 600px" width="600" /></p>
+        width="1200" /></p>
 <p>比如原来 K1 的 Value 为 V1，更新之后变成了 V2，那么需要新建一组 Value，然后将其中的 V1 变为 V2，因为不知道之前的那一组 Value 是否还有其他设备在引用，这样就会逐渐累积下去，要降低这种累积的话，还要设计清除算法，复杂度就上来。</p>
 <p>不妨参考一下 Go 语言里 Slice 的设计，Slice 内部使用了一个数组，但可以指定使用该数组的哪一部分，其实就是索引。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_06.jpg"
-    srcset="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_06.jpg 600w,&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_06.jpg 600w"
-    sizes="(max-width: 600px) 100vw, 600px" width="600" /></p>
+        width="1200" /></p>
 <p>这样某个 Key 如果有新的 Value 了，只需在对应的 Key 后面 append 即可。此时需要同步更新设备的索引，这块可能花一点时间，如果数据都在内存的话其实也还好（由于只是存索引，因此这些数据量内存 hold 得住），持久化可以异步进行。</p>
 <h4 id="liu-liang">流量</h4>
 <p>上面已经说过，单个设备的量可以达到 100K，如果每次配置有更新就发送 100K 的数据对到达率会有一定影响，尤其在设备网络情况不佳的情况下。因此这里的目标是如何减少数据传输量，同时尽量避免提升复杂度。</p>
@@ -113,8 +107,7 @@
 <p>维度也就是设备的特征，一个设备会有多个特征，比如 <code>iOS 11</code>，<code>v9.3.6</code> 等，同样一个维度也会包含多台设备。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_07.jpg"
-    srcset="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_07.jpg 600w,&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_07.jpg 600w"
-    sizes="(max-width: 600px) 100vw, 600px" width="600" /></p>
+        width="1200" /></p>
 <p>维度的设计使用 Set 会比较合适，因为顺序无关，且将来设备的维度改变后，查找起来也会很快(比如当设备升级了版本，就要把设备从旧版本的维度变为新版本的维度)。所以需要在一个合适的时机去检查设备的维度是否需要更新，同时检查是否需要发送配置，这个时机选择在连接建立完成后异步执行比较合适。</p>
 <h4 id="wei-du-geng-xin">维度更新</h4>
 <p>假如设备从「维度 1」更新到了「维度 2」，怎么知道需要更新哪些 K/V ？要解决这个问题，可以给维度也建一张表，来保存 Config 信息，Key 为维度名，Value 为 Config Index。</p>
@@ -122,8 +115,7 @@
 <p>最终的流程和设计如下：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_08.jpg"
-    srcset="&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_08.jpg 600w,&#x2F;posts&#x2F;how-to-architecture-config&#x2F;design_config_08.jpg 600w"
-    sizes="(max-width: 600px) 100vw, 600px" width="600" /></p>
+        width="1200" /></p>
 <p>本文主要提供了一种架构设计的思路，从最核心的需求开始，随着场景的变化，来不断完善、调整设计。结合常见的考虑点和适当的数据评估，选择相对简单的方案。在细化的过程中，一些问题就会浮现出来，尽早发现，尽早解决，等到开发甚至上线才发现就麻烦了，这也是架构设计的重要性。</p>
 <p>最后，请有限度吐槽图片质量，博主已经很努力了···</p>
 

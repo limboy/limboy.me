@@ -137,16 +137,14 @@
 &lt;p&gt;放个截图先：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_chat.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_chat.png 303w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_chat.png 303w&quot;
-    sizes=&quot;(max-width: 303px) 100vw, 303px&quot; width=&quot;303&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;606&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;主要工具：python (flask &#x2F; gevent &#x2F; apscheduler) + redis&lt;&#x2F;p&gt;
 &lt;p&gt;目前这个聊天室的功能还比较简单，可以实时更新全局在线用户，当前聊天室在线用户和聊天内容，都是通过一个 ajax 长连接实现的。在这个连接里定义了需要实时的内容，相应的内容一旦在服务端更新，可以马上推送到各个客户端。&lt;&#x2F;p&gt;
 &lt;p&gt;实时最大的挑战在于如何能在服务端尽量简单，灵活地实现。因为越是简单，就越不容易滋生 bug，即使出现问题，查找起来也很方便;越是灵活，就越容易应付多变的需求。以聊天室为例，当新用户加入后需要更新所有客户端的当前成员列表;有成员退出后也要更新该列表。每个聊天室有了新内容后都要实时推到所有客户端;给某个用户发私信，对方也可以实时收到。这些如果处理地不好，很容易与当前的逻辑发生耦合，为将来的调整和 bug 的查找带来困难。&lt;&#x2F;p&gt;
 &lt;p&gt;依靠强大的 redis，设计了这个简易的实时聊天室，基本架构如下:&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_arch.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_arch.png 243.5w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_arch.png 243.5w&quot;
-    sizes=&quot;(max-width: 243.5px) 100vw, 243.5px&quot; width=&quot;243.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;487&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;匆忙完成了初步的代码，还有不少需要优化的地方，有些功能也还没加上（如私信的实时通知）。接下来的一段时间内会逐步完善，如果有更好的 idea，欢迎沟通 :)&lt;&#x2F;p&gt;
 &lt;p&gt;代码地址：&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;chat&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;chat&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;如果使用过程中遇到什么问题，或有好的建议可以在&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;chat&#x2F;issues&quot;&gt;这里&lt;&#x2F;a&gt;反馈&lt;&#x2F;p&gt;
@@ -178,11 +176,9 @@
 &lt;h4 id=&quot;screenshot&quot;&gt;screenshot&lt;&#x2F;h4&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_home_0.1.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_home_0.1.png 307w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_home_0.1.png 307w&quot;
-    sizes=&quot;(max-width: 307px) 100vw, 307px&quot; width=&quot;307&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;614&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_room_0.1.gif&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_room_0.1.gif 307w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_room_0.1.gif 307w&quot;
-    sizes=&quot;(max-width: 307px) 100vw, 307px&quot; width=&quot;307&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
+        width=&quot;614&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
         </item>
         
         

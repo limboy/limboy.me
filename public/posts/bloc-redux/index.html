@@ -93,8 +93,7 @@ Architecture Flutter App the Bloc_Redux Way
 <p>再来看看 <a href="https://github.com/felangel/bloc">flutter_bloc</a>，这也是关注度蛮高的一个项目，说这个之前先说说 bloc，这是 flutter 提的一个概念，运行机制大致如下：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;bloc-redux&#x2F;movie250-bloc.png"
-    srcset="&#x2F;posts&#x2F;bloc-redux&#x2F;movie250-bloc.png 280.5w,&#x2F;posts&#x2F;bloc-redux&#x2F;movie250-bloc.png 280.5w"
-    sizes="(max-width: 280.5px) 100vw, 280.5px" width="280.5" /></p>
+        width="561" /></p>
 <p>它更像一个提案，缺少标准和实现。flutter_bloc 就是对这个提案的一个实现。这个实现本质上没觉得跟 flutter_redux 有太大的区别，而复杂度倒是增加了不少，还提出了一些新的概念(比如 BlocSupervisor, BlocDelegate, Transation)，增加了理解上的困难。在处理核心的 state 问题上依旧跟 flutter_redux 一样，甚至都没有做 <code>==</code> check。</p>
 <pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">void </span><span style="color:#4271ae;">_bindStateSubject</span><span>() {
 </span><span>  </span><span style="color:#c99e00;">Event</span><span> currentEvent;

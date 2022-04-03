@@ -50,8 +50,7 @@
 &lt;p&gt;接下来的问题是，如何让棋盘本身形成 6 个比特位？&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-0.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-0.png 1246w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-0.png 1246w&quot;
-    sizes=&quot;(max-width: 1246px) 100vw, 1246px&quot; width=&quot;1246&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;ji-xu-si-suo&quot;&gt;继续思索&lt;&#x2F;h3&gt;
+        width=&quot;2492&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;ji-xu-si-suo&quot;&gt;继续思索&lt;&#x2F;h3&gt;
 &lt;p&gt;假如你跟队友约定，左边四列代表第 1 位，右边四列代表第 2 位，上边四行代表第 3 位，下边四行代表第 4 位，中间四列代表第 5 位，中间四行代表第 6 位，也就是每 1 位都有特定的区域，然后数该区域里硬币为正面的个数，如果为奇数则表示该位为 1，偶数则为 0。而你可以通过翻转硬币来将这个二进制数变为魔币所在位置的二进制数，是不是就妥了？&lt;&#x2F;p&gt;
 &lt;p&gt;那应该怎么分呢，如果按照上面的分法，该如何达到翻转某个硬币来调整各个组的奇偶性呢？&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;hua-fen-zu-de-ce-lue&quot;&gt;划分组的策略&lt;&#x2F;h3&gt;
@@ -59,31 +58,26 @@
 &lt;p&gt;理想状态自然是每个组之间没有重叠，然后将各自组的其中一枚硬币翻转，但这样最多需要翻转 6 次（原始二进制数和目标二进制数各位都不相同）。所以一定会有交叉，那如何交叉才能使得所有可能的翻转组合都被覆盖到呢？如果用 1 表示翻转，那么二进制表示的 64 个数字，不就是所有可能的翻转组合么？&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-2.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-2.png 706w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-2.png 706w&quot;
-    sizes=&quot;(max-width: 706px) 100vw, 706px&quot; width=&quot;706&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1412&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;比如 3，也就是 &lt;code&gt;000011&lt;&#x2F;code&gt; 表示翻转 $2^0$ 和 $2^1$ 所在的组，原先为奇数个正面的硬币，就变成偶数个，反之亦然，其他 4 个组维持原状。&lt;&#x2F;p&gt;
 &lt;p&gt;好像有思路了。对于 $2^0$ 这一组，包含的数为末尾为 1 的二进制数，$2^1$ 这一组，则包含倒数第二位为 1 的二进制数，以此类推（下图可点击放大）：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-3.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-3.png 2230w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-3.png 2230w&quot;
-    sizes=&quot;(max-width: 2230px) 100vw, 2230px&quot; width=&quot;2230&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;4460&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这样 6 个组就划分完了，假设经过计算后发现要调整 $2^5$, $2^3$, $2^1$ 这 3 个组硬币的奇偶性，也就是 &lt;code&gt;101010&lt;&#x2F;code&gt;，对应十进制就是 42，那么将 42 号硬币翻一面就行了。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-4.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-4.png 2230w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-4.png 2230w&quot;
-    sizes=&quot;(max-width: 2230px) 100vw, 2230px&quot; width=&quot;2230&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;4460&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;是不是只影响了 $2^5$, $2^3$, $2^1$ 这 3 个组，$2^0$, $2^2$, $2^4$ 这 3 组安然无恙。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;shi-zhan&quot;&gt;实战&lt;&#x2F;h3&gt;
 &lt;p&gt;假设出题人最后的硬币摆放如下（白色为正面，灰色为反面，），指定魔币序号为 39。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-5.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-5.png 1246w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-5.png 1246w&quot;
-    sizes=&quot;(max-width: 1246px) 100vw, 1246px&quot; width=&quot;1246&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;2492&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;按照上面的分组规则，看看每个组包含的硬币正反面情况&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-6.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-6.png 2230w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-6.png 2230w&quot;
-    sizes=&quot;(max-width: 2230px) 100vw, 2230px&quot; width=&quot;2230&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;4460&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;分别为：&lt;&#x2F;p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;$2^0$ 正面数量为 23，奇数，该位为 1&lt;br &#x2F;&gt;

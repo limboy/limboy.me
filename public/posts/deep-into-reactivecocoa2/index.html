@@ -64,8 +64,7 @@ ReactiveCocoa2实战
 <p>以下面这个 Cell 为例</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-demo.png"
-    srcset="&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-demo.png 160.5w,&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-demo.png 160.5w"
-    sizes="(max-width: 160.5px) 100vw, 160.5px" width="160.5" /></p>
+        width="321" /></p>
 <p>正常的写法可能是这样，很直观。</p>
 <pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)configureWithItem</span><span style="color:#3e999f;">:</span><span>(HBItem </span><span style="color:#3e999f;">*</span><span>)item
 </span><span>{
@@ -93,8 +92,7 @@ ReactiveCocoa2实战
 <p>Signal 是 RAC 的核心，为了帮助理解，画了这张简化图</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-signal.png"
-    srcset="&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-signal.png 371.5w,&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-signal.png 371.5w"
-    sizes="(max-width: 371.5px) 100vw, 371.5px" width="371.5" /></p>
+        width="743" /></p>
 <p>这里的数据源和 sendXXX，可以理解为函数的参数和返回值。当 Signal 处理完数据后，可以向下一个 Signal 或 Subscriber 传送数据。可以看到上半部分的两个 Signal 是冷的(cold)，相当于实现了某个函数，但该函数没有被调用。同时也说明了 Signal 可以被组合使用，比如<code>RACSignal *signalB = [signalA map:^id(id x){return x}]</code>，或<code>RACSignal *signalB = [signalA take:1]</code>等等。</p>
 <p>当 signal 被 subscribe 时，就会处于热(hot)的状态，也就是该函数会被执行。比如上面的第二张图，首先 signalA 可能发了一个网络请求，拿到结果后，把数据通过<code>sendNext</code>方法传递到下一个 signal，signalB 可以根据需要做进一步处理，比如转换成相应的 Model，转换完后再<code>sendNext</code>到 subscriber，subscriber 拿到数据后，再改变 ViewModel，同时因为 View 已经绑定了 ViewModel，所以拿到的数据会自动在 View 里呈现。</p>
 <p>还有，一个 signal 可以被多个 subscriber 订阅，这里怕显得太乱就没有画出来，但每次被新的 subscriber 订阅时，都会导致数据源的处理逻辑被触发一次，这很有可能导致意想不到的结果，需要注意一下。</p>
@@ -320,8 +318,7 @@ ReactiveCocoa2实战
 <p>以下面这个需求为例，要求大图滑动结束时，底部的缩略图滚动到对应的位置，并高亮该缩略图；同时底部的缩略图被选中时，大图也要变成该缩略图的大图。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-mvvm.png"
-    srcset="&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-mvvm.png 160w,&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-mvvm.png 160w"
-    sizes="(max-width: 160px) 100vw, 160px" width="160" /></p>
+        width="320" /></p>
 <p>我的思路是横向滚动的大图是一个 collectionView，该 collectionView 是当前页面 VC 的一个 property。底部可以滑动的缩略图是一个 childVC 的 collectionView，这两个 collectionView 共用一套 VM，并且各自 RACObserve 感兴趣的 property。</p>
 <p>比如大图滑到下一页时，会改变 VM 的 indexPath 属性，而底部的 collectionView 所在的 VC 正好对该 indexPath 感兴趣，只要 indexPath 变化就滚动到相应的 Item</p>
 <pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// childVC
@@ -506,8 +503,7 @@ ReactiveCocoa2实战
 <h4 id="diao-shi">调试</h4>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-debug.png"
-    srcset="&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-debug.png 138w,&#x2F;posts&#x2F;deep-into-reactivecocoa2&#x2F;rac-debug.png 138w"
-    sizes="(max-width: 138px) 100vw, 138px" width="138" /></p>
+        width="276" /></p>
 <p>刚开始写 RAC 时，往往会遇到这种情况，满屏的调用栈信息都是 RAC 的，要找出真正出现问题的地方不容易。曾经有一次在使用<code>[RACSignal combineLatest: reduce:^id{}]</code>时，忘了在 Block 里返回 value，而 Xcode 也没有提示 warning，然后就是莫名其妙地挂起了，跳到了汇编上，也没有调用栈信息，这时就只能通过最古老的注释代码的方式来找到问题的根源。</p>
 <p>不过写多了之后，一般不太会犯这种低级错误。</p>
 <h4 id="strongify-weakify-dance">strongify / weakify dance</h4>

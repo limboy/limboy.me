@@ -23,8 +23,7 @@
 &lt;&#x2F;blockquote&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-scrollview.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-scrollview.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-scrollview.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;ScrollView&lt;&#x2F;code&gt; 和它的子类比如 &lt;code&gt;ListView&lt;&#x2F;code&gt; 或 &lt;code&gt;GridView&lt;&#x2F;code&gt; 是常见的 Unbounded Constraints. 也就是在某一个方向没有限制大小。其他的 widget 只要能够设置 &lt;code&gt;width&lt;&#x2F;code&gt; 或 &lt;code&gt;height&lt;&#x2F;code&gt; 为 &lt;code&gt;double.INFINITY&lt;&#x2F;code&gt; 的也算。有时也会用 &lt;strong&gt;as big as possible&lt;&#x2F;strong&gt; 来描述这些 widgets。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;flex&quot;&gt;Flex&lt;&#x2F;h4&gt;
 &lt;blockquote&gt;
@@ -34,15 +33,13 @@
 &lt;p&gt;当在有限的空间内，会撑满整个空间；如果在一个 unbounded constraints 容器里，就匹配子 widget 的大小。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-row-column.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-row-column.png 187w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-row-column.png 187w&quot;
-    sizes=&quot;(max-width: 187px) 100vw, 187px&quot; width=&quot;187&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;374&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;最常见的是 &lt;code&gt;Row&lt;&#x2F;code&gt; 和 &lt;code&gt;Column&lt;&#x2F;code&gt;，如果不嫌麻烦的话，也可以使用 &lt;code&gt;Flex&lt;&#x2F;code&gt; widget。里面可以放 &lt;code&gt;Flexible&lt;&#x2F;code&gt; widget，也可以不是。如果有 &lt;code&gt;Flexible&lt;&#x2F;code&gt; widgets 会把剩余空间计算出来分配给这些 widgets。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;flexible&quot;&gt;Flexible&lt;&#x2F;h4&gt;
 &lt;p&gt;跟 &lt;code&gt;Flex&lt;&#x2F;code&gt; 搭配使用，&lt;code&gt;Flexible&lt;&#x2F;code&gt; 可以用来声明使用百分之多少的空间。比如 &lt;code&gt;flex = 1&lt;&#x2F;code&gt; 也就是 &lt;code&gt;1&#x2F;all&lt;&#x2F;code&gt;，如果有两个 widgets，另一个也是 1，那么 &lt;code&gt;all = 2&lt;&#x2F;code&gt;，每个 widget 分配到 50% 的空间。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-expanded.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-expanded.png 187w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-expanded.png 187w&quot;
-    sizes=&quot;(max-width: 187px) 100vw, 187px&quot; width=&quot;187&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;374&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;Expanded&lt;&#x2F;code&gt; 是最常见的 &lt;code&gt;Flexible&lt;&#x2F;code&gt; widget，它会填满主方向上可用的空间（比如 Row 的水平空间或 Column 的垂直空间）。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;zhu-yao-widgets&quot;&gt;主要 Widgets&lt;&#x2F;h3&gt;
 &lt;h4 id=&quot;container&quot;&gt;Container&lt;&#x2F;h4&gt;
@@ -63,8 +60,7 @@
 &lt;p&gt;这是一个没有孩子的 container，因此它会表现地尽量大，就像这样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;如果设置了 &lt;code&gt;width&lt;&#x2F;code&gt; 或 &lt;code&gt;height&lt;&#x2F;code&gt;，则会根据设置的值来表现：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MaterialApp&lt;&#x2F;span&gt;&lt;span&gt;(
 &lt;&#x2F;span&gt;&lt;span&gt;  home&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Scaffold&lt;&#x2F;span&gt;&lt;span&gt;(
@@ -78,8 +74,7 @@
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-width.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-width.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-width.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;如果有 child，则会以 child 的 size 为准：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MaterialApp&lt;&#x2F;span&gt;&lt;span&gt;(
 &lt;&#x2F;span&gt;&lt;span&gt;  home&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Scaffold&lt;&#x2F;span&gt;&lt;span&gt;(
@@ -92,8 +87,7 @@
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-child.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-child.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-child.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;除此之外，还可以设置 padding, margin, child 的对齐方式，等等。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;stack&quot;&gt;Stack&lt;&#x2F;h4&gt;
 &lt;p&gt;&lt;code&gt;Stack&lt;&#x2F;code&gt; 有点像 css 的绝对布局，可以在上面盖一些 widgets，比如 profile 页的背景图上放一些个人信息。&lt;&#x2F;p&gt;
@@ -117,13 +111,11 @@
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-1.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-1.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-1.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;StackFit.loose&lt;&#x2F;code&gt; 的意思是，如果 child size 不比 Stack 的大，就用 child 的 size。而如果设置为 &lt;code&gt;StackFit.expand&lt;&#x2F;code&gt; 则会让所有非 &lt;code&gt;Positioned&lt;&#x2F;code&gt; 的 widgets 使用 Stack 的 size。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-2.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-2.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-2.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;Text(&#x27;world&#x27;)&lt;&#x2F;code&gt; 现在就跟 Stack 一样大了，所以看起来像是 &lt;code&gt;alignment.center&lt;&#x2F;code&gt; 没有生效。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;row-and-column&quot;&gt;Row and Column&lt;&#x2F;h4&gt;
 &lt;p&gt;它们都是 Flex widgets，Row 可以将 children 横着放，column 可以将 children 竖着放。&lt;&#x2F;p&gt;
@@ -175,13 +167,11 @@
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squrebox.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squrebox.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squrebox.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;答案是，不会，它会变成这样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squarebox-real.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squarebox-real.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squarebox-real.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;不是设置了 constraints 系统就要按着这个 constraints 来，在经过计算之后，系统会发现这个 constraints 无法满足需求，而被舍弃，具体过程如下：&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;Container&lt;&#x2F;code&gt; 的 &lt;code&gt;build&lt;&#x2F;code&gt; 方法里，发现有设置过 constraints，最终会返回一个 &lt;code&gt;BoxConstraints&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BoxConstraints&lt;&#x2F;span&gt;&lt;span&gt;(
@@ -237,23 +227,19 @@
 &lt;p&gt;能够使用 VSCode 作为主力 IDE 这本身就有足够的吸引力，Debug、Widget Inspector、Hot Reload、Automatically get packages 等等一应俱全，就连被诟病的嵌套过深，VSCode 也提供了一些便利：在每个括号后面以注释形式标注（但不是真的注释）&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-nested.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-nested.jpg 278w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-nested.jpg 278w&quot;
-    sizes=&quot;(max-width: 278px) 100vw, 278px&quot; width=&quot;278&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;556&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;对某个类的参数不太清楚，光标移上去即可，想看下实现，Cmd+Click。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-hover.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-hover.jpg 264.5w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-hover.jpg 264.5w&quot;
-    sizes=&quot;(max-width: 264.5px) 100vw, 264.5px&quot; width=&quot;264.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;529&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;想快速看下 Framework 里某个类的实现，Cmd+T&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-cmd-t.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-cmd-t.jpg 306.5w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-cmd-t.jpg 306.5w&quot;
-    sizes=&quot;(max-width: 306.5px) 100vw, 306.5px&quot; width=&quot;306.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;613&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;还有一些贴心的小功能&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-widget.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-widget.jpg 112w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-vscode-widget.jpg 112w&quot;
-    sizes=&quot;(max-width: 112px) 100vw, 112px&quot; width=&quot;112&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;224&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;当然也有改进空间，比如特别想要 auto import 功能。如果想要更完善的支持，可以使用 Android Studio，后者还提供了 Widget Tree、Performance Chart 等功能。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;kai-fa-yu-yan&quot;&gt;开发语言&lt;&#x2F;h4&gt;
 &lt;p&gt;Dart 这门语言本身并不复杂，看着挺舒服的，没有新发明一些概念，尽量简单（有些地方感觉过于简单了，比如 class 可以同时表示 interface），对异步编程有着很好的支持，自带的标准库基本够用。如果真静下心来看的话，不出三天，语言方面应该不会有太大的障碍了。&lt;&#x2F;p&gt;
@@ -285,11 +271,9 @@
 &lt;p&gt;我的一个比较简单的 App，上架了之后，在 Google Play 的大小为 7.8M，在 AppStore 上是 15 M，所以大致是 Android 的比原生大 5 M，iOS 的比原生大 10 M 那样。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-android-size.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-android-size.jpg 153.5w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-android-size.jpg 153.5w&quot;
-    sizes=&quot;(max-width: 153.5px) 100vw, 153.5px&quot; width=&quot;153.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;307&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-ios-size.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-ios-size.jpg 377w,&amp;#x2F;posts&amp;#x2F;is-flutter-the-future&amp;#x2F;flutter-ios-size.jpg 377w&quot;
-    sizes=&quot;(max-width: 377px) 100vw, 377px&quot; width=&quot;377&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h4 id=&quot;crash&quot;&gt;Crash&lt;&#x2F;h4&gt;
+        width=&quot;754&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h4 id=&quot;crash&quot;&gt;Crash&lt;&#x2F;h4&gt;
 &lt;p&gt;目前还没有这方面的数据，因为量不大，不好下结论。从个人体验来说，遇到的概率比较少，在 Develop 模式下倒是遇到过开机 Crash，Release 模式下还没有遇到过。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;cha-jian-ji-zhi&quot;&gt;插件机制&lt;&#x2F;h3&gt;
 &lt;p&gt;Flutter 提供了一套完善的插件机制方便与 Native 端进行数据传送、方法调用、流式处理。大致的实现是定义好两端都认识的基础类型，然后对消息进行编码和解码，再根据不同的消息使用目的（数据传送还是方法调用还是事件订阅）来执行不同的操作，这就给了 Flutter 很大的扩展空间。&lt;&#x2F;p&gt;
@@ -346,8 +330,7 @@
 &lt;p&gt;再来看看 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;felangel&#x2F;bloc&quot;&gt;flutter_bloc&lt;&#x2F;a&gt;，这也是关注度蛮高的一个项目，说这个之前先说说 bloc，这是 flutter 提的一个概念，运行机制大致如下：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;bloc-redux&amp;#x2F;movie250-bloc.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;bloc-redux&amp;#x2F;movie250-bloc.png 280.5w,&amp;#x2F;posts&amp;#x2F;bloc-redux&amp;#x2F;movie250-bloc.png 280.5w&quot;
-    sizes=&quot;(max-width: 280.5px) 100vw, 280.5px&quot; width=&quot;280.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;561&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;它更像一个提案，缺少标准和实现。flutter_bloc 就是对这个提案的一个实现。这个实现本质上没觉得跟 flutter_redux 有太大的区别，而复杂度倒是增加了不少，还提出了一些新的概念(比如 BlocSupervisor, BlocDelegate, Transation)，增加了理解上的困难。在处理核心的 state 问题上依旧跟 flutter_redux 一样，甚至都没有做 &lt;code&gt;==&lt;&#x2F;code&gt; check。&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;_bindStateSubject&lt;&#x2F;span&gt;&lt;span&gt;() {
 &lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Event&lt;&#x2F;span&gt;&lt;span&gt; currentEvent;
@@ -556,8 +539,7 @@
 &lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;video.twimg.com&#x2F;ext_tw_video&#x2F;1070286725656662017&#x2F;pu&#x2F;vid&#x2F;360x640&#x2F;uoeUgoq2-EigTzi7.mp4?tag=6&quot;&gt;这里&lt;&#x2F;a&gt;可以查看最终的效果。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-demo.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-demo.png 482w,&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-demo.png 482w&quot;
-    sizes=&quot;(max-width: 482px) 100vw, 482px&quot; width=&quot;482&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;mu-lu-hua-fen&quot;&gt;目录划分&lt;&#x2F;h3&gt;
+        width=&quot;964&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;mu-lu-hua-fen&quot;&gt;目录划分&lt;&#x2F;h3&gt;
 &lt;p&gt;接到这个需求后首先要考虑的是目录结构应该怎么划分，这也是架构的一部分，我是这么分的:&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;blocs&#x2F;
 &lt;&#x2F;span&gt;&lt;span&gt;widgets&#x2F;
@@ -621,8 +603,7 @@
 &lt;p&gt;BLoC 其实就是 ViewModel，有了 API 实现之后，接下来就要让 Widget 可以用上这些数据，这就是 BLoC 做的事。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-bloc.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-bloc.png 280.5w,&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-bloc.png 280.5w&quot;
-    sizes=&quot;(max-width: 280.5px) 100vw, 280.5px&quot; width=&quot;280.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;561&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;Widget 告诉 BLoC 发生了什么，BLoC 告诉 Widget 哪些数据更新了。&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MoviesBloc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocBase&lt;&#x2F;span&gt;&lt;span&gt; {
 &lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BehaviorSubject&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieEnvelope&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; _movieEnvelope &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BehaviorSubject&lt;&#x2F;span&gt;&lt;span&gt;();
@@ -698,8 +679,7 @@
 &lt;h3 id=&quot;shou-ye-bu-ju&quot;&gt;首页布局&lt;&#x2F;h3&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-home-layout.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-home-layout.png 127.5w,&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-home-layout.png 127.5w&quot;
-    sizes=&quot;(max-width: 127.5px) 100vw, 127.5px&quot; width=&quot;127.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;255&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;Flutter 提供了两种列表布局方式: &lt;code&gt;ListView&lt;&#x2F;code&gt; 和 &lt;code&gt;GridView&lt;&#x2F;code&gt;，如果页面里除了列表还有其他元素（比如顶部的 SlideView 等），就需要用到 &lt;code&gt;CustomScrollView&lt;&#x2F;code&gt; 或者 &lt;code&gt;NestedScrollView&lt;&#x2F;code&gt;，首页除了列表没有其他元素，同时一行可能包含多个视图，因此我们选择 &lt;a href=&quot;https:&#x2F;&#x2F;docs.flutter.io&#x2F;flutter&#x2F;widgets&#x2F;GridView-class.html&quot;&gt;GridView&lt;&#x2F;a&gt;。&lt;&#x2F;p&gt;
 &lt;p&gt;GridView 的构建可以使用 &lt;code&gt;GridView.builder&lt;&#x2F;code&gt;, 它需要提供几个关键信息:&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;GridView&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;builder&lt;&#x2F;span&gt;&lt;span&gt;(

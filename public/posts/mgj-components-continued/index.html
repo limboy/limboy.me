@@ -77,8 +77,7 @@
 <h4 id="zhu-ce-zhe-ge-zu-jian-guan-xin-de-url">注册这个组件关心的 URL</h4>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;mgj-components-continued&#x2F;MGJRouter.png"
-    srcset="&#x2F;posts&#x2F;mgj-components-continued&#x2F;MGJRouter.png 216w,&#x2F;posts&#x2F;mgj-components-continued&#x2F;MGJRouter.png 216w"
-    sizes="(max-width: 216px) 100vw, 216px" width="216" /></p><pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[MGJRouter </span><span style="color:#4271ae;">registerURLPattern:</span><span style="color:#839c00;">@&quot;mgj://detail?id=:id&quot; </span><span style="color:#4271ae;">toHandler:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">NSDictionary </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">routerParameters) {
+        width="432" /></p><pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span>[MGJRouter </span><span style="color:#4271ae;">registerURLPattern:</span><span style="color:#839c00;">@&quot;mgj://detail?id=:id&quot; </span><span style="color:#4271ae;">toHandler:</span><span style="color:#3e999f;">^</span><span style="color:#4271ae;">(</span><span style="color:#c99e00;">NSDictionary </span><span style="color:#3e999f;">*</span><span style="color:#4271ae;">routerParameters) {
 </span><span style="color:#4271ae;">    </span><span style="color:#c99e00;">NSNumber </span><span style="color:#3e999f;">*</span><span style="color:#8959a8;">id </span><span style="color:#3e999f;">=</span><span style="color:#4271ae;"> routerParameters[</span><span style="color:#839c00;">@&quot;id&quot;</span><span style="color:#4271ae;">];
 </span><span style="color:#4271ae;">    </span><span style="color:#8e908c;">// create view controller with id
 </span><span style="color:#4271ae;">    </span><span style="color:#8e908c;">// push view controller
@@ -89,8 +88,7 @@
 <p>当有一些场景不适合用 URL 的方式时，就可以通过注册 protocol 来实现</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;mgj-components-continued&#x2F;ModuleManager.png"
-    srcset="&#x2F;posts&#x2F;mgj-components-continued&#x2F;ModuleManager.png 216w,&#x2F;posts&#x2F;mgj-components-continued&#x2F;ModuleManager.png 216w"
-    sizes="(max-width: 216px) 100vw, 216px" width="216" /></p>
+        width="432" /></p>
 <p><code>[ModuleManager registerClass:ClassA forProtocol:ProtocolA]</code> 的结果就是在 MM 内部维护的 dict 里新加了一个映射关系。</p>
 <p><code>[ModuleManager classForProtocol:ProtocolA]</code> 的返回结果就是之前在 MM 内部 dict 里 protocol 对应的 class，使用方不需要关心这个 class 是个什么东东，反正实现了 <code>ProtocolA</code> 协议，拿来用就行。</p>
 <p>这里需要有一个公共的地方来容纳这些 public protocl，也就是图中的 <code>PublicProtocl.h</code></p>

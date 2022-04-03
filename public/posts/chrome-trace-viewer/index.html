@@ -58,8 +58,7 @@
   <div class="prose lg:prose-xl max-w-full my-6">
     
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b580eea70090ee05b7c8885712df2b271395a8b4.png"
-    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b580eea70090ee05b7c8885712df2b271395a8b4.png 695w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b580eea70090ee05b7c8885712df2b271395a8b4.png 695w"
-    sizes="(max-width: 695px) 100vw, 695px" width="695" /></p>
+        width="1390" /></p>
 <p>最近研究了下 Chrome 自带的 Trace Viewer，发现功能还挺强大的，用来做 Performance Profile，Timeline Tracing 等很方便，但官方的使用文档比较晦涩，资料也比较匮乏和分散，就专门整理了下。</p>
 <blockquote>
 <p>注：Trace Viewer 其实可以脱离 <code>chrome://tracing</code> 在线使用，具体操作后面会讲到</p>
@@ -72,8 +71,7 @@
 <p>catapult 源码里包含了很多 test case，git clone 下来后，运行 <code>$CATAPULT/bin/run_dev_server</code>. 然后在浏览器中打开 <code>http://localhost:8003/tracing_examples/trace_viewer.html</code> 能看到很多 Demo</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b45847555835cc49338b5d58c50fd5f656b4e681.jpg"
-    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b45847555835cc49338b5d58c50fd5f656b4e681.jpg 688.5w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b45847555835cc49338b5d58c50fd5f656b4e681.jpg 688.5w"
-    sizes="(max-width: 688.5px) 100vw, 688.5px" width="688.5" /></p>
+        width="1377" /></p>
 <p>不过 Google 目前正在开发另一套工具 <a href="https://ui.perfetto.dev/#!/">perfetto</a> 打算替换 Trace Viewer，我初步使用了下，感觉不如 Trace Viewer 简洁。</p>
 <h2 id="zai-kai-yuan-xiang-mu-zhong-de-shi-yong">在开源项目中的使用</h2>
 <p>Golang 用它来可视化展示执行过程 https://golang.org/cmd/trace/</p>
@@ -82,20 +80,17 @@
 </span></code></pre>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;49df6cdfe957da75a44c5a074e02d5e7b80dedc1.jpg"
-    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;49df6cdfe957da75a44c5a074e02d5e7b80dedc1.jpg 1049w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;49df6cdfe957da75a44c5a074e02d5e7b80dedc1.jpg 1049w"
-    sizes="(max-width: 1049px) 100vw, 1049px" width="1049" /></p>
+        width="2098" /></p>
 <p>Facebook 的 Buck Build 系统，用它来展示 Build 时发生了什么</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;a3adb318505c4c13881b90eb2b031f8afb977da7.png"
-    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;a3adb318505c4c13881b90eb2b031f8afb977da7.png 450w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;a3adb318505c4c13881b90eb2b031f8afb977da7.png 450w"
-    sizes="(max-width: 450px) 100vw, 450px" width="450" /></p>
+        width="900" /></p>
 <p>从这两个项目可以看出来 Trace Viewer 对于呈现「某段时间发生了什么」 还是有过人之处。</p>
 <h2 id="trace-viewer-format">Trace Viewer Format</h2>
 <p>Trace Viewer 有一套自己的 <a href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU/edit">Trace Event Format</a>，只要文件遵循这个格式，就可以被展示。比如：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;23d3a314c8c47e6ea8bf35f46d0e58ea7c9a62be.png"
-    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;23d3a314c8c47e6ea8bf35f46d0e58ea7c9a62be.png 815w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;23d3a314c8c47e6ea8bf35f46d0e58ea7c9a62be.png 815w"
-    sizes="(max-width: 815px) 100vw, 815px" width="815" /></p>
+        width="1630" /></p>
 <p>对应的 json 文件内容：</p>
 <pre style="background-color:#f9f9f9;color:#111111;"><code><span>[ {&quot;name&quot;: &quot;出方案&quot;, &quot;ph&quot;: &quot;B&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 0},
 </span><span>  {&quot;name&quot;: &quot;出方案&quot;, &quot;ph&quot;: &quot;E&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 28800000000},
@@ -137,8 +132,7 @@
 <p>左边的 <code>Process Main</code> 能不能也进行个性化定制以显得不那么突兀呢？比如将它改成「时间线」</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;2b199fda93a030e4ceaa09317e67bfd4407a08b1.png"
-    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;2b199fda93a030e4ceaa09317e67bfd4407a08b1.png 739w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;2b199fda93a030e4ceaa09317e67bfd4407a08b1.png 739w"
-    sizes="(max-width: 739px) 100vw, 739px" width="739" /></p>
+        width="1478" /></p>
 <p>这就要使用 MetaData Phase 了</p>
 <pre style="background-color:#f9f9f9;color:#111111;"><code><span>{&quot;name&quot;: &quot;process_name&quot;, &quot;ph&quot;: &quot;M&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;args&quot;: {&quot;name&quot;: &quot;时间线&quot;}}
 </span></code></pre>
@@ -146,8 +140,7 @@
 <p>有一些事件，它不是执行耗时，但包含了其他事件，比如「我的一天」，它不是一个可被执行的事件，但将一天做的事情包含进来。这些被称为「异步事件」，表现上就像这样：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b918640dca619c8e393599f7096a26043fd70f72.png"
-    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b918640dca619c8e393599f7096a26043fd70f72.png 757w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;b918640dca619c8e393599f7096a26043fd70f72.png 757w"
-    sizes="(max-width: 757px) 100vw, 757px" width="757" /></p>
+        width="1514" /></p>
 <p>独占一栏，同时使用了斜体字，如果仔细看，还会发现顶部多了一条黑色的线。异步事件的 <code>ph</code> 为 <code>b</code> 和 <code>e</code> 也是 Begin 和 End，只不过变成了小写，同时还要提供 <code>id</code> 和 <code>cat</code></p>
 <pre style="background-color:#f9f9f9;color:#111111;"><code><span>[
 </span><span>  {&quot;name&quot;: &quot;我的一天&quot;, &quot;ph&quot;: &quot;b&quot;, &quot;cat&quot;: &quot;daily&quot;, &quot;id&quot;: &quot;my-day&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 0},
@@ -158,8 +151,7 @@
 <p>一件事可能会被拆分为更小的单元，然后执行过程中也会穿插着其他的事件，针对这样的场景，可以通过 <code>Flow Event</code> 来表示</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;7a54bb4d237b14089e5bc83a2f9329b686c941c8.jpg"
-    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;7a54bb4d237b14089e5bc83a2f9329b686c941c8.jpg 717w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;7a54bb4d237b14089e5bc83a2f9329b686c941c8.jpg 717w"
-    sizes="(max-width: 717px) 100vw, 717px" width="717" /></p>
+        width="1434" /></p>
 <p>注意，在「出方案」和「写代码」之间多了一条线</p>
 <pre style="background-color:#f9f9f9;color:#111111;"><code><span>  {&quot;name&quot;: &quot;出方案&quot;, &quot;cname&quot;: &quot;good&quot;,&quot;ph&quot;: &quot;X&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 0, &quot;dur&quot;: 28800000000},
 </span><span>  {&quot;name&quot;: &quot;connect&quot;, &quot;ph&quot;: &quot;s&quot;, &quot;id&quot;: &quot;my-work&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;工作&quot;, &quot;ts&quot;: 28800000000},
@@ -178,14 +170,12 @@
 </span></code></pre>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;9fafe4e26805bce1fde36f7970389735fa66ec5a.jpg"
-    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;9fafe4e26805bce1fde36f7970389735fa66ec5a.jpg 741w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;9fafe4e26805bce1fde36f7970389735fa66ec5a.jpg 741w"
-    sizes="(max-width: 741px) 100vw, 741px" width="741" /></p>
+        width="1482" /></p>
 <p>中间那根红线就是我们刚加的事件，选中之后会在底部出现该事件的详细信息。</p>
 <p>作为一个上进的青年，一天下来之后，需要留一段时间反思今天做的好的和不好的，这可以通过 Snapshot 来体现，就像这样</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;200ba2a883121853011e9e0c22757929ee257a84.png"
-    srcset="&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;200ba2a883121853011e9e0c22757929ee257a84.png 636w,&#x2F;posts&#x2F;chrome-trace-viewer&#x2F;200ba2a883121853011e9e0c22757929ee257a84.png 636w"
-    sizes="(max-width: 636px) 100vw, 636px" width="636" /></p>
+        width="1272" /></p>
 <p>右上角那个圆点就是 Snapshot 在 Timeline 上的表现，点击之后可以在底部看到详细内容。</p>
 <pre style="background-color:#f9f9f9;color:#111111;"><code><span>{&quot;name&quot;: &quot;反思&quot;, &quot;ph&quot;: &quot;O&quot;, &quot;id&quot;: &quot;Ref&quot;, &quot;pid&quot;: &quot;Main&quot;, &quot;tid&quot;: &quot;其他&quot;, &quot;ts&quot;: 37800000000, &quot;args&quot;: {&quot;snapshot&quot;: &quot;充实的一天呢&quot;}}
 </span></code></pre>

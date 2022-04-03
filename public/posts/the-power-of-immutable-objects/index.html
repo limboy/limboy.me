@@ -83,8 +83,7 @@
 <p>接下来看看 ReactJS 拿到这个新的 property 后会如何处理，先来看一张图</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;the-power-of-immutable-objects&#x2F;should-component-update.png"
-    srcset="&#x2F;posts&#x2F;the-power-of-immutable-objects&#x2F;should-component-update.png 277.5w,&#x2F;posts&#x2F;the-power-of-immutable-objects&#x2F;should-component-update.png 277.5w"
-    sizes="(max-width: 277.5px) 100vw, 277.5px" width="277.5" /></p>
+        width="555" /></p>
 <p>View 会对新的 property 和当前的 property 做比较，如果数据是一致的，那就什么也不做（就像 C2 一样），它下面的节点也不用比较了；如果数据不一致，再往下找，一直找到那[几]个需要更新的节点。</p>
 <p>这整个过程没有使用到 Mutable Objects，但照样 Getting Things Done。</p>
 <h3 id="xiao-jie">小结</h3>

@@ -62,13 +62,11 @@
 <p>我们先来分析下 GUI 编程的本质，我喜欢把它抽象为视图和数据的结合。其中视图负责两件事：展示和交互，展示什么由数据决定。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814474678383.jpg"
-    srcset="&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814474678383.jpg 638w,&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814474678383.jpg 638w"
-    sizes="(max-width: 638px) 100vw, 638px" width="638" /></p>
+        width="1276" /></p>
 <p>其中单向数据流可以通过<a href="http://limboy.me/tech/2016/12/04/reswift-analyze.html">之前介绍的 ReSwift</a> 完成。看起来好像没 RxSwift 什么事情，其实不然，RxSwift 可以在 UniDirectional Data Flow 的各个阶段都发挥作用，从而让 Data 的处理和流动更加简洁和清晰。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814474032179.jpg"
-    srcset="&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814474032179.jpg 636w,&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814474032179.jpg 636w"
-    sizes="(max-width: 636px) 100vw, 636px" width="636" /></p>
+        width="1272" /></p>
 <ol>
 <li>通过对 RxCocoa 的各种回调进行统一处理，方便了「Interact」的处理。</li>
 <li>通过对 <code>Observable</code> 的 transform 和 composite，方便了 <code>Action</code> 的生成（比如使用 <code>throttle</code> 来压缩 <code>Action</code>）。</li>
@@ -101,15 +99,13 @@
 <p>所以，从生活中也能看到 Rx 的影子。「有些事情急不得，你得等它自己熟」，异步，其实就是跟时间打交道，不同的时间，拿到的数据也会不一样。可以<a href="http://rxmarbles.com">在线感受下</a></p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814518766811.jpg"
-    srcset="&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814518766811.jpg 813w,&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814518766811.jpg 813w"
-    sizes="(max-width: 813px) 100vw, 813px" width="813" /></p>
+        width="1626" /></p>
 <p>这里的核心是当数据有变化时，能够立刻知晓，并且通过组合和转换后，可以即时作出响应。有点像塔防，先在路上的各个节点埋好武器，然后等着小怪兽们过来。</p>
 <h3 id="rxswift-workflow">RxSwift Workflow</h3>
 <p>大致分为这么几个阶段：先把 Native Object 变成 Observable，再通过 Observable 内置的各种强大的转换和组合能力变成新的 Observable，最后消费新的 Observable 的数据。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814540314644.jpg"
-    srcset="&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814540314644.jpg 724w,&#x2F;posts&#x2F;time-to-learn-rxswift&#x2F;14814540314644.jpg 724w"
-    sizes="(max-width: 724px) 100vw, 724px" width="724" /></p><h4 id="native-object-observable">Native Object -&gt; Observable</h4>
+        width="1448" /></p><h4 id="native-object-observable">Native Object -&gt; Observable</h4>
 <h5 id="rx-extension">.rx extension</h5>
 <p>假设需要处理点击事件，正常的做法是给 Tap Gesture 添加一个 Target-Action，然后在那里实现具体的逻辑，这样的问题在于需要重新取名字，而且丢失了上下文。RxSwift (确切说是 RxCocoa) 给系统的诸多原生控件（包括像 <code>URLSession</code>）提供了 rx 扩展，所以点击的处理就变成了这样：</p>
 <pre data-lang="swift" style="background-color:#f9f9f9;color:#111111;" class="language-swift "><code class="language-swift" data-lang="swift"><span style="color:#8959a8;">let</span><span> tapBackground </span><span style="color:#3e999f;">=</span><span> UITapGestureRecognizer()

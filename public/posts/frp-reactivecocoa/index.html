@@ -69,13 +69,11 @@ ReactiveCocoa与Functional Reactive Programming
 <p>FRP 提供了一种信号机制来实现这样的效果，通过信号来记录值的变化。信号可以被叠加、分割或合并。通过对信号的组合，就不需要去监听某个值或事件。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_demo.png"
-    srcset="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_demo.png 353w,&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_demo.png 353w"
-    sizes="(max-width: 353px) 100vw, 353px" width="353" /></p>
+        width="706" /></p>
 <p>这在重交互的应用里是非常有用的。以注册为例：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_register_demo.png"
-    srcset="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_register_demo.png 198w,&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_register_demo.png 198w"
-    sizes="(max-width: 198px) 100vw, 198px" width="198" /></p>
+        width="396" /></p>
 <p>提交按钮的状态要跟输入框的状态绑定，比如必选的输入框没有填完时，提交按钮是灰色的，也就是不可点；如果提交按钮不可点，那么文字变成灰色，不然变成蓝色；如果正在提交，那么输入框的文字颜色变成灰色，且不可点，不然变成默认色且可点；如果注册成功就在状态栏显示成功信息，不然显示错误信息，等等。</p>
 <p>可以看到光是注册页就有这么多的联动，在 javascript 中可以采用事件监听来处理，iOS 中更多的是 delegate 模式，本质上都是事件的分发和响应。这种做法的缺点是不够直观，尤其在逻辑比较复杂的情况下。这也是为什么尽管 nodejs 很高效，但由于 javascript 的 callback style 和异步模式不符合正常的编程习惯，让很多人望而却步。</p>
 <p>使用 FRP 主要有两个好处：直观和灵活。直观的代码容易编写、阅读和维护，灵活的特性便于应对变态的需求。</p>
@@ -92,8 +90,7 @@ ReactiveCocoa与Functional Reactive Programming
 <p>可以看到<code>usernameField</code>有了一个新的属性<code>rac_textSignal</code>，这是 RAC 在<code>UITextField</code>category 中添加的，直接用即可。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_combine.png"
-    srcset="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_combine.png 203.5w,&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_combine.png 203.5w"
-    sizes="(max-width: 203.5px) 100vw, 203.5px" width="203.5" /></p><h2 id="rac-de-da-tong-yi">RAC 的大统一</h2>
+        width="407" /></p><h2 id="rac-de-da-tong-yi">RAC 的大统一</h2>
 <p>RAC 统一了对 KVO、UI Event、Network request、Async work 的处理，因为它们本质上都是值的变化(Values over time)。</p>
 <h3 id="kvo">KVO</h3>
 <p>RAC 可以用来监测属性的改变，这点跟 KVO 很像，不过使用了 block，而不是<code>-observeValueForKeyPath:ofObject:change:context:</code></p>
@@ -144,8 +141,7 @@ ReactiveCocoa与Functional Reactive Programming
 <p>简单画了下关系图，罗列了些要点</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_ReactiveCocoa_large.png"
-    srcset="&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_ReactiveCocoa_large.png 816w,&#x2F;posts&#x2F;frp-reactivecocoa&#x2F;FRP_ReactiveCocoa_large.png 816w"
-    sizes="(max-width: 816px) 100vw, 816px" width="816" /></p>
+        width="1632" /></p>
 <p>上面只是大概说了一下 RAC 的使用情景和用法，更多的例子可以到<a href="https://github.com/ReactiveCocoa/ReactiveCocoa">项目主页</a>中查看。</p>
 <h3 id="can-kao">参考</h3>
 <ul>

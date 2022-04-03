@@ -80,8 +80,7 @@
 <p>所以只要定位到包含该单词的行，然后找到符合特征(<code>dd:dd:dd.dd</code>)的字符串即可。这里遇到一个小问题，在打开某些字幕文件时会出现乱码，通过 Hex Editor 看了下长这样：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;english-video-clips&#x2F;utf-16.jpg"
-    srcset="&#x2F;posts&#x2F;english-video-clips&#x2F;utf-16.jpg 527w,&#x2F;posts&#x2F;english-video-clips&#x2F;utf-16.jpg 527w"
-    sizes="(max-width: 527px) 100vw, 527px" width="527" /></p>
+        width="1054" /></p>
 <p>BOM 头是 <code>0xFFFE</code>（小端序），同时还有用来占位的 <code>00</code>，是 <code>utf16le</code> 编码的文件。所以在判断该用哪种编码打开时要格外注意。</p>
 <h3 id="di-san-bu-jie-qu-shi-pin">第三步：截取视频</h3>
 <p>这一部分比较简单，一行命令就妥了：</p>
@@ -99,8 +98,7 @@
 <p>简单介绍下 Raycast，它是一个 Mac 下的启动器，跟 <a href="https://www.alfredapp.com/">Alfred</a> 类似，但 UI 和 UE 比 Alfred 更好，还免费，支持的 Extension 也不少。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;english-video-clips&#x2F;raycast.jpg"
-    srcset="&#x2F;posts&#x2F;english-video-clips&#x2F;raycast.jpg 750w,&#x2F;posts&#x2F;english-video-clips&#x2F;raycast.jpg 750w"
-    sizes="(max-width: 750px) 100vw, 750px" width="750" /></p>
+        width="1500" /></p>
 <p>这里我们会用到一个脚本用来生成单词视频，一个 Extension 用来浏览单词对应的视频和解释，同时支持添加到单词本（Add to New）。</p>
 <p>创建脚本的过程很简单，启动 Raycast 后，输入 <code>Create Script Command</code>，输入必要的信息，就会生成一个 <code>.sh</code> 结尾的文件（需要先在 Setting 的 Extension 页，<code>Add Script Directory</code>），把生成视频的脚本复制上去就行了。效果如下：</p>
 <video playsinline controls>

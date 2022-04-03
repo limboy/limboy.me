@@ -65,8 +65,7 @@
 </blockquote>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-scrollview.png"
-    srcset="&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-scrollview.png 73w,&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-scrollview.png 73w"
-    sizes="(max-width: 73px) 100vw, 73px" width="73" /></p>
+        width="146" /></p>
 <p><code>ScrollView</code> 和它的子类比如 <code>ListView</code> 或 <code>GridView</code> 是常见的 Unbounded Constraints. 也就是在某一个方向没有限制大小。其他的 widget 只要能够设置 <code>width</code> 或 <code>height</code> 为 <code>double.INFINITY</code> 的也算。有时也会用 <strong>as big as possible</strong> 来描述这些 widgets。</p>
 <h4 id="flex">Flex</h4>
 <blockquote>
@@ -76,15 +75,13 @@
 <p>当在有限的空间内，会撑满整个空间；如果在一个 unbounded constraints 容器里，就匹配子 widget 的大小。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-row-column.png"
-    srcset="&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-row-column.png 187w,&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-row-column.png 187w"
-    sizes="(max-width: 187px) 100vw, 187px" width="187" /></p>
+        width="374" /></p>
 <p>最常见的是 <code>Row</code> 和 <code>Column</code>，如果不嫌麻烦的话，也可以使用 <code>Flex</code> widget。里面可以放 <code>Flexible</code> widget，也可以不是。如果有 <code>Flexible</code> widgets 会把剩余空间计算出来分配给这些 widgets。</p>
 <h4 id="flexible">Flexible</h4>
 <p>跟 <code>Flex</code> 搭配使用，<code>Flexible</code> 可以用来声明使用百分之多少的空间。比如 <code>flex = 1</code> 也就是 <code>1/all</code>，如果有两个 widgets，另一个也是 1，那么 <code>all = 2</code>，每个 widget 分配到 50% 的空间。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-expanded.png"
-    srcset="&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-expanded.png 187w,&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-expanded.png 187w"
-    sizes="(max-width: 187px) 100vw, 187px" width="187" /></p>
+        width="374" /></p>
 <p><code>Expanded</code> 是最常见的 <code>Flexible</code> widget，它会填满主方向上可用的空间（比如 Row 的水平空间或 Column 的垂直空间）。</p>
 <h3 id="zhu-yao-widgets">主要 Widgets</h3>
 <h4 id="container">Container</h4>
@@ -105,8 +102,7 @@
 <p>这是一个没有孩子的 container，因此它会表现地尽量大，就像这样：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-container.png"
-    srcset="&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-container.png 73w,&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-container.png 73w"
-    sizes="(max-width: 73px) 100vw, 73px" width="73" /></p>
+        width="146" /></p>
 <p>如果设置了 <code>width</code> 或 <code>height</code>，则会根据设置的值来表现：</p>
 <pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">return </span><span style="color:#c99e00;">MaterialApp</span><span>(
 </span><span>  home</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">Scaffold</span><span>(
@@ -120,8 +116,7 @@
 </span></code></pre>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-container-width.png"
-    srcset="&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-container-width.png 73w,&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-container-width.png 73w"
-    sizes="(max-width: 73px) 100vw, 73px" width="73" /></p>
+        width="146" /></p>
 <p>如果有 child，则会以 child 的 size 为准：</p>
 <pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">return </span><span style="color:#c99e00;">MaterialApp</span><span>(
 </span><span>  home</span><span style="color:#3e999f;">: </span><span style="color:#c99e00;">Scaffold</span><span>(
@@ -134,8 +129,7 @@
 </span></code></pre>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-container-child.png"
-    srcset="&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-container-child.png 73w,&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-container-child.png 73w"
-    sizes="(max-width: 73px) 100vw, 73px" width="73" /></p>
+        width="146" /></p>
 <p>除此之外，还可以设置 padding, margin, child 的对齐方式，等等。</p>
 <h4 id="stack">Stack</h4>
 <p><code>Stack</code> 有点像 css 的绝对布局，可以在上面盖一些 widgets，比如 profile 页的背景图上放一些个人信息。</p>
@@ -159,13 +153,11 @@
 </span></code></pre>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-stack-1.png"
-    srcset="&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-stack-1.png 73w,&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-stack-1.png 73w"
-    sizes="(max-width: 73px) 100vw, 73px" width="73" /></p>
+        width="146" /></p>
 <p><code>StackFit.loose</code> 的意思是，如果 child size 不比 Stack 的大，就用 child 的 size。而如果设置为 <code>StackFit.expand</code> 则会让所有非 <code>Positioned</code> 的 widgets 使用 Stack 的 size。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-stack-2.png"
-    srcset="&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-stack-2.png 73w,&#x2F;posts&#x2F;flutter-layout&#x2F;flutter-stack-2.png 73w"
-    sizes="(max-width: 73px) 100vw, 73px" width="73" /></p>
+        width="146" /></p>
 <p><code>Text('world')</code> 现在就跟 Stack 一样大了，所以看起来像是 <code>alignment.center</code> 没有生效。</p>
 <h4 id="row-and-column">Row and Column</h4>
 <p>它们都是 Flex widgets，Row 可以将 children 横着放，column 可以将 children 竖着放。</p>
@@ -217,13 +209,11 @@
 </span></code></pre>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-squrebox.png"
-    srcset="&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-squrebox.png 73w,&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-squrebox.png 73w"
-    sizes="(max-width: 73px) 100vw, 73px" width="73" /></p>
+        width="146" /></p>
 <p>答案是，不会，它会变成这样：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-squarebox-real.png"
-    srcset="&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-squarebox-real.png 73w,&#x2F;posts&#x2F;flutter-layout&#x2F;Flutter-squarebox-real.png 73w"
-    sizes="(max-width: 73px) 100vw, 73px" width="73" /></p>
+        width="146" /></p>
 <p>不是设置了 constraints 系统就要按着这个 constraints 来，在经过计算之后，系统会发现这个 constraints 无法满足需求，而被舍弃，具体过程如下：</p>
 <p><code>Container</code> 的 <code>build</code> 方法里，发现有设置过 constraints，最终会返回一个 <code>BoxConstraints</code>:</p>
 <pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#c99e00;">BoxConstraints</span><span>(

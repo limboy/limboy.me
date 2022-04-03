@@ -37,8 +37,7 @@
 &lt;p&gt;假设某个囚犯抽到的数字是 5，也就是需要在 50 步内，找到放了 5 的那个抽屉。先找到第 5 个抽屉打开，然后看里面的数字是多少，如果不是 5，则找到该数字对应的抽屉再打开，以此类推。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-boxes.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-boxes.png 493w,&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-boxes.png 493w&quot;
-    sizes=&quot;(max-width: 493px) 100vw, 493px&quot; width=&quot;493&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;986&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;最终要么在 50 步内找到，要么没有。看起来并没有什么特别，为什么成功率能提高那么多呢？&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;tan-jiu-yuan-yin&quot;&gt;探究原因&lt;&#x2F;h3&gt;
 &lt;p&gt;链表有一个重要的概念：环。如果这 100 个数字全部组成一个环，如 &lt;code&gt;1 -&amp;gt; 4 -&amp;gt; 38 -&amp;gt; ... -&amp;gt; 1&lt;&#x2F;code&gt;，那么并不会提高成功率。但如果这 100 个数字形成了多个环，如：&lt;&#x2F;p&gt;
@@ -52,8 +51,7 @@
 &lt;p&gt;假设囚犯拿到的数字还是 5，他打开序号为 5 的抽屉（一定要打开跟自己序号对应的抽屉，不能随机挑一个，可以带着这个问题往下看），然后一路按照数字与抽屉序号这种对应方式，来到了环形链表的最后一个抽屉前，打开它，里面放的就会是想要找的数字：5。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-list.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-list.png 638w,&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-list.png 638w&quot;
-    sizes=&quot;(max-width: 638px) 100vw, 638px&quot; width=&quot;638&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1276&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;因为环形链表的长度不超过 50，因此抽屉打开次数也必然不超过 50。所以只要只要这 100 个数形成的环形链表中没有一个长度大于 50，按照这个策略，囚犯们就可以全部在 50 步内找到自己的数字。&lt;&#x2F;p&gt;
 &lt;p&gt;那接下来的问题就是，这个概率有多大？&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;suan-suan-gai-lu&quot;&gt;算算概率&lt;&#x2F;h3&gt;
@@ -64,14 +62,12 @@
 &lt;p&gt;假设有 3 个抽屉，就只有两种放法：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-list-1.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-list-1.png 773w,&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-list-1.png 773w&quot;
-    sizes=&quot;(max-width: 773px) 100vw, 773px&quot; width=&quot;773&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1546&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;1 号抽屉里只能放 2 或者 3，如果放了 2，则 2 号抽屉里只能放 3，如果放了 3，则 3 号抽屉里就只能放 2，因此只有两种放法。&lt;&#x2F;p&gt;
 &lt;p&gt;如果是 4 个抽屉有几种放法呢？这个新的抽屉可以出现在原先 3 条链的其中一条链，每出现在其中一条链，就有 2 种放法，所以 4 个抽屉就有 3*2 = 6 种方法形成一个环。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-list-2.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-list-2.png 278w,&amp;#x2F;posts&amp;#x2F;100-prisoners&amp;#x2F;100-prisoners-list-2.png 278w&quot;
-    sizes=&quot;(max-width: 278px) 100vw, 278px&quot; width=&quot;278&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;556&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;以此类推， 5 个抽屉有 &lt;code&gt;4*3*2&lt;&#x2F;code&gt; 种方法形成一个环，&lt;code&gt;n&lt;&#x2F;code&gt; 个抽屉就有 &lt;code&gt;(n-1)!&lt;&#x2F;code&gt; 种放法。&lt;&#x2F;p&gt;
 &lt;p&gt;把这些都乘起来就是长度为 n 的链表的可以摆放的个数：&lt;code&gt;C(100, n) * (100-n)! * (n-1)!&lt;&#x2F;code&gt;，其中 &lt;code&gt;C(100, n)&lt;&#x2F;code&gt; = &lt;code&gt;100!&#x2F;((100-n)! * n!)&lt;&#x2F;code&gt;，这个表达式的结果为：&lt;code&gt;100!&#x2F;n&lt;&#x2F;code&gt;，而这 100 个随机数所有可摆放的个数为：100!，也就是说，链表个数为 n 的可能性为 &lt;code&gt;1&#x2F;n&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
 &lt;p&gt;接下来就好办了，把这些可能性排除就是成功的可能性了：&lt;&#x2F;p&gt;

@@ -178,8 +178,7 @@
 &lt;p&gt;以下面这个 Cell 为例&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-demo.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-demo.png 160.5w,&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-demo.png 160.5w&quot;
-    sizes=&quot;(max-width: 160.5px) 100vw, 160.5px&quot; width=&quot;160.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;321&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;正常的写法可能是这样，很直观。&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;m&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-m &quot;&gt;&lt;code class=&quot;language-m&quot; data-lang=&quot;m&quot;&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;)configureWithItem&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt;(HBItem &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;)item
 &lt;&#x2F;span&gt;&lt;span&gt;{
@@ -207,8 +206,7 @@
 &lt;p&gt;Signal 是 RAC 的核心，为了帮助理解，画了这张简化图&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-signal.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-signal.png 371.5w,&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-signal.png 371.5w&quot;
-    sizes=&quot;(max-width: 371.5px) 100vw, 371.5px&quot; width=&quot;371.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;743&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这里的数据源和 sendXXX，可以理解为函数的参数和返回值。当 Signal 处理完数据后，可以向下一个 Signal 或 Subscriber 传送数据。可以看到上半部分的两个 Signal 是冷的(cold)，相当于实现了某个函数，但该函数没有被调用。同时也说明了 Signal 可以被组合使用，比如&lt;code&gt;RACSignal *signalB = [signalA map:^id(id x){return x}]&lt;&#x2F;code&gt;，或&lt;code&gt;RACSignal *signalB = [signalA take:1]&lt;&#x2F;code&gt;等等。&lt;&#x2F;p&gt;
 &lt;p&gt;当 signal 被 subscribe 时，就会处于热(hot)的状态，也就是该函数会被执行。比如上面的第二张图，首先 signalA 可能发了一个网络请求，拿到结果后，把数据通过&lt;code&gt;sendNext&lt;&#x2F;code&gt;方法传递到下一个 signal，signalB 可以根据需要做进一步处理，比如转换成相应的 Model，转换完后再&lt;code&gt;sendNext&lt;&#x2F;code&gt;到 subscriber，subscriber 拿到数据后，再改变 ViewModel，同时因为 View 已经绑定了 ViewModel，所以拿到的数据会自动在 View 里呈现。&lt;&#x2F;p&gt;
 &lt;p&gt;还有，一个 signal 可以被多个 subscriber 订阅，这里怕显得太乱就没有画出来，但每次被新的 subscriber 订阅时，都会导致数据源的处理逻辑被触发一次，这很有可能导致意想不到的结果，需要注意一下。&lt;&#x2F;p&gt;
@@ -434,8 +432,7 @@
 &lt;p&gt;以下面这个需求为例，要求大图滑动结束时，底部的缩略图滚动到对应的位置，并高亮该缩略图；同时底部的缩略图被选中时，大图也要变成该缩略图的大图。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-mvvm.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-mvvm.png 160w,&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-mvvm.png 160w&quot;
-    sizes=&quot;(max-width: 160px) 100vw, 160px&quot; width=&quot;160&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;我的思路是横向滚动的大图是一个 collectionView，该 collectionView 是当前页面 VC 的一个 property。底部可以滑动的缩略图是一个 childVC 的 collectionView，这两个 collectionView 共用一套 VM，并且各自 RACObserve 感兴趣的 property。&lt;&#x2F;p&gt;
 &lt;p&gt;比如大图滑到下一页时，会改变 VM 的 indexPath 属性，而底部的 collectionView 所在的 VC 正好对该 indexPath 感兴趣，只要 indexPath 变化就滚动到相应的 Item&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;m&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-m &quot;&gt;&lt;code class=&quot;language-m&quot; data-lang=&quot;m&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; childVC
@@ -620,8 +617,7 @@
 &lt;h4 id=&quot;diao-shi&quot;&gt;调试&lt;&#x2F;h4&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-debug.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-debug.png 138w,&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-debug.png 138w&quot;
-    sizes=&quot;(max-width: 138px) 100vw, 138px&quot; width=&quot;138&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;276&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;刚开始写 RAC 时，往往会遇到这种情况，满屏的调用栈信息都是 RAC 的，要找出真正出现问题的地方不容易。曾经有一次在使用&lt;code&gt;[RACSignal combineLatest: reduce:^id{}]&lt;&#x2F;code&gt;时，忘了在 Block 里返回 value，而 Xcode 也没有提示 warning，然后就是莫名其妙地挂起了，跳到了汇编上，也没有调用栈信息，这时就只能通过最古老的注释代码的方式来找到问题的根源。&lt;&#x2F;p&gt;
 &lt;p&gt;不过写多了之后，一般不太会犯这种低级错误。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;strongify-weakify-dance&quot;&gt;strongify &#x2F; weakify dance&lt;&#x2F;h4&gt;
@@ -835,13 +831,11 @@
 &lt;p&gt;FRP 提供了一种信号机制来实现这样的效果，通过信号来记录值的变化。信号可以被叠加、分割或合并。通过对信号的组合，就不需要去监听某个值或事件。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_demo.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_demo.png 353w,&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_demo.png 353w&quot;
-    sizes=&quot;(max-width: 353px) 100vw, 353px&quot; width=&quot;353&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;706&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这在重交互的应用里是非常有用的。以注册为例：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_register_demo.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_register_demo.png 198w,&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_register_demo.png 198w&quot;
-    sizes=&quot;(max-width: 198px) 100vw, 198px&quot; width=&quot;198&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;396&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;提交按钮的状态要跟输入框的状态绑定，比如必选的输入框没有填完时，提交按钮是灰色的，也就是不可点；如果提交按钮不可点，那么文字变成灰色，不然变成蓝色；如果正在提交，那么输入框的文字颜色变成灰色，且不可点，不然变成默认色且可点；如果注册成功就在状态栏显示成功信息，不然显示错误信息，等等。&lt;&#x2F;p&gt;
 &lt;p&gt;可以看到光是注册页就有这么多的联动，在 javascript 中可以采用事件监听来处理，iOS 中更多的是 delegate 模式，本质上都是事件的分发和响应。这种做法的缺点是不够直观，尤其在逻辑比较复杂的情况下。这也是为什么尽管 nodejs 很高效，但由于 javascript 的 callback style 和异步模式不符合正常的编程习惯，让很多人望而却步。&lt;&#x2F;p&gt;
 &lt;p&gt;使用 FRP 主要有两个好处：直观和灵活。直观的代码容易编写、阅读和维护，灵活的特性便于应对变态的需求。&lt;&#x2F;p&gt;
@@ -858,8 +852,7 @@
 &lt;p&gt;可以看到&lt;code&gt;usernameField&lt;&#x2F;code&gt;有了一个新的属性&lt;code&gt;rac_textSignal&lt;&#x2F;code&gt;，这是 RAC 在&lt;code&gt;UITextField&lt;&#x2F;code&gt;category 中添加的，直接用即可。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_combine.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_combine.png 203.5w,&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_combine.png 203.5w&quot;
-    sizes=&quot;(max-width: 203.5px) 100vw, 203.5px&quot; width=&quot;203.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h2 id=&quot;rac-de-da-tong-yi&quot;&gt;RAC 的大统一&lt;&#x2F;h2&gt;
+        width=&quot;407&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h2 id=&quot;rac-de-da-tong-yi&quot;&gt;RAC 的大统一&lt;&#x2F;h2&gt;
 &lt;p&gt;RAC 统一了对 KVO、UI Event、Network request、Async work 的处理，因为它们本质上都是值的变化(Values over time)。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;kvo&quot;&gt;KVO&lt;&#x2F;h3&gt;
 &lt;p&gt;RAC 可以用来监测属性的改变，这点跟 KVO 很像，不过使用了 block，而不是&lt;code&gt;-observeValueForKeyPath:ofObject:change:context:&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
@@ -910,8 +903,7 @@
 &lt;p&gt;简单画了下关系图，罗列了些要点&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_ReactiveCocoa_large.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_ReactiveCocoa_large.png 816w,&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_ReactiveCocoa_large.png 816w&quot;
-    sizes=&quot;(max-width: 816px) 100vw, 816px&quot; width=&quot;816&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1632&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;上面只是大概说了一下 RAC 的使用情景和用法，更多的例子可以到&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ReactiveCocoa&#x2F;ReactiveCocoa&quot;&gt;项目主页&lt;&#x2F;a&gt;中查看。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;can-kao&quot;&gt;参考&lt;&#x2F;h3&gt;
 &lt;ul&gt;

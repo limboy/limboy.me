@@ -62,8 +62,7 @@
 <p>用一张图来形容的话，大体就是这样：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data.png"
-    srcset="&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data.png 255w,&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data.png 255w"
-    sizes="(max-width: 255px) 100vw, 255px" width="255" /></p><pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)_setupCoreDataStack
+        width="510" /></p><pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#3e999f;">- </span><span>(</span><span style="color:#8959a8;">void</span><span>)_setupCoreDataStack
 </span><span>{
 </span><span>     </span><span style="color:#8e908c;">// setup managed object model
 </span><span>     </span><span style="color:#c99e00;">NSURL </span><span style="color:#3e999f;">*</span><span>modelURL </span><span style="color:#3e999f;">= </span><span>[[</span><span style="color:#c99e00;">NSBundle </span><span style="color:#4271ae;">mainBundle</span><span>] URLForResource</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;Database&quot;</span><span> withExtension</span><span style="color:#3e999f;">:</span><span style="color:#839c00;">@&quot;momd&quot;</span><span>];
@@ -116,8 +115,7 @@
 <p>因为 UI 相关的数据必须在主线程获取，同时又要避免数据库的 I/O 操作阻塞主线程，所以就有了下面这个模型：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data_nested.png"
-    srcset="&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data_nested.png 255.5w,&#x2F;posts&#x2F;ios-multi-thread-core-data&#x2F;multi_thread_core_data_nested.png 255.5w"
-    sizes="(max-width: 255.5px) 100vw, 255.5px" width="255.5" /></p>
+        width="511" /></p>
 <p>我对这种实现方式的一个困惑是：child 无法得知 parent 的变化，也就是说，如果 NSFetchedResultsController 绑定了 Main MOC，当 Background Write MOC save 时，NSFetchedResultsController 为何能知晓？求指点。</p>
 <p>这种方式比「Thread Confinement」稍微简单了点，也更明了。不过个人还是推荐使用 MagicalRecord，因为实现起来更加简单，等有空再写一篇。</p>
 <p>写了一个使用了这个模型的 demo，配合 TableView 和 NSFetchedResultsController，有兴趣的可以看下：<a href="https://github.com/limboy/coredata-with-tableview">https://github.com/limboy/coredata-with-tableview</a></p>

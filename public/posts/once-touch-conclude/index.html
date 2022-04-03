@@ -79,20 +79,17 @@
 <p>先来看两张图片，第一张是国际空间站</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;once-touch-conclude&#x2F;space-station.jpg"
-    srcset="&#x2F;posts&#x2F;once-touch-conclude&#x2F;space-station.jpg 364w,&#x2F;posts&#x2F;once-touch-conclude&#x2F;space-station.jpg 364w"
-    sizes="(max-width: 364px) 100vw, 364px" width="364" /></p>
+        width="728" /></p>
 <p>再来看看拆解图</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;once-touch-conclude&#x2F;space-station-parts.jpg"
-    srcset="&#x2F;posts&#x2F;once-touch-conclude&#x2F;space-station-parts.jpg 364w,&#x2F;posts&#x2F;once-touch-conclude&#x2F;space-station-parts.jpg 364w"
-    sizes="(max-width: 364px) 100vw, 364px" width="364" /></p>
+        width="728" /></p>
 <p>看出模块的好处了吧，只要接口是对的，且功能也正常，这个模块是非洲产的，还是美国造的，都不 care。也就是说空间站完全不关心每个模块的内部实现。每个模块只要完成自己的功能就行了，出了问题，也只需要调整某一个模块，而不用担心会引发其他模块功能的异常。这其实就是 OO 设计里的 SOLID 原则。</p>
 <h3 id="xcode-de-wen-jian-guan-li">Xcode 的文件管理</h3>
 <p>之前的习惯是把文件都交给 Xcode 来管理，在 Xcode 里新建 Group，因为 Xcode 并不会在新建 Group 时在文件系统也新建文件夹，所以在 Project 在 Xcode 看起来挺整洁，到了文件系统就又是另一回事了。那能不能两全其美呢，当然是可以的，稍微改变下流程就行。不要在 Xcode 里新建 Group，先在文件系统中建立好文件夹，然后把文件夹拖到 Xcode 的目录中就可以了，以后在该 Group 下新建的文件都会出现在文件系统中对应的文件夹内。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;once-touch-conclude&#x2F;xcode-finder.png"
-    srcset="&#x2F;posts&#x2F;once-touch-conclude&#x2F;xcode-finder.png 222w,&#x2F;posts&#x2F;once-touch-conclude&#x2F;xcode-finder.png 222w"
-    sizes="(max-width: 222px) 100vw, 222px" width="222" /></p><h3 id="mu-lu-jie-gou">目录结构</h3>
+        width="444" /></p><h3 id="mu-lu-jie-gou">目录结构</h3>
 <p>从上面的图中可以看到我的目录结果，简单说明一下：</p>
 <h4 id="utils">Utils</h4>
 <p>这里放一些与应用无关的帮助类文件，如 Global.h / Helper.h / Macro.h 等等。</p>
@@ -110,8 +107,7 @@
 <p>以这个画面为例</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;once-touch-conclude&#x2F;once-touch-popup.jpg"
-    srcset="&#x2F;posts&#x2F;once-touch-conclude&#x2F;once-touch-popup.jpg 320w,&#x2F;posts&#x2F;once-touch-conclude&#x2F;once-touch-popup.jpg 320w"
-    sizes="(max-width: 320px) 100vw, 320px" width="320" /></p>
+        width="640" /></p>
 <p>应该把星星作为一个模块，还是把 3 个星星作为一个模块？分数有没有必要作为一个模块？左边黄色的那个圈呢？</p>
 <p>如果模块的粒度划分过细，那么组装的过程就会很痛苦。想像一下某个 MM 拎着一堆电脑零件来找你组装台电脑，你信心满满地告诉她：几分钟搞定。等你打开箱子后发现，风扇、硬盘神马的都是以最小单位存在，还得先把这些附件先组装起来，看你崩不崩溃。</p>
 <p>如果粒度划分过粗，就失去了模块的意义，基本上也无法复用了。一辆雪佛莱，如果说还能作为某个更大实体的零部件的话，估计也就只有擎天柱了。</p>

@@ -51,38 +51,31 @@
 &lt;p&gt;&lt;strong&gt;单数据库&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache1.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache1.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache1.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;主库+从库&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache2.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache2.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache2.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;保持主库+从库的架构，把读写最频繁的几个表分到单独的数据库服务器&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache3.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache3.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache3.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;把那几个读写最频繁的表也分成主从&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache4.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache4.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache4.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;出现了 1040 too many connections&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache5.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache5.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache5.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;Sharding(水平分区)&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache6.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache6.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache6.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;数据库服务器&#x2F;数据库&#x2F;分区&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache7.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache7.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache7.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这样基本上就可以应付正常的访问了，如果哪个表数据量过大或连接过多，就 Sharding 一下。但随之而来的问题也很明显，比如：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;php&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-php &quot;&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;&amp;lt;?php
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;没有分区之前，可以通过下面几段代码来获取数据

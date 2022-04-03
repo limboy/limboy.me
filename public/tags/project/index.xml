@@ -17,8 +17,7 @@
             <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;pinyincaichengyu.com&#x2F;&quot;&gt;拼音猜成语&lt;&#x2F;a&gt; 是我第一款 PV 超过百万的产品，这里就来聊聊它背后的故事。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;data.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;data.jpg 1128.5w,&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;data.jpg 1128.5w&quot;
-    sizes=&quot;(max-width: 1128.5px) 100vw, 1128.5px&quot; width=&quot;1128.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;bei-jing&quot;&gt;背景&lt;&#x2F;h3&gt;
+        width=&quot;2257&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;bei-jing&quot;&gt;背景&lt;&#x2F;h3&gt;
 &lt;p&gt;有一段时间在 Twitter 上经常能看到有推友在发各种颜色的方块，原来是一个叫 &lt;a href=&quot;https:&#x2F;&#x2F;www.nytimes.com&#x2F;games&#x2F;wordle&#x2F;index.html&quot;&gt;Wordle&lt;&#x2F;a&gt; 的英文猜词小游戏，试玩了后发现还挺不错的，轻量、节制还益智。就拉妹子一起来玩，有时还会在零点一起挑战。但非母语也影响了游戏体验，遇到一些生僻的词就只能束手就擒了。某天走在路上就在想，是不是可以做一个成语版的 Wordle，用拼音？&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;kai-fa&quot;&gt;开发&lt;&#x2F;h3&gt;
 &lt;p&gt;有了方向之后，就开始细化具体的游戏机制，发现只要把成语拆解为拼音组合，就可以像 Wordle 那样猜了。较快地搭了一个原型后，让妹子体验了下，发现可以玩，好像还挺好玩，这也给了我一些信心。之后大概花了 1 个星期的时间完善这个小游戏，从琢磨游戏机制到设计界面和交互，到实现功能、填充词库。这段时间在学习前端，正好可以通过这个项目来练手。&lt;&#x2F;p&gt;
@@ -35,8 +34,7 @@
 &lt;p&gt;第一版上线后，代码质量感觉还是不够好，于是从头开始又写了一遍，这次代码设计上更加合理，流程上也更加规范，加入了测试集和 Storybook，顺便把觉得不错的 Feature 如声调提示、统计信息、成语解释等给加上了，对 UI 也做了些优化。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;popup.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;popup.jpg 672w,&amp;#x2F;posts&amp;#x2F;idiom&amp;#x2F;popup.jpg 672w&quot;
-    sizes=&quot;(max-width: 672px) 100vw, 672px&quot; width=&quot;672&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
+        width=&quot;1344&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
   加入「游戏统计」这块还有点小挑战，因为没有用户系统，只能通过设备来判断，而发给服务器的请求又很容易伪造，所以需要一套防护措施。采用的是客户端加密的方式，&lt;code&gt;import&lt;&#x2F;code&gt; 一段加密后的 js，然后生成一个全局变量（用来验证和避免重放攻击），因为这段 js 用到了很多浏览器相关的 API，所以不太好通过 cli 的方式直接引用（当然可以用 headless 工具，不过这也增加了成本）
 &lt;&#x2F;aside&gt;&lt;h3 id=&quot;kai-yuan&quot;&gt;开源&lt;&#x2F;h3&gt;
 &lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;idiom&quot;&gt;开源&lt;&#x2F;a&gt;就像是个节点，让这个小游戏的源码出现在了公共区域，虽然不一定会有多少人关注。&lt;&#x2F;p&gt;
@@ -54,8 +52,7 @@
             <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;podcast&#x2F;6177bab6b69226ed16a3ed41&quot;&gt;Bytetalk&lt;&#x2F;a&gt; 是去年的一个尝试性项目，以访谈的形式与不同领域的程序员聊聊他们的故事。一方面可以拓展自己的视野，另一方面也能给听众一些启发。第一季 7 期录制下来，结果还不错，感谢各位嘉宾朋友和听众们。等接下来有了更明确的规划后，再来开始第二季。这里简单回顾下 Bytetalk 背后的一些故事。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;data.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;data.jpg 1086w,&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;data.jpg 1086w&quot;
-    sizes=&quot;(max-width: 1086px) 100vw, 1086px&quot; width=&quot;1086&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;2172&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;之所以选择播客，而不是更常见的视频，主要是因为自己在镜头前会变得不自然，访谈嘉宾可能也会有这方面的困扰，另一方面视频的录制和剪辑成本也会更高。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;di-yi-qi&quot;&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.xiaoyuzhoufm.com&#x2F;episode&#x2F;6177bab6b69226ed16a3ed42&quot;&gt;第一期&lt;&#x2F;a&gt;&lt;&#x2F;h3&gt;
 &lt;p&gt;第一期节目尤为重要，因为在录制播客方面的经验几乎为零，所以需要容忍度高、能聊又互相熟悉的嘉宾。为此借着聚餐的名义，将字节的几个小伙伴「诱骗」到家里，期间还玩了会桥牌。因为是第一次录多人聊天，在设备调试这块就花了近半小时，好在最后的效果还能接受。&lt;&#x2F;p&gt;
@@ -67,8 +64,7 @@
 &lt;p&gt;第三期我想邀请的嘉宾是&lt;a href=&quot;https:&#x2F;&#x2F;imtx.me&#x2F;&quot;&gt;图拉鼎&lt;&#x2F;a&gt;，我觉得应该会有很多人对独立开发者感兴趣，另一方面也好久没聊了，正好可以借录制播客聚聚。还会担心他档期比较紧或者对播客录制不太感冒，结果比我想的顺利。于是就找了一个茶馆，开始了第三期节目的录制&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;teahouse.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;teahouse.jpg 1000w,&amp;#x2F;posts&amp;#x2F;bytetalk&amp;#x2F;teahouse.jpg 1000w&quot;
-    sizes=&quot;(max-width: 1000px) 100vw, 1000px&quot; width=&quot;1000&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
+        width=&quot;2000&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
   &lt;strong&gt;一个小插曲:&lt;&#x2F;strong&gt; 由于收听次数较多，VPS 流量已经顶不住了，听众也反馈有卡顿的现象。图拉鼎建议可以试下 Cloudflare，果然非常有效，而且还是免费，一下就让我成了 Cloudflare 的粉丝，并以股票支持。（虽然买了之后就一路降降降···）
 &lt;&#x2F;aside&gt;&lt;aside class=&quot;info&quot; &gt;
   &lt;strong&gt;另一个小插曲:&lt;&#x2F;strong&gt; 我妈也会听这个节目，她说这一期她最喜欢。
@@ -108,8 +104,7 @@
 &lt;p&gt;他的方法是在墙上挂一个日历，每天任务完成就画个 X。慢慢地当这些 X 连在一起时，你会不忍心中断。很简单的一个技巧，对他来说却很管用，于是我也希望有这么一个简单的 App，可以让我 Chain 一把。这就是 Habbit 的核心功能。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;habbit&amp;#x2F;habbit-screenshot.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;habbit&amp;#x2F;habbit-screenshot.jpg 310.5w,&amp;#x2F;posts&amp;#x2F;habbit&amp;#x2F;habbit-screenshot.jpg 310.5w&quot;
-    sizes=&quot;(max-width: 310.5px) 100vw, 310.5px&quot; width=&quot;310.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;621&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;很简单，希望能带来些帮助。&lt;&#x2F;p&gt;
 </description>
         </item>
@@ -128,12 +123,10 @@
 &lt;p&gt;于是就有了「时而不见」这个 app。&lt;&#x2F;p&gt;
 &lt;p&gt;
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;12hour&amp;#x2F;2207-1.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;12hour&amp;#x2F;2207-1.jpg 310.5w,&amp;#x2F;posts&amp;#x2F;12hour&amp;#x2F;2207-1.jpg 310.5w&quot;
-    sizes=&quot;(max-width: 310.5px) 100vw, 310.5px&quot; width=&quot;310.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;621&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;12hour&amp;#x2F;2207-2.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;12hour&amp;#x2F;2207-2.jpg 310.5w,&amp;#x2F;posts&amp;#x2F;12hour&amp;#x2F;2207-2.jpg 310.5w&quot;
-    sizes=&quot;(max-width: 310.5px) 100vw, 310.5px&quot; width=&quot;310.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;621&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;再来说说技术层面，一直想用 Swift 正经开发一个 App，这次终于如愿以偿。Swift 是我使用过的语言中最优雅的，就是 Xcode 后腿拖的比较严重，比如两个 block 一嵌套，自动提示就 gg 了，再加上不支持 Vim，开发效率上也是打了点折扣。后端语言选择了 Go，因为使用简单，性能也足够好，口碑和社区也都不错，服务托管在了 Google Cloud 上。&lt;&#x2F;p&gt;
 &lt;p&gt;我希望这个 App 能够保持较小的体量，然后服务好这一小撮人，控制好内容。&lt;del&gt;为了避免麻烦，会选择不在国内上架。就不上 app store 了，不定期在&lt;a href=&quot;https:&#x2F;&#x2F;testflight.top&#x2F;t&#x2F;2eIzAb&quot;&gt;这里&lt;&#x2F;a&gt;放出可用名额。&lt;&#x2F;del&gt;&lt;&#x2F;p&gt;
 </description>
@@ -168,20 +161,17 @@
 &lt;p&gt;先来看两张图片，第一张是国际空间站&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;space-station.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;space-station.jpg 364w,&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;space-station.jpg 364w&quot;
-    sizes=&quot;(max-width: 364px) 100vw, 364px&quot; width=&quot;364&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;728&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;再来看看拆解图&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;space-station-parts.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;space-station-parts.jpg 364w,&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;space-station-parts.jpg 364w&quot;
-    sizes=&quot;(max-width: 364px) 100vw, 364px&quot; width=&quot;364&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;728&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;看出模块的好处了吧，只要接口是对的，且功能也正常，这个模块是非洲产的，还是美国造的，都不 care。也就是说空间站完全不关心每个模块的内部实现。每个模块只要完成自己的功能就行了，出了问题，也只需要调整某一个模块，而不用担心会引发其他模块功能的异常。这其实就是 OO 设计里的 SOLID 原则。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;xcode-de-wen-jian-guan-li&quot;&gt;Xcode 的文件管理&lt;&#x2F;h3&gt;
 &lt;p&gt;之前的习惯是把文件都交给 Xcode 来管理，在 Xcode 里新建 Group，因为 Xcode 并不会在新建 Group 时在文件系统也新建文件夹，所以在 Project 在 Xcode 看起来挺整洁，到了文件系统就又是另一回事了。那能不能两全其美呢，当然是可以的，稍微改变下流程就行。不要在 Xcode 里新建 Group，先在文件系统中建立好文件夹，然后把文件夹拖到 Xcode 的目录中就可以了，以后在该 Group 下新建的文件都会出现在文件系统中对应的文件夹内。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;xcode-finder.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;xcode-finder.png 222w,&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;xcode-finder.png 222w&quot;
-    sizes=&quot;(max-width: 222px) 100vw, 222px&quot; width=&quot;222&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;mu-lu-jie-gou&quot;&gt;目录结构&lt;&#x2F;h3&gt;
+        width=&quot;444&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;mu-lu-jie-gou&quot;&gt;目录结构&lt;&#x2F;h3&gt;
 &lt;p&gt;从上面的图中可以看到我的目录结果，简单说明一下：&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;utils&quot;&gt;Utils&lt;&#x2F;h4&gt;
 &lt;p&gt;这里放一些与应用无关的帮助类文件，如 Global.h &#x2F; Helper.h &#x2F; Macro.h 等等。&lt;&#x2F;p&gt;
@@ -199,8 +189,7 @@
 &lt;p&gt;以这个画面为例&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;once-touch-popup.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;once-touch-popup.jpg 320w,&amp;#x2F;posts&amp;#x2F;once-touch-conclude&amp;#x2F;once-touch-popup.jpg 320w&quot;
-    sizes=&quot;(max-width: 320px) 100vw, 320px&quot; width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;640&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;应该把星星作为一个模块，还是把 3 个星星作为一个模块？分数有没有必要作为一个模块？左边黄色的那个圈呢？&lt;&#x2F;p&gt;
 &lt;p&gt;如果模块的粒度划分过细，那么组装的过程就会很痛苦。想像一下某个 MM 拎着一堆电脑零件来找你组装台电脑，你信心满满地告诉她：几分钟搞定。等你打开箱子后发现，风扇、硬盘神马的都是以最小单位存在，还得先把这些附件先组装起来，看你崩不崩溃。&lt;&#x2F;p&gt;
 &lt;p&gt;如果粒度划分过粗，就失去了模块的意义，基本上也无法复用了。一辆雪佛莱，如果说还能作为某个更大实体的零部件的话，估计也就只有擎天柱了。&lt;&#x2F;p&gt;
@@ -441,16 +430,14 @@
 &lt;p&gt;放个截图先：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_chat.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_chat.png 303w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_chat.png 303w&quot;
-    sizes=&quot;(max-width: 303px) 100vw, 303px&quot; width=&quot;303&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;606&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;主要工具：python (flask &#x2F; gevent &#x2F; apscheduler) + redis&lt;&#x2F;p&gt;
 &lt;p&gt;目前这个聊天室的功能还比较简单，可以实时更新全局在线用户，当前聊天室在线用户和聊天内容，都是通过一个 ajax 长连接实现的。在这个连接里定义了需要实时的内容，相应的内容一旦在服务端更新，可以马上推送到各个客户端。&lt;&#x2F;p&gt;
 &lt;p&gt;实时最大的挑战在于如何能在服务端尽量简单，灵活地实现。因为越是简单，就越不容易滋生 bug，即使出现问题，查找起来也很方便;越是灵活，就越容易应付多变的需求。以聊天室为例，当新用户加入后需要更新所有客户端的当前成员列表;有成员退出后也要更新该列表。每个聊天室有了新内容后都要实时推到所有客户端;给某个用户发私信，对方也可以实时收到。这些如果处理地不好，很容易与当前的逻辑发生耦合，为将来的调整和 bug 的查找带来困难。&lt;&#x2F;p&gt;
 &lt;p&gt;依靠强大的 redis，设计了这个简易的实时聊天室，基本架构如下:&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_arch.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_arch.png 243.5w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_arch.png 243.5w&quot;
-    sizes=&quot;(max-width: 243.5px) 100vw, 243.5px&quot; width=&quot;243.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;487&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;匆忙完成了初步的代码，还有不少需要优化的地方，有些功能也还没加上（如私信的实时通知）。接下来的一段时间内会逐步完善，如果有更好的 idea，欢迎沟通 :)&lt;&#x2F;p&gt;
 &lt;p&gt;代码地址：&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;chat&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;chat&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;如果使用过程中遇到什么问题，或有好的建议可以在&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;chat&#x2F;issues&quot;&gt;这里&lt;&#x2F;a&gt;反馈&lt;&#x2F;p&gt;
@@ -482,11 +469,9 @@
 &lt;h4 id=&quot;screenshot&quot;&gt;screenshot&lt;&#x2F;h4&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_home_0.1.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_home_0.1.png 307w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_home_0.1.png 307w&quot;
-    sizes=&quot;(max-width: 307px) 100vw, 307px&quot; width=&quot;307&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;614&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_room_0.1.gif&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_room_0.1.gif 307w,&amp;#x2F;posts&amp;#x2F;python-comet&amp;#x2F;comet_room_0.1.gif 307w&quot;
-    sizes=&quot;(max-width: 307px) 100vw, 307px&quot; width=&quot;307&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
+        width=&quot;614&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
         </item>
         
         

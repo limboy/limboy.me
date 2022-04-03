@@ -135,8 +135,7 @@ iOS 统计打点那些事
 <p>那么有没有一种直观的验证方式呢？当然，程序员是万能的呀。一个理想的状况是，产品打开 App 后，开启某个开关就能看到所有会发送 Event 的按钮，就像这样</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;ios-analytics&#x2F;analytics_highlight.jpg"
-    srcset="&#x2F;posts&#x2F;ios-analytics&#x2F;analytics_highlight.jpg 320w,&#x2F;posts&#x2F;ios-analytics&#x2F;analytics_highlight.jpg 320w"
-    sizes="(max-width: 320px) 100vw, 320px" width="320" /></p>
+        width="640" /></p>
 <p>其中数字代表了 <code>EventID</code>。如何实现呢？还记得注册事件时，我们有传入 <code>class</code> 和 <code>selector</code> 么，一般我们都会有一个 <code>BaseViewController</code>，那么就可以在 <code>BaseViewController</code> 的 <code>viewDidAppear:</code> 里做点文章了。</p>
 <pre data-lang="m" style="background-color:#f9f9f9;color:#111111;" class="language-m "><code class="language-m" data-lang="m"><span style="color:#8e908c;">// BaseViewController.m
 </span><span>

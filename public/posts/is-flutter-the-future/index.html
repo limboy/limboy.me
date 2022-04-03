@@ -67,23 +67,19 @@
 <p>能够使用 VSCode 作为主力 IDE 这本身就有足够的吸引力，Debug、Widget Inspector、Hot Reload、Automatically get packages 等等一应俱全，就连被诟病的嵌套过深，VSCode 也提供了一些便利：在每个括号后面以注释形式标注（但不是真的注释）</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-nested.jpg"
-    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-nested.jpg 278w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-nested.jpg 278w"
-    sizes="(max-width: 278px) 100vw, 278px" width="278" /></p>
+        width="556" /></p>
 <p>对某个类的参数不太清楚，光标移上去即可，想看下实现，Cmd+Click。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-hover.jpg"
-    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-hover.jpg 264.5w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-hover.jpg 264.5w"
-    sizes="(max-width: 264.5px) 100vw, 264.5px" width="264.5" /></p>
+        width="529" /></p>
 <p>想快速看下 Framework 里某个类的实现，Cmd+T</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-cmd-t.jpg"
-    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-cmd-t.jpg 306.5w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-cmd-t.jpg 306.5w"
-    sizes="(max-width: 306.5px) 100vw, 306.5px" width="306.5" /></p>
+        width="613" /></p>
 <p>还有一些贴心的小功能</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-widget.jpg"
-    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-widget.jpg 112w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-vscode-widget.jpg 112w"
-    sizes="(max-width: 112px) 100vw, 112px" width="112" /></p>
+        width="224" /></p>
 <p>当然也有改进空间，比如特别想要 auto import 功能。如果想要更完善的支持，可以使用 Android Studio，后者还提供了 Widget Tree、Performance Chart 等功能。</p>
 <h4 id="kai-fa-yu-yan">开发语言</h4>
 <p>Dart 这门语言本身并不复杂，看着挺舒服的，没有新发明一些概念，尽量简单（有些地方感觉过于简单了，比如 class 可以同时表示 interface），对异步编程有着很好的支持，自带的标准库基本够用。如果真静下心来看的话，不出三天，语言方面应该不会有太大的障碍了。</p>
@@ -115,11 +111,9 @@
 <p>我的一个比较简单的 App，上架了之后，在 Google Play 的大小为 7.8M，在 AppStore 上是 15 M，所以大致是 Android 的比原生大 5 M，iOS 的比原生大 10 M 那样。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-android-size.jpg"
-    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-android-size.jpg 153.5w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-android-size.jpg 153.5w"
-    sizes="(max-width: 153.5px) 100vw, 153.5px" width="153.5" /></p>
+        width="307" /></p>
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-ios-size.jpg"
-    srcset="&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-ios-size.jpg 377w,&#x2F;posts&#x2F;is-flutter-the-future&#x2F;flutter-ios-size.jpg 377w"
-    sizes="(max-width: 377px) 100vw, 377px" width="377" /></p><h4 id="crash">Crash</h4>
+        width="754" /></p><h4 id="crash">Crash</h4>
 <p>目前还没有这方面的数据，因为量不大，不好下结论。从个人体验来说，遇到的概率比较少，在 Develop 模式下倒是遇到过开机 Crash，Release 模式下还没有遇到过。</p>
 <h3 id="cha-jian-ji-zhi">插件机制</h3>
 <p>Flutter 提供了一套完善的插件机制方便与 Native 端进行数据传送、方法调用、流式处理。大致的实现是定义好两端都认识的基础类型，然后对消息进行编码和解码，再根据不同的消息使用目的（数据传送还是方法调用还是事件订阅）来执行不同的操作，这就给了 Flutter 很大的扩展空间。</p>

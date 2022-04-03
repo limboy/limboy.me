@@ -51,8 +51,7 @@
 &lt;p&gt;这么做的问题就是，需要不断地去检测 hashtag 是否改变，效率有点低，如果能通过原生的监听来实现，就会更加高效和优雅。这里就涉及到另一个 iframe 特性：可以设置其他 iframe 的大小，即使是不同域的。而页面的 resize 事件是可以监听的，所以就有了下面这个模型。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;iframe-crossdomain&amp;#x2F;crossdomain.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;iframe-crossdomain&amp;#x2F;crossdomain.png 340.5w,&amp;#x2F;posts&amp;#x2F;iframe-crossdomain&amp;#x2F;crossdomain.png 340.5w&quot;
-    sizes=&quot;(max-width: 340.5px) 100vw, 340.5px&quot; width=&quot;340.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;681&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;主页面先把消息附加到 hashtag，然后改变一个隐藏的(或者页面外的)iframe 的 size。这个 iframe 会监听 resize 事件，同时捕获到 hashtag。捕获到 hashtag 后(也就是所需的数据)，再对 hashtag 做进一步的处理。处理完后把数据传到主页内的一个 iframe，或者直接操作该 iframe。这样就比较优雅地完成了跨域操作。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;demo&quot;&gt;demo&lt;&#x2F;h3&gt;
 &lt;p&gt;将以下代码拷贝到本地的一个 html 文件，然后双击在浏览器中打开，看看能不能查单词。(ajax 无法跨协议，这是 iframe 比 ajax 强大的地方)&lt;&#x2F;p&gt;

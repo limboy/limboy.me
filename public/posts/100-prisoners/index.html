@@ -84,8 +84,7 @@
 <p>假设某个囚犯抽到的数字是 5，也就是需要在 50 步内，找到放了 5 的那个抽屉。先找到第 5 个抽屉打开，然后看里面的数字是多少，如果不是 5，则找到该数字对应的抽屉再打开，以此类推。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-boxes.png"
-    srcset="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-boxes.png 493w,&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-boxes.png 493w"
-    sizes="(max-width: 493px) 100vw, 493px" width="493" /></p>
+        width="986" /></p>
 <p>最终要么在 50 步内找到，要么没有。看起来并没有什么特别，为什么成功率能提高那么多呢？</p>
 <h3 id="tan-jiu-yuan-yin">探究原因</h3>
 <p>链表有一个重要的概念：环。如果这 100 个数字全部组成一个环，如 <code>1 -&gt; 4 -&gt; 38 -&gt; ... -&gt; 1</code>，那么并不会提高成功率。但如果这 100 个数字形成了多个环，如：</p>
@@ -99,8 +98,7 @@
 <p>假设囚犯拿到的数字还是 5，他打开序号为 5 的抽屉（一定要打开跟自己序号对应的抽屉，不能随机挑一个，可以带着这个问题往下看），然后一路按照数字与抽屉序号这种对应方式，来到了环形链表的最后一个抽屉前，打开它，里面放的就会是想要找的数字：5。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list.png"
-    srcset="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list.png 638w,&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list.png 638w"
-    sizes="(max-width: 638px) 100vw, 638px" width="638" /></p>
+        width="1276" /></p>
 <p>因为环形链表的长度不超过 50，因此抽屉打开次数也必然不超过 50。所以只要只要这 100 个数形成的环形链表中没有一个长度大于 50，按照这个策略，囚犯们就可以全部在 50 步内找到自己的数字。</p>
 <p>那接下来的问题就是，这个概率有多大？</p>
 <h3 id="suan-suan-gai-lu">算算概率</h3>
@@ -111,14 +109,12 @@
 <p>假设有 3 个抽屉，就只有两种放法：</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-1.png"
-    srcset="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-1.png 773w,&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-1.png 773w"
-    sizes="(max-width: 773px) 100vw, 773px" width="773" /></p>
+        width="1546" /></p>
 <p>1 号抽屉里只能放 2 或者 3，如果放了 2，则 2 号抽屉里只能放 3，如果放了 3，则 3 号抽屉里就只能放 2，因此只有两种放法。</p>
 <p>如果是 4 个抽屉有几种放法呢？这个新的抽屉可以出现在原先 3 条链的其中一条链，每出现在其中一条链，就有 2 种放法，所以 4 个抽屉就有 3*2 = 6 种方法形成一个环。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-2.png"
-    srcset="&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-2.png 278w,&#x2F;posts&#x2F;100-prisoners&#x2F;100-prisoners-list-2.png 278w"
-    sizes="(max-width: 278px) 100vw, 278px" width="278" /></p>
+        width="556" /></p>
 <p>以此类推， 5 个抽屉有 <code>4*3*2</code> 种方法形成一个环，<code>n</code> 个抽屉就有 <code>(n-1)!</code> 种放法。</p>
 <p>把这些都乘起来就是长度为 n 的链表的可以摆放的个数：<code>C(100, n) * (100-n)! * (n-1)!</code>，其中 <code>C(100, n)</code> = <code>100!/((100-n)! * n!)</code>，这个表达式的结果为：<code>100!/n</code>，而这 100 个随机数所有可摆放的个数为：100!，也就是说，链表个数为 n 的可能性为 <code>1/n</code>。</p>
 <p>接下来就好办了，把这些可能性排除就是成功的可能性了：</p>

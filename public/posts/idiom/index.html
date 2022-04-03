@@ -64,8 +64,7 @@
     <p><a href="https://pinyincaichengyu.com/">拼音猜成语</a> 是我第一款 PV 超过百万的产品，这里就来聊聊它背后的故事。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;idiom&#x2F;data.jpg"
-    srcset="&#x2F;posts&#x2F;idiom&#x2F;data.jpg 1128.5w,&#x2F;posts&#x2F;idiom&#x2F;data.jpg 1128.5w"
-    sizes="(max-width: 1128.5px) 100vw, 1128.5px" width="1128.5" /></p><h3 id="bei-jing">背景</h3>
+        width="2257" /></p><h3 id="bei-jing">背景</h3>
 <p>有一段时间在 Twitter 上经常能看到有推友在发各种颜色的方块，原来是一个叫 <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a> 的英文猜词小游戏，试玩了后发现还挺不错的，轻量、节制还益智。就拉妹子一起来玩，有时还会在零点一起挑战。但非母语也影响了游戏体验，遇到一些生僻的词就只能束手就擒了。某天走在路上就在想，是不是可以做一个成语版的 Wordle，用拼音？</p>
 <h3 id="kai-fa">开发</h3>
 <p>有了方向之后，就开始细化具体的游戏机制，发现只要把成语拆解为拼音组合，就可以像 Wordle 那样猜了。较快地搭了一个原型后，让妹子体验了下，发现可以玩，好像还挺好玩，这也给了我一些信心。之后大概花了 1 个星期的时间完善这个小游戏，从琢磨游戏机制到设计界面和交互，到实现功能、填充词库。这段时间在学习前端，正好可以通过这个项目来练手。</p>
@@ -82,8 +81,7 @@
 <p>第一版上线后，代码质量感觉还是不够好，于是从头开始又写了一遍，这次代码设计上更加合理，流程上也更加规范，加入了测试集和 Storybook，顺便把觉得不错的 Feature 如声调提示、统计信息、成语解释等给加上了，对 UI 也做了些优化。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;idiom&#x2F;popup.jpg"
-    srcset="&#x2F;posts&#x2F;idiom&#x2F;popup.jpg 672w,&#x2F;posts&#x2F;idiom&#x2F;popup.jpg 672w"
-    sizes="(max-width: 672px) 100vw, 672px" width="672" /></p><aside class="info" >
+        width="1344" /></p><aside class="info" >
   加入「游戏统计」这块还有点小挑战，因为没有用户系统，只能通过设备来判断，而发给服务器的请求又很容易伪造，所以需要一套防护措施。采用的是客户端加密的方式，<code>import</code> 一段加密后的 js，然后生成一个全局变量（用来验证和避免重放攻击），因为这段 js 用到了很多浏览器相关的 API，所以不太好通过 cli 的方式直接引用（当然可以用 headless 工具，不过这也增加了成本）
 </aside><h3 id="kai-yuan">开源</h3>
 <p><a href="https://github.com/limboy/idiom">开源</a>就像是个节点，让这个小游戏的源码出现在了公共区域，虽然不一定会有多少人关注。</p>

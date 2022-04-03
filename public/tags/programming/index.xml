@@ -50,8 +50,7 @@
 &lt;p&gt;接下来的问题是，如何让棋盘本身形成 6 个比特位？&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-0.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-0.png 1246w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-0.png 1246w&quot;
-    sizes=&quot;(max-width: 1246px) 100vw, 1246px&quot; width=&quot;1246&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;ji-xu-si-suo&quot;&gt;继续思索&lt;&#x2F;h3&gt;
+        width=&quot;2492&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;ji-xu-si-suo&quot;&gt;继续思索&lt;&#x2F;h3&gt;
 &lt;p&gt;假如你跟队友约定，左边四列代表第 1 位，右边四列代表第 2 位，上边四行代表第 3 位，下边四行代表第 4 位，中间四列代表第 5 位，中间四行代表第 6 位，也就是每 1 位都有特定的区域，然后数该区域里硬币为正面的个数，如果为奇数则表示该位为 1，偶数则为 0。而你可以通过翻转硬币来将这个二进制数变为魔币所在位置的二进制数，是不是就妥了？&lt;&#x2F;p&gt;
 &lt;p&gt;那应该怎么分呢，如果按照上面的分法，该如何达到翻转某个硬币来调整各个组的奇偶性呢？&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;hua-fen-zu-de-ce-lue&quot;&gt;划分组的策略&lt;&#x2F;h3&gt;
@@ -59,31 +58,26 @@
 &lt;p&gt;理想状态自然是每个组之间没有重叠，然后将各自组的其中一枚硬币翻转，但这样最多需要翻转 6 次（原始二进制数和目标二进制数各位都不相同）。所以一定会有交叉，那如何交叉才能使得所有可能的翻转组合都被覆盖到呢？如果用 1 表示翻转，那么二进制表示的 64 个数字，不就是所有可能的翻转组合么？&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-2.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-2.png 706w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-2.png 706w&quot;
-    sizes=&quot;(max-width: 706px) 100vw, 706px&quot; width=&quot;706&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1412&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;比如 3，也就是 &lt;code&gt;000011&lt;&#x2F;code&gt; 表示翻转 $2^0$ 和 $2^1$ 所在的组，原先为奇数个正面的硬币，就变成偶数个，反之亦然，其他 4 个组维持原状。&lt;&#x2F;p&gt;
 &lt;p&gt;好像有思路了。对于 $2^0$ 这一组，包含的数为末尾为 1 的二进制数，$2^1$ 这一组，则包含倒数第二位为 1 的二进制数，以此类推（下图可点击放大）：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-3.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-3.png 2230w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-3.png 2230w&quot;
-    sizes=&quot;(max-width: 2230px) 100vw, 2230px&quot; width=&quot;2230&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;4460&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这样 6 个组就划分完了，假设经过计算后发现要调整 $2^5$, $2^3$, $2^1$ 这 3 个组硬币的奇偶性，也就是 &lt;code&gt;101010&lt;&#x2F;code&gt;，对应十进制就是 42，那么将 42 号硬币翻一面就行了。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-4.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-4.png 2230w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-4.png 2230w&quot;
-    sizes=&quot;(max-width: 2230px) 100vw, 2230px&quot; width=&quot;2230&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;4460&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;是不是只影响了 $2^5$, $2^3$, $2^1$ 这 3 个组，$2^0$, $2^2$, $2^4$ 这 3 组安然无恙。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;shi-zhan&quot;&gt;实战&lt;&#x2F;h3&gt;
 &lt;p&gt;假设出题人最后的硬币摆放如下（白色为正面，灰色为反面，），指定魔币序号为 39。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-5.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-5.png 1246w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-5.png 1246w&quot;
-    sizes=&quot;(max-width: 1246px) 100vw, 1246px&quot; width=&quot;1246&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;2492&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;按照上面的分组规则，看看每个组包含的硬币正反面情况&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-6.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-6.png 2230w,&amp;#x2F;posts&amp;#x2F;impossible-win-game&amp;#x2F;impossible-win-6.png 2230w&quot;
-    sizes=&quot;(max-width: 2230px) 100vw, 2230px&quot; width=&quot;2230&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;4460&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;分别为：&lt;&#x2F;p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;$2^0$ 正面数量为 23，奇数，该位为 1&lt;br &#x2F;&gt;
@@ -408,28 +402,24 @@ $2^5$ 正面数量为 23，奇数，该位为 1&lt;&#x2F;p&gt;
 &lt;p&gt;如果设备信息就是固定的手机的 udid，或者对应的映射，攻击者就可以利用这个指纹做文章（比如查看另一个人的手机，看是否有某台设备的 udid，以确定两个人是否近距离接触过，或者持续监控&#x2F;跟踪某台设备）。因此这里的 Key 应该是变的，同时又跟设备紧密相关，别人无法仿造和解密。白皮书里涉及到了 3 个 Key：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;74ae60e45645cb3745de5b164fe647178a993e8e.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;74ae60e45645cb3745de5b164fe647178a993e8e.jpg 410w,&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;74ae60e45645cb3745de5b164fe647178a993e8e.jpg 410w&quot;
-    sizes=&quot;(max-width: 410px) 100vw, 410px&quot; width=&quot;410&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;tracing-key-yi-xia-jian-cheng-tk&quot;&gt;Tracing Key （以下简称 TK）&lt;&#x2F;h3&gt;
+        width=&quot;820&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;tracing-key-yi-xia-jian-cheng-tk&quot;&gt;Tracing Key （以下简称 TK）&lt;&#x2F;h3&gt;
 &lt;p&gt;一个设备只生成一次，保存在本地，不会被上传。它的目标是足够随机，不会与其他设备产生的 TK 冲突。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;daily-tracing-key-yi-xia-jian-cheng-dtk&quot;&gt;Daily Tracing Key（以下简称 DTK）:&lt;&#x2F;h3&gt;
 &lt;p&gt;一天生成一次，一天内不变，从 Tracing Key 派生而来，使用 &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;HKDF&quot;&gt;HKDF&lt;&#x2F;a&gt; 密钥算法（将较短的密钥生成较长的密钥，同时保证随机性），这个算法使用原始的密钥（Tracing Key）作为输入，使用 &lt;code&gt;DayNumber&lt;&#x2F;code&gt; 作为变量，因为 &lt;code&gt;DayNumber&lt;&#x2F;code&gt; 一天内不变，所以 DTK 一天内也不会变。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;faa9b33a2cbe2d8caca14f5d9fe40488b0290982.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;faa9b33a2cbe2d8caca14f5d9fe40488b0290982.png 416w,&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;faa9b33a2cbe2d8caca14f5d9fe40488b0290982.png 416w&quot;
-    sizes=&quot;(max-width: 416px) 100vw, 416px&quot; width=&quot;416&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;832&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这个 Key 的设计目标是隐藏 TK（外部无法根据这个 Key 推测出 TK），同时不会与其他设备的 DTK 冲突。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;rolling-proximity-identifier-yi-xia-jian-cheng-rpi&quot;&gt;Rolling Proximity Identifier（以下简称 RPI）&lt;&#x2F;h3&gt;
 &lt;p&gt;一个广播周期内（比如 10 分钟）生成同一个 HMAC（密钥散列消息认证码）&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;5b07e24e0ab6fc016cd36a5926ae1a659ac0fb19.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;5b07e24e0ab6fc016cd36a5926ae1a659ac0fb19.png 562w,&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;5b07e24e0ab6fc016cd36a5926ae1a659ac0fb19.png 562w&quot;
-    sizes=&quot;(max-width: 562px) 100vw, 562px&quot; width=&quot;562&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1124&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;dkt&lt;sub&gt;i&lt;&#x2F;sub&gt; 表示当天的 Daily Tracing Key，也就是 SHA-256 哈希函数的入参
 TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 j 轮广播周期，比如 10 分钟为一个周期（换一次 RPI）&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;64fd3c7f5c0e0c9f4f3a6ff28227e8ddbe39113f.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;64fd3c7f5c0e0c9f4f3a6ff28227e8ddbe39113f.png 496w,&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;64fd3c7f5c0e0c9f4f3a6ff28227e8ddbe39113f.png 496w&quot;
-    sizes=&quot;(max-width: 496px) 100vw, 496px&quot; width=&quot;496&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;992&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;j 的取值区间就是 &lt;code&gt;[0,143]&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;RPI&lt;&#x2F;code&gt; 的设计目标是隐藏 DKT，同时支持 DKT 的验证（当某个人确诊后，可以通过 ta 的 DKT 计算 RPI 来验证）。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;ru-he-fa-song-rpi&quot;&gt;如何发送 RPI&lt;&#x2F;h3&gt;
@@ -437,8 +427,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;发送（广播）流程如下：
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;c978802c2c011295dea09a857ca31ba24c56d004.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;c978802c2c011295dea09a857ca31ba24c56d004.jpg 1104w,&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;c978802c2c011295dea09a857ca31ba24c56d004.jpg 1104w&quot;
-    sizes=&quot;(max-width: 1104px) 100vw, 1104px&quot; width=&quot;1104&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;2208&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这里的通信双方分别是：advertiser（广播数据包）和 scanner（扫描响应包），前者在广播时间间隔内会不断广播数据，这些数据中会包含 RPI，scanner 接收到广播数据后会将 payload 中的 RPI 保存到本地。等切换到下一个时间窗口后，会生成并广播新的 RPI。跨天会以新的 DTK 为基础，生成并广播新的 RPI。&lt;&#x2F;p&gt;
 &lt;p&gt;这个过程使用的是 Beaconing 协议，也就是接收方无需应答广播者的数据包，只要默默地把数据记下来就行。一个设备同时是广播者和扫描者。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;guan-yu-kong-jian-zhan-yong&quot;&gt;关于空间占用&lt;&#x2F;h4&gt;
@@ -448,21 +437,18 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;对于 Scanner 来说，流程更加简单，只要存储收到的 RPI 即可。如果云端有推送 Diagnosis Keys（确诊者上传的 DTK），就对它使用 SHA_256 算法（结合 TimeIntervalNumber）， 将结果与本地存储的 RPI 比对，如果 match，就有被感染的风险，系统会推送通知提醒。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;9b0d919706658c6c62ab9b9baab4f7adec60427a.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;9b0d919706658c6c62ab9b9baab4f7adec60427a.jpg 1104w,&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;9b0d919706658c6c62ab9b9baab4f7adec60427a.jpg 1104w&quot;
-    sizes=&quot;(max-width: 1104px) 100vw, 1104px&quot; width=&quot;1104&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h2 id=&quot;guan-yu-api&quot;&gt;关于 API&lt;&#x2F;h2&gt;
+        width=&quot;2208&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h2 id=&quot;guan-yu-api&quot;&gt;关于 API&lt;&#x2F;h2&gt;
 &lt;p&gt;苹果和 Google 都放出了 API Interface，虽然没有具体的实现，但光是对比两家的 API 接口就能看出点门道，这个环节个人认为 Google 做得更好，苹果很「意外」地没有使用 Swift 来提供 API，OC 那冗长的语法和 Block，给 API 的友好度打了折扣&lt;&#x2F;p&gt;
 &lt;a href=&quot;https:&#x2F;&#x2F;covid19-static.cdn-apple.com&#x2F;applications&#x2F;covid19&#x2F;current&#x2F;static&#x2F;contact-tracing&#x2F;pdf&#x2F;ContactTracing-FrameworkDocumentation.pdf&quot;&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;2b1faeb610533f0fb6da0f92d2f907a272f5ebec.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;2b1faeb610533f0fb6da0f92d2f907a272f5ebec.jpg 354.5w,&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;2b1faeb610533f0fb6da0f92d2f907a272f5ebec.jpg 354.5w&quot;
-    sizes=&quot;(max-width: 354.5px) 100vw, 354.5px&quot; width=&quot;354.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;709&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;&#x2F;a&gt;
 &lt;p&gt;相比之下 Google 的 API 看着就舒服多了&lt;&#x2F;p&gt;
 &lt;a href=&quot;https:&#x2F;&#x2F;blog.google&#x2F;documents&#x2F;55&#x2F;Android_Contact_Tracing_API.pdf&quot;&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;9dfa8c4a3c89e00c20b346c8fe6e06bfd02547d8.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;9dfa8c4a3c89e00c20b346c8fe6e06bfd02547d8.jpg 309.5w,&amp;#x2F;posts&amp;#x2F;contact-tracing-tech-analyze&amp;#x2F;9dfa8c4a3c89e00c20b346c8fe6e06bfd02547d8.jpg 309.5w&quot;
-    sizes=&quot;(max-width: 309.5px) 100vw, 309.5px&quot; width=&quot;309.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;619&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;&#x2F;a&gt;
 &lt;h2 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h2&gt;
 &lt;p&gt;这个设计非常巧妙，不仅保护了用户隐私，也减少了服务端的压力，对于服务端只需存储和下发 Diagnosis Keys，不需要计算 Key 与 Key，Key 与设备之间的关联。设备也不会有很大的存储和计算压力。从扩展性来看，将来如果有类似的近距离传播流行病，可以复用这套技术。但 Android 设备因为众所周知的原因在国内推行这套基建会比较困难。&lt;&#x2F;p&gt;
@@ -479,8 +465,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
             <guid>https://limboy.me/posts/chrome-trace-viewer/</guid>
             <description>
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;b580eea70090ee05b7c8885712df2b271395a8b4.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;b580eea70090ee05b7c8885712df2b271395a8b4.png 695w,&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;b580eea70090ee05b7c8885712df2b271395a8b4.png 695w&quot;
-    sizes=&quot;(max-width: 695px) 100vw, 695px&quot; width=&quot;695&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1390&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;最近研究了下 Chrome 自带的 Trace Viewer，发现功能还挺强大的，用来做 Performance Profile，Timeline Tracing 等很方便，但官方的使用文档比较晦涩，资料也比较匮乏和分散，就专门整理了下。&lt;&#x2F;p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;注：Trace Viewer 其实可以脱离 &lt;code&gt;chrome:&#x2F;&#x2F;tracing&lt;&#x2F;code&gt; 在线使用，具体操作后面会讲到&lt;&#x2F;p&gt;
@@ -493,8 +478,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;catapult 源码里包含了很多 test case，git clone 下来后，运行 &lt;code&gt;$CATAPULT&#x2F;bin&#x2F;run_dev_server&lt;&#x2F;code&gt;. 然后在浏览器中打开 &lt;code&gt;http:&#x2F;&#x2F;localhost:8003&#x2F;tracing_examples&#x2F;trace_viewer.html&lt;&#x2F;code&gt; 能看到很多 Demo&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;b45847555835cc49338b5d58c50fd5f656b4e681.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;b45847555835cc49338b5d58c50fd5f656b4e681.jpg 688.5w,&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;b45847555835cc49338b5d58c50fd5f656b4e681.jpg 688.5w&quot;
-    sizes=&quot;(max-width: 688.5px) 100vw, 688.5px&quot; width=&quot;688.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1377&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;不过 Google 目前正在开发另一套工具 &lt;a href=&quot;https:&#x2F;&#x2F;ui.perfetto.dev&#x2F;#!&#x2F;&quot;&gt;perfetto&lt;&#x2F;a&gt; 打算替换 Trace Viewer，我初步使用了下，感觉不如 Trace Viewer 简洁。&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;zai-kai-yuan-xiang-mu-zhong-de-shi-yong&quot;&gt;在开源项目中的使用&lt;&#x2F;h2&gt;
 &lt;p&gt;Golang 用它来可视化展示执行过程 https:&#x2F;&#x2F;golang.org&#x2F;cmd&#x2F;trace&#x2F;&lt;&#x2F;p&gt;
@@ -503,20 +487,17 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;49df6cdfe957da75a44c5a074e02d5e7b80dedc1.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;49df6cdfe957da75a44c5a074e02d5e7b80dedc1.jpg 1049w,&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;49df6cdfe957da75a44c5a074e02d5e7b80dedc1.jpg 1049w&quot;
-    sizes=&quot;(max-width: 1049px) 100vw, 1049px&quot; width=&quot;1049&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;2098&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;Facebook 的 Buck Build 系统，用它来展示 Build 时发生了什么&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;a3adb318505c4c13881b90eb2b031f8afb977da7.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;a3adb318505c4c13881b90eb2b031f8afb977da7.png 450w,&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;a3adb318505c4c13881b90eb2b031f8afb977da7.png 450w&quot;
-    sizes=&quot;(max-width: 450px) 100vw, 450px&quot; width=&quot;450&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;900&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;从这两个项目可以看出来 Trace Viewer 对于呈现「某段时间发生了什么」 还是有过人之处。&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;trace-viewer-format&quot;&gt;Trace Viewer Format&lt;&#x2F;h2&gt;
 &lt;p&gt;Trace Viewer 有一套自己的 &lt;a href=&quot;https:&#x2F;&#x2F;docs.google.com&#x2F;document&#x2F;d&#x2F;1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU&#x2F;edit&quot;&gt;Trace Event Format&lt;&#x2F;a&gt;，只要文件遵循这个格式，就可以被展示。比如：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;23d3a314c8c47e6ea8bf35f46d0e58ea7c9a62be.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;23d3a314c8c47e6ea8bf35f46d0e58ea7c9a62be.png 815w,&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;23d3a314c8c47e6ea8bf35f46d0e58ea7c9a62be.png 815w&quot;
-    sizes=&quot;(max-width: 815px) 100vw, 815px&quot; width=&quot;815&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1630&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;对应的 json 文件内容：&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;[ {&amp;quot;name&amp;quot;: &amp;quot;出方案&amp;quot;, &amp;quot;ph&amp;quot;: &amp;quot;B&amp;quot;, &amp;quot;pid&amp;quot;: &amp;quot;Main&amp;quot;, &amp;quot;tid&amp;quot;: &amp;quot;工作&amp;quot;, &amp;quot;ts&amp;quot;: 0},
 &lt;&#x2F;span&gt;&lt;span&gt;  {&amp;quot;name&amp;quot;: &amp;quot;出方案&amp;quot;, &amp;quot;ph&amp;quot;: &amp;quot;E&amp;quot;, &amp;quot;pid&amp;quot;: &amp;quot;Main&amp;quot;, &amp;quot;tid&amp;quot;: &amp;quot;工作&amp;quot;, &amp;quot;ts&amp;quot;: 28800000000},
@@ -558,8 +539,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;左边的 &lt;code&gt;Process Main&lt;&#x2F;code&gt; 能不能也进行个性化定制以显得不那么突兀呢？比如将它改成「时间线」&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;2b199fda93a030e4ceaa09317e67bfd4407a08b1.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;2b199fda93a030e4ceaa09317e67bfd4407a08b1.png 739w,&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;2b199fda93a030e4ceaa09317e67bfd4407a08b1.png 739w&quot;
-    sizes=&quot;(max-width: 739px) 100vw, 739px&quot; width=&quot;739&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1478&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这就要使用 MetaData Phase 了&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;{&amp;quot;name&amp;quot;: &amp;quot;process_name&amp;quot;, &amp;quot;ph&amp;quot;: &amp;quot;M&amp;quot;, &amp;quot;pid&amp;quot;: &amp;quot;Main&amp;quot;, &amp;quot;tid&amp;quot;: &amp;quot;工作&amp;quot;, &amp;quot;args&amp;quot;: {&amp;quot;name&amp;quot;: &amp;quot;时间线&amp;quot;}}
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
@@ -567,8 +547,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;有一些事件，它不是执行耗时，但包含了其他事件，比如「我的一天」，它不是一个可被执行的事件，但将一天做的事情包含进来。这些被称为「异步事件」，表现上就像这样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;b918640dca619c8e393599f7096a26043fd70f72.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;b918640dca619c8e393599f7096a26043fd70f72.png 757w,&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;b918640dca619c8e393599f7096a26043fd70f72.png 757w&quot;
-    sizes=&quot;(max-width: 757px) 100vw, 757px&quot; width=&quot;757&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1514&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;独占一栏，同时使用了斜体字，如果仔细看，还会发现顶部多了一条黑色的线。异步事件的 &lt;code&gt;ph&lt;&#x2F;code&gt; 为 &lt;code&gt;b&lt;&#x2F;code&gt; 和 &lt;code&gt;e&lt;&#x2F;code&gt; 也是 Begin 和 End，只不过变成了小写，同时还要提供 &lt;code&gt;id&lt;&#x2F;code&gt; 和 &lt;code&gt;cat&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;[
 &lt;&#x2F;span&gt;&lt;span&gt;  {&amp;quot;name&amp;quot;: &amp;quot;我的一天&amp;quot;, &amp;quot;ph&amp;quot;: &amp;quot;b&amp;quot;, &amp;quot;cat&amp;quot;: &amp;quot;daily&amp;quot;, &amp;quot;id&amp;quot;: &amp;quot;my-day&amp;quot;, &amp;quot;pid&amp;quot;: &amp;quot;Main&amp;quot;, &amp;quot;tid&amp;quot;: &amp;quot;工作&amp;quot;, &amp;quot;ts&amp;quot;: 0},
@@ -579,8 +558,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;一件事可能会被拆分为更小的单元，然后执行过程中也会穿插着其他的事件，针对这样的场景，可以通过 &lt;code&gt;Flow Event&lt;&#x2F;code&gt; 来表示&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;7a54bb4d237b14089e5bc83a2f9329b686c941c8.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;7a54bb4d237b14089e5bc83a2f9329b686c941c8.jpg 717w,&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;7a54bb4d237b14089e5bc83a2f9329b686c941c8.jpg 717w&quot;
-    sizes=&quot;(max-width: 717px) 100vw, 717px&quot; width=&quot;717&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1434&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;注意，在「出方案」和「写代码」之间多了一条线&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;  {&amp;quot;name&amp;quot;: &amp;quot;出方案&amp;quot;, &amp;quot;cname&amp;quot;: &amp;quot;good&amp;quot;,&amp;quot;ph&amp;quot;: &amp;quot;X&amp;quot;, &amp;quot;pid&amp;quot;: &amp;quot;Main&amp;quot;, &amp;quot;tid&amp;quot;: &amp;quot;工作&amp;quot;, &amp;quot;ts&amp;quot;: 0, &amp;quot;dur&amp;quot;: 28800000000},
 &lt;&#x2F;span&gt;&lt;span&gt;  {&amp;quot;name&amp;quot;: &amp;quot;connect&amp;quot;, &amp;quot;ph&amp;quot;: &amp;quot;s&amp;quot;, &amp;quot;id&amp;quot;: &amp;quot;my-work&amp;quot;, &amp;quot;pid&amp;quot;: &amp;quot;Main&amp;quot;, &amp;quot;tid&amp;quot;: &amp;quot;工作&amp;quot;, &amp;quot;ts&amp;quot;: 28800000000},
@@ -599,14 +577,12 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;9fafe4e26805bce1fde36f7970389735fa66ec5a.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;9fafe4e26805bce1fde36f7970389735fa66ec5a.jpg 741w,&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;9fafe4e26805bce1fde36f7970389735fa66ec5a.jpg 741w&quot;
-    sizes=&quot;(max-width: 741px) 100vw, 741px&quot; width=&quot;741&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1482&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;中间那根红线就是我们刚加的事件，选中之后会在底部出现该事件的详细信息。&lt;&#x2F;p&gt;
 &lt;p&gt;作为一个上进的青年，一天下来之后，需要留一段时间反思今天做的好的和不好的，这可以通过 Snapshot 来体现，就像这样&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;200ba2a883121853011e9e0c22757929ee257a84.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;200ba2a883121853011e9e0c22757929ee257a84.png 636w,&amp;#x2F;posts&amp;#x2F;chrome-trace-viewer&amp;#x2F;200ba2a883121853011e9e0c22757929ee257a84.png 636w&quot;
-    sizes=&quot;(max-width: 636px) 100vw, 636px&quot; width=&quot;636&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1272&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;右上角那个圆点就是 Snapshot 在 Timeline 上的表现，点击之后可以在底部看到详细内容。&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;{&amp;quot;name&amp;quot;: &amp;quot;反思&amp;quot;, &amp;quot;ph&amp;quot;: &amp;quot;O&amp;quot;, &amp;quot;id&amp;quot;: &amp;quot;Ref&amp;quot;, &amp;quot;pid&amp;quot;: &amp;quot;Main&amp;quot;, &amp;quot;tid&amp;quot;: &amp;quot;其他&amp;quot;, &amp;quot;ts&amp;quot;: 37800000000, &amp;quot;args&amp;quot;: {&amp;quot;snapshot&amp;quot;: &amp;quot;充实的一天呢&amp;quot;}}
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
@@ -796,8 +772,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;因此除了专业技能过硬之外，还有很多需要考虑的点。我觉得从开发者和开发这两个方向切入会比较合适，开发占大部分。下图是我的总结，欢迎探讨 :)&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;architect-mindset&amp;#x2F;architect-mindset.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;architect-mindset&amp;#x2F;architect-mindset.png 1043.5w,&amp;#x2F;posts&amp;#x2F;architect-mindset&amp;#x2F;architect-mindset.png 1043.5w&quot;
-    sizes=&quot;(max-width: 1043.5px) 100vw, 1043.5px&quot; width=&quot;1043.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
+        width=&quot;2087&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
         </item>
         
         
@@ -815,8 +790,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;&#x2F;blockquote&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-scrollview.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-scrollview.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-scrollview.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;ScrollView&lt;&#x2F;code&gt; 和它的子类比如 &lt;code&gt;ListView&lt;&#x2F;code&gt; 或 &lt;code&gt;GridView&lt;&#x2F;code&gt; 是常见的 Unbounded Constraints. 也就是在某一个方向没有限制大小。其他的 widget 只要能够设置 &lt;code&gt;width&lt;&#x2F;code&gt; 或 &lt;code&gt;height&lt;&#x2F;code&gt; 为 &lt;code&gt;double.INFINITY&lt;&#x2F;code&gt; 的也算。有时也会用 &lt;strong&gt;as big as possible&lt;&#x2F;strong&gt; 来描述这些 widgets。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;flex&quot;&gt;Flex&lt;&#x2F;h4&gt;
 &lt;blockquote&gt;
@@ -826,15 +800,13 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;当在有限的空间内，会撑满整个空间；如果在一个 unbounded constraints 容器里，就匹配子 widget 的大小。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-row-column.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-row-column.png 187w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-row-column.png 187w&quot;
-    sizes=&quot;(max-width: 187px) 100vw, 187px&quot; width=&quot;187&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;374&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;最常见的是 &lt;code&gt;Row&lt;&#x2F;code&gt; 和 &lt;code&gt;Column&lt;&#x2F;code&gt;，如果不嫌麻烦的话，也可以使用 &lt;code&gt;Flex&lt;&#x2F;code&gt; widget。里面可以放 &lt;code&gt;Flexible&lt;&#x2F;code&gt; widget，也可以不是。如果有 &lt;code&gt;Flexible&lt;&#x2F;code&gt; widgets 会把剩余空间计算出来分配给这些 widgets。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;flexible&quot;&gt;Flexible&lt;&#x2F;h4&gt;
 &lt;p&gt;跟 &lt;code&gt;Flex&lt;&#x2F;code&gt; 搭配使用，&lt;code&gt;Flexible&lt;&#x2F;code&gt; 可以用来声明使用百分之多少的空间。比如 &lt;code&gt;flex = 1&lt;&#x2F;code&gt; 也就是 &lt;code&gt;1&#x2F;all&lt;&#x2F;code&gt;，如果有两个 widgets，另一个也是 1，那么 &lt;code&gt;all = 2&lt;&#x2F;code&gt;，每个 widget 分配到 50% 的空间。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-expanded.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-expanded.png 187w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-expanded.png 187w&quot;
-    sizes=&quot;(max-width: 187px) 100vw, 187px&quot; width=&quot;187&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;374&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;Expanded&lt;&#x2F;code&gt; 是最常见的 &lt;code&gt;Flexible&lt;&#x2F;code&gt; widget，它会填满主方向上可用的空间（比如 Row 的水平空间或 Column 的垂直空间）。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;zhu-yao-widgets&quot;&gt;主要 Widgets&lt;&#x2F;h3&gt;
 &lt;h4 id=&quot;container&quot;&gt;Container&lt;&#x2F;h4&gt;
@@ -855,8 +827,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;这是一个没有孩子的 container，因此它会表现地尽量大，就像这样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;如果设置了 &lt;code&gt;width&lt;&#x2F;code&gt; 或 &lt;code&gt;height&lt;&#x2F;code&gt;，则会根据设置的值来表现：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MaterialApp&lt;&#x2F;span&gt;&lt;span&gt;(
 &lt;&#x2F;span&gt;&lt;span&gt;  home&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Scaffold&lt;&#x2F;span&gt;&lt;span&gt;(
@@ -870,8 +841,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-width.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-width.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-width.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;如果有 child，则会以 child 的 size 为准：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MaterialApp&lt;&#x2F;span&gt;&lt;span&gt;(
 &lt;&#x2F;span&gt;&lt;span&gt;  home&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Scaffold&lt;&#x2F;span&gt;&lt;span&gt;(
@@ -884,8 +854,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-child.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-child.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-container-child.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;除此之外，还可以设置 padding, margin, child 的对齐方式，等等。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;stack&quot;&gt;Stack&lt;&#x2F;h4&gt;
 &lt;p&gt;&lt;code&gt;Stack&lt;&#x2F;code&gt; 有点像 css 的绝对布局，可以在上面盖一些 widgets，比如 profile 页的背景图上放一些个人信息。&lt;&#x2F;p&gt;
@@ -909,13 +878,11 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-1.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-1.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-1.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;StackFit.loose&lt;&#x2F;code&gt; 的意思是，如果 child size 不比 Stack 的大，就用 child 的 size。而如果设置为 &lt;code&gt;StackFit.expand&lt;&#x2F;code&gt; 则会让所有非 &lt;code&gt;Positioned&lt;&#x2F;code&gt; 的 widgets 使用 Stack 的 size。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-2.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-2.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;flutter-stack-2.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;Text(&#x27;world&#x27;)&lt;&#x2F;code&gt; 现在就跟 Stack 一样大了，所以看起来像是 &lt;code&gt;alignment.center&lt;&#x2F;code&gt; 没有生效。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;row-and-column&quot;&gt;Row and Column&lt;&#x2F;h4&gt;
 &lt;p&gt;它们都是 Flex widgets，Row 可以将 children 横着放，column 可以将 children 竖着放。&lt;&#x2F;p&gt;
@@ -967,13 +934,11 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squrebox.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squrebox.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squrebox.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;答案是，不会，它会变成这样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squarebox-real.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squarebox-real.png 73w,&amp;#x2F;posts&amp;#x2F;flutter-layout&amp;#x2F;Flutter-squarebox-real.png 73w&quot;
-    sizes=&quot;(max-width: 73px) 100vw, 73px&quot; width=&quot;73&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;146&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;不是设置了 constraints 系统就要按着这个 constraints 来，在经过计算之后，系统会发现这个 constraints 无法满足需求，而被舍弃，具体过程如下：&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;Container&lt;&#x2F;code&gt; 的 &lt;code&gt;build&lt;&#x2F;code&gt; 方法里，发现有设置过 constraints，最终会返回一个 &lt;code&gt;BoxConstraints&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BoxConstraints&lt;&#x2F;span&gt;&lt;span&gt;(
@@ -1055,8 +1020,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;再来看看 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;felangel&#x2F;bloc&quot;&gt;flutter_bloc&lt;&#x2F;a&gt;，这也是关注度蛮高的一个项目，说这个之前先说说 bloc，这是 flutter 提的一个概念，运行机制大致如下：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;bloc-redux&amp;#x2F;movie250-bloc.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;bloc-redux&amp;#x2F;movie250-bloc.png 280.5w,&amp;#x2F;posts&amp;#x2F;bloc-redux&amp;#x2F;movie250-bloc.png 280.5w&quot;
-    sizes=&quot;(max-width: 280.5px) 100vw, 280.5px&quot; width=&quot;280.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;561&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;它更像一个提案，缺少标准和实现。flutter_bloc 就是对这个提案的一个实现。这个实现本质上没觉得跟 flutter_redux 有太大的区别，而复杂度倒是增加了不少，还提出了一些新的概念(比如 BlocSupervisor, BlocDelegate, Transation)，增加了理解上的困难。在处理核心的 state 问题上依旧跟 flutter_redux 一样，甚至都没有做 &lt;code&gt;==&lt;&#x2F;code&gt; check。&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;_bindStateSubject&lt;&#x2F;span&gt;&lt;span&gt;() {
 &lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;Event&lt;&#x2F;span&gt;&lt;span&gt; currentEvent;
@@ -1265,8 +1229,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;video.twimg.com&#x2F;ext_tw_video&#x2F;1070286725656662017&#x2F;pu&#x2F;vid&#x2F;360x640&#x2F;uoeUgoq2-EigTzi7.mp4?tag=6&quot;&gt;这里&lt;&#x2F;a&gt;可以查看最终的效果。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-demo.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-demo.png 482w,&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-demo.png 482w&quot;
-    sizes=&quot;(max-width: 482px) 100vw, 482px&quot; width=&quot;482&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;mu-lu-hua-fen&quot;&gt;目录划分&lt;&#x2F;h3&gt;
+        width=&quot;964&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;mu-lu-hua-fen&quot;&gt;目录划分&lt;&#x2F;h3&gt;
 &lt;p&gt;接到这个需求后首先要考虑的是目录结构应该怎么划分，这也是架构的一部分，我是这么分的:&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;blocs&#x2F;
 &lt;&#x2F;span&gt;&lt;span&gt;widgets&#x2F;
@@ -1330,8 +1293,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;BLoC 其实就是 ViewModel，有了 API 实现之后，接下来就要让 Widget 可以用上这些数据，这就是 BLoC 做的事。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-bloc.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-bloc.png 280.5w,&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-bloc.png 280.5w&quot;
-    sizes=&quot;(max-width: 280.5px) 100vw, 280.5px&quot; width=&quot;280.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;561&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;Widget 告诉 BLoC 发生了什么，BLoC 告诉 Widget 哪些数据更新了。&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;class &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MoviesBloc &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;extends &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BlocBase&lt;&#x2F;span&gt;&lt;span&gt; {
 &lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;final &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BehaviorSubject&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;MovieEnvelope&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; _movieEnvelope &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;BehaviorSubject&lt;&#x2F;span&gt;&lt;span&gt;();
@@ -1407,8 +1369,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;h3 id=&quot;shou-ye-bu-ju&quot;&gt;首页布局&lt;&#x2F;h3&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-home-layout.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-home-layout.png 127.5w,&amp;#x2F;posts&amp;#x2F;flutter-demo&amp;#x2F;movie250-home-layout.png 127.5w&quot;
-    sizes=&quot;(max-width: 127.5px) 100vw, 127.5px&quot; width=&quot;127.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;255&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;Flutter 提供了两种列表布局方式: &lt;code&gt;ListView&lt;&#x2F;code&gt; 和 &lt;code&gt;GridView&lt;&#x2F;code&gt;，如果页面里除了列表还有其他元素（比如顶部的 SlideView 等），就需要用到 &lt;code&gt;CustomScrollView&lt;&#x2F;code&gt; 或者 &lt;code&gt;NestedScrollView&lt;&#x2F;code&gt;，首页除了列表没有其他元素，同时一行可能包含多个视图，因此我们选择 &lt;a href=&quot;https:&#x2F;&#x2F;docs.flutter.io&#x2F;flutter&#x2F;widgets&#x2F;GridView-class.html&quot;&gt;GridView&lt;&#x2F;a&gt;。&lt;&#x2F;p&gt;
 &lt;p&gt;GridView 的构建可以使用 &lt;code&gt;GridView.builder&lt;&#x2F;code&gt;, 它需要提供几个关键信息:&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;dart&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-dart &quot;&gt;&lt;code class=&quot;language-dart&quot; data-lang=&quot;dart&quot;&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;GridView&lt;&#x2F;span&gt;&lt;span&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;builder&lt;&#x2F;span&gt;&lt;span&gt;(
@@ -1651,15 +1612,13 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;h2 id=&quot;yuan-gu-shi-dai&quot;&gt;远古时代&lt;&#x2F;h2&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;1.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;1.jpg 111w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;1.jpg 111w&quot;
-    sizes=&quot;(max-width: 111px) 100vw, 111px&quot; width=&quot;111&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;222&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;一开始，只有一个进程，一切都很美好，除了操作系统的自留地外，剩下的都给那个进程，想怎么折腾都行，只要别超出最大的容量。&lt;&#x2F;p&gt;
 &lt;p&gt;但我们知道，那个时候，一台计算机是很贵的，比 iPhone XS Max 还贵，在这么昂贵的机器上同时只能运行一个程序实在浪费，于是就有了支持多进程的需求，所谓多进程，并不需要同时运行这些进程，只要它们都处于 ready 状态，操作系统快速地在它们之间切换，就能达到同时运行的假象。每个进程都需要内存，Context Switch 时，之前内存里的内容怎么办？简单粗暴的方式就是先 dump 到磁盘上，然后再从磁盘上 restore 之前 dump 的内容（如果有的话），但效果并不好，太慢了！&lt;&#x2F;p&gt;
 &lt;p&gt;那怎么才能不慢呢？把进程对应的内存依旧留在物理内存中，需要的时候就切换到特定的区域。这就涉及到了内存的保护机制，毕竟进程之间可以随意读取、写入内容就乱套了，非常不安全。因此操作系统需要对物理内存做一层抽象，也就是「地址空间」(Address Space)，一个进程的地址空间包含了该进程所有相关内存，比如 code &#x2F; stack &#x2F; heap。一个 16 KB 的地址空间可能长这样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;2.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;2.jpg 181.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;2.jpg 181.5w&quot;
-    sizes=&quot;(max-width: 181.5px) 100vw, 181.5px&quot; width=&quot;181.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;363&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;当程序运行时，heap 和 stack 共用中间 free 的区域，当然这只是 OS 层面的抽象。比如下面这段代码：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; x;
 &lt;&#x2F;span&gt;&lt;span&gt;x &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; x &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;3&lt;&#x2F;span&gt;&lt;span&gt;; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; this is the line of code we are interested in
@@ -1673,13 +1632,11 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;从进程的角度看，内存可能是这样的：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;3.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;3.jpg 136w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;3.jpg 136w&quot;
-    sizes=&quot;(max-width: 136px) 100vw, 136px&quot; width=&quot;136&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;272&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;真实的物理内存可能是这样的：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;4.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;4.jpg 141.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;4.jpg 141.5w&quot;
-    sizes=&quot;(max-width: 141.5px) 100vw, 141.5px&quot; width=&quot;141.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;283&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;从 32KB 处作为开始，48KB 作为结束。那 32 &#x2F; 48 可不可以动态设置呢，只要在 CPU 上整两个寄存器，base 和 bounds 就可以了，base 指明从哪里开始，bounds 指定哪里是边界。 因此真实物理地址和虚拟地址之间的关系是：&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;physical address = virtual address + base
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
@@ -1689,16 +1646,13 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;分段的思想很简单，之前不是一大块都是连在一起的么，现在要把你们都分开，code &#x2F; stack &#x2F; heap 各自成为一段，段内的空间是连续的，段与段之间不必连续，这样空间利用率上就更高了。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;7.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;7.jpg 252.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;7.jpg 252.5w&quot;
-    sizes=&quot;(max-width: 252.5px) 100vw, 252.5px&quot; width=&quot;252.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;505&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;5.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;5.jpg 242w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;5.jpg 242w&quot;
-    sizes=&quot;(max-width: 242px) 100vw, 242px&quot; width=&quot;242&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;484&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;接下来问题就来了，一个进程会有多个段，如何知道一个内存地址对应的是哪个段呢？一个方法是用地址的前两个字节来表示：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;6.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;6.jpg 166.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;6.jpg 166.5w&quot;
-    sizes=&quot;(max-width: 166.5px) 100vw, 166.5px&quot; width=&quot;166.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;333&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;比如 &lt;code&gt;00&lt;&#x2F;code&gt; 表示 code, &lt;code&gt;01&lt;&#x2F;code&gt; 表示 heap。获取物理地址的过程大概像这样：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; 获取前两个比特
 &lt;&#x2F;span&gt;&lt;span&gt;Segment &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;(VirtualAddress &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;amp;&lt;&#x2F;span&gt;&lt;span&gt; SEG_MASK) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;&amp;gt;&amp;gt;&lt;&#x2F;span&gt;&lt;span&gt; SEG_SHIFT
@@ -1716,8 +1670,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;每个段依旧会有 Base 和 Bounds，但注意到有些段是向上扩张，有些是向下扩张，这个信息也需要被额外记录：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;8.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;8.jpg 312w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;8.jpg 312w&quot;
-    sizes=&quot;(max-width: 312px) 100vw, 312px&quot; width=&quot;312&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;624&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;除此之外，还会有其他的信息需要记录，比如是否可读写等。&lt;&#x2F;p&gt;
 &lt;p&gt;那这个做法有没有问题呢，有的：&lt;&#x2F;p&gt;
 &lt;ol&gt;
@@ -1726,14 +1679,12 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;&#x2F;ol&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;9.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;9.jpg 285w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;9.jpg 285w&quot;
-    sizes=&quot;(max-width: 285px) 100vw, 285px&quot; width=&quot;285&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;570&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;在这个例子中，当一个进程想要申请 20KB 的段时，虽然有 24KB 的剩余空间，但并不连续，因此会申请失败。一种解决方法是让内存空间变得更紧凑，比如暂停正在运行的进程，把内存拷贝到连续的地址空间，修改 Segment Register，这样就可以变成右图那样了。但是代价有点大，拷贝段会花费显著的时间。无论使用何种算法，碎片化一定会存在，只是好点的算法能降低碎片化程度。&lt;&#x2F;p&gt;
 &lt;p&gt;顺便提一下 C 里面的内存申请，当 &lt;code&gt;malloc(size_t size)&lt;&#x2F;code&gt; 时，会返回一个指针，当 &lt;code&gt;free(void *pointer)&lt;&#x2F;code&gt; 时，会释放指针对应的区域，也就是说 &lt;code&gt;free&lt;&#x2F;code&gt; 时，不需要知道 &lt;code&gt;size&lt;&#x2F;code&gt;，这是因为申请内存时，有一块额外的区域用来存储这些信息，比如当用户执行 &lt;code&gt;ptr = malloc(20)&lt;&#x2F;code&gt; 时&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;10.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;10.jpg 305.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;10.jpg 305.5w&quot;
-    sizes=&quot;(max-width: 305.5px) 100vw, 305.5px&quot; width=&quot;305.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;611&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;除了那 20 个字节，头部还留了点空间用来放 &lt;code&gt;size&lt;&#x2F;code&gt; 和 &lt;code&gt;magic&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;c&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-c &quot;&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;typedef struct&lt;&#x2F;span&gt;&lt;span&gt; __header_t {
 &lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span&gt; size;
@@ -1750,41 +1701,34 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;Paging 的思想是把地址空间切分成固定大小的单元。比如下面一个只有 64 字节的地址空间，每个 Page 16 个字节&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;11.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;11.jpg 235.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;11.jpg 235.5w&quot;
-    sizes=&quot;(max-width: 235.5px) 100vw, 235.5px&quot; width=&quot;235.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;471&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;对应到真实的物理地址：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;12.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;12.jpg 220.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;12.jpg 220.5w&quot;
-    sizes=&quot;(max-width: 220.5px) 100vw, 220.5px&quot; width=&quot;220.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;441&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;可以看到，虽然地址空间是连续的，但物理地址并不是。这样的好处是，不用去考虑 heap &#x2F; stack 会被申请多少 size，比如要申请 64 字节地址空间，只要给 4 个 free 的 page 即可，这样 OS 管理起来也很简单，比如只要维护一份 free pages list，然后给出前 4 个。为了记录虚拟页(Virtual Page)跟物理地址之间的关系，OS 需要维护给每个进程维护一份 Page Table，它的作用就是地址翻译。比如 &lt;code&gt;movl &amp;lt;virtual address&amp;gt;, %eax&lt;&#x2F;code&gt;，由于进程的地址空间是 64 字节，因此需要 6 个比特来表示（2^6 = 64）&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;13.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;13.jpg 139.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;13.jpg 139.5w&quot;
-    sizes=&quot;(max-width: 139.5px) 100vw, 139.5px&quot; width=&quot;139.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;279&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;由于 Page Size 为 16 字节，因此 offset 为 4（4 个比特就能表示全一个 Page 里的任意位置），剩下的前两位作为 VPN (Virtual Page Number)&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;14.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;14.jpg 137.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;14.jpg 137.5w&quot;
-    sizes=&quot;(max-width: 137.5px) 100vw, 137.5px&quot; width=&quot;137.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;275&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;比如 &lt;code&gt;movl 21, %eax&lt;&#x2F;code&gt;, 21 转成 2 进制就是 &lt;code&gt;010101&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;15.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;15.jpg 142.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;15.jpg 142.5w&quot;
-    sizes=&quot;(max-width: 142.5px) 100vw, 142.5px&quot; width=&quot;142.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;285&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;经过地址翻译后，就能找到物理内存中的地址了&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;16.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;16.jpg 172.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;16.jpg 172.5w&quot;
-    sizes=&quot;(max-width: 172.5px) 100vw, 172.5px&quot; width=&quot;172.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;345&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;那么问题又来了，Page Tables (用来将虚拟地址翻译成物理地址)存在哪里呢？在想这个问题前，先想下 Page Tables 大概有多大？&lt;&#x2F;p&gt;
 &lt;p&gt;如果每个 Page Table Entry (PTE) 需要 4 个字节来保存 物理地址(PFN, Physical Frame Number)和其他的状态码，一个进程会有多少个 PTE 呢？假设地址空间为 32 位，Page Size 为 4KB，那么虚拟地址就可以被拆分成 20 bits 的 VPN 和 12 bits 的 Offset，有 2^20 个 VPN 可能需要翻译，就需要有对应数量的 PTE，因此一个进程大概需要 4MB 的内存来存储 Page Tables，想想如果有 100 个进程在运行，就需要 400MB，这个数量可不算小。&lt;&#x2F;p&gt;
 &lt;p&gt;既然 Page Tables 如此之大，放 CPU 的寄存器里是不可能了，那就只能放内存了，因此在获取虚拟地址对应的物理内存地址时，需要先访问一次内存，这比直接访问 CPU 的寄存器会慢很多。&lt;&#x2F;p&gt;
 &lt;p&gt;顺便来看一下 PTE 到底长啥样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;17.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;17.jpg 299.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;17.jpg 299.5w&quot;
-    sizes=&quot;(max-width: 299.5px) 100vw, 299.5px&quot; width=&quot;299.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;599&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;前几位都是状态位，用来表示这段内存目前的状态，比如是否有效（Valid），是否可读，是否在 Swap 等。PFN 是真正的物理内存地址。&lt;&#x2F;p&gt;
 &lt;p&gt;采用分页模式后，物理地址的获取过程就变成了这样：&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;&#x2F;&#x2F; 把 VPN 摘出来
@@ -1812,8 +1756,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;再来看看 Context Switch。每个进程的 VPN 和 PFN 的对应关系是不一样的，因此上一个进程的对应关系对于下一个进程来说，完全无用。那怎么办？最简单粗暴的方式就是进程切换时，直接清空，这样虽然不会出问题，但也降低了缓存命中率，尤其是频繁切换的话。还有一种方法是多加一个字段来表示该段翻译对应的是哪个地址空间（ASID），有点像 PID。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;18.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;18.jpg 181w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;18.jpg 181w&quot;
-    sizes=&quot;(max-width: 181px) 100vw, 181px&quot; width=&quot;181&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;362&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;但 CPU 这寸土寸金的地方，不可能放很大的缓存，而且 size 越小，访问速度才会越快，当缓存满了之后怎么办？可以采用常见的策略，比如 LRU 或 Random。所以虽然内存被叫做 Random Access Memory，但也分是否命中缓存，那些命中 TLB 缓存的才是最快的。&lt;&#x2F;p&gt;
 &lt;p&gt;OK，访问速度这个问题算是解决了，还有一个体积大的问题又该怎么处理呢？&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;smaller-tables&quot;&gt;Smaller Tables&lt;&#x2F;h2&gt;
@@ -1823,8 +1766,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;回顾之前，我们采用段模式时，并没有体积大的问题，因为只需要 base and bounds 就可以了，那有没有可能把段和页结合起来呢？我们来试试，如果每个 Segment 对应一个 Table，这样就只需要 3 个 Table。对于 Segment 来说，现在 Bounds 变为了判断 Page Table 的边界（比如有多少个 Pages）。假设 32 位的地址空间，4KB Pages，就会变成这样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;20.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;20.jpg 324w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;20.jpg 324w&quot;
-    sizes=&quot;(max-width: 324px) 100vw, 324px&quot; width=&quot;324&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;648&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;如果 TLB 没有命中的话，过程大概如此&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;SN = (VirtualAddress &amp;amp; SEG_MASK) &amp;gt;&amp;gt; SN_SHIFT
 &lt;&#x2F;span&gt;&lt;span&gt;VPN = (VirtualAddress &amp;amp; VPN_MASK) &amp;gt;&amp;gt; VPN_SHIFT
@@ -1833,20 +1775,17 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;但这样 Segment 自带的碎片化问题依旧存在，到时 malloc 寻找可用空间时依旧会比较复杂。回过头来，我们再来看下，占用的这 4MB 空间真的是必须的么？&lt;&#x2F;p&gt;
 &lt;p&gt;
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;21.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;21.jpg 222w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;21.jpg 222w&quot;
-    sizes=&quot;(max-width: 222px) 100vw, 222px&quot; width=&quot;222&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;444&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;22.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;22.jpg 255.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;22.jpg 255.5w&quot;
-    sizes=&quot;(max-width: 255.5px) 100vw, 255.5px&quot; width=&quot;255.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;511&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;可以看到，中间的一大部分都是空的，但依旧会被填充（因为是采用数组的方式来访问），那有没有办法既能表达「无」的信息，又不占用空间呢？&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;multi-level-page-tables&quot;&gt;Multi-level Page Tables&lt;&#x2F;h3&gt;
 &lt;p&gt;多级分页表。比如要去宿舍找同学玩，发现宿舍大楼门关着，那么就不用再到寝室了，多级分页表的思路也类似，在最前面先做一次粗检，如果粗检都不符合就直接打回，粗检通过之后再来一次细检，这样就能把空间给省下来，具体是怎么做的呢？&lt;&#x2F;p&gt;
 &lt;p&gt;把 PTE(Page Table Entry, 包含了物理地址和状态码)放进 page-sized units（比如一个 Page 里放 16 个 PTE），如果该 Page 的 PTE 都无效，那么压根就不申请内存，然后外面包一层 Page Directory 用来表示里面是否有有效的 PTE。就像文件夹一样，如果文件夹里没有文件，自然就不会占用空间。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;23.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;23.jpg 461.5w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;23.jpg 461.5w&quot;
-    sizes=&quot;(max-width: 461.5px) 100vw, 461.5px&quot; width=&quot;461.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;923&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;左边是单层 Page Table 的实现，可以看到，虽然只有最下面两层是 valid 的，但中间依旧会有很多被占用的空间（就像要访问数组的第 1000 个元素，必须先要把这 1000 个元素填满）。&lt;&#x2F;p&gt;
 &lt;p&gt;右边是两层 Page Table 的实现，通过 Valid 状态码就可以知道是否有必要去物理地址拿内容，如果第一层的 Valid 为 1，那么地址转换后就可以拿到第二层 PTE 的内容，如果此时 Valid 为 0，抛出 Exception，为 1，那么继续去拿真正的存放在物理内存中的内容。 因此最外层的 Valid 为 1，只是表示里面至少有一个 Valid 的 PTE。&lt;&#x2F;p&gt;
 &lt;p&gt;相比之下，空间上是不是节省了不少。但也有弊端，比如需要两次内存访问才能拿到真正的虚拟地址对应的内容，所以这是一个典型的时间换空间的做法。还有一个弊端就是复杂度，无论是硬件还是操作系统，处理起来肯定比一个线性的 Page Table 查找复杂，但为了省出来的内存，这个 tradeoff 还是可以接受的。&lt;&#x2F;p&gt;
@@ -1854,8 +1793,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;假设 CPU 在解析指令时，遇到了一个 14 位长的虚拟地址，现在要把它转换为真实地址，并取出其中的内容：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;25.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;25.jpg 224w,&amp;#x2F;posts&amp;#x2F;os-memory&amp;#x2F;25.jpg 224w&quot;
-    sizes=&quot;(max-width: 224px) 100vw, 224px&quot; width=&quot;224&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;448&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;Page Directory Index 告诉 CPU 去第几层找 PDE(Page Directory Entry)&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;PDEAddr = PageDirBase + (PDIndex * sizeof(PDE))
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
@@ -1876,38 +1814,32 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;对「配置中心」这个需求进行分解就是：第一时间把配置发送给客户端。因此我们先来构想一个最简单的场景：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_01.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_01.jpg 600w,&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_01.jpg 600w&quot;
-    sizes=&quot;(max-width: 600px) 100vw, 600px&quot; width=&quot;600&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;客户端和服务端保持一个长链，当在后台操作配置时，会把这个配置以 K&#x2F;V 形式存储，然后通知 Procesor，后者拿到 K&#x2F;V 之后把它推给客户端，整个过程就完成了。这是最原始的形态，接下来会在这个基础上进行演化。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;pei-zhi-geng-xin-shi-ke-hu-duan-chu-yu-chi-xian-zhuang-tai-zen-yao-ban&quot;&gt;配置更新时，客户端处于离线状态怎么办&lt;&#x2F;h3&gt;
 &lt;p&gt;长链只能保证(尽量)客户端在线时能第一时间拿到配置中心的值，处于离线状态（比如没有打开 App）时就无能为力了，因此需要想办法到用户下一次打开 App 时可以拿到最新的值，这个简单处理就是在保存 K&#x2F;V 时，额外存一个 flag 字段，用来表示这个 K&#x2F;V 是否已经成功发送给客户端。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_02.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_02.jpg 600w,&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_02.jpg 600w&quot;
-    sizes=&quot;(max-width: 600px) 100vw, 600px&quot; width=&quot;600&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;duo-fen-pei-zhi-de-chu-li&quot;&gt;多份配置的处理&lt;&#x2F;h3&gt;
+        width=&quot;1200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;duo-fen-pei-zhi-de-chu-li&quot;&gt;多份配置的处理&lt;&#x2F;h3&gt;
 &lt;p&gt;通常 K&#x2F;V 对不止一份，那么多份配置，也就是多个 K&#x2F;V 对，又会带来哪些变化呢。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_03.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_03.jpg 600w,&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_03.jpg 600w&quot;
-    sizes=&quot;(max-width: 600px) 100vw, 600px&quot; width=&quot;600&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这时就有三个问题需要我们考虑：存储、流量和同步策略。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;cun-chu&quot;&gt;存储&lt;&#x2F;h4&gt;
 &lt;p&gt;一个设备的 K&#x2F;V 对通常不会超过 100 项，每对 Size 不超过 1K，也就是一台设备对应的大小上限为 100K 左右，假如设备数为 100 万，就需要 100G 的磁盘空间。这个量还是有点大的，可以优化下。考虑到一些配置项会在多个设备共存，可以把这些配置单独存储，然后把 hash 值作为 Value。假设 Key 的 size 为 30 字节，Value 为 10 字节，这样就只需 40M 的 K&#x2F;V 存储空间。因此由于存储上的限制，我们的设计也要做一下调整:&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_04.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_04.jpg 600w,&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_04.jpg 600w&quot;
-    sizes=&quot;(max-width: 600px) 100vw, 600px&quot; width=&quot;600&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;但这样还是有问题，Value 的组合会很多：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_05.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_05.jpg 600w,&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_05.jpg 600w&quot;
-    sizes=&quot;(max-width: 600px) 100vw, 600px&quot; width=&quot;600&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;比如原来 K1 的 Value 为 V1，更新之后变成了 V2，那么需要新建一组 Value，然后将其中的 V1 变为 V2，因为不知道之前的那一组 Value 是否还有其他设备在引用，这样就会逐渐累积下去，要降低这种累积的话，还要设计清除算法，复杂度就上来。&lt;&#x2F;p&gt;
 &lt;p&gt;不妨参考一下 Go 语言里 Slice 的设计，Slice 内部使用了一个数组，但可以指定使用该数组的哪一部分，其实就是索引。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_06.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_06.jpg 600w,&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_06.jpg 600w&quot;
-    sizes=&quot;(max-width: 600px) 100vw, 600px&quot; width=&quot;600&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这样某个 Key 如果有新的 Value 了，只需在对应的 Key 后面 append 即可。此时需要同步更新设备的索引，这块可能花一点时间，如果数据都在内存的话其实也还好（由于只是存索引，因此这些数据量内存 hold 得住），持久化可以异步进行。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;liu-liang&quot;&gt;流量&lt;&#x2F;h4&gt;
 &lt;p&gt;上面已经说过，单个设备的量可以达到 100K，如果每次配置有更新就发送 100K 的数据对到达率会有一定影响，尤其在设备网络情况不佳的情况下。因此这里的目标是如何减少数据传输量，同时尽量避免提升复杂度。&lt;&#x2F;p&gt;
@@ -1929,8 +1861,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;维度也就是设备的特征，一个设备会有多个特征，比如 &lt;code&gt;iOS 11&lt;&#x2F;code&gt;，&lt;code&gt;v9.3.6&lt;&#x2F;code&gt; 等，同样一个维度也会包含多台设备。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_07.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_07.jpg 600w,&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_07.jpg 600w&quot;
-    sizes=&quot;(max-width: 600px) 100vw, 600px&quot; width=&quot;600&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;维度的设计使用 Set 会比较合适，因为顺序无关，且将来设备的维度改变后，查找起来也会很快(比如当设备升级了版本，就要把设备从旧版本的维度变为新版本的维度)。所以需要在一个合适的时机去检查设备的维度是否需要更新，同时检查是否需要发送配置，这个时机选择在连接建立完成后异步执行比较合适。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;wei-du-geng-xin&quot;&gt;维度更新&lt;&#x2F;h4&gt;
 &lt;p&gt;假如设备从「维度 1」更新到了「维度 2」，怎么知道需要更新哪些 K&#x2F;V ？要解决这个问题，可以给维度也建一张表，来保存 Config 信息，Key 为维度名，Value 为 Config Index。&lt;&#x2F;p&gt;
@@ -1938,8 +1869,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;最终的流程和设计如下：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_08.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_08.jpg 600w,&amp;#x2F;posts&amp;#x2F;how-to-architecture-config&amp;#x2F;design_config_08.jpg 600w&quot;
-    sizes=&quot;(max-width: 600px) 100vw, 600px&quot; width=&quot;600&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;本文主要提供了一种架构设计的思路，从最核心的需求开始，随着场景的变化，来不断完善、调整设计。结合常见的考虑点和适当的数据评估，选择相对简单的方案。在细化的过程中，一些问题就会浮现出来，尽早发现，尽早解决，等到开发甚至上线才发现就麻烦了，这也是架构设计的重要性。&lt;&#x2F;p&gt;
 &lt;p&gt;最后，请有限度吐槽图片质量，博主已经很努力了···&lt;&#x2F;p&gt;
 </description>
@@ -2836,13 +2766,11 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;我们先来分析下 GUI 编程的本质，我喜欢把它抽象为视图和数据的结合。其中视图负责两件事：展示和交互，展示什么由数据决定。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814474678383.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814474678383.jpg 638w,&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814474678383.jpg 638w&quot;
-    sizes=&quot;(max-width: 638px) 100vw, 638px&quot; width=&quot;638&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1276&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;其中单向数据流可以通过&lt;a href=&quot;http:&#x2F;&#x2F;limboy.me&#x2F;tech&#x2F;2016&#x2F;12&#x2F;04&#x2F;reswift-analyze.html&quot;&gt;之前介绍的 ReSwift&lt;&#x2F;a&gt; 完成。看起来好像没 RxSwift 什么事情，其实不然，RxSwift 可以在 UniDirectional Data Flow 的各个阶段都发挥作用，从而让 Data 的处理和流动更加简洁和清晰。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814474032179.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814474032179.jpg 636w,&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814474032179.jpg 636w&quot;
-    sizes=&quot;(max-width: 636px) 100vw, 636px&quot; width=&quot;636&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1272&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;ol&gt;
 &lt;li&gt;通过对 RxCocoa 的各种回调进行统一处理，方便了「Interact」的处理。&lt;&#x2F;li&gt;
 &lt;li&gt;通过对 &lt;code&gt;Observable&lt;&#x2F;code&gt; 的 transform 和 composite，方便了 &lt;code&gt;Action&lt;&#x2F;code&gt; 的生成（比如使用 &lt;code&gt;throttle&lt;&#x2F;code&gt; 来压缩 &lt;code&gt;Action&lt;&#x2F;code&gt;）。&lt;&#x2F;li&gt;
@@ -2875,15 +2803,13 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;所以，从生活中也能看到 Rx 的影子。「有些事情急不得，你得等它自己熟」，异步，其实就是跟时间打交道，不同的时间，拿到的数据也会不一样。可以&lt;a href=&quot;http:&#x2F;&#x2F;rxmarbles.com&quot;&gt;在线感受下&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814518766811.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814518766811.jpg 813w,&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814518766811.jpg 813w&quot;
-    sizes=&quot;(max-width: 813px) 100vw, 813px&quot; width=&quot;813&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1626&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这里的核心是当数据有变化时，能够立刻知晓，并且通过组合和转换后，可以即时作出响应。有点像塔防，先在路上的各个节点埋好武器，然后等着小怪兽们过来。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;rxswift-workflow&quot;&gt;RxSwift Workflow&lt;&#x2F;h3&gt;
 &lt;p&gt;大致分为这么几个阶段：先把 Native Object 变成 Observable，再通过 Observable 内置的各种强大的转换和组合能力变成新的 Observable，最后消费新的 Observable 的数据。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814540314644.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814540314644.jpg 724w,&amp;#x2F;posts&amp;#x2F;time-to-learn-rxswift&amp;#x2F;14814540314644.jpg 724w&quot;
-    sizes=&quot;(max-width: 724px) 100vw, 724px&quot; width=&quot;724&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h4 id=&quot;native-object-observable&quot;&gt;Native Object -&amp;gt; Observable&lt;&#x2F;h4&gt;
+        width=&quot;1448&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h4 id=&quot;native-object-observable&quot;&gt;Native Object -&amp;gt; Observable&lt;&#x2F;h4&gt;
 &lt;h5 id=&quot;rx-extension&quot;&gt;.rx extension&lt;&#x2F;h5&gt;
 &lt;p&gt;假设需要处理点击事件，正常的做法是给 Tap Gesture 添加一个 Target-Action，然后在那里实现具体的逻辑，这样的问题在于需要重新取名字，而且丢失了上下文。RxSwift (确切说是 RxCocoa) 给系统的诸多原生控件（包括像 &lt;code&gt;URLSession&lt;&#x2F;code&gt;）提供了 rx 扩展，所以点击的处理就变成了这样：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;swift&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-swift &quot;&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; tapBackground &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span&gt; UITapGestureRecognizer()
@@ -3443,8 +3369,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;h4 id=&quot;zhu-ce-zhe-ge-zu-jian-guan-xin-de-url&quot;&gt;注册这个组件关心的 URL&lt;&#x2F;h4&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components-continued&amp;#x2F;MGJRouter.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components-continued&amp;#x2F;MGJRouter.png 216w,&amp;#x2F;posts&amp;#x2F;mgj-components-continued&amp;#x2F;MGJRouter.png 216w&quot;
-    sizes=&quot;(max-width: 216px) 100vw, 216px&quot; width=&quot;216&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;pre data-lang=&quot;m&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-m &quot;&gt;&lt;code class=&quot;language-m&quot; data-lang=&quot;m&quot;&gt;&lt;span&gt;[MGJRouter &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;registerURLPattern:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;@&amp;quot;mgj:&#x2F;&#x2F;detail?id=:id&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;toHandler:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;^&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;NSDictionary &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;routerParameters) {
+        width=&quot;432&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;pre data-lang=&quot;m&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-m &quot;&gt;&lt;code class=&quot;language-m&quot; data-lang=&quot;m&quot;&gt;&lt;span&gt;[MGJRouter &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;registerURLPattern:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;@&amp;quot;mgj:&#x2F;&#x2F;detail?id=:id&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;toHandler:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;^&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;NSDictionary &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;routerParameters) {
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;NSNumber &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;id &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; routerParameters[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;@&amp;quot;id&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;];
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; create view controller with id
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; push view controller
@@ -3455,8 +3380,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;当有一些场景不适合用 URL 的方式时，就可以通过注册 protocol 来实现&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components-continued&amp;#x2F;ModuleManager.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components-continued&amp;#x2F;ModuleManager.png 216w,&amp;#x2F;posts&amp;#x2F;mgj-components-continued&amp;#x2F;ModuleManager.png 216w&quot;
-    sizes=&quot;(max-width: 216px) 100vw, 216px&quot; width=&quot;216&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;432&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;[ModuleManager registerClass:ClassA forProtocol:ProtocolA]&lt;&#x2F;code&gt; 的结果就是在 MM 内部维护的 dict 里新加了一个映射关系。&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;[ModuleManager classForProtocol:ProtocolA]&lt;&#x2F;code&gt; 的返回结果就是之前在 MM 内部 dict 里 protocol 对应的 class，使用方不需要关心这个 class 是个什么东东，反正实现了 &lt;code&gt;ProtocolA&lt;&#x2F;code&gt; 协议，拿来用就行。&lt;&#x2F;p&gt;
 &lt;p&gt;这里需要有一个公共的地方来容纳这些 public protocl，也就是图中的 &lt;code&gt;PublicProtocl.h&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
@@ -3536,8 +3460,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;先来看下，组件化之后的一个大概架构&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575533415332.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575533415332.jpg 812w,&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575533415332.jpg 812w&quot;
-    sizes=&quot;(max-width: 812px) 100vw, 812px&quot; width=&quot;812&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1624&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;「组件化」顾名思义就是把一个大的 App 拆成一个个小的组件，相互之间不直接引用。那如何做呢？&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;shi-xian-fang-shi&quot;&gt;实现方式&lt;&#x2F;h3&gt;
 &lt;h4 id=&quot;zu-jian-jian-tong-xin&quot;&gt;组件间通信&lt;&#x2F;h4&gt;
@@ -3552,8 +3475,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;那问题又来了，我怎么知道有哪些可用的 URL？为此，我们做了一个后台专门来管理。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575445324533.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575445324533.jpg 1165w,&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575445324533.jpg 1165w&quot;
-    sizes=&quot;(max-width: 1165px) 100vw, 1165px&quot; width=&quot;1165&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;2330&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;然后可以把这些短链生成不同平台所需的文件，iOS 平台生成 .{h,m} 文件，Android 平台生成 .java 文件，并注入到项目中。这样开发人员只需在项目中打开该文件就知道所有的可用 URL 了。&lt;&#x2F;p&gt;
 &lt;p&gt;目前还有一块没有做，就是参数这块，虽然描述了短链，但真想要生成完整的 URL，还需要知道如何传参数，这个正在开发中。&lt;&#x2F;p&gt;
 &lt;p&gt;还有一种情况会稍微麻烦点，就是「组件 A」要调用「组件 B」的某个方法，比如在商品详情页要展示购物车的商品数量，就涉及到向购物车组件拿数据。&lt;&#x2F;p&gt;
@@ -3594,8 +3516,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;其中 &lt;code&gt;[MGJApp startApp]&lt;&#x2F;code&gt; 主要负责一些 SDK 的初始化。&lt;code&gt;[self trackLaunchTime]&lt;&#x2F;code&gt; 是我们打的一个点，用来监测从 &lt;code&gt;main&lt;&#x2F;code&gt; 方法开始到入口方法调用结束花了多长时间。其他的都由 &lt;code&gt;ModuleManager&lt;&#x2F;code&gt; 搞定，&lt;code&gt;loadModuleFromPlist:pathForResource:&lt;&#x2F;code&gt; 方法会读取 bundle 里的一个 plist 文件，这个文件的内容大概是这样的&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575489295366.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575489295366.jpg 453w,&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575489295366.jpg 453w&quot;
-    sizes=&quot;(max-width: 453px) 100vw, 453px&quot; width=&quot;453&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;906&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;每个 &lt;code&gt;Module&lt;&#x2F;code&gt; 都实现了 &lt;code&gt;ModuleProtocol&lt;&#x2F;code&gt;，其中有一个 &lt;code&gt;- (BOOL)applicaiton:didFinishLaunchingWithOptions:&lt;&#x2F;code&gt; 方法，如果实现了的话，就会被调用。&lt;&#x2F;p&gt;
 &lt;p&gt;还有一个问题就是，系统的一些事件会有通知，比如 &lt;code&gt;applicationDidBecomeActive&lt;&#x2F;code&gt; 会有对应的 &lt;code&gt;UIApplicationDidBecomeActiveNotification&lt;&#x2F;code&gt;，组件如果要做响应的话，只需监听这个系统通知即可。但也有一些事件是没有通知的，比如 &lt;code&gt;- application:didRegisterUserNotificationSettings:&lt;&#x2F;code&gt;，这时组件如果也要做点事情，怎么办？&lt;&#x2F;p&gt;
 &lt;p&gt;一个简单的解决方法是在 &lt;code&gt;AppDelegate&lt;&#x2F;code&gt; 的各个方法里，手动调一遍组件的对应的方法，如果有就执行。&lt;&#x2F;p&gt;
@@ -3625,33 +3546,28 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;在刚开始，持续集成还不是很完善，业务方升级组件，直接把 podspec 扔到 private repo 里就完事了。这样最简单，但也经常会带来编译通不过的问题。而且这种随意的版本升级也不太能保证质量。于是我们就搭建了一套持续集成系统，大概如此&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575538180893.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575538180893.jpg 857w,&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575538180893.jpg 857w&quot;
-    sizes=&quot;(max-width: 857px) 100vw, 857px&quot; width=&quot;857&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1714&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;每个组件升级之前都需要先通过编译，然后再决定是否升级。这套体系看起来不复杂，但在实施过程中经常会遇到后端的并发问题，导致业务方要么集成失败，要么要等不少时间。而且也没有一个地方可以呈现当前版本的组件版本信息。还有就是业务方对于这种命令行的升级方式接受度也不是很高。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575547778269.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575547778269.jpg 972w,&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575547778269.jpg 972w&quot;
-    sizes=&quot;(max-width: 972px) 100vw, 972px&quot; width=&quot;972&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1944&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;基于此，在经过了几轮讨论之后，有了新版的持续集成平台，升级操作通过网页端来完成。&lt;&#x2F;p&gt;
 &lt;p&gt;大致思路是，业务方如果要升级组件，假设现在的版本是 0.1.7，添加了一些 feature 之后，壳工程测试通过，想集成到主工程里看看效果，或者其他组件也想引用这个最新的，就可以在后台手动把版本升到 0.1.8-rc.1，这样的话，原先依赖 &lt;code&gt;~&amp;gt; 0.1.7&lt;&#x2F;code&gt; 的组件，不会升到 0.1.8，同时想要测试这个组件的话，只要手动把版本调到 0.1.8-rc.1 就可以了。这个过程不会触发 CI 的编译检查。&lt;&#x2F;p&gt;
 &lt;p&gt;当测试通过后，就可以把尾部的 &lt;code&gt;-rc.n&lt;&#x2F;code&gt; 去掉，然后点击「集成」，就会走 CI 编译检查，通过的话，会在主工程的 podfile 里写上固定的版本号 0.1.8。也就是说，podfile 里所有的组件版本号都是固定的。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575547304396.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575547304396.jpg 993w,&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575547304396.jpg 993w&quot;
-    sizes=&quot;(max-width: 993px) 100vw, 993px&quot; width=&quot;993&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;zhou-bian-she-shi&quot;&gt;周边设施&lt;&#x2F;h3&gt;
+        width=&quot;1986&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;zhou-bian-she-shi&quot;&gt;周边设施&lt;&#x2F;h3&gt;
 &lt;h4 id=&quot;ji-chu-zu-jian-ji-zu-jian-de-wen-dang-demo-dan-yuan-ce-shi&quot;&gt;基础组件及组件的文档 &#x2F; Demo &#x2F; 单元测试&lt;&#x2F;h4&gt;
 &lt;p&gt;无线基础的职能是为集团提供解决方案，只是在蘑菇街 App 里能 work 是远远不够的，所以就需要提供入口，知道有哪些可用组件，并且如何使用，就像这样（目前还未实现）&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575551851317.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575551851317.jpg 1117w,&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575551851317.jpg 1117w&quot;
-    sizes=&quot;(max-width: 1117px) 100vw, 1117px&quot; width=&quot;1117&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;2234&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这就要求组件的负责人需要及时地更新 README &#x2F; CHANGELOG &#x2F; API，并且当发生 API 变更时，能够快速通知到使用方。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;gong-gong-ui-zu-jian&quot;&gt;公共 UI 组件&lt;&#x2F;h4&gt;
 &lt;p&gt;组件化之后还有一个问题就是资源的重复性，以前在一个工程里的时候，资源都可以很方便地拿到，现在独立出去了，也不知道哪些是公用的，哪些是独有的，索性都放到自己的组件里，这样就会导致包变大。还有一个问题是每个组件可能是不同的产品经理在跟，而他们很可能只关注于自己关心的页面长什么样，而忽略了整体的样式。公共 UI 组件就是用来解决这些问题的，这些组件甚至可以跨 App 使用。（目前还未实现）&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575557095716.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575557095716.jpg 996w,&amp;#x2F;posts&amp;#x2F;mgj-components&amp;#x2F;14575557095716.jpg 996w&quot;
-    sizes=&quot;(max-width: 996px) 100vw, 996px&quot; width=&quot;996&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h3&gt;
+        width=&quot;1992&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h3&gt;
 &lt;p&gt;「组件化」是 App 膨胀到一定体积后的解决方案，能一定程度上解决问题，在提高开发效率的过程中，采坑是难免的，希望这篇文章能够带来些帮助。&lt;&#x2F;p&gt;
 </description>
         </item>
@@ -3689,8 +3605,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;接下来看看 ReactJS 拿到这个新的 property 后会如何处理，先来看一张图&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;the-power-of-immutable-objects&amp;#x2F;should-component-update.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;the-power-of-immutable-objects&amp;#x2F;should-component-update.png 277.5w,&amp;#x2F;posts&amp;#x2F;the-power-of-immutable-objects&amp;#x2F;should-component-update.png 277.5w&quot;
-    sizes=&quot;(max-width: 277.5px) 100vw, 277.5px&quot; width=&quot;277.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;555&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;View 会对新的 property 和当前的 property 做比较，如果数据是一致的，那就什么也不做（就像 C2 一样），它下面的节点也不用比较了；如果数据不一致，再往下找，一直找到那[几]个需要更新的节点。&lt;&#x2F;p&gt;
 &lt;p&gt;这整个过程没有使用到 Mutable Objects，但照样 Getting Things Done。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h3&gt;
@@ -3946,8 +3861,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;那么有没有一种直观的验证方式呢？当然，程序员是万能的呀。一个理想的状况是，产品打开 App 后，开启某个开关就能看到所有会发送 Event 的按钮，就像这样&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;ios-analytics&amp;#x2F;analytics_highlight.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;ios-analytics&amp;#x2F;analytics_highlight.jpg 320w,&amp;#x2F;posts&amp;#x2F;ios-analytics&amp;#x2F;analytics_highlight.jpg 320w&quot;
-    sizes=&quot;(max-width: 320px) 100vw, 320px&quot; width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;640&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;其中数字代表了 &lt;code&gt;EventID&lt;&#x2F;code&gt;。如何实现呢？还记得注册事件时，我们有传入 &lt;code&gt;class&lt;&#x2F;code&gt; 和 &lt;code&gt;selector&lt;&#x2F;code&gt; 么，一般我们都会有一个 &lt;code&gt;BaseViewController&lt;&#x2F;code&gt;，那么就可以在 &lt;code&gt;BaseViewController&lt;&#x2F;code&gt; 的 &lt;code&gt;viewDidAppear:&lt;&#x2F;code&gt; 里做点文章了。&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;m&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-m &quot;&gt;&lt;code class=&quot;language-m&quot; data-lang=&quot;m&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; BaseViewController.m
 &lt;&#x2F;span&gt;&lt;span&gt;
@@ -4000,19 +3914,16 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;这个属性表示的是 NSOperationQueue 最多可以同时处理几个任务，假如我们希望它一次只处理一个，也就是线性 Queue，可以设置 &lt;code&gt;maxConcurrentOperationCount = 1&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-1.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-1.png 337w,&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-1.png 337w&quot;
-    sizes=&quot;(max-width: 337px) 100vw, 337px&quot; width=&quot;337&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;674&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;中间的点表示任务的状态，在上一个任务完成前，下一个任务不会被执行，因为只有一个 worker。&lt;&#x2F;p&gt;
 &lt;p&gt;如果希望一次能处理多个，将这个值设置为大于 1 即可，或者直接使用默认值，系统会自动设置一个合理的最大值。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-2.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-2.png 337w,&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-2.png 337w&quot;
-    sizes=&quot;(max-width: 337px) 100vw, 337px&quot; width=&quot;337&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h4 id=&quot;nsoperation-cancel&quot;&gt;NSOperation cancel&lt;&#x2F;h4&gt;
+        width=&quot;674&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h4 id=&quot;nsoperation-cancel&quot;&gt;NSOperation cancel&lt;&#x2F;h4&gt;
 &lt;p&gt;从上面的图可以看到，正在被执行的任务的状态跟在后面排队的状态是不一样的，有这么几种状态：pending, ready, executing, finished, cancelled。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-3.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-3.png 148.5w,&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-3.png 148.5w&quot;
-    sizes=&quot;(max-width: 148.5px) 100vw, 148.5px&quot; width=&quot;148.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;297&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;之前提到过 NSOperation 一个很重要的特性是可以被取消，但不同状态的取消处理也不一样。比如当 Operation 处于 pending, ready 状态时，系统可以去看一下这个 Operation 是否已经被取消了(判断 self.cancelled)，如果是的话，就不执行任务了。但是当 Operation 处于 executing 状态时，取消的操作就只能自己处理了，比如&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;m&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-m &quot;&gt;&lt;code class=&quot;language-m&quot; data-lang=&quot;m&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;@implementation &lt;&#x2F;span&gt;&lt;span&gt;MyOperation: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;NSOperation
 &lt;&#x2F;span&gt;&lt;span&gt;- (&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;main
@@ -4028,16 +3939,14 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;NSOperation 还有一个很重要的特性是可以设置依赖&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-4.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-4.png 150.5w,&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-4.png 150.5w&quot;
-    sizes=&quot;(max-width: 150.5px) 100vw, 150.5px&quot; width=&quot;150.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;301&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;任务 A 需要等待 任务 B 和 任务 C 完成，才能被执行，而任务 B 需要等到 任务 D 完成才能被执行。&lt;&#x2F;p&gt;
 &lt;p&gt;当然前提是这些 Operation 都需要被放到某个 Queue 里，这样它们的状态才会发生改变。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;gao-ji-wan-fa&quot;&gt;高级玩法&lt;&#x2F;h3&gt;
 &lt;p&gt;开发 App 的过程中，有一些逻辑是可以共用的，比如登录、网络状况等，最好可以组装起来，就像超能陆战队里的 megabot 一样&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;megabot.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;megabot.jpg 240w,&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;megabot.jpg 240w&quot;
-    sizes=&quot;(max-width: 240px) 100vw, 240px&quot; width=&quot;240&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;480&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;基于前面提到的 NSOperation &#x2F; NSOperationQueue 的一些特点，苹果的工程师们想到了他们的解决方法。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;condition&quot;&gt;Condition&lt;&#x2F;h4&gt;
 &lt;p&gt;Condition，也就是条件，它可以被附加到 Operation 上，只有当 Condition 被满足时，Operation 才能被执行。比如只有在有网络的情况下才能进行交易，这时「网络状况」就是附加给「交易」的 Condition。&lt;&#x2F;p&gt;
@@ -4057,8 +3966,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;所以总结起来 Condition 主要干了这么三件事&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-condition.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-condition.png 206w,&amp;#x2F;posts&amp;#x2F;advanced-nsoperation&amp;#x2F;nsoperation-condition.png 206w&quot;
-    sizes=&quot;(max-width: 206px) 100vw, 206px&quot; width=&quot;206&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;412&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;来看一个简单的 Condition (来自 WWDC Sample)&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;swift&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-swift &quot;&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;struct&lt;&#x2F;span&gt;&lt;span&gt; ReachabilityCondition: OperationCondition {
 &lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;static let&lt;&#x2F;span&gt;&lt;span&gt; hostKey &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;Host&amp;quot;
@@ -5006,8 +4914,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;以下面这个 Cell 为例&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-demo.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-demo.png 160.5w,&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-demo.png 160.5w&quot;
-    sizes=&quot;(max-width: 160.5px) 100vw, 160.5px&quot; width=&quot;160.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;321&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;正常的写法可能是这样，很直观。&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;m&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-m &quot;&gt;&lt;code class=&quot;language-m&quot; data-lang=&quot;m&quot;&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;)configureWithItem&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span&gt;(HBItem &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;)item
 &lt;&#x2F;span&gt;&lt;span&gt;{
@@ -5035,8 +4942,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;Signal 是 RAC 的核心，为了帮助理解，画了这张简化图&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-signal.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-signal.png 371.5w,&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-signal.png 371.5w&quot;
-    sizes=&quot;(max-width: 371.5px) 100vw, 371.5px&quot; width=&quot;371.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;743&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这里的数据源和 sendXXX，可以理解为函数的参数和返回值。当 Signal 处理完数据后，可以向下一个 Signal 或 Subscriber 传送数据。可以看到上半部分的两个 Signal 是冷的(cold)，相当于实现了某个函数，但该函数没有被调用。同时也说明了 Signal 可以被组合使用，比如&lt;code&gt;RACSignal *signalB = [signalA map:^id(id x){return x}]&lt;&#x2F;code&gt;，或&lt;code&gt;RACSignal *signalB = [signalA take:1]&lt;&#x2F;code&gt;等等。&lt;&#x2F;p&gt;
 &lt;p&gt;当 signal 被 subscribe 时，就会处于热(hot)的状态，也就是该函数会被执行。比如上面的第二张图，首先 signalA 可能发了一个网络请求，拿到结果后，把数据通过&lt;code&gt;sendNext&lt;&#x2F;code&gt;方法传递到下一个 signal，signalB 可以根据需要做进一步处理，比如转换成相应的 Model，转换完后再&lt;code&gt;sendNext&lt;&#x2F;code&gt;到 subscriber，subscriber 拿到数据后，再改变 ViewModel，同时因为 View 已经绑定了 ViewModel，所以拿到的数据会自动在 View 里呈现。&lt;&#x2F;p&gt;
 &lt;p&gt;还有，一个 signal 可以被多个 subscriber 订阅，这里怕显得太乱就没有画出来，但每次被新的 subscriber 订阅时，都会导致数据源的处理逻辑被触发一次，这很有可能导致意想不到的结果，需要注意一下。&lt;&#x2F;p&gt;
@@ -5262,8 +5168,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;以下面这个需求为例，要求大图滑动结束时，底部的缩略图滚动到对应的位置，并高亮该缩略图；同时底部的缩略图被选中时，大图也要变成该缩略图的大图。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-mvvm.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-mvvm.png 160w,&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-mvvm.png 160w&quot;
-    sizes=&quot;(max-width: 160px) 100vw, 160px&quot; width=&quot;160&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;我的思路是横向滚动的大图是一个 collectionView，该 collectionView 是当前页面 VC 的一个 property。底部可以滑动的缩略图是一个 childVC 的 collectionView，这两个 collectionView 共用一套 VM，并且各自 RACObserve 感兴趣的 property。&lt;&#x2F;p&gt;
 &lt;p&gt;比如大图滑到下一页时，会改变 VM 的 indexPath 属性，而底部的 collectionView 所在的 VC 正好对该 indexPath 感兴趣，只要 indexPath 变化就滚动到相应的 Item&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;m&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-m &quot;&gt;&lt;code class=&quot;language-m&quot; data-lang=&quot;m&quot;&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; childVC
@@ -5448,8 +5353,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;h4 id=&quot;diao-shi&quot;&gt;调试&lt;&#x2F;h4&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-debug.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-debug.png 138w,&amp;#x2F;posts&amp;#x2F;deep-into-reactivecocoa2&amp;#x2F;rac-debug.png 138w&quot;
-    sizes=&quot;(max-width: 138px) 100vw, 138px&quot; width=&quot;138&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;276&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;刚开始写 RAC 时，往往会遇到这种情况，满屏的调用栈信息都是 RAC 的，要找出真正出现问题的地方不容易。曾经有一次在使用&lt;code&gt;[RACSignal combineLatest: reduce:^id{}]&lt;&#x2F;code&gt;时，忘了在 Block 里返回 value，而 Xcode 也没有提示 warning，然后就是莫名其妙地挂起了，跳到了汇编上，也没有调用栈信息，这时就只能通过最古老的注释代码的方式来找到问题的根源。&lt;&#x2F;p&gt;
 &lt;p&gt;不过写多了之后，一般不太会犯这种低级错误。&lt;&#x2F;p&gt;
 &lt;h4 id=&quot;strongify-weakify-dance&quot;&gt;strongify &#x2F; weakify dance&lt;&#x2F;h4&gt;
@@ -5535,8 +5439,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;通过 objection 实现依赖注入后，就能更好地实现 SRP(Single Responsibility Principle)，代码更简洁，心情更舒畅，生活更美好。拿 Pinterest 来说，下面的页面就可以划分为 3 个 Section。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;use-objection-to-decouple-ios-project&amp;#x2F;demo_4_objection.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;use-objection-to-decouple-ios-project&amp;#x2F;demo_4_objection.png 160w,&amp;#x2F;posts&amp;#x2F;use-objection-to-decouple-ios-project&amp;#x2F;demo_4_objection.png 160w&quot;
-    sizes=&quot;(max-width: 160px) 100vw, 160px&quot; width=&quot;160&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;各个 Section 可以由不同的人负责，然后串到一起就行，也能一定程度地避免 MVC(Mess View Controller)的出现。&lt;&#x2F;p&gt;
 &lt;p&gt;总体来说，这个 lib 还是挺靠谱的，已经维护了两年多，也有一些项目在用，对于提高开发成员的效率也会有不少的帮助，可以考虑尝试下。&lt;&#x2F;p&gt;
 &lt;p&gt;---- update (2014-04-30) ----&lt;&#x2F;p&gt;
@@ -5557,20 +5460,17 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;h3 id=&quot;ji-ben-jia-gou&quot;&gt;基本架构&lt;&#x2F;h3&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-arch.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-arch.png 350w,&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-arch.png 350w&quot;
-    sizes=&quot;(max-width: 350px) 100vw, 350px&quot; width=&quot;350&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;700&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;其中最底层是其他项目也会引用的基础类库。&lt;code&gt;HBToolkit&lt;&#x2F;code&gt;包含了一些常用、好用的 Categories，如图片缩放、UIView Layout 等等；&lt;code&gt;HBBussiness&lt;&#x2F;code&gt;是跟业务相关的一些类库，如弹出新版本提示、登录等等；&lt;code&gt;HBAPI&lt;&#x2F;code&gt;是花瓣主站点的 API 接口。这些类库都是私有的 pod 源，可以通过&lt;code&gt;pod install&lt;&#x2F;code&gt;安装。&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;AppCommon&lt;&#x2F;code&gt;是一个 xcode project，包含了该项目会用到的一些公共内容，如颜色值、按钮样式、图片、APIKey 等等，同样，也是私有 pod 源。&lt;&#x2F;p&gt;
 &lt;p&gt;再上层就是各个 sub app 了。所谓 sub app，就是功能单一，可独立运行的 app。同样，每个 sub app 会提供相应的 podspec 文件，可以在这个 podspec 里指定最后会用到的 Classes。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapps.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapps.png 160w,&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapps.png 160w&quot;
-    sizes=&quot;(max-width: 160px) 100vw, 160px&quot; width=&quot;160&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;进去之后会是这样&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapp-index.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapp-index.png 320w,&amp;#x2F;posts&amp;#x2F;huaban-app-redesign&amp;#x2F;huaban-app-subapp-index.png 320w&quot;
-    sizes=&quot;(max-width: 320px) 100vw, 320px&quot; width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;640&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;对于使用者来说，可以通过查看 demo，很快地了解接口的使用。对测试人员，也可以在 App 还没有开发完成的情况下，对各个子模块进行测试。&lt;&#x2F;p&gt;
 &lt;p&gt;各个 sub app 都完成了的话，就可以组装成最终的 App 了，这里用到了一个 URL Route 类：&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;joeldev&#x2F;JLRoutes&quot;&gt;JLRoutes&lt;&#x2F;a&gt;，它的作用是让按钮的点击像网页里的链接一样，只是触发了某个 URL，而没有像 pushViewController 这样的行为。这样如果点击 A 模块的某个按钮，会 push 一个 B 模块的 ViewController，也不需要在 A 模块里 import 模块 B 的 ViewController，而只是&lt;code&gt;[JLRoutes routeURL:parameters]&lt;&#x2F;code&gt;即可，也就实现了解耦。&lt;&#x2F;p&gt;
 &lt;p&gt;每个 sub app 需要注册自己感兴趣的 URL，这样当某个 URL 被触发时，就能捕获到并做适当的处理。如果注册的行为统一放到最终的 App 里去做，会不够灵活，且显得杂乱。所以最好是在类加载的过程中就完成注册。 而 Class 正好有一个&lt;code&gt;+ (void)load&lt;&#x2F;code&gt;方法，会在该 Class 被加入到运行时触发，且只触发一次。&lt;&#x2F;p&gt;
@@ -6691,13 +6591,11 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;FRP 提供了一种信号机制来实现这样的效果，通过信号来记录值的变化。信号可以被叠加、分割或合并。通过对信号的组合，就不需要去监听某个值或事件。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_demo.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_demo.png 353w,&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_demo.png 353w&quot;
-    sizes=&quot;(max-width: 353px) 100vw, 353px&quot; width=&quot;353&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;706&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这在重交互的应用里是非常有用的。以注册为例：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_register_demo.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_register_demo.png 198w,&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_register_demo.png 198w&quot;
-    sizes=&quot;(max-width: 198px) 100vw, 198px&quot; width=&quot;198&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;396&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;提交按钮的状态要跟输入框的状态绑定，比如必选的输入框没有填完时，提交按钮是灰色的，也就是不可点；如果提交按钮不可点，那么文字变成灰色，不然变成蓝色；如果正在提交，那么输入框的文字颜色变成灰色，且不可点，不然变成默认色且可点；如果注册成功就在状态栏显示成功信息，不然显示错误信息，等等。&lt;&#x2F;p&gt;
 &lt;p&gt;可以看到光是注册页就有这么多的联动，在 javascript 中可以采用事件监听来处理，iOS 中更多的是 delegate 模式，本质上都是事件的分发和响应。这种做法的缺点是不够直观，尤其在逻辑比较复杂的情况下。这也是为什么尽管 nodejs 很高效，但由于 javascript 的 callback style 和异步模式不符合正常的编程习惯，让很多人望而却步。&lt;&#x2F;p&gt;
 &lt;p&gt;使用 FRP 主要有两个好处：直观和灵活。直观的代码容易编写、阅读和维护，灵活的特性便于应对变态的需求。&lt;&#x2F;p&gt;
@@ -6714,8 +6612,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;可以看到&lt;code&gt;usernameField&lt;&#x2F;code&gt;有了一个新的属性&lt;code&gt;rac_textSignal&lt;&#x2F;code&gt;，这是 RAC 在&lt;code&gt;UITextField&lt;&#x2F;code&gt;category 中添加的，直接用即可。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_combine.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_combine.png 203.5w,&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_combine.png 203.5w&quot;
-    sizes=&quot;(max-width: 203.5px) 100vw, 203.5px&quot; width=&quot;203.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h2 id=&quot;rac-de-da-tong-yi&quot;&gt;RAC 的大统一&lt;&#x2F;h2&gt;
+        width=&quot;407&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h2 id=&quot;rac-de-da-tong-yi&quot;&gt;RAC 的大统一&lt;&#x2F;h2&gt;
 &lt;p&gt;RAC 统一了对 KVO、UI Event、Network request、Async work 的处理，因为它们本质上都是值的变化(Values over time)。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;kvo&quot;&gt;KVO&lt;&#x2F;h3&gt;
 &lt;p&gt;RAC 可以用来监测属性的改变，这点跟 KVO 很像，不过使用了 block，而不是&lt;code&gt;-observeValueForKeyPath:ofObject:change:context:&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
@@ -6766,8 +6663,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;简单画了下关系图，罗列了些要点&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_ReactiveCocoa_large.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_ReactiveCocoa_large.png 816w,&amp;#x2F;posts&amp;#x2F;frp-reactivecocoa&amp;#x2F;FRP_ReactiveCocoa_large.png 816w&quot;
-    sizes=&quot;(max-width: 816px) 100vw, 816px&quot; width=&quot;816&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;1632&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;上面只是大概说了一下 RAC 的使用情景和用法，更多的例子可以到&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;ReactiveCocoa&#x2F;ReactiveCocoa&quot;&gt;项目主页&lt;&#x2F;a&gt;中查看。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;can-kao&quot;&gt;参考&lt;&#x2F;h3&gt;
 &lt;ul&gt;
@@ -6789,8 +6685,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;用一张图来形容的话，大体就是这样：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;ios-multi-thread-core-data&amp;#x2F;multi_thread_core_data.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;ios-multi-thread-core-data&amp;#x2F;multi_thread_core_data.png 255w,&amp;#x2F;posts&amp;#x2F;ios-multi-thread-core-data&amp;#x2F;multi_thread_core_data.png 255w&quot;
-    sizes=&quot;(max-width: 255px) 100vw, 255px&quot; width=&quot;255&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;pre data-lang=&quot;m&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-m &quot;&gt;&lt;code class=&quot;language-m&quot; data-lang=&quot;m&quot;&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;)_setupCoreDataStack
+        width=&quot;510&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;pre data-lang=&quot;m&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-m &quot;&gt;&lt;code class=&quot;language-m&quot; data-lang=&quot;m&quot;&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span&gt;)_setupCoreDataStack
 &lt;&#x2F;span&gt;&lt;span&gt;{
 &lt;&#x2F;span&gt;&lt;span&gt;     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F; setup managed object model
 &lt;&#x2F;span&gt;&lt;span&gt;     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;NSURL &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span&gt;modelURL &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span&gt;[[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c99e00;&quot;&gt;NSBundle &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;mainBundle&lt;&#x2F;span&gt;&lt;span&gt;] URLForResource&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;@&amp;quot;Database&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt; withExtension&lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;@&amp;quot;momd&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;];
@@ -6843,8 +6738,7 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;因为 UI 相关的数据必须在主线程获取，同时又要避免数据库的 I&#x2F;O 操作阻塞主线程，所以就有了下面这个模型：&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;ios-multi-thread-core-data&amp;#x2F;multi_thread_core_data_nested.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;ios-multi-thread-core-data&amp;#x2F;multi_thread_core_data_nested.png 255.5w,&amp;#x2F;posts&amp;#x2F;ios-multi-thread-core-data&amp;#x2F;multi_thread_core_data_nested.png 255.5w&quot;
-    sizes=&quot;(max-width: 255.5px) 100vw, 255.5px&quot; width=&quot;255.5&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;511&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;我对这种实现方式的一个困惑是：child 无法得知 parent 的变化，也就是说，如果 NSFetchedResultsController 绑定了 Main MOC，当 Background Write MOC save 时，NSFetchedResultsController 为何能知晓？求指点。&lt;&#x2F;p&gt;
 &lt;p&gt;这种方式比「Thread Confinement」稍微简单了点，也更明了。不过个人还是推荐使用 MagicalRecord，因为实现起来更加简单，等有空再写一篇。&lt;&#x2F;p&gt;
 &lt;p&gt;写了一个使用了这个模型的 demo，配合 TableView 和 NSFetchedResultsController，有兴趣的可以看下：&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;coredata-with-tableview&quot;&gt;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;coredata-with-tableview&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
@@ -6925,13 +6819,11 @@ TIN&lt;sub&gt;j&lt;&#x2F;sub&gt; 表示 TimeIntervalNumber，也就是当天第 
 &lt;p&gt;以 twitter 为例，可以通过 subviews 来实现，不过性能会有点影响，但实现起来简单。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;ios-graphic-animation&amp;#x2F;twitter_tvc_subviews.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;ios-graphic-animation&amp;#x2F;twitter_tvc_subviews.jpg 200w,&amp;#x2F;posts&amp;#x2F;ios-graphic-animation&amp;#x2F;twitter_tvc_subviews.jpg 200w&quot;
-    sizes=&quot;(max-width: 200px) 100vw, 200px&quot; width=&quot;200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;400&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;因为 cell 在形态上不会经常改变，所以也可以通过 drawRect 直接绘制，只要这个时间足够短就可以。好处是 layer 不用处理多个子 layer 的组合和叠加，就像一张 jpg 图片一样，滑动会更流畅。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;ios-graphic-animation&amp;#x2F;twitter_tvc_drawrect.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;ios-graphic-animation&amp;#x2F;twitter_tvc_drawrect.png 200w,&amp;#x2F;posts&amp;#x2F;ios-graphic-animation&amp;#x2F;twitter_tvc_drawrect.png 200w&quot;
-    sizes=&quot;(max-width: 200px) 100vw, 200px&quot; width=&quot;200&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;can-kao&quot;&gt;参考&lt;&#x2F;h3&gt;
+        width=&quot;400&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;can-kao&quot;&gt;参考&lt;&#x2F;h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;geeklu.com&#x2F;2012&#x2F;09&#x2F;animation-in-ios&#x2F;&quot;&gt;http:&#x2F;&#x2F;geeklu.com&#x2F;2012&#x2F;09&#x2F;animation-in-ios&#x2F;&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
 &lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;robots.thoughtbot.com&#x2F;post&#x2F;33427366406&#x2F;designing-for-ios-taming-uibutton&quot;&gt;http:&#x2F;&#x2F;robots.thoughtbot.com&#x2F;post&#x2F;33427366406&#x2F;designing-for-ios-taming-uibutton&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
@@ -8007,8 +7899,7 @@ socket 或 comet。socket 是比较好的解决方案，问题在于不是所有
 &lt;p&gt;最后来一张图说明一下&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;php-comet&amp;#x2F;comet-firebug.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;php-comet&amp;#x2F;comet-firebug.png 320w,&amp;#x2F;posts&amp;#x2F;php-comet&amp;#x2F;comet-firebug.png 320w&quot;
-    sizes=&quot;(max-width: 320px) 100vw, 320px&quot; width=&quot;320&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+        width=&quot;640&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
 &lt;ol&gt;
 &lt;li&gt;运行一段时间后，没有收到任何 publish 事件，服务端结束执行&lt;&#x2F;li&gt;
 &lt;li&gt;服务端返回一段 json&lt;&#x2F;li&gt;
@@ -8403,8 +8294,7 @@ socket 或 comet。socket 是比较好的解决方案，问题在于不是所有
 &lt;p&gt;HTTPS 其实是有两部分组成：HTTP + SSL &#x2F; TLS，也就是在 HTTP 上又加了一层处理加密信息的模块。服务端和客户端的信息传输都会通过 TLS 进行加密，所以传输的数据都是加密后的数据。具体是如何进行加密，解密，验证的，且看下图。&lt;&#x2F;p&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;https-workflow&amp;#x2F;https.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;https-workflow&amp;#x2F;https.png 324w,&amp;#x2F;posts&amp;#x2F;https-workflow&amp;#x2F;https.png 324w&quot;
-    sizes=&quot;(max-width: 324px) 100vw, 324px&quot; width=&quot;324&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;1-ke-hu-duan-fa-qi-https-qing-qiu&quot;&gt;1. 客户端发起 HTTPS 请求&lt;&#x2F;h3&gt;
+        width=&quot;648&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h3 id=&quot;1-ke-hu-duan-fa-qi-https-qing-qiu&quot;&gt;1. 客户端发起 HTTPS 请求&lt;&#x2F;h3&gt;
 &lt;p&gt;这个没什么好说的，就是用户在浏览器里输入一个 https 网址，然后连接到 server 的 443 端口。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;2-fu-wu-duan-de-pei-zhi&quot;&gt;2. 服务端的配置&lt;&#x2F;h3&gt;
 &lt;p&gt;采用 HTTPS 协议的服务器必须要有一套数字证书，可以自己制作，也可以向组织申请。区别就是自己颁发的证书需要客户端验证通过，才可以继续访问，而使用受信任的公司申请的证书则不会弹出提示页面(startssl 就是个不错的选择，有 1 年的免费服务)。这套证书其实就是一对公钥和私钥。如果对公钥和私钥不太理解，可以想象成一把钥匙和一个锁头，只是全世界只有你一个人有这把钥匙，你可以把锁头给别人，别人可以用这个锁把重要的东西锁起来，然后发给你，因为只有你一个人有这把钥匙，所以只有你才能看到被这把锁锁起来的东西。&lt;&#x2F;p&gt;
@@ -8563,38 +8453,31 @@ socket 或 comet。socket 是比较好的解决方案，问题在于不是所有
 &lt;p&gt;&lt;strong&gt;单数据库&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache1.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache1.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache1.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;主库+从库&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache2.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache2.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache2.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;保持主库+从库的架构，把读写最频繁的几个表分到单独的数据库服务器&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache3.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache3.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache3.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;把那几个读写最频繁的表也分成主从&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache4.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache4.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache4.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;出现了 1040 too many connections&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache5.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache5.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache5.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;Sharding(水平分区)&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache6.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache6.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache6.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;数据库服务器&#x2F;数据库&#x2F;分区&lt;&#x2F;strong&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache7.jpg&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache7.jpg 250w,&amp;#x2F;posts&amp;#x2F;orm-cache&amp;#x2F;orm-cache7.jpg 250w&quot;
-    sizes=&quot;(max-width: 250px) 100vw, 250px&quot; width=&quot;250&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
+        width=&quot;500&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;这样基本上就可以应付正常的访问了，如果哪个表数据量过大或连接过多，就 Sharding 一下。但随之而来的问题也很明显，比如：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;php&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-php &quot;&gt;&lt;code class=&quot;language-php&quot; data-lang=&quot;php&quot;&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;&amp;lt;?php
 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;&#x2F;&#x2F;没有分区之前，可以通过下面几段代码来获取数据
@@ -9079,8 +8962,7 @@ INSERT+DELETE&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;unix-zhe-xue-yi-yan-yi-bi-zhi&quot;&gt;Unix 哲学一言以蔽之&lt;&#x2F;h3&gt;
 
 &lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;the-art-of-unix-programming&amp;#x2F;kiss.png&quot;
-    srcset=&quot;&amp;#x2F;posts&amp;#x2F;the-art-of-unix-programming&amp;#x2F;kiss.png 234w,&amp;#x2F;posts&amp;#x2F;the-art-of-unix-programming&amp;#x2F;kiss.png 234w&quot;
-    sizes=&quot;(max-width: 234px) 100vw, 234px&quot; width=&quot;234&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
+        width=&quot;468&quot; &#x2F;&gt;&lt;&#x2F;p&gt;</description>
         </item>
         
         

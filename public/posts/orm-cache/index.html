@@ -93,38 +93,31 @@
 <p><strong>单数据库</strong>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache1.jpg"
-    srcset="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache1.jpg 250w,&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache1.jpg 250w"
-    sizes="(max-width: 250px) 100vw, 250px" width="250" /></p></p>
+        width="500" /></p></p>
 <p><strong>主库+从库</strong>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache2.jpg"
-    srcset="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache2.jpg 250w,&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache2.jpg 250w"
-    sizes="(max-width: 250px) 100vw, 250px" width="250" /></p></p>
+        width="500" /></p></p>
 <p><strong>保持主库+从库的架构，把读写最频繁的几个表分到单独的数据库服务器</strong>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache3.jpg"
-    srcset="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache3.jpg 250w,&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache3.jpg 250w"
-    sizes="(max-width: 250px) 100vw, 250px" width="250" /></p></p>
+        width="500" /></p></p>
 <p><strong>把那几个读写最频繁的表也分成主从</strong>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache4.jpg"
-    srcset="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache4.jpg 250w,&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache4.jpg 250w"
-    sizes="(max-width: 250px) 100vw, 250px" width="250" /></p></p>
+        width="500" /></p></p>
 <p><strong>出现了 1040 too many connections</strong>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache5.jpg"
-    srcset="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache5.jpg 250w,&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache5.jpg 250w"
-    sizes="(max-width: 250px) 100vw, 250px" width="250" /></p></p>
+        width="500" /></p></p>
 <p><strong>Sharding(水平分区)</strong>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache6.jpg"
-    srcset="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache6.jpg 250w,&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache6.jpg 250w"
-    sizes="(max-width: 250px) 100vw, 250px" width="250" /></p></p>
+        width="500" /></p></p>
 <p><strong>数据库服务器/数据库/分区</strong>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache7.jpg"
-    srcset="&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache7.jpg 250w,&#x2F;posts&#x2F;orm-cache&#x2F;orm-cache7.jpg 250w"
-    sizes="(max-width: 250px) 100vw, 250px" width="250" /></p></p>
+        width="500" /></p></p>
 <p>这样基本上就可以应付正常的访问了，如果哪个表数据量过大或连接过多，就 Sharding 一下。但随之而来的问题也很明显，比如：</p>
 <pre data-lang="php" style="background-color:#f9f9f9;color:#111111;" class="language-php "><code class="language-php" data-lang="php"><span style="color:#f07219;">&lt;?php
 </span><span style="color:#8e908c;">//没有分区之前，可以通过下面几段代码来获取数据

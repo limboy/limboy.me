@@ -62,8 +62,7 @@
 <p><a href="https://video.twimg.com/ext_tw_video/1070286725656662017/pu/vid/360x640/uoeUgoq2-EigTzi7.mp4?tag=6">这里</a>可以查看最终的效果。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-demo.png"
-    srcset="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-demo.png 482w,&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-demo.png 482w"
-    sizes="(max-width: 482px) 100vw, 482px" width="482" /></p><h3 id="mu-lu-hua-fen">目录划分</h3>
+        width="964" /></p><h3 id="mu-lu-hua-fen">目录划分</h3>
 <p>接到这个需求后首先要考虑的是目录结构应该怎么划分，这也是架构的一部分，我是这么分的:</p>
 <pre style="background-color:#f9f9f9;color:#111111;"><code><span>blocs/
 </span><span>widgets/
@@ -127,8 +126,7 @@
 <p>BLoC 其实就是 ViewModel，有了 API 实现之后，接下来就要让 Widget 可以用上这些数据，这就是 BLoC 做的事。</p>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-bloc.png"
-    srcset="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-bloc.png 280.5w,&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-bloc.png 280.5w"
-    sizes="(max-width: 280.5px) 100vw, 280.5px" width="280.5" /></p>
+        width="561" /></p>
 <p>Widget 告诉 BLoC 发生了什么，BLoC 告诉 Widget 哪些数据更新了。</p>
 <pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#8959a8;">class </span><span style="color:#c99e00;">MoviesBloc </span><span style="color:#8959a8;">extends </span><span style="color:#c99e00;">BlocBase</span><span> {
 </span><span>  </span><span style="color:#8959a8;">final </span><span style="color:#c99e00;">BehaviorSubject</span><span style="color:#3e999f;">&lt;</span><span style="color:#c99e00;">MovieEnvelope</span><span style="color:#3e999f;">&gt;</span><span> _movieEnvelope </span><span style="color:#3e999f;">= </span><span style="color:#c99e00;">BehaviorSubject</span><span>();
@@ -204,8 +202,7 @@
 <h3 id="shou-ye-bu-ju">首页布局</h3>
 
 <p  style="text-align:center" ><img src="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-home-layout.png"
-    srcset="&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-home-layout.png 127.5w,&#x2F;posts&#x2F;flutter-demo&#x2F;movie250-home-layout.png 127.5w"
-    sizes="(max-width: 127.5px) 100vw, 127.5px" width="127.5" /></p>
+        width="255" /></p>
 <p>Flutter 提供了两种列表布局方式: <code>ListView</code> 和 <code>GridView</code>，如果页面里除了列表还有其他元素（比如顶部的 SlideView 等），就需要用到 <code>CustomScrollView</code> 或者 <code>NestedScrollView</code>，首页除了列表没有其他元素，同时一行可能包含多个视图，因此我们选择 <a href="https://docs.flutter.io/flutter/widgets/GridView-class.html">GridView</a>。</p>
 <p>GridView 的构建可以使用 <code>GridView.builder</code>, 它需要提供几个关键信息:</p>
 <pre data-lang="dart" style="background-color:#f9f9f9;color:#111111;" class="language-dart "><code class="language-dart" data-lang="dart"><span style="color:#c99e00;">GridView</span><span>.</span><span style="color:#4271ae;">builder</span><span>(
