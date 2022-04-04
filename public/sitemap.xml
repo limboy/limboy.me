@@ -224,6 +224,10 @@
         <lastmod>2019-01-11</lastmod>
     </url>
     <url>
+        <loc>https://limboy.me/posts/frontend-learning/</loc>
+        <lastmod>2022-04-04</lastmod>
+    </url>
+    <url>
         <loc>https://limboy.me/posts/frp-reactivecocoa/</loc>
         <lastmod>2013-06-19</lastmod>
     </url>
@@ -764,6 +768,9 @@
     </url>
     <url>
         <loc>https://limboy.me/tags/flutter/</loc>
+    </url>
+    <url>
+        <loc>https://limboy.me/tags/frontend/</loc>
     </url>
     <url>
         <loc>https://limboy.me/tags/git/</loc>

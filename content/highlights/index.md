@@ -5,6 +5,12 @@ template = "highlights.html"
 
 ## 2022
 
+{% timelinecard(title="发布一篇博客" date="2022-04-04") %}
+
+[我的前端学习路线](/posts/frontend-learning/)
+
+{% end %}
+
 {% timelinecard(title="发布一篇博客" date="2022-03-31") %}
 
 [通过视频片段来学习英语](/posts/english-video-clips/)
