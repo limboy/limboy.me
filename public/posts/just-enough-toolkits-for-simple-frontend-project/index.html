@@ -81,7 +81,11 @@
 </span><span>|- assets/
 </span><span>|- styles/
 </span><span>|- layouts/
+</span><span>  |- index.html
 </span><span>|- scripts/
+</span><span>  |- index.jsx
+</span><span>  |- components/
+</span><span>    |- App.jsx
 </span><span>|- package.json
 </span></code></pre>
 <ul>
@@ -95,6 +99,25 @@
 <aside class="info" >
   关于 HMR（Hot Module Replacement），我觉得是 Plus，不是 Essential，如果能在（几乎）不增加复杂度的前提下提供这个功能，自然可以有，但如果因此增加了复杂度和理解成本，那就先放一放。
 </aside>
+<p><code>index.html</code> 是入口页，这里会引用最终的 css 和 js 文件</p>
+<pre data-lang="html" style="background-color:#f9f9f9;color:#111111;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">link rel</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;stylesheet&quot; </span><span style="color:#c82728;">href</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;/assets/index.css&quot; </span><span style="color:#5d9be5;">/&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">link rel</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;icon&quot; </span><span style="color:#c82728;">href</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;https://fav.farm/👻&quot; </span><span style="color:#5d9be5;">/&gt;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>
+</span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">body</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">div id</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;root&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">div</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script src=</span><span style="color:#839c00;">&quot;/assets/index.js&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">body</span><span style="color:#5d9be5;">&gt;
+</span></code></pre>
+<p><code>index.jsx</code> 是 js 的入口文件</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">import </span><span style="color:#c82728;">React </span><span style="color:#8959a8;">from </span><span style="color:#839c00;">&#39;react&#39;</span><span>;
+</span><span style="color:#8959a8;">import </span><span style="color:#c82728;">ReactDOM </span><span style="color:#8959a8;">from </span><span style="color:#839c00;">&#39;react-dom/client&#39;</span><span>;
+</span><span style="color:#8959a8;">import </span><span style="color:#c82728;">App </span><span style="color:#8959a8;">from </span><span style="color:#839c00;">&#39;./components/App&#39;</span><span>;
+</span><span>
+</span><span style="color:#8959a8;">const </span><span style="color:#c82728;">root </span><span style="color:#3e999f;">= </span><span style="color:#c82728;">ReactDOM</span><span style="color:#4271ae;">.createRoot</span><span>(</span><span style="color:#4271ae;">document.getElementById</span><span>(</span><span style="color:#839c00;">&#39;root&#39;</span><span>));
+</span><span style="color:#4271ae;">root.render</span><span>(</span><span style="color:#4271ae;">App</span><span>());
+</span></code></pre>
 <p><code>package.json</code> 的核心内容大概是这样的：</p>
 <pre data-lang="json" style="background-color:#f9f9f9;color:#111111;" class="language-json "><code class="language-json" data-lang="json"><span>{
 </span><span>  </span><span style="color:#839c00;">&quot;scripts&quot;</span><span>: {

@@ -39,7 +39,11 @@ added 1354 packages in 18s
 |- assets/
 |- styles/
 |- layouts/
+  |- index.html
 |- scripts/
+  |- index.jsx
+  |- components/
+    |- App.jsx
 |- package.json
 ```
 
@@ -54,6 +58,31 @@ added 1354 packages in 18s
 {% aside(level="info") %}
 关于 HMR（Hot Module Replacement），我觉得是 Plus，不是 Essential，如果能在（几乎）不增加复杂度的前提下提供这个功能，自然可以有，但如果因此增加了复杂度和理解成本，那就先放一放。
 {% end %}
+
+`index.html` 是入口页，这里会引用最终的 css 和 js 文件
+
+```html
+<head>
+  <link rel="stylesheet" href="/assets/index.css" />
+  <link rel="icon" href="https://fav.farm/👻" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="/assets/index.js"></script>
+</body>
+```
+
+`index.jsx` 是 js 的入口文件
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './components/App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(App());
+```
 
 `package.json` 的核心内容大概是这样的：
 

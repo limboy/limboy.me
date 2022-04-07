@@ -38,7 +38,11 @@
 &lt;&#x2F;span&gt;&lt;span&gt;|- assets&#x2F;
 &lt;&#x2F;span&gt;&lt;span&gt;|- styles&#x2F;
 &lt;&#x2F;span&gt;&lt;span&gt;|- layouts&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;  |- index.html
 &lt;&#x2F;span&gt;&lt;span&gt;|- scripts&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;  |- index.jsx
+&lt;&#x2F;span&gt;&lt;span&gt;  |- components&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;    |- App.jsx
 &lt;&#x2F;span&gt;&lt;span&gt;|- package.json
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;ul&gt;
@@ -52,6 +56,25 @@
 &lt;aside class=&quot;info&quot; &gt;
   关于 HMR（Hot Module Replacement），我觉得是 Plus，不是 Essential，如果能在（几乎）不增加复杂度的前提下提供这个功能，自然可以有，但如果因此增加了复杂度和理解成本，那就先放一放。
 &lt;&#x2F;aside&gt;
+&lt;p&gt;&lt;code&gt;index.html&lt;&#x2F;code&gt; 是入口页，这里会引用最终的 css 和 js 文件&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;html&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;head&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;link rel&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;stylesheet&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;href&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;&#x2F;assets&#x2F;index.css&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;link rel&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;icon&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;href&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;https:&#x2F;&#x2F;fav.farm&#x2F;👻&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;head&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;body&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;div id&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;root&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;div&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;script src=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;&#x2F;assets&#x2F;index.js&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;body&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;index.jsx&lt;&#x2F;code&gt; 是 js 的入口文件&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;React &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;react&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;ReactDOM &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;react-dom&#x2F;client&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;App &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;.&#x2F;components&#x2F;App&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;const &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;root &lt;&#x2F;span&gt;&lt;span style=&quot;color:#3e999f;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;ReactDOM&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;.createRoot&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;document.getElementById&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;root&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;));
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;root.render&lt;&#x2F;span&gt;&lt;span&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;App&lt;&#x2F;span&gt;&lt;span&gt;());
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;&lt;code&gt;package.json&lt;&#x2F;code&gt; 的核心内容大概是这样的：&lt;&#x2F;p&gt;
 &lt;pre data-lang=&quot;json&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-json &quot;&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;{
 &lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;scripts&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: {
