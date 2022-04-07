@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <link rel="icon" href="https://fav.farm/👻" />
+  <title>
+刚好够用的简易前端工具集
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/just-enough-toolkits-for-simple-frontend-project/">
+
+<meta name="twitter:title" content="刚好够用的简易前端工具集">
+<meta property="og:title" content="刚好够用的简易前端工具集">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;just-enough-toolkits-for-simple-frontend-project&#x2F;">刚好够用的简易前端工具集</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2022-04-07</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>前端构建工具总给人一种很 magic 很复杂的感觉，理解它需要花一番工夫，不理解直接用的话，总觉得心里不踏实，出问题或者加需求不一定能搞定。我习惯用 React，官方推荐用 <a href="https://create-react-app.dev/">Create React App</a> 来创建项目，但它给我的感觉太黑盒了，而且新建一个项目就会添加 1000 多个 package，也不知道这 1000 多个 package 是干啥用的。</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>$ npx create-react-app demo
+</span><span>
+</span><span>Creating a new React app in ...
+</span><span>
+</span><span>Installing packages. This might take a couple of minutes.
+</span><span>Installing react, react-dom, and react-scripts with cra-template...
+</span><span>
+</span><span>added 1354 packages in 18s
+</span></code></pre>
+<p>如果用 webpack 的话，挑战也很大，首先要捋清它的工作模式就要费一番工夫，文档都啃下来也不简单，同时它又很灵活，提供了几十个 Hook，每个 Hook 都对应不同的时机，有自己的参数，文档上也没有详细说明这些 Hook 具体的时机和适合的使用场景。插件很丰富，但挑起来也很累，配置项很多，大约有 10086 个（当然，此处用了夸张手法），有些 Plugin 如 <a href="https://github.com/jantimon/html-webpack-plugin">html-webpack-plugin</a> 还有自己的 Plugin。对于前端新人真的很劝退。</p>
+<p>如果是自己的前端项目，能实现以下几点就可以了：</p>
+<ol>
+<li>js 这块能通过 <code>npm install</code> 安装依赖，打出一个 js 包（最好支持 tree-shaking）</li>
+<li>css 这块能支持类似 tailwind 的使用姿势</li>
+<li>维护方便，部署方便</li>
+</ol>
+<p>对于第 1 点，可以使用 <a href="https://esbuild.github.io/">esbuild</a>，这是一个用 go 写的 js bundler（可以把相关的 js 文件合并成一个浏览器可以识别和运行的 js 文件），足够快，功能也够用，虽然还未到 1.0，但已被一些知名项目使用（如 vite / snowpack）。</p>
+<p>对于第 2 点，可以使用 <a href="https://windicss.org/">windicss</a>，相比 <a href="https://tailwindcss.com/">tailwind</a> 更轻量，性能也更好。</p>
+<p>对于第 3 点，我预期的目录结构是这样的：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>|- dist/
+</span><span>|- assets/
+</span><span>|- styles/
+</span><span>|- layouts/
+</span><span>|- scripts/
+</span><span>|- package.json
+</span></code></pre>
+<ul>
+<li><code>dist</code> 是待发布的目录，运行 <code>npm build</code> 命令后所有的文件都会在这个目录下。</li>
+<li><code>assets</code> 用来放资源文件（如图片）</li>
+<li><code>styles</code> css 文件</li>
+<li><code>layouts</code> html 文件</li>
+<li><code>scripts</code> react 等 js 文件</li>
+</ul>
+<p>每个目录的职能都很清晰，也没有各种 config 文件，维护起来比较方便（为什么是按 function 来分，而不是 feature，可以看下<a href="https://www.joshwcomeau.com/react/file-structure/">这篇文章</a>），部署也很简单。</p>
+<aside class="info" >
+  关于 HMR（Hot Module Replacement），我觉得是 Plus，不是 Essential，如果能在（几乎）不增加复杂度的前提下提供这个功能，自然可以有，但如果因此增加了复杂度和理解成本，那就先放一放。
+</aside>
+<p><code>package.json</code> 的核心内容大概是这样的：</p>
+<pre data-lang="json" style="background-color:#f9f9f9;color:#111111;" class="language-json "><code class="language-json" data-lang="json"><span>{
+</span><span>  </span><span style="color:#839c00;">&quot;scripts&quot;</span><span>: {
+</span><span>    </span><span style="color:#839c00;">&quot;dev-js&quot;</span><span>: </span><span style="color:#839c00;">&quot;cp -r layouts/* dist &amp;&amp; cp -r assets dist &amp;&amp; esbuild scripts/index.jsx --servedir=dist --outdir=dist/assets --bundle&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;dev-css&quot;</span><span>: </span><span style="color:#839c00;">&quot;windicss &#39;./layouts/**/*.html&#39; &#39;./scripts/**/*.{js,jsx}&#39; -o dist/assets/index.css --dev&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;dev&quot;</span><span>: </span><span style="color:#839c00;">&quot;concurrently -g &#39;npm:dev-*&#39;&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;build-js&quot;</span><span>: </span><span style="color:#839c00;">&quot;cp -r layouts/* dist &amp;&amp; cp -r assets dist &amp;&amp; esbuild scripts/index.jsx --bundle --minify --outfile=dist/assets/index.js&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;build-css&quot;</span><span>: </span><span style="color:#839c00;">&quot;windicss &#39;./layouts/**/*.html&#39; &#39;./scripts/**/*.{js,jsx}&#39; -o dist/assets/index.css --minify&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;build&quot;</span><span>: </span><span style="color:#839c00;">&quot;concurrently -g &#39;npm:build-*&#39;&quot;
+</span><span>  },
+</span><span>  </span><span style="color:#839c00;">&quot;dependencies&quot;</span><span>: {
+</span><span>    </span><span style="color:#839c00;">&quot;esbuild&quot;</span><span>: </span><span style="color:#839c00;">&quot;^0.14.32&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;react&quot;</span><span>: </span><span style="color:#839c00;">&quot;^18.0.0&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;react-dom&quot;</span><span>: </span><span style="color:#839c00;">&quot;^18.0.0&quot;</span><span>,
+</span><span>    </span><span style="color:#839c00;">&quot;windicss&quot;</span><span>: </span><span style="color:#839c00;">&quot;^3.5.1&quot;
+</span><span>  },
+</span><span>  </span><span style="color:#839c00;">&quot;devDependencies&quot;</span><span>: {
+</span><span>    </span><span style="color:#839c00;">&quot;concurrently&quot;</span><span>: </span><span style="color:#839c00;">&quot;^7.1.0&quot;
+</span><span>  }
+</span><span>}
+</span></code></pre>
+<p>简单说明下 <code>scripts</code> 栏下的几个命令:</p>
+<ul>
+<li><code>dev-js</code>: 把相关内容复制到 dist 目录下，然后让 <code>esbuild</code> 来 serve 这个目录，当 js 文件有变化时，再次请求页面，就会得到最新的 js 文件。</li>
+<li><code>dev-css</code>: <code>windicss</code> 监控特定目录下的文件，有变化时会自动生成新的 css 文件。</li>
+<li><code>dev</code>: 通过 <a href="https://www.npmjs.com/package/concurrently">concurrently</a> 一并执行 <code>dev-js</code> 和 <code>dev-css</code>。</li>
+<li><code>build-js</code>: 通过 <code>esbuild</code> 命令把 js 文件打包成一个（minify 之后）。</li>
+<li><code>build-css</code>: 通过 <code>windicss</code> 命令扫描项目中的关键字，并生成 minify 后的 css 文件。</li>
+<li><code>build</code>: 通过 <a href="https://www.npmjs.com/package/concurrently">concurrently</a> 一并执行 <code>build-js</code> 和 <code>build-css</code> 。</li>
+</ul>
+<p>之后如果想要新增依赖，用 <code>npm install</code> 或 <code>pnpm add</code> 就行了，相比 <code>create-react-app</code> 或者 <code>webpack</code>，能力上肯定会弱一些，但也更容易理解。</p>
+<p>这就是我目前的「刚好够用的简易前端工具集」的尝试，用来写简单的页面应该够用了，如果你有别的想法，也欢迎交流～</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/frontend/">frontend</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/limboy.me"
+    data-repo-id="R_kgDOGqD9cw" data-category="General"
+    data-category-id="DIC_kwDOGqD9c84CAoVe" data-mapping="pathname" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>

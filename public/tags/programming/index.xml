@@ -7,7 +7,86 @@
         <generator>Zola</generator>
         <language>zh</language>
         <atom:link href="https://limboy.me/tags/programming/index.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Mon, 04 Apr 2022 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Thu, 07 Apr 2022 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>刚好够用的简易前端工具集</title>
+            <pubDate>Thu, 07 Apr 2022 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/just-enough-toolkits-for-simple-frontend-project/</link>
+            <guid>https://limboy.me/posts/just-enough-toolkits-for-simple-frontend-project/</guid>
+            <description>&lt;p&gt;前端构建工具总给人一种很 magic 很复杂的感觉，理解它需要花一番工夫，不理解直接用的话，总觉得心里不踏实，出问题或者加需求不一定能搞定。我习惯用 React，官方推荐用 &lt;a href=&quot;https:&#x2F;&#x2F;create-react-app.dev&#x2F;&quot;&gt;Create React App&lt;&#x2F;a&gt; 来创建项目，但它给我的感觉太黑盒了，而且新建一个项目就会添加 1000 多个 package，也不知道这 1000 多个 package 是干啥用的。&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;$ npx create-react-app demo
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;Creating a new React app in ...
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;Installing packages. This might take a couple of minutes.
+&lt;&#x2F;span&gt;&lt;span&gt;Installing react, react-dom, and react-scripts with cra-template...
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;added 1354 packages in 18s
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;如果用 webpack 的话，挑战也很大，首先要捋清它的工作模式就要费一番工夫，文档都啃下来也不简单，同时它又很灵活，提供了几十个 Hook，每个 Hook 都对应不同的时机，有自己的参数，文档上也没有详细说明这些 Hook 具体的时机和适合的使用场景。插件很丰富，但挑起来也很累，配置项很多，大约有 10086 个（当然，此处用了夸张手法），有些 Plugin 如 &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;jantimon&#x2F;html-webpack-plugin&quot;&gt;html-webpack-plugin&lt;&#x2F;a&gt; 还有自己的 Plugin。对于前端新人真的很劝退。&lt;&#x2F;p&gt;
+&lt;p&gt;如果是自己的前端项目，能实现以下几点就可以了：&lt;&#x2F;p&gt;
+&lt;ol&gt;
+&lt;li&gt;js 这块能通过 &lt;code&gt;npm install&lt;&#x2F;code&gt; 安装依赖，打出一个 js 包（最好支持 tree-shaking）&lt;&#x2F;li&gt;
+&lt;li&gt;css 这块能支持类似 tailwind 的使用姿势&lt;&#x2F;li&gt;
+&lt;li&gt;维护方便，部署方便&lt;&#x2F;li&gt;
+&lt;&#x2F;ol&gt;
+&lt;p&gt;对于第 1 点，可以使用 &lt;a href=&quot;https:&#x2F;&#x2F;esbuild.github.io&#x2F;&quot;&gt;esbuild&lt;&#x2F;a&gt;，这是一个用 go 写的 js bundler（可以把相关的 js 文件合并成一个浏览器可以识别和运行的 js 文件），足够快，功能也够用，虽然还未到 1.0，但已被一些知名项目使用（如 vite &#x2F; snowpack）。&lt;&#x2F;p&gt;
+&lt;p&gt;对于第 2 点，可以使用 &lt;a href=&quot;https:&#x2F;&#x2F;windicss.org&#x2F;&quot;&gt;windicss&lt;&#x2F;a&gt;，相比 &lt;a href=&quot;https:&#x2F;&#x2F;tailwindcss.com&#x2F;&quot;&gt;tailwind&lt;&#x2F;a&gt; 更轻量，性能也更好。&lt;&#x2F;p&gt;
+&lt;p&gt;对于第 3 点，我预期的目录结构是这样的：&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;|- dist&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;|- assets&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;|- styles&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;|- layouts&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;|- scripts&#x2F;
+&lt;&#x2F;span&gt;&lt;span&gt;|- package.json
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;dist&lt;&#x2F;code&gt; 是待发布的目录，运行 &lt;code&gt;npm build&lt;&#x2F;code&gt; 命令后所有的文件都会在这个目录下。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;assets&lt;&#x2F;code&gt; 用来放资源文件（如图片）&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;styles&lt;&#x2F;code&gt; css 文件&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;layouts&lt;&#x2F;code&gt; html 文件&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;scripts&lt;&#x2F;code&gt; react 等 js 文件&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;每个目录的职能都很清晰，也没有各种 config 文件，维护起来比较方便（为什么是按 function 来分，而不是 feature，可以看下&lt;a href=&quot;https:&#x2F;&#x2F;www.joshwcomeau.com&#x2F;react&#x2F;file-structure&#x2F;&quot;&gt;这篇文章&lt;&#x2F;a&gt;），部署也很简单。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  关于 HMR（Hot Module Replacement），我觉得是 Plus，不是 Essential，如果能在（几乎）不增加复杂度的前提下提供这个功能，自然可以有，但如果因此增加了复杂度和理解成本，那就先放一放。
+&lt;&#x2F;aside&gt;
+&lt;p&gt;&lt;code&gt;package.json&lt;&#x2F;code&gt; 的核心内容大概是这样的：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;json&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-json &quot;&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;scripts&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;dev-js&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;cp -r layouts&#x2F;* dist &amp;amp;&amp;amp; cp -r assets dist &amp;amp;&amp;amp; esbuild scripts&#x2F;index.jsx --servedir=dist --outdir=dist&#x2F;assets --bundle&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;dev-css&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;windicss &amp;#39;.&#x2F;layouts&#x2F;**&#x2F;*.html&amp;#39; &amp;#39;.&#x2F;scripts&#x2F;**&#x2F;*.{js,jsx}&amp;#39; -o dist&#x2F;assets&#x2F;index.css --dev&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;dev&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;concurrently -g &amp;#39;npm:dev-*&amp;#39;&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;build-js&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;cp -r layouts&#x2F;* dist &amp;amp;&amp;amp; cp -r assets dist &amp;amp;&amp;amp; esbuild scripts&#x2F;index.jsx --bundle --minify --outfile=dist&#x2F;assets&#x2F;index.js&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;build-css&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;windicss &amp;#39;.&#x2F;layouts&#x2F;**&#x2F;*.html&amp;#39; &amp;#39;.&#x2F;scripts&#x2F;**&#x2F;*.{js,jsx}&amp;#39; -o dist&#x2F;assets&#x2F;index.css --minify&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;build&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;concurrently -g &amp;#39;npm:build-*&amp;#39;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  },
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;dependencies&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;esbuild&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;^0.14.32&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;react&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;^18.0.0&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;react-dom&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;^18.0.0&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;windicss&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;^3.5.1&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  },
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;devDependencies&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;concurrently&amp;quot;&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;^7.1.0&amp;quot;
+&lt;&#x2F;span&gt;&lt;span&gt;  }
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;简单说明下 &lt;code&gt;scripts&lt;&#x2F;code&gt; 栏下的几个命令:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;dev-js&lt;&#x2F;code&gt;: 把相关内容复制到 dist 目录下，然后让 &lt;code&gt;esbuild&lt;&#x2F;code&gt; 来 serve 这个目录，当 js 文件有变化时，再次请求页面，就会得到最新的 js 文件。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;dev-css&lt;&#x2F;code&gt;: &lt;code&gt;windicss&lt;&#x2F;code&gt; 监控特定目录下的文件，有变化时会自动生成新的 css 文件。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;dev&lt;&#x2F;code&gt;: 通过 &lt;a href=&quot;https:&#x2F;&#x2F;www.npmjs.com&#x2F;package&#x2F;concurrently&quot;&gt;concurrently&lt;&#x2F;a&gt; 一并执行 &lt;code&gt;dev-js&lt;&#x2F;code&gt; 和 &lt;code&gt;dev-css&lt;&#x2F;code&gt;。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;build-js&lt;&#x2F;code&gt;: 通过 &lt;code&gt;esbuild&lt;&#x2F;code&gt; 命令把 js 文件打包成一个（minify 之后）。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;build-css&lt;&#x2F;code&gt;: 通过 &lt;code&gt;windicss&lt;&#x2F;code&gt; 命令扫描项目中的关键字，并生成 minify 后的 css 文件。&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;build&lt;&#x2F;code&gt;: 通过 &lt;a href=&quot;https:&#x2F;&#x2F;www.npmjs.com&#x2F;package&#x2F;concurrently&quot;&gt;concurrently&lt;&#x2F;a&gt; 一并执行 &lt;code&gt;build-js&lt;&#x2F;code&gt; 和 &lt;code&gt;build-css&lt;&#x2F;code&gt; 。&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;之后如果想要新增依赖，用 &lt;code&gt;npm install&lt;&#x2F;code&gt; 或 &lt;code&gt;pnpm add&lt;&#x2F;code&gt; 就行了，相比 &lt;code&gt;create-react-app&lt;&#x2F;code&gt; 或者 &lt;code&gt;webpack&lt;&#x2F;code&gt;，能力上肯定会弱一些，但也更容易理解。&lt;&#x2F;p&gt;
+&lt;p&gt;这就是我目前的「刚好够用的简易前端工具集」的尝试，用来写简单的页面应该够用了，如果你有别的想法，也欢迎交流～&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
         
         <item>
             <title>我的前端学习路线</title>
