@@ -55,3 +55,112 @@ tags = ["programming", "frontend"]
 每个板块里的内容，会按照我自己的喜好来学习，比如包管理工具我更喜欢 `pnpm`，Computer Science 里学习操作系统相关的内容会选择 [OSTEP](https://pages.cs.wisc.edu/~remzi/OSTEP/) 这本书等等。
 
 有了这张图，学习起来会更有底：自己目前大概到了哪个阶段，哪块需要重点补强一下，优先学习哪个（感觉跟「皇室战争」升级建筑一样一样的 😂）。
+
+---
+
+2022/06/21 更新了更全的学习内容
+
+## Career
+
+- Building a Career in Software
+- The Passionate Programmer
+- Unwritten Laws of Engineering
+- The Clean Coder: A Code of Conduct for Professional Programmers
+
+## Inspire
+
+- [Book] The Design of the UNIX Operating System
+- [Book] UNIX: A History and a Memoir
+- [Book] How Linux Works
+- [Book] Mastering Bitcoin: Programming the Open Blockchain
+- [Book] Software Engineering at Google
+- [Paper] Peer-to-peer networking with BitTorrent
+- [Paper] state charts: a visual formalism for complex systems
+- [Paper] How to share a secret
+- [Paper] Kademlia: A Peer-to-peer Information System Based on the XOR Metric
+- [Paper] Out of the Tar Pit
+- [Paper] On the criteria to be used in decomposing systems into modules
+- [Paper] Build systems à la carte: Theory and practice
+- [Paper] In Search of an Understandable Consensus Algorithm
+- [Article] Solving Every Sudoku Puzzle
+- [Article] How to Write a Spelling Corrector
+- [Lecture] Distributed Systems (via Martin Kleppmann)
+- [Presentation] Inventing on principle
+
+## Computer Science
+
+- OSTEP
+- 图解 TCP/IP
+- 网络是怎样连接的
+- 剑指 offer
+- Algorithm Design Manual
+- 编程之美
+- SCIPJS
+- Pearls of Functional Algorithm Design
+- System Design Interview
+
+## Maintainable and Reliable Code
+
+- How to Design a Good API and Why it Matters
+- Philosophy of Software Design
+- The Pragmatic Programmer
+- Refactoring: Improving the Design of Existing Code
+- Clean Code: A Handbook of Agile Software Craftsmanship
+- Test-Driven Development: By Example
+- Microservices Patterns
+- Composing Software
+- Concepts, Techniques, and Models of Computer Programming
+- Fundamentals of Software Architecture: An Engineering Approach
+- Software Architecture: The Hard Parts
+
+## Frontend
+
+### Dev Mate
+
+- VS Code
+- Chrome
+- Git
+- Docker
+
+### Languages
+
+- JavaScript
+- TypeScript
+
+### Web
+
+- HTML
+- CSS
+- Web API
+
+### Tools and Libraries
+
+- Next.js
+- Jest
+- Windi CSS
+- Prisma
+- Vite
+- pnpm
+- fastify
+- React
+  - React Testing Library
+  - React Query
+  - React Router
+  - Zustand
+  - Immer
+  - Mantine
+  - Framer Motion
+
+### Learn
+
+- css-doodle
+- Turborepo
+- Preact
+- SolidJS
+- million
+- alpine
+- swr
+- vite
+- rollup
+- patterns.dev
+- browser.engineering
