@@ -5,6 +5,18 @@ template = "highlights.html"
 
 ## 2022
 
+{% timelinecard(title="发布一篇博客" date="2022-06-23") %}
+
+[通过 VisiData 来方便地分析数据](/posts/visidata/)
+
+{% end %}
+
+{% timelinecard(title="日语学习" date="2022-06-22") %}
+
+完成 大家的日语(初级 1) 的学习
+
+{% end %}
+
 {% timelinecard(title="发布一篇博客" date="2022-04-07") %}
 
 [刚好够用的简易前端工具集](/posts/just-enough-toolkits-for-simple-frontend-project/)
