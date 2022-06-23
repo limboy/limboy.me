@@ -7,7 +7,79 @@
         <generator>Zola</generator>
         <language>zh</language>
         <atom:link href="https://limboy.me/index.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Thu, 07 Apr 2022 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Thu, 23 Jun 2022 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>通过 VisiData 来方便地分析数据</title>
+            <pubDate>Thu, 23 Jun 2022 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/visidata/</link>
+            <guid>https://limboy.me/posts/visidata/</guid>
+            <description>&lt;p&gt;在 Hacker News 上看到一篇 &lt;a href=&quot;https:&#x2F;&#x2F;news.ycombinator.com&#x2F;item?id=31824030&quot;&gt;通过 SQLite 来方便地操作 CSV&lt;&#x2F;a&gt; 的文章，利用 sqlite3 对 csv 原生支持的能力，对 csv 执行 SQL 查询，来获得自己想要的数据。试了下确实挺方便的：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;visidata&amp;#x2F;sqlite-one-liner.jpg&quot;
+        width=&quot;1278&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
+  &lt;code&gt;tweets.csv&lt;&#x2F;code&gt; 是从 Twitter 导出的个人数据。可以在 Twitter 的 Settings and privacy 中找到 download an archive of your data 的选项，点击后过一段时间就能收到自己的数据了
+&lt;&#x2F;aside&gt;
+&lt;p&gt;保存为一个 bash function 后，就更方便了：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;bash&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-bash &quot;&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;csv2sqlite&lt;&#x2F;span&gt;&lt;span&gt;() {
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;sqlite3&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; :memory:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -cmd &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;.mode csv&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -cmd &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;.import $&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;.csv $&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt; -cmd &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;.mode column&amp;#39; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;2
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8e908c;&quot;&gt;# usage
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;csv2sqlite&lt;&#x2F;span&gt;&lt;span style=&quot;color:#4271ae;&quot;&gt; tweets &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;select * from tweets limit 1&amp;#39;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;顺便看了下 HN 上的评论，发现有不少人提到了 &lt;a href=&quot;https:&#x2F;&#x2F;www.visidata.org&quot;&gt;VisiData&lt;&#x2F;a&gt; 这个工具，就体验了下，确实很不错，能满足常见的数据查询工作，还不用写 SQL。下面就通过 &lt;code&gt;tweets.csv&lt;&#x2F;code&gt; 这个文件，结合具体的场景来看看 VisiData 的使用姿势。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  VisiData 是一个表格类数据（如 json, csv）分析工具，既支持类似 Excel 的数据显示，又有终端操作的高效，能够处理百万行的数据。&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;jsvine.github.io&#x2F;visidata-cheat-sheet&#x2F;en&#x2F;&quot;&gt;这个快捷键列表&lt;&#x2F;a&gt;很方便，基本可以覆盖常用的操作了。
+&lt;&#x2F;aside&gt;&lt;h2 id=&quot;mei-nian-fa-liao-duo-shao-tweet&quot;&gt;每年发了多少 Tweet&lt;&#x2F;h2&gt;
+&lt;p&gt;VisiData 安装完后，直接 &lt;code&gt;vd tweets.csv&lt;&#x2F;code&gt; 就可以了，界面如下：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;visidata&amp;#x2F;visidata-overview.jpg&quot;
+        width=&quot;1752&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;其中有一列为 &lt;code&gt;timestamp&lt;&#x2F;code&gt;，包含了 &lt;code&gt;date&lt;&#x2F;code&gt; 和 &lt;code&gt;time&lt;&#x2F;code&gt;，我们需要将 &lt;code&gt;Year&lt;&#x2F;code&gt; 分离出来，然后才能进行聚合操作。分离的过程也很简单，先选中 &lt;code&gt;timestamp&lt;&#x2F;code&gt; 这一列，输入快捷键 &lt;code&gt;:&lt;&#x2F;code&gt; 就会进入到正则切分模式，输入空格 &lt;code&gt; &lt;&#x2F;code&gt;，就可以将 &lt;code&gt;date&lt;&#x2F;code&gt; 和 &lt;code&gt;time&lt;&#x2F;code&gt; 分开了，然后再对 &lt;code&gt;date&lt;&#x2F;code&gt; 列执行同样的操作，不过要用 &lt;code&gt;-&lt;&#x2F;code&gt; 来切分，这样就能得到 &lt;code&gt;Year&lt;&#x2F;code&gt; 了。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;visidata&amp;#x2F;visidata-year.jpg&quot;
+        width=&quot;1354&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
+  列名为自动生成，这里没有调整，可以通过 &lt;code&gt;^&lt;&#x2F;code&gt; 快捷键重命名。
+&lt;&#x2F;aside&gt;
+&lt;p&gt;接下来，在 &lt;code&gt;Year&lt;&#x2F;code&gt; 对应的列，按一下 &lt;code&gt;F&lt;&#x2F;code&gt; (&lt;code&gt;shift+f&lt;&#x2F;code&gt;)，就能达到 &lt;code&gt;group by&lt;&#x2F;code&gt; 的效果，这个真的太方便了。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;visidata&amp;#x2F;visidata-year-count.jpg&quot;
+        width=&quot;1256&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
+  VisiData 会新建一个 Table，所以不用担心会覆盖当前的表格，操作完后，输入 &lt;code&gt;q&lt;&#x2F;code&gt; 就能回到之前的表格。
+&lt;&#x2F;aside&gt;
+&lt;p&gt;可以看到我最爱唠叨的年份是 2008 和 2010 年，那时 Twitter 还能正常访问，有点什么想法就想发一下，也能在 Twitter 上找到很多有意思的人。&lt;&#x2F;p&gt;
+&lt;p&gt;也可以通过这个方法看发推频率最高的是那几天：&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;visidata&amp;#x2F;visidata-tweets-per-day.jpg&quot;
+        width=&quot;1204&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;或者看自己 &lt;code&gt;@&lt;&#x2F;code&gt; 频率最高的是哪些人：（这里显示的是 user_id，可以通过 user_id 转 username 的服务来看对应的人）&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;visidata&amp;#x2F;visidata-reply.jpg&quot;
+        width=&quot;1270&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h2 id=&quot;mou-yi-tian-fa-liao-na-xie-tui&quot;&gt;某一天发了哪些推&lt;&#x2F;h2&gt;
+&lt;p&gt;找到了发推最多的日子后，接下来很自然就想看看这几天自己都发了些啥，比如我想看 &lt;code&gt;2008-01-16&lt;&#x2F;code&gt; 这一天的推，先选择日期列，然后输入快捷键 &lt;code&gt;|&lt;&#x2F;code&gt;，表示要选择符合正则表达式的行，此时 status bar 会提示输入正则，输入 &lt;code&gt;2008-01-16&lt;&#x2F;code&gt; 后回车，就能选中这些行了。&lt;&#x2F;p&gt;
+&lt;aside class=&quot;info&quot; &gt;
+  虽然状态栏会提示有 N 行被选中，但并没有出现在当前显示的列表中，输入快捷键 &lt;code&gt;&amp;quot;&lt;&#x2F;code&gt; 就能看到了。
+&lt;&#x2F;aside&gt;
+&lt;p&gt;如果 &lt;code&gt;text&lt;&#x2F;code&gt; 列的内容没有完全显示出来，可以选中 &lt;code&gt;text&lt;&#x2F;code&gt; 列，输入快捷键 &lt;code&gt;_&lt;&#x2F;code&gt; 就行了。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;visidata&amp;#x2F;visidata-day-tweets.jpg&quot;
+        width=&quot;1656&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;h2 id=&quot;tu-xing-hua-xian-shi-mei-ge-yue-de-fa-tui-shu-liang&quot;&gt;图形化显示每个月的发推数量&lt;&#x2F;h2&gt;
+&lt;p&gt;VisiData 还支持散点图，我们可以通过这个功能来看每个月的发推数量，不过显示的效果不太好。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;visidata&amp;#x2F;visidata-plot.jpg&quot;
+        width=&quot;1568&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;好在 VisiData 可以将当前 Table 的内容导出为 &lt;code&gt;csv&lt;&#x2F;code&gt;, &lt;code&gt;json&lt;&#x2F;code&gt; 等常用格式，我们可以将这些数据导入到其他的 plot 服务来获得更好的显示效果。&lt;&#x2F;p&gt;
+
+&lt;p  style=&quot;text-align:center&quot; &gt;&lt;img src=&quot;&amp;#x2F;posts&amp;#x2F;visidata&amp;#x2F;plot.jpg&quot;
+        width=&quot;1400&quot; &#x2F;&gt;&lt;&#x2F;p&gt;&lt;aside class=&quot;info&quot; &gt;
+  上图使用的是 &lt;a href=&quot;https:&#x2F;&#x2F;www.csvplot.com&quot;&gt;csvplot&lt;&#x2F;a&gt; 这个在线服务。
+&lt;&#x2F;aside&gt;&lt;h2 id=&quot;xiao-jie&quot;&gt;小结&lt;&#x2F;h2&gt;
+&lt;p&gt;VisiData 是一个开源项目，有 5 年多的历史了，还在持续维护着，可信任程度还是比较高的。以上是我的简单探索，已经可以满足不少需求了。一开始我对 TUI (Terminal UI) 是有点抗拒的，感觉不如 GUI 美观，但结合 Terminal 的操作确实太方便了，之后如果有不太复杂的数据分析需求，应该还会选择 VisiData。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
         
         <item>
             <title>刚好够用的简易前端工具集</title>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <link rel="icon" href="https://fav.farm/👻" />
+  <title>
+通过 VisiData 来方便地分析数据
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/visidata/">
+
+<meta name="twitter:title" content="通过 VisiData 来方便地分析数据">
+<meta property="og:title" content="通过 VisiData 来方便地分析数据">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;visidata&#x2F;">通过 VisiData 来方便地分析数据</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2022-06-23</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>在 Hacker News 上看到一篇 <a href="https://news.ycombinator.com/item?id=31824030">通过 SQLite 来方便地操作 CSV</a> 的文章，利用 sqlite3 对 csv 原生支持的能力，对 csv 执行 SQL 查询，来获得自己想要的数据。试了下确实挺方便的：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;visidata&#x2F;sqlite-one-liner.jpg"
+        width="1278" /></p><aside class="info" >
+  <code>tweets.csv</code> 是从 Twitter 导出的个人数据。可以在 Twitter 的 Settings and privacy 中找到 download an archive of your data 的选项，点击后过一段时间就能收到自己的数据了
+</aside>
+<p>保存为一个 bash function 后，就更方便了：</p>
+<pre data-lang="bash" style="background-color:#f9f9f9;color:#111111;" class="language-bash "><code class="language-bash" data-lang="bash"><span style="color:#4271ae;">csv2sqlite</span><span>() {
+</span><span>  </span><span style="color:#c82728;">sqlite3</span><span style="color:#4271ae;"> :memory:</span><span style="color:#f07219;"> -cmd </span><span style="color:#839c00;">&#39;.mode csv&#39;</span><span style="color:#f07219;"> -cmd </span><span style="color:#839c00;">&quot;.import $</span><span style="color:#c82728;">1</span><span style="color:#839c00;">.csv $</span><span style="color:#c82728;">1</span><span style="color:#839c00;">&quot;</span><span style="color:#f07219;"> -cmd </span><span style="color:#839c00;">&#39;.mode column&#39; </span><span style="color:#4271ae;">$</span><span style="color:#c82728;">2
+</span><span>}
+</span><span>
+</span><span style="color:#8e908c;"># usage
+</span><span style="color:#c82728;">csv2sqlite</span><span style="color:#4271ae;"> tweets </span><span style="color:#839c00;">&#39;select * from tweets limit 1&#39;
+</span></code></pre>
+<p>顺便看了下 HN 上的评论，发现有不少人提到了 <a href="https://www.visidata.org">VisiData</a> 这个工具，就体验了下，确实很不错，能满足常见的数据查询工作，还不用写 SQL。下面就通过 <code>tweets.csv</code> 这个文件，结合具体的场景来看看 VisiData 的使用姿势。</p>
+<aside class="info" >
+  VisiData 是一个表格类数据（如 json, csv）分析工具，既支持类似 Excel 的数据显示，又有终端操作的高效，能够处理百万行的数据。</p>
+<p><a href="https://jsvine.github.io/visidata-cheat-sheet/en/">这个快捷键列表</a>很方便，基本可以覆盖常用的操作了。
+</aside><h2 id="mei-nian-fa-liao-duo-shao-tweet">每年发了多少 Tweet</h2>
+<p>VisiData 安装完后，直接 <code>vd tweets.csv</code> 就可以了，界面如下：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;visidata&#x2F;visidata-overview.jpg"
+        width="1752" /></p>
+<p>其中有一列为 <code>timestamp</code>，包含了 <code>date</code> 和 <code>time</code>，我们需要将 <code>Year</code> 分离出来，然后才能进行聚合操作。分离的过程也很简单，先选中 <code>timestamp</code> 这一列，输入快捷键 <code>:</code> 就会进入到正则切分模式，输入空格 <code> </code>，就可以将 <code>date</code> 和 <code>time</code> 分开了，然后再对 <code>date</code> 列执行同样的操作，不过要用 <code>-</code> 来切分，这样就能得到 <code>Year</code> 了。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;visidata&#x2F;visidata-year.jpg"
+        width="1354" /></p><aside class="info" >
+  列名为自动生成，这里没有调整，可以通过 <code>^</code> 快捷键重命名。
+</aside>
+<p>接下来，在 <code>Year</code> 对应的列，按一下 <code>F</code> (<code>shift+f</code>)，就能达到 <code>group by</code> 的效果，这个真的太方便了。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;visidata&#x2F;visidata-year-count.jpg"
+        width="1256" /></p><aside class="info" >
+  VisiData 会新建一个 Table，所以不用担心会覆盖当前的表格，操作完后，输入 <code>q</code> 就能回到之前的表格。
+</aside>
+<p>可以看到我最爱唠叨的年份是 2008 和 2010 年，那时 Twitter 还能正常访问，有点什么想法就想发一下，也能在 Twitter 上找到很多有意思的人。</p>
+<p>也可以通过这个方法看发推频率最高的是那几天：</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;visidata&#x2F;visidata-tweets-per-day.jpg"
+        width="1204" /></p>
+<p>或者看自己 <code>@</code> 频率最高的是哪些人：（这里显示的是 user_id，可以通过 user_id 转 username 的服务来看对应的人）</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;visidata&#x2F;visidata-reply.jpg"
+        width="1270" /></p><h2 id="mou-yi-tian-fa-liao-na-xie-tui">某一天发了哪些推</h2>
+<p>找到了发推最多的日子后，接下来很自然就想看看这几天自己都发了些啥，比如我想看 <code>2008-01-16</code> 这一天的推，先选择日期列，然后输入快捷键 <code>|</code>，表示要选择符合正则表达式的行，此时 status bar 会提示输入正则，输入 <code>2008-01-16</code> 后回车，就能选中这些行了。</p>
+<aside class="info" >
+  虽然状态栏会提示有 N 行被选中，但并没有出现在当前显示的列表中，输入快捷键 <code>&quot;</code> 就能看到了。
+</aside>
+<p>如果 <code>text</code> 列的内容没有完全显示出来，可以选中 <code>text</code> 列，输入快捷键 <code>_</code> 就行了。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;visidata&#x2F;visidata-day-tweets.jpg"
+        width="1656" /></p><h2 id="tu-xing-hua-xian-shi-mei-ge-yue-de-fa-tui-shu-liang">图形化显示每个月的发推数量</h2>
+<p>VisiData 还支持散点图，我们可以通过这个功能来看每个月的发推数量，不过显示的效果不太好。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;visidata&#x2F;visidata-plot.jpg"
+        width="1568" /></p>
+<p>好在 VisiData 可以将当前 Table 的内容导出为 <code>csv</code>, <code>json</code> 等常用格式，我们可以将这些数据导入到其他的 plot 服务来获得更好的显示效果。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;visidata&#x2F;plot.jpg"
+        width="1400" /></p><aside class="info" >
+  上图使用的是 <a href="https://www.csvplot.com">csvplot</a> 这个在线服务。
+</aside><h2 id="xiao-jie">小结</h2>
+<p>VisiData 是一个开源项目，有 5 年多的历史了，还在持续维护着，可信任程度还是比较高的。以上是我的简单探索，已经可以满足不少需求了。一开始我对 TUI (Terminal UI) 是有点抗拒的，感觉不如 GUI 美观，但结合 Terminal 的操作确实太方便了，之后如果有不太复杂的数据分析需求，应该还会选择 VisiData。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/util/">util</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/limboy.me"
+    data-repo-id="R_kgDOGqD9cw" data-category="General"
+    data-category-id="DIC_kwDOGqD9c84CAoVe" data-mapping="pathname" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>
