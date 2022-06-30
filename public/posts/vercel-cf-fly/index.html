@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <link rel="icon" href="https://fav.farm/👻" />
+  <title>
+Vercel, Cloudflare, fly.io 我的网页三剑客
+</title>
+  <link rel="stylesheet" href="/assets/main.css?gkCPK9ibGk2PIXzFp9c+CG7gIjpFY2pNyZ+E7aXMGlU=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/vercel-cf-fly/">
+
+<meta name="twitter:title" content="Vercel, Cloudflare, fly.io 我的网页三剑客">
+<meta property="og:title" content="Vercel, Cloudflare, fly.io 我的网页三剑客">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center opacity-80 bg-black h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;vercel-cf-fly&#x2F;">Vercel, Cloudflare, fly.io 我的网页三剑客</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2022-06-30</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>自己时不时地会写一些网页（如 <a href="https://pinyincaichengyu.com/">拼音猜成语</a>）或部署一些静态页面（如这个博客），或者托管一些资源文件（如播客音频），这就涉及到线上服务的选择。目前来看 <a href="https://vercel.com">Vercel</a>, <a href="https://cloudflare.net">Cloudflare</a> 和 <a href="https://fly.io">fly.io</a> 能较好地满足我的大部分需求。</p>
+<h3 id="dns-guan-li-cdn">DNS 管理 &amp; CDN</h3>
+<p>这部分交由 Cloudflare(简称 CF) 来管理。在 CF 后台新建 Site 后，在域名注册商处，将 Name Server 设置为 Cloudflare 的 Name Server 就行了，就是下面这两个</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>leah.ns.cloudflare.com
+</span><span>wesley.ns.cloudflare.com
+</span></code></pre>
+<aside class="info" >
+  CF 也提供域名注册服务，如果是新的域名，可以直接在 CF 注册，管理起来更方便，价格也不贵。
+</aside>
+<p>因为 CF 的主营业务还是 CDN，所以提供了一个很方便的功能：代理网站静态资源，也就是这朵橘色的云（Proxy Status）。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;vercel-cf-fly&#x2F;cf-dns.jpg"
+        width="1746" /></p>
+<p>开启了之后，domain 下的资源（如图片，CSS 等）会被 CF 缓存到 CDN，用户访问这些资源时，就直接访问 CDN 上的缓存，不会到自己的服务器，可以节省很多流量。而且 CF 的 CDN 流量是免费的，所以不用担心哪天站点访问量剧增带来的流量费用。</p>
+<p>PS: 开启「自动代理」后，如果出现直接访问 OK，但通过 CF 访问就会出现问题的现象，可以把 <code>SSL/TLS</code> 设置为「灵活」。</p>
+
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;vercel-cf-fly&#x2F;cf-forwarding-settings.jpg"
+        width="2106" /></p><aside class="warn" >
+  CF 默认不缓存 HTML 文件，如果要设置更加灵活的缓存策略，可以通过 Page Rules 来完成，免费用户可以设置 3 个规则，基本够用了。
+</aside>
+<p  style="text-align:center" ><img src="&#x2F;posts&#x2F;vercel-cf-fly&#x2F;cf-page-rules.jpg"
+        width="1608" /></p>
+<p>还有一个好处是，可以在 CF 的后台看到页面的访问统计，虽然比较简单（能看到访问次数，但无法精确到页面，或者来源），但不需要额外的 JS 代码，不用依赖第三方访问统计服务，也还不错。</p>
+<aside class="info" >
+  CF 还可以托管一些存储服务的文件，以 <a href="https://www.backblaze.com/">Backblaze</a>(又称 B2) 为例，对 DNS 的 CNAME 做一下映射（同样要将 Proxy 设置为 Proxied），比如将 <code>assets.example.com</code> 映射到 <code>f002.backblazeb2.com</code>，通过后台或 API 上传资源文件（如播客的音频）后会得到 B2 的 URL，将域名换一下就行了。比如将 <code>https://f002.backblazeb2.com/a/b.mp3</code> 替换为 <code>https://assets.example.com/a/b.mp3</code>，就可以使用 CF 的 CDN 服务了。
+</aside><h3 id="jing-tai-ye-mian">静态页面</h3>
+<p>通过 SSG（静态内容生成器）生成的博客或文档等静态资源，会部署到 <a href="https://vercel.com/">Vercel</a> 上，体验确实很不错。比如 Connect Github 后，做一些简单的配置，就能方便地 Deploy 了。push 到 main 之外的分支，可以生成 Preview 页面，确定内容正确后，再 push 到 main 分支，就上线了。这也是 Vercel 提倡的 Develop, Preview, Ship 流程。</p>
+<p>每个月 100 G 的流量（所有 Projects 加起来）如果都走 Vercel，可能不太够，但结合 CF 就完全能 hold 住了（流量主要是一些 HTML 页面）。</p>
+<p>如果要写一些复杂的页面或涉及到一些后端逻辑，也可以使用 Vercel 开源的 <a href="https://nextjs.org/">Next.js</a>。API 会以 Serverless 的方式运行（所以不要依赖一些内存全局变量）。最近 Middleware 也 <a href="https://vercel.com/blog/vercel-edge-middleware-dynamic-at-the-speed-of-static">GA</a> 了，可以在请求到达具体页面前再做一些处理（比如判断是否有特定的 Cookie，然后重定向到特定的页面）。</p>
+<aside class="info" >
+  CF 也提供类似的服务 <a href="https://pages.cloudflare.com/">Cloudflare Pages</a>，不过目前对 Vercel 还比较满意，就没考虑切换。
+</aside><h3 id="dong-tai-shu-ju">动态数据</h3>
+<p>如果涉及到数据库，对个人项目来说，要么在单独的 VPS 上部署，要么在 Serverless code 里通过 API 去连接 Cloud Database Service，前者有一定的维护成本，要保障 VPS、后端服务、DB Service 的正常运行，还要考虑各种运维（网络耗时、磁盘空间、CPU、内存占用等等），后者就要找一个合适的服务商，确保价格、空间、流量、使用体验等比较满意。</p>
+<p>其实也可以有第三种选择，我选的是 <a href="https://fly.io/">fly.io</a>，可以简单地理解为把 Docker 部署到边缘节点，让用户可以就近访问服务。fly 的免费版本提供了一定的存储空间（3GB，先创建 Volume，然后 mount 到 App 上），一些简单的项目，一个 SQLite 文件就搞定了，备份起来也很方便。更 Serious 的项目可以使用他们提供的 Postgres 数据库（支持多节点部署，读写分离）。</p>
+<p>这样就兼具了 VPS 的灵活性，又免去了不少运维成本，又因为服务可以部署在全球的各个节点，访问速度上也比较有保障（挂了 Volume 后，就只能锁定单个区域，因为 Volume 跟 App 和 Region 绑定）。</p>
+<p>目前只是在上面部署了一个小项目，还没有较正经地使用，不过有 <a href="https://remix.run/">Remix</a> 和 <a href="https://kentcdodds.com/uses">Kent</a> 的背书，从一些<a href="https://xeiaso.net/blog/fly.io-heroku-replacement">其他的反馈</a>来看也还可以，应该会是不错的选择。</p>
+<p>还有一个原因是 fly.io 给我的感觉也是满酷的，比如 <a href="https://fly.io/jobs/rust-developer/">Rust 开发的招聘文</a>，这是其中一段：</p>
+<blockquote>
+<p>The premise of our hiring process is that we’re going to show you the kind of work we’re doing and then see if you enjoy actually doing it; “work-sample challenges”. Unlike a lot of places that assign “take-home problems”, our challenges are the backbone of our whole process; they’re not pre-screeners for an interview gauntlet.</p>
+</blockquote>
+<hr />
+<p>这三家服务商基本覆盖了我所有的线上需求，而且只需支付很少（或者免费）的费用就能支撑足够大的访问量（Cloudflare 功不可没）。如果你也有类似的需求，或许可以考虑下。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/limboy.me"
+    data-repo-id="R_kgDOGqD9cw" data-category="General"
+    data-category-id="DIC_kwDOGqD9c84CAoVe" data-mapping="pathname" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>
