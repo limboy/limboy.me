@@ -31,6 +31,32 @@ PS: 开启「自动代理」后，如果出现直接访问 OK，但通过 CF 访
 
 {{img(path="/posts/vercel-cf-fly/cf-forwarding-settings.jpg")}}
 
+{% aside(level="info") %}
+如果发现 CF 访问统计中，有很多的流量没有缓存，可能是跟 Vercel 返回的 `Cache-Control` 有关，比如 `Cache-Control: public, max-age=0, must-revalidate`，表示不缓存，这样 CF 也要遵从这个约定，当用户访问资源文件时，如果浏览器本地没有缓存，或者已经过期，每次请求到了 CF 这里后，CF 也还是要到源站（Vercel）去取。这样不仅没有让 CF 发挥 CDN 的优势，反而因为要回源，导致请求变慢。
+
+好在 Vercel 支持自定义 header 规则（更多的规则可以看[这里](https://vercel.com/docs/project-configuration)），我们可以在 `vercel.json` 里重新定义 `Cache-Control`
+
+```json
+{
+  "headers": [
+    {
+      "source": "/(.*).(jpe?g|png|ico|webp|svg|mp4|gif|xml|ttf|woff2?)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}
+```
+
+这样当访问特定后缀的资源文件时，就会返回我们定义的 `Cache-Control`，CF 会根据新的 `Cache-Control` 策略来缓存，比如这里设置了永不过期。
+
+PS: Vercel 有个[页面](https://vercel.com/support/articles/using-cloudflare-with-vercel)专门讨论了与 CF 并存的问题，想进一步了解的话，可以看一下。
+{% end %}
+
 {% aside(level="warn") %}
 CF 默认不缓存 HTML 文件，如果要设置更加灵活的缓存策略，可以通过 Page Rules 来完成，免费用户可以设置 3 个规则，基本够用了。
 {% end %}
