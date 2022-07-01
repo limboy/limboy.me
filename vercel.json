@@ -1,16 +1,4 @@
 {
-  "redirects": [
-    {
-      "source": "/:year/:month/:day/:post",
-      "destination": "https://limboy.me/posts/:post",
-      "permanent": true
-    },
-    {
-      "source": "/:year/:month/:day/:post/",
-      "destination": "https://limboy.me/posts/:post/",
-      "permanent": true
-    }
-  ],
   "routes": [
     {
       "src": "/**/*.jpg",
