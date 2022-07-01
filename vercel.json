@@ -1,25 +1,25 @@
 {
   "routes": [
     {
-      "src": "/**/*.jpg",
+      "src": "posts/**/*.jpg",
       "headers": {
         "cache-control": "s-maxage=86400"
       }
     },
     {
-      "src": "/**/*.png",
+      "src": "posts/**/*.png",
       "headers": {
         "cache-control": "s-maxage=86400"
       }
     },
     {
-      "src": "/**/*.gif",
+      "src": "posts/**/*.gif",
       "headers": {
         "cache-control": "s-maxage=86400"
       }
     },
     {
-      "src": "/**/*.mp4",
+      "src": "posts/**/*.mp4",
       "headers": {
         "cache-control": "s-maxage=86400"
       }
