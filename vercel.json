@@ -10,5 +10,31 @@
       "destination": "https://limboy.me/posts/:post/",
       "permanent": true
     }
+  ],
+  "routes": [
+    {
+      "src": "/**/*.jpg",
+      "headers": {
+        "cache-control": "s-maxage=86400"
+      }
+    },
+    {
+      "src": "/**/*.png",
+      "headers": {
+        "cache-control": "s-maxage=86400"
+      }
+    },
+    {
+      "src": "/**/*.gif",
+      "headers": {
+        "cache-control": "s-maxage=86400"
+      }
+    },
+    {
+      "src": "/**/*.mp4",
+      "headers": {
+        "cache-control": "s-maxage=86400"
+      }
+    }
   ]
 }
