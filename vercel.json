@@ -1,28 +1,13 @@
 {
-  "routes": [
+  "headers": [
     {
-      "src": "posts/**/*.jpg",
-      "headers": {
-        "cache-control": "s-maxage=86400"
-      }
-    },
-    {
-      "src": "posts/**/*.png",
-      "headers": {
-        "cache-control": "s-maxage=86400"
-      }
-    },
-    {
-      "src": "posts/**/*.gif",
-      "headers": {
-        "cache-control": "s-maxage=86400"
-      }
-    },
-    {
-      "src": "posts/**/*.mp4",
-      "headers": {
-        "cache-control": "s-maxage=86400"
-      }
+      "source": "(.jpg|.png|.gif|.mp4)$",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, must-revalidate"
+        }
+      ]
     }
   ]
 }
