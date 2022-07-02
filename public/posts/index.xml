@@ -7,7 +7,48 @@
         <generator>Zola</generator>
         <language>zh</language>
         <atom:link href="https://limboy.me/posts/index.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Thu, 30 Jun 2022 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sat, 02 Jul 2022 00:00:00 +0000</lastBuildDate>
+        
+        <item>
+            <title>Alpine, Tailwind, Deno, SQLite 我的本地服务四件套</title>
+            <pubDate>Sat, 02 Jul 2022 00:00:00 +0000</pubDate>
+            <link>https://limboy.me/posts/local-services-tools/</link>
+            <guid>https://limboy.me/posts/local-services-tools/</guid>
+            <description>&lt;p&gt;有时会想要写一些本地服务来满足自己特定的需求。这个本地服务需要支持 GUI，可以读写本地文件。如果写一个命令行工具，在交互和展示上会有一定限制。&lt;a href=&quot;https:&#x2F;&#x2F;nextjs.org&quot;&gt;Next.js&lt;&#x2F;a&gt; &#x2F; &lt;a href=&quot;https:&#x2F;&#x2F;www.electronjs.org&#x2F;&quot;&gt;Electron&lt;&#x2F;a&gt; &#x2F; &lt;a href=&quot;https:&#x2F;&#x2F;tauri.studio&#x2F;&quot;&gt;Tauri&lt;&#x2F;a&gt; 这样的全功能解决方案又显得太重。不想引入编译，不想看到 &lt;code&gt;node_modules&lt;&#x2F;code&gt;。&lt;&#x2F;p&gt;
+&lt;p&gt;这么看下来，一个前端页面结合本地的后端服务是比较合适的。对于前端页面，如果选择 &lt;code&gt;React&lt;&#x2F;code&gt; 或 &lt;code&gt;Vue&lt;&#x2F;code&gt;，则不可避免地要引入一整套编译工具，以及 &lt;code&gt;node_modules&lt;&#x2F;code&gt;。使用 &lt;code&gt;jQuery&lt;&#x2F;code&gt; 又过于 Old School。&lt;a href=&quot;https:&#x2F;&#x2F;alpinejs.dev&#x2F;&quot;&gt;Alpine&lt;&#x2F;a&gt; 则刚刚好，使用姿势上跟 &lt;code&gt;Vue&lt;&#x2F;code&gt; 类似，但更轻量，不需要编译。CSS 使用了 &lt;a href=&quot;https:&#x2F;&#x2F;tailwindcss.com&#x2F;&quot;&gt;Tailwind&lt;&#x2F;a&gt; 后，就很难回去了，方便起见，就直接使用了 Tailwind 的 CDN 文件。&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;html&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-html &quot;&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;head&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;meta name&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;viewport&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;content&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;width=device-width, initial-scale=1.0&amp;quot; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;script defer src=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;https:&#x2F;&#x2F;unpkg.com&#x2F;alpinejs@3.x.x&#x2F;dist&#x2F;cdn.min.js&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;script&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;link
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;href&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;https:&#x2F;&#x2F;unpkg.com&#x2F;tailwindcss@^2&#x2F;dist&#x2F;tailwind.min.css&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;rel&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;quot;stylesheet&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9ae5;&quot;&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&#x2F;&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;lt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;head&lt;&#x2F;span&gt;&lt;span style=&quot;color:#5d9be5;&quot;&gt;&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;后端服务的话，如果用 &lt;code&gt;node&lt;&#x2F;code&gt;，就要用到 npm 等包管理工具，就会有 &lt;code&gt;node_modules&lt;&#x2F;code&gt;。如果用 &lt;code&gt;python&lt;&#x2F;code&gt;，也要在众多的包管理工具中找一个合适的，还要适应它的使用姿势，可能还要结合 &lt;code&gt;pyenv&lt;&#x2F;code&gt;，对一个简单的本地服务来说还是太复杂了。而 &lt;a href=&quot;https:&#x2F;&#x2F;deno.land&#x2F;&quot;&gt;deno&lt;&#x2F;a&gt; 正好可以解决这些问题：内置了包管理功能，不需要额外的 &lt;code&gt;package.json&lt;&#x2F;code&gt; 或类似的 package 声明文件；原生支持 JavaScript、TypeScript；自带了很多开箱即用的功能（batteries-included）；周边生态也还可以。&lt;&#x2F;p&gt;
+&lt;p&gt;数据库的话，SQLite 再合适不过了，功能强大，足够 Solid，单文件，不需开启额外的进程。&lt;&#x2F;p&gt;
+&lt;p&gt;假如要写一个本地的密码管理工具，只需要 3 个文件：&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;- LocalPass.html
+&lt;&#x2F;span&gt;&lt;span&gt;- LocalPass.js
+&lt;&#x2F;span&gt;&lt;span&gt;- LocalPass.db
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;在 &lt;code&gt;LocalPass.js&lt;&#x2F;code&gt; 里，如果要引入三方 Lib，只需：&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;js&quot; style=&quot;background-color:#f9f9f9;color:#111111;&quot; class=&quot;language-js &quot;&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span&gt;{
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Application&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;Router&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;helpers&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;https:&#x2F;&#x2F;deno.land&#x2F;x&#x2F;oak@v10.6.0&#x2F;mod.ts&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;import &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;as &lt;&#x2F;span&gt;&lt;span style=&quot;color:#c82728;&quot;&gt;sqlite &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8959a8;&quot;&gt;from &lt;&#x2F;span&gt;&lt;span style=&quot;color:#839c00;&quot;&gt;&amp;#39;https:&#x2F;&#x2F;deno.land&#x2F;x&#x2F;sqlite@v3.4.0&#x2F;mod.ts&amp;#39;&lt;&#x2F;span&gt;&lt;span&gt;;
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;开发模式下，可以使用 &lt;code&gt;deno run -A --watch LocalPass.js&lt;&#x2F;code&gt;，这样只要 &lt;code&gt;LocalPass.js&lt;&#x2F;code&gt; 文件有变动，就会自动 restart。对一个简单的服务来说，开发效率还是挺高的，而且维护起来也很方便。  开放给其他人使用的话，只要对方安装好 &lt;code&gt;deno&lt;&#x2F;code&gt; 就可以了，一个命令直接跑。&lt;&#x2F;p&gt;
+&lt;p&gt;以下是&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;limboy&#x2F;localpass&quot;&gt;该项目&lt;&#x2F;a&gt;的一个演示效果：&lt;&#x2F;p&gt;
+&lt;video playsinline controls&gt;
+  &lt;source src=&quot;&amp;#x2F;posts&amp;#x2F;local-services-tools&amp;#x2F;LocalPassDemo.mp4&quot; type=&quot;video&#x2F;mp4&quot; &#x2F;&gt;
+&lt;&#x2F;video&gt;
+&lt;p&gt;如果你了解一些前端，想要写一个本地服务（比如给命令行工具 &lt;a href=&quot;https:&#x2F;&#x2F;youtube-dl.org&#x2F;&quot;&gt;youtube-dl&lt;&#x2F;a&gt; 写一个更友好的界面）时，可以试一下这套配搭，还是挺方便的。&lt;&#x2F;p&gt;
+</description>
+        </item>
+        
         
         <item>
             <title>Vercel, Cloudflare, fly.io 我的云服务三剑客</title>

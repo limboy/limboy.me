@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content="width=device-width,initial-scale=1" name="viewport" />
+  <meta charset="UTF-8">
+  <link rel="icon" href="https://fav.farm/👻" />
+  <title>
+Alpine, Tailwind, Deno, SQLite 我的本地服务四件套
+</title>
+  <link rel="stylesheet" href="/assets/main.css?9zs&#x2F;BXhW+t7PNacyPraNbWdNoN&#x2F;V7G9VhdTj5z3mo8A=" />
+  <script async defer data-domain="limboy.me" src="https://analytics.limboy.me/js/plausible.js"></script>
+  
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:creator" content="@_limboy">
+<meta name="twitter:site" content="@_limboy">
+<meta property="og:url" content="https://limboy.me/posts/local-services-tools/">
+
+<meta name="twitter:title" content="Alpine, Tailwind, Deno, SQLite 我的本地服务四件套">
+<meta property="og:title" content="Alpine, Tailwind, Deno, SQLite 我的本地服务四件套">
+
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+
+
+
+</head>
+
+<body class="  ">
+  <nav class="flex justify-center items-center bg-zinc-700 h-12 py-0 ">
+    <div class="inner flex justify-between flex-row mx-1">
+      <ul class="color-white flex flex-row justify-start gap-4">
+        <li><a class="nav-link opacity-90 text-2xl" href="/">Limboy</a></li>
+        <!--<li><a class="nav-link" href="/coodle">Coodle</a></li>-->
+      </ul>
+      <ul class="color-white flex flex-row gap-4 items-center text-base">
+        <!--<li> <a class="nav-link" href="/books" class="decoration-0"> Books </a> </li>-->
+        <li> <a class="nav-link" href="/highlights" class="decoration-0"> Highlights </a> </li>
+        <li> <a class="nav-link" href="/projects" class="decoration-0"> Projects </a> </li>
+        <li> <a class="nav-link" href="/about" class="decoration-0"> About </a> </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="flex flex-col">
+    <div id="wrapper" class="flex justify-center" style="min-height: calc(100vh - 6.5rem);">
+      <div class="inner mb-2">
+        
+<div class="mt-4 lg:mt-6">
+  
+
+  <h1 class="title font-medium text-3xl"><a href="https:&#x2F;&#x2F;limboy.me&#x2F;posts&#x2F;local-services-tools&#x2F;">Alpine, Tailwind, Deno, SQLite 我的本地服务四件套</a></h1>
+  <div class="flex gap-4 items-center my-1">
+    <time class="text-gray-500">2022-07-02</time>
+
+  </div>
+  <hr class="border-t-[3px]" />
+
+  <div class="prose lg:prose-xl max-w-full my-6">
+    <p>有时会想要写一些本地服务来满足自己特定的需求。这个本地服务需要支持 GUI，可以读写本地文件。如果写一个命令行工具，在交互和展示上会有一定限制。<a href="https://nextjs.org">Next.js</a> / <a href="https://www.electronjs.org/">Electron</a> / <a href="https://tauri.studio/">Tauri</a> 这样的全功能解决方案又显得太重。不想引入编译，不想看到 <code>node_modules</code>。</p>
+<p>这么看下来，一个前端页面结合本地的后端服务是比较合适的。对于前端页面，如果选择 <code>React</code> 或 <code>Vue</code>，则不可避免地要引入一整套编译工具，以及 <code>node_modules</code>。使用 <code>jQuery</code> 又过于 Old School。<a href="https://alpinejs.dev/">Alpine</a> 则刚刚好，使用姿势上跟 <code>Vue</code> 类似，但更轻量，不需要编译。CSS 使用了 <a href="https://tailwindcss.com/">Tailwind</a> 后，就很难回去了，方便起见，就直接使用了 Tailwind 的 CDN 文件。</p>
+<pre data-lang="html" style="background-color:#f9f9f9;color:#111111;" class="language-html "><code class="language-html" data-lang="html"><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">meta name</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;viewport&quot; </span><span style="color:#c82728;">content</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;width=device-width, initial-scale=1.0&quot; </span><span style="color:#5d9be5;">/&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">script defer src=</span><span style="color:#839c00;">&quot;https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js&quot;</span><span style="color:#5d9be5;">&gt;&lt;/</span><span style="color:#c82728;">script</span><span style="color:#5d9be5;">&gt;
+</span><span>  </span><span style="color:#5d9be5;">&lt;</span><span style="color:#c82728;">link
+</span><span style="color:#5d9ae5;">    </span><span style="color:#c82728;">href</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css&quot;
+</span><span style="color:#5d9ae5;">    </span><span style="color:#c82728;">rel</span><span style="color:#5d9ae5;">=</span><span style="color:#839c00;">&quot;stylesheet&quot;
+</span><span style="color:#5d9ae5;">  </span><span style="color:#5d9be5;">/&gt;
+</span><span style="color:#5d9be5;">&lt;/</span><span style="color:#c82728;">head</span><span style="color:#5d9be5;">&gt;
+</span></code></pre>
+<p>后端服务的话，如果用 <code>node</code>，就要用到 npm 等包管理工具，就会有 <code>node_modules</code>。如果用 <code>python</code>，也要在众多的包管理工具中找一个合适的，还要适应它的使用姿势，可能还要结合 <code>pyenv</code>，对一个简单的本地服务来说还是太复杂了。而 <a href="https://deno.land/">deno</a> 正好可以解决这些问题：内置了包管理功能，不需要额外的 <code>package.json</code> 或类似的 package 声明文件；原生支持 JavaScript、TypeScript；自带了很多开箱即用的功能（batteries-included）；周边生态也还可以。</p>
+<p>数据库的话，SQLite 再合适不过了，功能强大，足够 Solid，单文件，不需开启额外的进程。</p>
+<p>假如要写一个本地的密码管理工具，只需要 3 个文件：</p>
+<pre style="background-color:#f9f9f9;color:#111111;"><code><span>- LocalPass.html
+</span><span>- LocalPass.js
+</span><span>- LocalPass.db
+</span></code></pre>
+<p>在 <code>LocalPass.js</code> 里，如果要引入三方 Lib，只需：</p>
+<pre data-lang="js" style="background-color:#f9f9f9;color:#111111;" class="language-js "><code class="language-js" data-lang="js"><span style="color:#8959a8;">import </span><span>{
+</span><span>  </span><span style="color:#c82728;">Application</span><span>,
+</span><span>  </span><span style="color:#c82728;">Router</span><span>,
+</span><span>  </span><span style="color:#c82728;">helpers</span><span>,
+</span><span>} </span><span style="color:#8959a8;">from </span><span style="color:#839c00;">&#39;https://deno.land/x/oak@v10.6.0/mod.ts&#39;</span><span>;
+</span><span style="color:#8959a8;">import </span><span style="color:#f07219;">* </span><span style="color:#8959a8;">as </span><span style="color:#c82728;">sqlite </span><span style="color:#8959a8;">from </span><span style="color:#839c00;">&#39;https://deno.land/x/sqlite@v3.4.0/mod.ts&#39;</span><span>;
+</span></code></pre>
+<p>开发模式下，可以使用 <code>deno run -A --watch LocalPass.js</code>，这样只要 <code>LocalPass.js</code> 文件有变动，就会自动 restart。对一个简单的服务来说，开发效率还是挺高的，而且维护起来也很方便。  开放给其他人使用的话，只要对方安装好 <code>deno</code> 就可以了，一个命令直接跑。</p>
+<p>以下是<a href="https://github.com/limboy/localpass">该项目</a>的一个演示效果：</p>
+<video playsinline controls>
+  <source src="&#x2F;posts&#x2F;local-services-tools&#x2F;LocalPassDemo.mp4" type="video/mp4" />
+</video>
+<p>如果你了解一些前端，想要写一个本地服务（比如给命令行工具 <a href="https://youtube-dl.org/">youtube-dl</a> 写一个更友好的界面）时，可以试一下这套配搭，还是挺方便的。</p>
+
+  </div>
+
+
+  <ul class="tags flex flex-wrap justify-center items-center gap-4 mt-5 mb-8 text-lg">
+    
+    
+    <li
+      class="px-4 pb-[2px] leading-8 rounded-full border text-gray-700 border-gray-700 hover:text-gray-100 hover:border-gray-900 hover:bg-gray-900 transition-all">
+      <a class="inline-block" href="https://limboy.me/tags/programming/">programming</a>
+    </li>
+    
+    
+  </ul>
+
+  
+  <script src="https://giscus.app/client.js" data-repo="limboy/limboy.me"
+    data-repo-id="R_kgDOGqD9cw" data-category="General"
+    data-category-id="DIC_kwDOGqD9c84CAoVe" data-mapping="pathname" data-reactions-enabled="1"
+    data-emit-metadata="0" data-theme="light" data-lang="en" crossorigin="anonymous" async>
+    </script>
+  
+
+  
+
+</div>
+
+      </div>
+    </div>
+    
+    <footer
+      class="flex border-t border-gray-300 text-gray-600 bg-gray-50 items-center justify-center h-12 text-sm mt-2">
+      <div class="flex inner justify-center gap-4">
+        <a class="hover:underline" href="https://github.com/limboy" target="_blank">GitHub</a>
+        <a class="hover:underline" href="https://twitter.com/_limboy" target="_blank">Twitter</a>
+        <a class="hover:underline" href="https://limboy.me/index.xml">RSS</a>
+      </div>
+    </footer>
+    
+  </div>
+
+  
+  
+
+  <script>
+    // 都是为了 iOS...
+    document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    window.addEventListener('resize', () => {
+      document.querySelector("#wrapper").style.minHeight = `calc(${window.innerHeight}px - 6.5rem)`
+    })
+  </script>
+</body>
+
+</html>
