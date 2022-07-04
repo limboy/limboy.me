@@ -5,51 +5,9 @@ template = "highlights.html"
 
 ## 2022
 
-{% timelinecard(title="发布一篇博客" date="2022-06-23") %}
-
-[通过 VisiData 来方便地分析数据](/posts/visidata/)
-
-{% end %}
-
 {% timelinecard(title="日语学习" date="2022-06-22") %}
 
 完成 大家的日语(初级 1) 的学习
-
-{% end %}
-
-{% timelinecard(title="发布一篇博客" date="2022-04-07") %}
-
-[刚好够用的简易前端工具集](/posts/just-enough-toolkits-for-simple-frontend-project/)
-
-{% end %}
-
-{% timelinecard(title="发布一篇博客" date="2022-04-04") %}
-
-[我的前端学习路线](/posts/frontend-learning/)
-
-{% end %}
-
-{% timelinecard(title="发布一篇博客" date="2022-03-31") %}
-
-[通过视频片段来学习英语](/posts/english-video-clips/)
-
-{% end %}
-
-{% timelinecard(title="发布一篇博客" date="2022-03-25") %}
-
-[我的 Logseq 使用习惯](/posts/logseq/)
-
-{% end %}
-
-{% timelinecard(title="发布一篇博客" date="2022-03-22") %}
-
-[回顾了下「拼音猜成语」背后的一些故事](/posts/idiom/)
-
-{% end %}
-
-{% timelinecard(title="发布一篇博客" date="2022-03-21") %}
-
-[回顾了下 Bytetalk 背后的一些故事](/posts/bytetalk/)
 
 {% end %}
 
@@ -68,11 +26,5 @@ template = "highlights.html"
 {% timelinecard(title="拼音猜成语" date="2022-01-19") %}
 
 受 Wordle 启发，花了 1 个星期制作的一个[网页小游戏](https://pinyincaichengyu.com)，通过输入拼音来猜测对应的成语。还挺受欢迎的，每天有来自全球 1 万以上的活跃用户，也有国外的媒体对这个小游戏比较感兴趣（如卫报），还发来了采访邀请。
-
-{% end %}
-
-{% timelinecard(title="发布了一篇博客" date="2022-01-11" isLast=true) %}
-
-[回顾 2021](https://limboy.me/posts/2021-review/)
 
 {% end %}
