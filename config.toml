@@ -5,7 +5,6 @@ title = "Limboy"
 
 default_language = "zh"
 
-
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = false
 
