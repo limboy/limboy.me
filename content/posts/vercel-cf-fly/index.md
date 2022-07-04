@@ -6,6 +6,10 @@ tags = ["programming"]
 [extra]
 +++
 
+{% aside(level="warn") %}
+Update: 在排查 Cloudflare 缓存命中率低的问题时，发现没有一台 Server 实在是不方便。比如想看下哪些请求透过了 CF，直接到了源站，如果内容 deploy 在 Vercel 上，就看不到这些请求日志。所以虽然 Vercel 很方便，用起来也很舒服，但一些能力上的缺失在某些场景下还是挺难受的，因此还是转向了 VPS（Vultr） + Cloudflare 的传统配搭。
+{% end %}
+
 自己时不时地会写一些网页（如 [拼音猜成语](https://pinyincaichengyu.com/)）或部署一些静态页面（如这个博客），或者托管一些资源文件（如播客音频），这就涉及到线上服务的选择。目前来看 [Vercel](https://vercel.com), [Cloudflare](https://cloudflare.net) 和 [fly.io](https://fly.io) 能较好地满足我的大部分需求。
 
 ### DNS 管理 & CDN

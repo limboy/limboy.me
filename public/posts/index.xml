@@ -55,7 +55,10 @@
             <pubDate>Thu, 30 Jun 2022 00:00:00 +0000</pubDate>
             <link>https://limboy.me/posts/vercel-cf-fly/</link>
             <guid>https://limboy.me/posts/vercel-cf-fly/</guid>
-            <description>&lt;p&gt;自己时不时地会写一些网页（如 &lt;a href=&quot;https:&#x2F;&#x2F;pinyincaichengyu.com&#x2F;&quot;&gt;拼音猜成语&lt;&#x2F;a&gt;）或部署一些静态页面（如这个博客），或者托管一些资源文件（如播客音频），这就涉及到线上服务的选择。目前来看 &lt;a href=&quot;https:&#x2F;&#x2F;vercel.com&quot;&gt;Vercel&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;cloudflare.net&quot;&gt;Cloudflare&lt;&#x2F;a&gt; 和 &lt;a href=&quot;https:&#x2F;&#x2F;fly.io&quot;&gt;fly.io&lt;&#x2F;a&gt; 能较好地满足我的大部分需求。&lt;&#x2F;p&gt;
+            <description>&lt;aside class=&quot;warn&quot; &gt;
+  Update: 在排查 Cloudflare 缓存命中率低的问题时，发现没有一台 Server 实在是不方便。比如想看下哪些请求透过了 CF，直接到了源站，如果内容 deploy 在 Vercel 上，就看不到这些请求日志。所以虽然 Vercel 很方便，用起来也很舒服，但一些能力上的缺失在某些场景下还是挺难受的，因此还是转向了 VPS（Vultr） + Cloudflare 的传统配搭。
+&lt;&#x2F;aside&gt;
+&lt;p&gt;自己时不时地会写一些网页（如 &lt;a href=&quot;https:&#x2F;&#x2F;pinyincaichengyu.com&#x2F;&quot;&gt;拼音猜成语&lt;&#x2F;a&gt;）或部署一些静态页面（如这个博客），或者托管一些资源文件（如播客音频），这就涉及到线上服务的选择。目前来看 &lt;a href=&quot;https:&#x2F;&#x2F;vercel.com&quot;&gt;Vercel&lt;&#x2F;a&gt;, &lt;a href=&quot;https:&#x2F;&#x2F;cloudflare.net&quot;&gt;Cloudflare&lt;&#x2F;a&gt; 和 &lt;a href=&quot;https:&#x2F;&#x2F;fly.io&quot;&gt;fly.io&lt;&#x2F;a&gt; 能较好地满足我的大部分需求。&lt;&#x2F;p&gt;
 &lt;h3 id=&quot;dns-guan-li-cdn&quot;&gt;DNS 管理 &amp;amp; CDN&lt;&#x2F;h3&gt;
 &lt;p&gt;这部分交由 Cloudflare(简称 CF) 来管理。在 CF 后台新建 Site 后，在域名注册商处，将 Name Server 设置为 Cloudflare 的 Name Server 就行了，就是下面这两个&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#f9f9f9;color:#111111;&quot;&gt;&lt;code&gt;&lt;span&gt;leah.ns.cloudflare.com
