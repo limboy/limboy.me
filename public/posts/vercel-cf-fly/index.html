@@ -93,11 +93,10 @@ Vercel, Cloudflare, fly.io 我的云服务三剑客
 </span><span>    }
 </span><span>  ]
 </span><span>}
-</span><span>
-</span><span>update: 这么做确实可以达到效果，但 CF 后台显示缓存命中率只有不到 </span><span style="color:#f07219;">10</span><span>%，需要进一步排查。
 </span></code></pre>
 <p>这样当访问特定后缀的资源文件时，就会返回我们定义的 <code>Cache-Control</code>，CF 会根据新的 <code>Cache-Control</code> 策略来缓存，比如这里设置了永不过期。</p>
-<p>PS: Vercel 有个<a href="https://vercel.com/support/articles/using-cloudflare-with-vercel">页面</a>专门讨论了与 CF 并存的问题，想进一步了解的话，可以看一下。
+<p>PS: Vercel 有个<a href="https://vercel.com/support/articles/using-cloudflare-with-vercel">页面</a>专门讨论了与 CF 并存的问题，想进一步了解的话，可以看一下。</p>
+<p>PPS: 这么做确实可以达到效果，但 CF 后台显示缓存命中率只有不到 10%，需要进一步排查。
 </aside><aside class="warn" >
   CF 默认不缓存 HTML 文件，如果要设置更加灵活的缓存策略，可以通过 Page Rules 来完成，免费用户可以设置 3 个规则，基本够用了。
 </aside>

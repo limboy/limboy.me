@@ -54,13 +54,13 @@ PS: 开启「自动代理」后，如果出现直接访问 OK，但通过 CF 访
     }
   ]
 }
-
-update: 这么做确实可以达到效果，但 CF 后台显示缓存命中率只有不到 10%，需要进一步排查。
 ```
 
 这样当访问特定后缀的资源文件时，就会返回我们定义的 `Cache-Control`，CF 会根据新的 `Cache-Control` 策略来缓存，比如这里设置了永不过期。
 
 PS: Vercel 有个[页面](https://vercel.com/support/articles/using-cloudflare-with-vercel)专门讨论了与 CF 并存的问题，想进一步了解的话，可以看一下。
+
+PPS: 这么做确实可以达到效果，但 CF 后台显示缓存命中率只有不到 10%，需要进一步排查。
 {% end %}
 
 {% aside(level="warn") %}
