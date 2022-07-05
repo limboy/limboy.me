@@ -91,6 +91,8 @@
 &lt;&#x2F;span&gt;&lt;span&gt;    }
 &lt;&#x2F;span&gt;&lt;span&gt;  ]
 &lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;update: 这么做确实可以达到效果，但 CF 后台显示缓存命中率只有不到 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f07219;&quot;&gt;10&lt;&#x2F;span&gt;&lt;span&gt;%，需要进一步排查。
 &lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;这样当访问特定后缀的资源文件时，就会返回我们定义的 &lt;code&gt;Cache-Control&lt;&#x2F;code&gt;，CF 会根据新的 &lt;code&gt;Cache-Control&lt;&#x2F;code&gt; 策略来缓存，比如这里设置了永不过期。&lt;&#x2F;p&gt;
 &lt;p&gt;PS: Vercel 有个&lt;a href=&quot;https:&#x2F;&#x2F;vercel.com&#x2F;support&#x2F;articles&#x2F;using-cloudflare-with-vercel&quot;&gt;页面&lt;&#x2F;a&gt;专门讨论了与 CF 并存的问题，想进一步了解的话，可以看一下。
